@@ -8,7 +8,7 @@ import {
 import { getToken } from "next-auth/jwt";
 
 // Public links from Diana Imoveis website
-import { navLinks } from "./utils/constants/navbar-links";
+import { navLinks } from "./lib/constants/links/navbar-links";
 
 const generatedPublicRoutes = navLinks.map((item) => ({
   path: item.path,

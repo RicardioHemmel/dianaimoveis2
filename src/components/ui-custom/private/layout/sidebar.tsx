@@ -20,7 +20,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 
-import { SIDEBAR_LINKS } from "@/utils/constants/sidebar-links";
+import { SIDEBAR_LINKS } from "@/lib/constants/links/sidebar-links";
 import { LogOut, Settings } from "lucide-react";
 
 export function AppSidebar() {

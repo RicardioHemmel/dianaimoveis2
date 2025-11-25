@@ -1,4 +1,10 @@
 import { Navbar } from "@/components/ui-custom/public/layout/Navbar";
+import { Poppins } from "next/font/google";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
 
 export default function PublicLayout({
   children,
@@ -6,9 +12,9 @@ export default function PublicLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div>
+    <section className={`${poppins.className}`}>
       <Navbar />
       {children}
-    </div>
+    </section>
   );
 }

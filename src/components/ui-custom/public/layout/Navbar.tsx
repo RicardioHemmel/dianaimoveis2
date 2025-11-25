@@ -27,7 +27,7 @@ import Image from "next/image";
 import { useState } from "react";
 
 // NavLinks
-import { navLinks } from "@/utils/constants/navbar-links";
+import { navLinks } from "@/lib/constants/links/navbar-links";
 
 export function Navbar() {
   const pathname = usePathname();

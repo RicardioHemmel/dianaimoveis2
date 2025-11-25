@@ -4,9 +4,15 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-// zod
+// Form control
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import {
+  propertySchema,
+  PropertyFormData,
+} from "@/lib/schemas/property/property.schema";
+
+// Lists
+import { amenitiesList } from "@/lib/constants/properties/amenities-list";
 
 // Shadcnui
 import { Card } from "@/components/ui/card";
@@ -37,65 +43,36 @@ import {
   Bath,
   Car,
   Sparkles,
-  Save,
   FileText,
   Info,
   TreePalm,
   SearchIcon,
+  Upload,
+  X,
+  Youtube,
+  PawPrint,
+  Sofa,
+  Train,
+  ImageUp,
 } from "lucide-react";
 import {
   InputGroup,
   InputGroupInput,
   InputGroupAddon,
 } from "@/components/ui/input-group";
-
-const propertySchema = z.object({
-  // Informações Básicas
-  tipo: z.enum(["apartamento", "casa", "comercial", "terreno"]),
-  titulo: z.string().min(5, "Título deve ter no mínimo 5 caracteres"),
-  descricao: z.string().min(20, "Descrição deve ter no mínimo 20 caracteres"),
-
-  // Localização
-  endereco: z.string().min(5, "Endereço é obrigatório"),
-  bairro: z.string().min(3, "Bairro é obrigatório"),
-  cidade: z.string().min(3, "Cidade é obrigatória"),
-  estado: z.string().min(2, "Estado é obrigatório"),
-  cep: z.string().min(8, "CEP é obrigatório"),
-
-  // Valores
-  preco: z.string().min(1, "Preço é obrigatório"),
-  iptu: z.string().optional(),
-  condominio: z.string().optional(),
-
-  // Características Gerais
-  area: z.string().min(1, "Área é obrigatória"),
-  quartos: z.string().optional(),
-  banheiros: z.string().optional(),
-  vagas: z.string().optional(),
-
-  // Específico para Apartamento
-  andarInicial: z.string().optional(),
-  andarFinal: z.string().optional(),
-  totalAndares: z.string().optional(),
-  unidadesAndar: z.string().optional(),
-
-  // Específico para Casa
-  terreno: z.string().optional(),
-  quintal: z.string().optional(),
-
-  // Status e Opções
-  status: z.enum(["disponivel", "reservado", "vendido"]),
-  mobiliado: z.boolean().optional(),
-  aceitaPet: z.boolean().optional(),
-});
-
-type PropertyFormData = z.infer<typeof propertySchema>;
+import { isDragging } from "framer-motion";
+import { Badge } from "@/components/ui/badge";
 
 const DRAFT_STORAGE_KEY = "property_draft";
 
 const CadastroImovel = () => {
   const [propertyType, setPropertyType] = useState<string>("apartamento");
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
+  const [coverImage, setCoverImage] = useState<File | null>(null);
+  const [coverImagePreview, setCoverImagePreview] = useState<string>("");
+  const [galleryImages, setGalleryImages] = useState<File[]>([]);
+  const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
+  const [isDragging, setIsDragging] = useState(false);
 
   const {
     register,
@@ -125,7 +102,6 @@ const CadastroImovel = () => {
         });
         if (draft.tipo) setPropertyType(draft.tipo);
         if (draft.amenities) setSelectedAmenities(draft.amenities);
-        toast.success("Rascunho carregado! 📝");
       } catch (e) {
         console.error("Error loading draft:", e);
       }
@@ -145,75 +121,6 @@ const CadastroImovel = () => {
     return () => clearTimeout(timeoutId);
   }, [formValues, selectedAmenities]);
 
-  const amenitiesList = [
-    "Academia",
-    "Bar/Lounge",
-    "Bicicletário",
-    "Brinquedoteca",
-    "Campo de Futebol",
-    "Cat Place",
-    "Churrasqueira",
-    "Cinema",
-    "Copa de Funcionários",
-    "Coworking",
-    "Crossfit",
-    "Deck Molhado",
-    "Elevador",
-    "Escada Fitness",
-    "Espaço Beauty",
-    "Espaço Delivery",
-    "Espaço gourmet",
-    "Espaço Influencer",
-    "Espaço kids",
-    "Espaço para piqueniques",
-    "Fire place",
-    "Fitness Externo",
-    "Forno de Pizza",
-    "Garagem",
-    "Hall de Entrada",
-    "Horta",
-    "Lavanderia",
-    "Lounge",
-    "Mercado 24hs",
-    "Mini Mercado",
-    "Mini Quadra",
-    "Pet care",
-    "Pet place",
-    "Piscina",
-    "Piscina adulto",
-    "Piscina aquecida",
-    "Piscina Coberta",
-    "Piscina Infantil",
-    "Playground",
-    "Pomar",
-    "Portaria",
-    "Praça",
-    "Praça de Leitura",
-    "Praça do Fogo",
-    "Private Pool House",
-    "Quadra de Beach Tennis",
-    "Quadra de Tênis",
-    "Quadra Poliesportiva",
-    "Quadra Recreativa",
-    "Redário",
-    "Rooftop",
-    "Sala de leitura",
-    "Sala de Massagem",
-    "Sala de Reunião",
-    "Salão de festas",
-    "Salão de Jogos",
-    "Salão de Jogos Adolescente",
-    "Salão de Jogos Adulto",
-    "Sauna",
-    "Segurança",
-    "Sky Lounge",
-    "Solarium",
-    "Spa",
-    "Sports Bar",
-    "Terraço",
-    "Tomada para carro elétrico",
-  ];
-
   const toggleAmenity = (amenity: string) => {
     setSelectedAmenities((prev) =>
       prev.includes(amenity)
@@ -229,18 +136,64 @@ const CadastroImovel = () => {
     localStorage.removeItem(DRAFT_STORAGE_KEY);
   };
 
-  const saveDraft = () => {
-    const draft = {
-      ...formValues,
-      amenities: selectedAmenities,
-    };
-    localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(draft));
-    toast("Rascunho salvo! 💾");
-  };
-
   const clearDraft = () => {
     localStorage.removeItem(DRAFT_STORAGE_KEY);
     window.location.reload();
+  };
+
+  const handleCoverImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setCoverImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCoverImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleGalleryDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+
+    const files = Array.from(e.dataTransfer.files).filter((file) =>
+      file.type.startsWith("image/")
+    );
+
+    addGalleryImages(files);
+  };
+
+  const handleGallerySelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    addGalleryImages(files);
+  };
+
+  const addGalleryImages = (files: File[]) => {
+    setGalleryImages((prev) => [...prev, ...files]);
+
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setGalleryPreviews((prev) => [...prev, reader.result as string]);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const removeGalleryImage = (index: number) => {
+    setGalleryImages((prev) => prev.filter((_, i) => i !== index));
+    setGalleryPreviews((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
   };
 
   const propertyTypes = [
@@ -251,7 +204,7 @@ const CadastroImovel = () => {
   ];
 
   return (
-    <div className="space-y-6 animate-fade-in max-w-5xl mx-auto">
+    <div className="space-y-6 animate-fade-in max-w-6xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -267,7 +220,7 @@ const CadastroImovel = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Card className="p-6 shadow-card">
           <Tabs defaultValue="basic" className="w-full">
-            <TabsList className="grid w-full grid-cols-5 gap-3 mb-12">
+            <TabsList className="grid w-full grid-cols-6 gap-3 mb-12">
               <TabsTrigger value="basic">
                 <FileText className="h-4 w-4 mr-2" />
                 Básico
@@ -289,12 +242,8 @@ const CadastroImovel = () => {
                 Comodidades
               </TabsTrigger>
               <TabsTrigger value="creative">
-                <Sparkles className="h-4 w-4 mr-2" />
+                <ImageUp className="h-4 w-4 mr-2" />
                 Criativo
-              </TabsTrigger>
-              <TabsTrigger value="teste">
-                <Sparkles className="h-4 w-4 mr-2" />
-                Teste
               </TabsTrigger>
             </TabsList>
 
@@ -315,23 +264,23 @@ const CadastroImovel = () => {
                           setPropertyType(type.value);
                           setValue("tipo", type.value as any);
                         }}
-                        className={`p-4 rounded-lg border-2 transition-all ${
+                        className={`p-4 rounded-lg border-2 transition-all cursor-pointer ${
                           propertyType === type.value
-                            ? "border-primary bg-primary/5"
+                            ? "border-[var(--soft-primary-custom)] bg-gradient-primary"
                             : "border-border hover:border-primary/50"
                         }`}
                       >
                         <Icon
                           className={`h-6 w-6 mx-auto mb-1 ${
                             propertyType === type.value
-                              ? "text-primary"
+                              ? "text-white"
                               : "text-muted-foreground"
                           }`}
                         />
                         <p
                           className={`text-sm font-medium ${
                             propertyType === type.value
-                              ? "text-primary"
+                              ? "text-white"
                               : "text-foreground"
                           }`}
                         >
@@ -350,6 +299,7 @@ const CadastroImovel = () => {
                     id="titulo"
                     placeholder="Ex: Apartamento Luxo Vista Mar"
                     {...register("titulo")}
+                    variant={"gray"}
                     className="mt-1.5"
                   />
                   {errors.titulo && (
@@ -366,6 +316,7 @@ const CadastroImovel = () => {
                     placeholder="Descreva o imóvel..."
                     {...register("descricao")}
                     className="mt-1.5"
+                    variant={"gray"}
                     rows={4}
                   />
                   {errors.descricao && (
@@ -375,7 +326,42 @@ const CadastroImovel = () => {
                   )}
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-3 gap-4 items-center">
+                  <div>
+                    <Label htmlFor="preco">Preço *</Label>
+                    <div className="relative mt-1.5">
+                      <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="preco"
+                        variant={"gray"}
+                        placeholder="R$ 0,00"
+                        {...register("preco")}
+                        className="pl-10 mt-1.5 h-10 w-full"
+                      />
+                    </div>
+                    {errors.preco && (
+                      <p className="text-sm text-destructive mt-1">
+                        {errors.preco.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label htmlFor="finalidade">Finalidade</Label>
+                    <Select defaultValue="venda">
+                      <SelectTrigger
+                        variant={"gray"}
+                        className="mt-1.5 h-10 w-full"
+                      >
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="disponivel">Venda</SelectItem>
+                        <SelectItem value="reservado">Locação</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
                   <div>
                     <Label htmlFor="status">Status</Label>
                     <Select
@@ -384,7 +370,10 @@ const CadastroImovel = () => {
                         setValue("status", value as any)
                       }
                     >
-                      <SelectTrigger className="mt-1.5">
+                      <SelectTrigger
+                        variant={"gray"}
+                        className="mt-1.5 h-10 w-full"
+                      >
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -393,24 +382,6 @@ const CadastroImovel = () => {
                         <SelectItem value="vendido">Vendido</SelectItem>
                       </SelectContent>
                     </Select>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="preco">Preço *</Label>
-                    <div className="relative mt-1.5">
-                      <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="preco"
-                        placeholder="R$ 0,00"
-                        {...register("preco")}
-                        className="pl-10"
-                      />
-                    </div>
-                    {errors.preco && (
-                      <p className="text-sm text-destructive mt-1">
-                        {errors.preco.message}
-                      </p>
-                    )}
                   </div>
                 </div>
               </div>
@@ -422,6 +393,7 @@ const CadastroImovel = () => {
                 <div className="col-span-2">
                   <Label htmlFor="endereco">Endereço *</Label>
                   <Input
+                    variant={"gray"}
                     id="endereco"
                     placeholder="Rua, Avenida, número"
                     {...register("endereco")}
@@ -437,6 +409,7 @@ const CadastroImovel = () => {
                 <div>
                   <Label htmlFor="bairro">Bairro *</Label>
                   <Input
+                    variant={"gray"}
                     id="bairro"
                     {...register("bairro")}
                     className="mt-1.5"
@@ -451,6 +424,7 @@ const CadastroImovel = () => {
                 <div>
                   <Label htmlFor="cidade">Cidade *</Label>
                   <Input
+                    variant={"gray"}
                     id="cidade"
                     {...register("cidade")}
                     className="mt-1.5"
@@ -465,6 +439,7 @@ const CadastroImovel = () => {
                 <div>
                   <Label htmlFor="estado">Estado *</Label>
                   <Input
+                    variant={"gray"}
                     id="estado"
                     maxLength={2}
                     {...register("estado")}
@@ -480,6 +455,7 @@ const CadastroImovel = () => {
                 <div>
                   <Label htmlFor="cep">CEP *</Label>
                   <Input
+                    variant={"gray"}
                     id="cep"
                     placeholder="00000-000"
                     {...register("cep")}
@@ -502,6 +478,7 @@ const CadastroImovel = () => {
                   <div className="relative mt-1.5">
                     <Ruler className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
+                      variant={"gray"}
                       id="area"
                       placeholder="0"
                       {...register("area")}
@@ -522,6 +499,7 @@ const CadastroImovel = () => {
                       <div className="relative mt-1.5">
                         <Bed className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
+                          variant={"gray"}
                           id="quartos"
                           placeholder="0"
                           {...register("quartos")}
@@ -535,6 +513,7 @@ const CadastroImovel = () => {
                       <div className="relative mt-1.5">
                         <Bath className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
+                          variant={"gray"}
                           id="banheiros"
                           placeholder="0"
                           {...register("banheiros")}
@@ -548,6 +527,7 @@ const CadastroImovel = () => {
                       <div className="relative mt-1.5">
                         <Car className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
+                          variant={"gray"}
                           id="vagas"
                           placeholder="0"
                           {...register("vagas")}
@@ -561,6 +541,7 @@ const CadastroImovel = () => {
                 <div>
                   <Label htmlFor="iptu">IPTU (anual)</Label>
                   <Input
+                    variant={"gray"}
                     id="iptu"
                     placeholder="R$ 0,00"
                     {...register("iptu")}
@@ -571,6 +552,7 @@ const CadastroImovel = () => {
                 <div>
                   <Label htmlFor="condominio">Condomínio (mensal)</Label>
                   <Input
+                    variant={"gray"}
                     id="condominio"
                     placeholder="R$ 0,00"
                     {...register("condominio")}
@@ -579,28 +561,43 @@ const CadastroImovel = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-3 pt-4">
-                <div className="flex items-center space-x-2">
+              <div className="grid grid-cols-3 gap-4 pt-4">
+                <div className="flex items-center space-x-3 p-3 rounded-lg border-2 border-border hover:border-primary/50 transition-colors bg-gray-50">
                   <Checkbox
                     id="mobiliado"
                     onCheckedChange={(checked) =>
                       setValue("mobiliado", checked as boolean)
                     }
                   />
-                  <Label htmlFor="mobiliado" className="cursor-pointer">
+                  <Sofa className="h-5 w-5 text-primary" />
+                  <Label htmlFor="mobiliado" className="cursor-pointer flex-1">
                     Imóvel mobiliado
                   </Label>
                 </div>
 
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-3 p-3 rounded-lg border-2 border-border hover:border-primary/50 transition-colors bg-gray-50">
                   <Checkbox
                     id="aceitaPet"
                     onCheckedChange={(checked) =>
                       setValue("aceitaPet", checked as boolean)
                     }
                   />
-                  <Label htmlFor="aceitaPet" className="cursor-pointer">
-                    Aceita animais de estimação
+                  <PawPrint className="h-5 w-5 text-primary" />
+                  <Label htmlFor="aceitaPet" className="cursor-pointer flex-1">
+                    Aceita pets
+                  </Label>
+                </div>
+
+                <div className="flex items-center space-x-3 p-3 rounded-lg border-2 border-border hover:border-primary/50 transition-colors bg-gray-50">
+                  <Checkbox
+                    id="pertoMetro"
+                    onCheckedChange={(checked) =>
+                      setValue("pertoMetro" as any, checked as boolean)
+                    }
+                  />
+                  <Train className="h-5 w-5 text-primary" />
+                  <Label htmlFor="pertoMetro" className="cursor-pointer flex-1">
+                    Perto do metrô
                   </Label>
                 </div>
               </div>
@@ -617,6 +614,7 @@ const CadastroImovel = () => {
                     <div>
                       <Label htmlFor="andarInicial">Andar</Label>
                       <Input
+                        variant={"gray"}
                         id="andarInicial"
                         placeholder="Ex: 5"
                         {...register("andarInicial")}
@@ -629,6 +627,7 @@ const CadastroImovel = () => {
                         Andar Final (Duplex/Triplex)
                       </Label>
                       <Input
+                        variant={"gray"}
                         id="andarFinal"
                         placeholder="Ex: 6"
                         {...register("andarFinal")}
@@ -639,6 +638,7 @@ const CadastroImovel = () => {
                     <div>
                       <Label htmlFor="totalAndares">Total de Andares</Label>
                       <Input
+                        variant={"gray"}
                         id="totalAndares"
                         placeholder="Ex: 20"
                         {...register("totalAndares")}
@@ -649,6 +649,7 @@ const CadastroImovel = () => {
                     <div>
                       <Label htmlFor="unidadesAndar">Unidades por Andar</Label>
                       <Input
+                        variant={"gray"}
                         id="unidadesAndar"
                         placeholder="Ex: 4"
                         {...register("unidadesAndar")}
@@ -668,6 +669,7 @@ const CadastroImovel = () => {
                     <div>
                       <Label htmlFor="terreno">Área do Terreno (m²)</Label>
                       <Input
+                        variant={"gray"}
                         id="terreno"
                         placeholder="Ex: 500"
                         {...register("terreno")}
@@ -678,6 +680,7 @@ const CadastroImovel = () => {
                     <div>
                       <Label htmlFor="quintal">Área do Quintal (m²)</Label>
                       <Input
+                        variant={"gray"}
                         id="quintal"
                         placeholder="Ex: 200"
                         {...register("quintal")}
@@ -716,10 +719,11 @@ const CadastroImovel = () => {
             <TabsContent value="amenities" className="space-y-4">
               {propertyType === "apartamento" || propertyType === "casa" ? (
                 <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4 items-center my-5">
+                  <div className="grid grid-cols-3 gap-4 items-center my-5">
                     <h3 className="text-lg font-semibold text-foreground">
                       Selecione as Comodidades
                     </h3>
+                    <Button variant={"outline"}>Limpar</Button>
                     <InputGroup>
                       <InputGroupInput placeholder="Buscar comodidade..." />
                       <InputGroupAddon>
@@ -755,23 +759,146 @@ const CadastroImovel = () => {
             </TabsContent>
 
             {/* Creative */}
-            <TabsContent value="creative" className="space-y-4">
-              <div>
-                <h1>crativo</h1>
-              </div>
-            </TabsContent>
+            <TabsContent value="creative" className="space-y-6">
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-foreground">
+                  Imagem de Capa
+                </h3>
+                <div className="space-y-3">
+                  <input
+                    type="file"
+                    id="coverImageInput"
+                    accept="image/*"
+                    onChange={handleCoverImageSelect}
+                    className="hidden"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() =>
+                      document.getElementById("coverImageInput")?.click()
+                    }
+                    className="w-full"
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Escolher Imagem de Capa
+                  </Button>
 
-            {/* Lazeres e Comodidades */}
-            <TabsContent value="teste" className="space-y-4">
-              teste
+                  {coverImagePreview && (
+                    <div className="relative rounded-lg overflow-hidden border-2 border-border">
+                      <img
+                        src={coverImagePreview}
+                        alt="Preview da capa"
+                        className="w-full h-48 object-cover"
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        className="absolute top-2 right-2"
+                        onClick={() => {
+                          setCoverImage(null);
+                          setCoverImagePreview("");
+                        }}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-foreground">
+                  Galeria de Imagens
+                </h3>
+                <div
+                  onDrop={handleGalleryDrop}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onClick={() =>
+                    document.getElementById("galleryInput")?.click()
+                  }
+                  className={`border-2 border-dashed rounded-lg p-8 transition-all cursor-pointer ${
+                    isDragging
+                      ? "border-primary bg-primary/5"
+                      : "border-border hover:border-primary/50 hover:bg-accent/50"
+                  }`}
+                >
+                  <input
+                    type="file"
+                    id="galleryInput"
+                    accept="image/*"
+                    multiple
+                    onChange={handleGallerySelect}
+                    className="hidden"
+                  />
+                  <div className="text-center">
+                    <Upload className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
+                    <p className="text-sm font-medium text-foreground mb-1">
+                      Clique ou arraste imagens aqui
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Suporta múltiplas imagens
+                    </p>
+                  </div>
+                </div>
+
+                {galleryPreviews.length > 0 && (
+                  <div className="grid grid-cols-3 gap-3">
+                    {galleryPreviews.map((preview, index) => (
+                      <div
+                        key={index}
+                        className="relative rounded-lg overflow-hidden border-2 border-border group"
+                      >
+                        <img
+                          src={preview}
+                          alt={`Galeria ${index + 1}`}
+                          className="w-full h-32 object-cover"
+                        />
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="icon"
+                          className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeGalleryImage(index);
+                          }}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-foreground">
+                  Vídeo do YouTube
+                </h3>
+                <div>
+                  <Label htmlFor="videoYoutube">URL do Vídeo</Label>
+                  <div className="relative mt-1.5">
+                    <Youtube className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="videoYoutube"
+                      placeholder="https://youtube.com/watch?v=..."
+                      {...register("videoYoutube" as any)}
+                      className="pl-10"
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1.5">
+                    Cole o link completo do vídeo do YouTube
+                  </p>
+                </div>
+              </div>
             </TabsContent>
           </Tabs>
 
           {/* Botões de Ação */}
           <div className="flex gap-3 justify-end mt-6 pt-6 border-t">
-            <Button type="button" variant="outline">
-              Cancelar
-            </Button>
             <Button
               type="submit"
               className="bg-gradient-primary shadow-premium hover:shadow-card transition-shadow"

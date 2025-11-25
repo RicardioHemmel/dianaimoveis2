@@ -22,7 +22,7 @@ import { ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 
 // Formatter
-import { propertyPriceFormatter } from "@/utils/formatters/ui-formatters/property-price.formatter";
+import { propertyPriceFormatter } from "@/lib/formatters/ui-formatters/property-price.formatter";
 
 const featuredProperties = [
   {

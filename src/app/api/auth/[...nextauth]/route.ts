@@ -6,11 +6,6 @@ import bcrypt from "bcryptjs";
 import User from "@/lib/db/models/user/user";
 import connectMongoDB from "@/lib/db/mongodbConnection";
 
-// Types
-import type { JWT } from "next-auth/jwt";
-import type { Session } from "next-auth";
-
-//
 interface AuthUser {
   id: string;
   name: string;

@@ -130,6 +130,10 @@
   background-repeat: no-repeat;
 }
 
+.bg-soft-primary-custom {
+  background-color: var(--soft-primary-custom);
+}
+
 .bg-selected-btn {
   background-color: var(--bg-selected);
 }

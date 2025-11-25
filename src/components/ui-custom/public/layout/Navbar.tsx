@@ -40,10 +40,9 @@ export function Navbar() {
         <div>
           <Link href="/">
             <Image
-              width={80}
-              height={80}
+              width={95}
+              height={95}
               src="/LogoDianaRemovedBg.png"
-              className="object-cover w-auto"
               alt="Navbar Logo"
               priority
             />

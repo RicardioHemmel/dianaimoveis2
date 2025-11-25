@@ -1,17 +1,17 @@
 import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
   const session = await getServerSession();
-
-  if (!session) {
-    redirect("/diana-corretora");
-  }
-
   return (
     <div>
-      <h1>Dashboard</h1>
-      <h1>Bem-Vindo - {session?.user?.name}</h1>
+      <div className="bg-gradient-primary rounded-2xl p-8 text-white shadow-premium">
+        <h1 className="text-3xl font-bold mb-2">
+          Bem-vinda de volta, {session?.user.name}!
+        </h1>
+        <p className="text-white/80">
+          Aqui está alguns dados para você Bizoiar
+        </p>
+      </div>
     </div>
   );
 }

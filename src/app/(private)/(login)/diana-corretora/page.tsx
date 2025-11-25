@@ -1,4 +1,4 @@
-import { LoginForm } from "@/components/ui-custom/private/login-form";
+import { LoginForm } from "@/components/ui-custom/private/LoginForm";
 import { Metadata } from "next";
 import Image from "next/image";
 

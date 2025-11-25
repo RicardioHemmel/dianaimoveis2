@@ -1,20 +1,19 @@
 import {
-  LayoutDashboard,
   User,
   Settings,
   LogOut,
-  LayoutTemplate,
   Home,
+  Plus,
+  Building2
 } from "lucide-react";
 
 export const SIDEBAR_LINKS = {
   dashboard: {
     title: "Dashboard",
     path: "/dashboard",
-    icon: LayoutDashboard,
+    icon: Home,
   },
+  propertyList: { title: "Imóveis", path: "/property-list", icon: Building2 },
+  createProperty: { title: "Cadastrar", path: "/create-property", icon: Plus },
   profile: { title: "Perfil", path: "/profile", icon: User },
-  properties: {title: "Imóveis", path: "/properties-list", icon: Home},
-  settings: { title: "Configurações", path: "/settings", icon: Settings },
-  logout: { title: "Sair", path: "/sair", icon: LogOut },
 } as const;

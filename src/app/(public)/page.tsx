@@ -9,8 +9,8 @@ import {
   Filter,
 } from "lucide-react";
 
-import FeaturedPropertiesCarousel from "@/components/ui-custom/public/carousel";
-import TextBox from "@/components/ui-custom/public/txt-box";
+import FeaturedPropertiesCarousel from "@/components/ui-custom/public/Carousel";
+import TextBox from "@/components/ui-custom/public/Txt-box";
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<"comprar" | "alugar">("comprar");

@@ -1,4 +1,4 @@
-  export const amenitiesList = [
+  export const PROPERTY_AMENITIES = [
     "Academia",
     "Bar/Lounge",
     "Bicicletário",

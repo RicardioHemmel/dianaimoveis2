@@ -5,14 +5,21 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    const { email, password, name } = await request.json();
+    const body = await request.json();
+    const { email, password, name } = body;
+
+    if (!email || !password || !name) {
+      return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
+    }
 
     await connectMongoDB();
 
-    const existingUser = await User.findOne({ email: email });
-
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
-      throw new Error("Erro ao criar conta");
+      return NextResponse.json(
+        { error: "Email já cadastrado" },
+        { status: 409 }
+      );
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -23,12 +30,18 @@ export async function POST(request: Request) {
       password: hashedPassword,
     });
 
-    return NextResponse.json(user, { status: 201 });
-  } catch (error: any) {
-    console.error(error);
+    const userSafe = {
+      _id: user._id,
+      email: user.email,
+      name: user.name,
+    };
+
+    return NextResponse.json(userSafe, { status: 201 });
+  } catch (error) {
+    console.error("Erro no cadastro:", error);
 
     return NextResponse.json(
-      { error: error.message || "Falha ao criar usuário" },
+      { error: "Erro interno ao criar conta" },
       { status: 500 }
     );
   }

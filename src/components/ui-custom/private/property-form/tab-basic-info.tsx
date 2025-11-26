@@ -2,7 +2,7 @@
 
 //Next | React
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, UseFormReturn } from "react-hook-form";
 
 // Form control
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,28 +25,19 @@ import {
 import { TabsContent } from "@/components/ui/tabs";
 
 // lucide-react
-import {
-  Building2,
-  Home,
-  Store,
-  MapPin,
-  DollarSign,
-} from "lucide-react";
+import { Building2, Home, Store, MapPin, DollarSign } from "lucide-react";
+import { PropertySelectOption } from "@/lib/schemas/property/property-select-option";
 
-export default function TabBasicInfo() {
+interface TabBasicInfoProps {
+  form: UseFormReturn<PropertyFormData>;
+  propertyPurposes?: PropertySelectOption[];
+}
+
+export default function TabBasicInfo({
+  form,
+  propertyPurposes,
+}: TabBasicInfoProps) {
   const [propertyType, setPropertyType] = useState<string>("apartamento");
-
-  const {
-    register,
-    setValue,
-    formState: { errors },
-  } = useForm<PropertyFormData>({
-    resolver: zodResolver(propertySchema),
-    defaultValues: {
-      tipo: "apartamento",
-      status: "disponivel",
-    },
-  });
 
   const propertyTypes = [
     { value: "apartamento", label: "Apartamento", icon: Building2 },
@@ -70,7 +61,6 @@ export default function TabBasicInfo() {
                 type="button"
                 onClick={() => {
                   setPropertyType(type.value);
-                  setValue("tipo", type.value as any);
                 }}
                 className={`p-4 rounded-lg border-2 transition-all cursor-pointer ${
                   propertyType === type.value
@@ -106,15 +96,9 @@ export default function TabBasicInfo() {
           <Input
             id="titulo"
             placeholder="Ex: Apartamento Luxo Vista Mar"
-            {...register("titulo")}
             variant={"gray"}
             className="mt-1.5"
           />
-          {errors.titulo && (
-            <p className="text-sm text-destructive mt-1">
-              {errors.titulo.message}
-            </p>
-          )}
         </div>
 
         <div>
@@ -122,16 +106,10 @@ export default function TabBasicInfo() {
           <Textarea
             id="descricao"
             placeholder="Descreva o imóvel..."
-            {...register("descricao")}
             className="mt-1.5"
             variant={"gray"}
             rows={4}
           />
-          {errors.descricao && (
-            <p className="text-sm text-destructive mt-1">
-              {errors.descricao.message}
-            </p>
-          )}
         </div>
 
         <div className="grid grid-cols-3 gap-4 items-center">
@@ -143,36 +121,31 @@ export default function TabBasicInfo() {
                 id="preco"
                 variant={"gray"}
                 placeholder="R$ 0,00"
-                {...register("preco")}
                 className="pl-10 mt-1.5 h-10 w-full"
               />
             </div>
-            {errors.preco && (
-              <p className="text-sm text-destructive mt-1">
-                {errors.preco.message}
-              </p>
-            )}
           </div>
 
           <div>
             <Label htmlFor="finalidade">Finalidade</Label>
-            <Select defaultValue="venda">
-              <SelectTrigger variant={"gray"} className="mt-1.5 h-10 w-full">
-                <SelectValue />
+            <Select>
+              <SelectTrigger variant="gray" className="mt-1.5 h-10 w-full">
+                <SelectValue placeholder="Selecione uma finalidade" />
               </SelectTrigger>
+
               <SelectContent>
-                <SelectItem value="disponivel">Venda</SelectItem>
-                <SelectItem value="reservado">Locação</SelectItem>
+                {propertyPurposes?.map((purpose) => (
+                  <SelectItem key={purpose._id} value={purpose._id}>
+                    {purpose.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
 
           <div>
             <Label htmlFor="status">Status</Label>
-            <Select
-              defaultValue="disponivel"
-              onValueChange={(value) => setValue("status", value as any)}
-            >
+            <Select defaultValue="disponivel">
               <SelectTrigger variant={"gray"} className="mt-1.5 h-10 w-full">
                 <SelectValue />
               </SelectTrigger>

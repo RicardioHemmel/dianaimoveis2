@@ -1,16 +1,31 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI; 
+const MONGODB_URI = process.env.MONGODB_URI;
 
-const connectMongoDB = async () => {
-  try {
-    await mongoose.connect(MONGODB_URI!, {
-      dbName: "nextjs-backend", 
-    });
-    console.log("Connected to MongoDB.");
-  } catch (error) {
-    console.log("MongoDB connection error:", error);
+if (!MONGODB_URI) {
+  throw new Error("❌ MONGODB_URI is not defined");
+}
+
+let cached = (global as any).mongoose;
+
+if (!cached) {
+  cached = (global as any).mongoose = { conn: null, promise: null };
+}
+
+export default async function connectMongoDB() {
+  if (cached.conn) {
+    return cached.conn;
   }
-};
 
-export default connectMongoDB;
+  if (!cached.promise) {
+    cached.promise = mongoose
+      .connect(MONGODB_URI!, {
+        dbName: "nextjs-backend",
+        bufferCommands: false,
+      })
+      .then((mongoose) => mongoose);
+  }
+
+  cached.conn = await cached.promise;
+  return cached.conn;
+}

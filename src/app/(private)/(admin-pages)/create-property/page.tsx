@@ -32,14 +32,18 @@ import {
   ImageUp,
 } from "lucide-react";
 
-const CadastroImovel = () => {
+import usePropertyCreateForm from "@/hooks/properties/use-property-create-form";
+
+export default function CreatePropertyPage() {
+  const { form, amenities, propertyPurposes } = usePropertyCreateForm();
+
   const {
     handleSubmit,
     formState: { errors },
   } = useForm<PropertyFormData>({
     resolver: zodResolver(propertySchema),
     defaultValues: {
-      tipo: "apartamento",
+      propertyType: "apartamento",
       status: "disponivel",
     },
   });
@@ -91,8 +95,9 @@ const CadastroImovel = () => {
                 Criativo
               </TabsTrigger>
             </TabsList>
+
             {/* Basic Info */}
-            <TabBasicInfo />
+            <TabBasicInfo form={form} propertyPurposes={propertyPurposes} />
             {/* Location */}
             <TabLocation />
             {/* Details */}
@@ -100,7 +105,7 @@ const CadastroImovel = () => {
             {/* Specific Info */}
             <TabSpecific />
             {/* Amenities Selection */}
-            <TabAmenities />
+            <TabAmenities amenities={amenities} />
             {/* Creative */}
             <TabCreative />
           </Tabs>
@@ -118,6 +123,4 @@ const CadastroImovel = () => {
       </form>
     </div>
   );
-};
-
-export default CadastroImovel;
+}

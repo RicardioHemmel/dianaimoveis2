@@ -4,46 +4,26 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-// Form control
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  propertySchema,
-  PropertyFormData,
-} from "@/lib/schemas/property/property.schema";
-
-// Lists
-import { PROPERTY_AMENITIES } from "@/lib/constants/properties/property-amenities";
-
 // Shadcnui
 import { Button } from "@/components/ui/button";
 import { TabsContent } from "@/components/ui/tabs";
 
 // lucide-react
-import {
-  Sparkles,
-  SearchIcon,
-} from "lucide-react";
+import { Sparkles, SearchIcon } from "lucide-react";
 import {
   InputGroup,
   InputGroupInput,
   InputGroupAddon,
 } from "@/components/ui/input-group";
+import { PropertySelectOption } from "@/lib/schemas/property/property-select-option";
 
-const DRAFT_STORAGE_KEY = "property_draft";
+interface TabAmenitiesProps {
+  amenities?: PropertySelectOption[];
+}
 
-export default function TabAmenities() {
+export default function TabAmenities({ amenities }: TabAmenitiesProps) {
   const [propertyType, setPropertyType] = useState<string>("apartamento");
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
-
-  const {
-    formState: { errors },
-  } = useForm<PropertyFormData>({
-    resolver: zodResolver(propertySchema),
-    defaultValues: {
-      tipo: "apartamento",
-      status: "disponivel",
-    },
-  });
 
   const toggleAmenity = (amenity: string) => {
     setSelectedAmenities((prev) =>
@@ -70,18 +50,18 @@ export default function TabAmenities() {
             </InputGroup>
           </div>
           <div className="grid grid-cols-3 gap-3">
-            {PROPERTY_AMENITIES.map((amenity) => (
+            {amenities?.map((amenity) => (
               <button
-                key={amenity}
+                key={amenity._id}
                 type="button"
-                onClick={() => toggleAmenity(amenity)}
+                onClick={() => toggleAmenity(amenity._id)}
                 className={`p-3 rounded-lg border-2 text-sm font-medium transition-all cursor-pointer ${
-                  selectedAmenities.includes(amenity)
+                  selectedAmenities.includes(amenity._id)
                     ? "border-[var(--bg-selected)] bg-selected-btn text-primary-foreground"
                     : "border-border hover:border-primary/50 text-foreground"
                 }`}
               >
-                {amenity}
+                {amenity.name}
               </button>
             ))}
           </div>

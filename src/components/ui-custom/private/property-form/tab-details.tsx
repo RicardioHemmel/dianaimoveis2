@@ -25,8 +25,9 @@ import {
   PawPrint,
   Sofa,
   Train,
+  BedDouble,
+  BadgeDollarSign,
 } from "lucide-react";
-
 
 export default function TabDetails() {
   const [propertyType, setPropertyType] = useState<string>("apartamento");
@@ -37,7 +38,7 @@ export default function TabDetails() {
     formState: { errors },
   } = useForm<PropertyFormData>({
     defaultValues: {
-      tipo: "apartamento",
+      propertyType: "apartamento",
       status: "disponivel",
     },
   });
@@ -74,7 +75,7 @@ export default function TabDetails() {
                   variant={"gray"}
                   id="quartos"
                   placeholder="0"
-                  {...register("quartos")}
+                  {...register("roomsQty")}
                   className="pl-10"
                 />
               </div>
@@ -88,7 +89,7 @@ export default function TabDetails() {
                   variant={"gray"}
                   id="banheiros"
                   placeholder="0"
-                  {...register("banheiros")}
+                  {...register("bathroomsQty")}
                   className="pl-10"
                 />
               </div>
@@ -102,35 +103,26 @@ export default function TabDetails() {
                   variant={"gray"}
                   id="vagas"
                   placeholder="0"
-                  {...register("vagas")}
+                  {...register("parkingSpacesQty")}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="suites">Suítes</Label>
+              <div className="relative mt-1.5">
+                <BedDouble className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  variant={"gray"}
+                  id="suites"
+                  placeholder="0"
+                  {...register("suites")}
                   className="pl-10"
                 />
               </div>
             </div>
           </>
         )}
-
-        <div>
-          <Label htmlFor="iptu">IPTU (anual)</Label>
-          <Input
-            variant={"gray"}
-            id="iptu"
-            placeholder="R$ 0,00"
-            {...register("iptu")}
-            className="mt-1.5"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="condominio">Condomínio (mensal)</Label>
-          <Input
-            variant={"gray"}
-            id="condominio"
-            placeholder="R$ 0,00"
-            {...register("condominio")}
-            className="mt-1.5"
-          />
-        </div>
       </div>
 
       <div className="grid grid-cols-3 gap-4 pt-4">
@@ -138,7 +130,7 @@ export default function TabDetails() {
           <Checkbox
             id="mobiliado"
             onCheckedChange={(checked) =>
-              setValue("mobiliado", checked as boolean)
+              setValue("isFurnished", checked as boolean)
             }
           />
           <Sofa className="h-5 w-5 text-primary" />
@@ -151,7 +143,7 @@ export default function TabDetails() {
           <Checkbox
             id="aceitaPet"
             onCheckedChange={(checked) =>
-              setValue("aceitaPet", checked as boolean)
+              setValue("isPetFriendly", checked as boolean)
             }
           />
           <PawPrint className="h-5 w-5 text-primary" />
@@ -170,6 +162,19 @@ export default function TabDetails() {
           <Train className="h-5 w-5 text-primary" />
           <Label htmlFor="pertoMetro" className="cursor-pointer flex-1">
             Perto do metrô
+          </Label>
+        </div>
+
+        <div className="flex items-center space-x-3 p-3 rounded-lg border-2 border-border hover:border-primary/50 transition-colors bg-gray-50">
+          <Checkbox
+            id="areaPrice"
+            onCheckedChange={(checked) =>
+              setValue("areaPrice" as any, checked as boolean)
+            }
+          />
+          <BadgeDollarSign className="h-5 w-5 text-primary" />
+          <Label htmlFor="areaPrice" className="cursor-pointer flex-1">
+            Mostrar preço do <b>m²</b>
           </Label>
         </div>
       </div>

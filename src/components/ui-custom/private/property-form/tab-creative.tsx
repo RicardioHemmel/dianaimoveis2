@@ -4,13 +4,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-// Form control
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  propertySchema,
-  PropertyFormData,
-} from "@/lib/schemas/property/property.schema";
-
 // Shadcnui
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,8 +13,6 @@ import { TabsContent } from "@/components/ui/tabs";
 // lucide-react
 import { Upload, X, Youtube } from "lucide-react";
 
-const DRAFT_STORAGE_KEY = "property_draft";
-
 export default function TabCreative() {
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [coverImage, setCoverImage] = useState<File | null>(null);
@@ -30,19 +21,6 @@ export default function TabCreative() {
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
   const [isDragging, setIsDragging] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { errors },
-  } = useForm<PropertyFormData>({
-    resolver: zodResolver(propertySchema),
-    defaultValues: {
-      tipo: "apartamento",
-      status: "disponivel",
-    },
-  });
 
   const handleCoverImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -222,7 +200,6 @@ export default function TabCreative() {
             <Input
               id="videoYoutube"
               placeholder="https://youtube.com/watch?v=..."
-              {...register("videoYoutube" as any)}
               className="pl-10"
             />
           </div>

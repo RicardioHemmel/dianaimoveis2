@@ -1,61 +1,89 @@
 "use client";
 
+import { UseFormReturn } from "react-hook-form";
+import { PropertyFormData } from "@/lib/schemas/property/property.schema";
+
 // Shadcnui
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { TabsContent } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
+//Brazilian State
+import { brazilianStates } from "@/lib/constants/states/brazilian-states";
 
-export default function TabLocation() {
+interface TabLocationProps {
+  form: UseFormReturn<PropertyFormData>;
+}
+
+export default function TabLocation({ form }: TabLocationProps) {
   return (
     <TabsContent value="location" className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div className="col-span-2">
-          <Label htmlFor="endereco">Endereço *</Label>
+          <Label htmlFor="street">Endereço</Label>
           <Input
             variant={"gray"}
-            id="endereco"
-            placeholder="Rua, Avenida, número"
+            id="street"
+            placeholder="Digite a rua, avenida, etc..."
             className="mt-1.5"
-          />
-        
-        </div>
-
-        <div>
-          <Label htmlFor="bairro">Bairro *</Label>
-          <Input
-            variant={"gray"}
-            id="bairro"
-            className="mt-1.5"
+            {...form.register("street")}
           />
         </div>
 
         <div>
-          <Label htmlFor="cidade">Cidade *</Label>
+          <Label htmlFor="neighborhood">Bairro</Label>
           <Input
             variant={"gray"}
-            id="cidade"
+            id="neighborhood"
+            placeholder="Digite seu bairro"
             className="mt-1.5"
+            {...form.register("neighborhood")}
           />
         </div>
 
         <div>
-          <Label htmlFor="estado">Estado *</Label>
+          <Label htmlFor="city">Cidade</Label>
           <Input
             variant={"gray"}
-            id="estado"
-            maxLength={2}
+            id="city"
+            placeholder="Digite sua cidade"
             className="mt-1.5"
+            {...form.register("city")}
           />
         </div>
 
         <div>
-          <Label htmlFor="cep">CEP *</Label>
+          <Label htmlFor="state">Estado</Label>
+          <Select>
+            <SelectTrigger variant={"gray"} className="mt-1.5 h-10 w-full">
+              <SelectValue placeholder="Selecione o estado" />
+            </SelectTrigger>
+
+            <SelectContent>
+              {brazilianStates.map((state) => (
+                <SelectItem key={state.uf} value={state.uf}>
+                  {state.nome}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div>
+          <Label htmlFor="zipCode">CEP</Label>
           <Input
             variant={"gray"}
-            id="cep"
+            id="zipCode"
             placeholder="00000-000"
             className="mt-1.5"
+            {...form.register("zipCode")}
           />
         </div>
       </div>

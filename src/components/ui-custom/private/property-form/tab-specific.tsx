@@ -7,14 +7,28 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { TabsContent } from "@/components/ui/tabs";
-import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 // lucide-react
 import { MapPin } from "lucide-react";
+import { PropertySelectOption } from "@/lib/schemas/property/property-select-option";
 
-export default function TabSpecific() {
+interface TabSpecificProps {
+  propertyStandings?: PropertySelectOption[];
+  propertyTypologies?: PropertySelectOption[];
+}
+
+export default function TabSpecific({
+  propertyStandings,
+  propertyTypologies,
+}: TabSpecificProps) {
   const [propertyType, setPropertyType] = useState<string>("apartamento");
-
 
   return (
     <TabsContent value="specific" className="space-y-4">
@@ -25,7 +39,7 @@ export default function TabSpecific() {
           </h3>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="andarInicial">Andar</Label>
+              <Label htmlFor="andarInicial">Andar Inicial</Label>
               <Input
                 variant={"gray"}
                 id="andarInicial"
@@ -35,13 +49,55 @@ export default function TabSpecific() {
             </div>
 
             <div>
-              <Label htmlFor="andarFinal">Andar Final (Duplex/Triplex)</Label>
+              <Label htmlFor="andarFinal">Andar Final</Label>
               <Input
                 variant={"gray"}
                 id="andarFinal"
                 placeholder="Ex: 6"
                 className="mt-1.5"
               />
+            </div>
+
+            <div>
+              <Label htmlFor="standings">Porte do Imóvel</Label>
+              <Select>
+                <SelectTrigger
+                  id="standings"
+                  variant={"gray"}
+                  className="mt-1.5 h-10 w-full"
+                >
+                  <SelectValue placeholder="Selecione uma finalidade" />
+                </SelectTrigger>
+
+                <SelectContent>
+                  {propertyStandings?.map((standing) => (
+                    <SelectItem key={standing._id} value={standing._id}>
+                      {standing.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label htmlFor="typologies">Tipologia</Label>
+              <Select>
+                <SelectTrigger
+                  id="typologies"
+                  variant={"gray"}
+                  className="mt-1.5 h-10 w-full"
+                >
+                  <SelectValue placeholder="Selecione uma finalidade" />
+                </SelectTrigger>
+
+                <SelectContent>
+                  {propertyTypologies?.map((tipology) => (
+                    <SelectItem key={tipology._id} value={tipology._id}>
+                      {tipology.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </div>

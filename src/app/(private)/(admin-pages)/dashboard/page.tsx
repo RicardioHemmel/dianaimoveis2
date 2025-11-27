@@ -4,7 +4,7 @@ export default async function DashboardPage() {
   const session = await getServerSession();
   return (
     <div>
-      <div className="bg-gradient-primary rounded-2xl p-8 text-white shadow-premium">
+      <div className="bg-[image:var(--gradient-primary)] rounded-2xl p-8 text-white shadow-premium">
         <h1 className="text-3xl font-bold mb-2">
           Bem-vinda de volta, {session?.user.name}!
         </h1>

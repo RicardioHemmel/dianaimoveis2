@@ -1,7 +1,7 @@
 "use client";
 
 import { useAmenities } from "@/hooks/properties/use-property-amenities";
-import { useDeliveryStatus } from "@/hooks/properties/use-property-delivery-status";
+import { useDeliveryStatus } from "@/hooks/properties/use-property-status";
 import { usePurposes } from "@/hooks/properties/use-property-purposes";
 import { useStandings } from "@/hooks/properties/use-property-standings";
 import { useTypes } from "@/hooks/properties/use-property-types";

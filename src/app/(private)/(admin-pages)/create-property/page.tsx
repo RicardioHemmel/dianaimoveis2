@@ -1,13 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-
-// Form control
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  propertySchema,
-  PropertyFormData,
-} from "@/lib/schemas/property/property.schema";
+import { useState } from "react";
 
 // Tabs
 import TabBasicInfo from "@/components/ui-custom/private/property-form/tab-basic-info";
@@ -32,25 +25,50 @@ import {
   ImageUp,
 } from "lucide-react";
 
+// Hooks
 import usePropertyCreateForm from "@/hooks/properties/use-property-create-form";
 
 export default function CreatePropertyPage() {
-  const { form, amenities, propertyPurposes } = usePropertyCreateForm();
-
+  // Gets data from the custom hook to populate each tab
   const {
-    handleSubmit,
-    formState: { errors },
-  } = useForm<PropertyFormData>({
-    resolver: zodResolver(propertySchema),
-    defaultValues: {
-      propertyType: "apartamento",
-      status: "disponivel",
-    },
-  });
+    form,
+    onSubmit,
+    amenities,
+    propertyPurposes,
+    propertyStatus,
+    propertyStandings,
+    propertyTypologies,
+  } = usePropertyCreateForm();
 
-  const onSubmit = (data: PropertyFormData) => {
-    console.log("Formulário enviado", { ...data });
+  // Manage the tabs change
+  const tabs = [
+    "basic",
+    "location",
+    "details",
+    "specific",
+    "amenities",
+    "creative",
+  ];
+
+  const [activeTab, setActiveTab] = useState<string>("basic");
+
+  const goToNextTab = () => {
+    const currentIndex = tabs.indexOf(activeTab);
+    if (currentIndex < tabs.length - 1) {
+      setActiveTab(tabs[currentIndex + 1]);
+    }
   };
+
+  const goToPreviousTab = () => {
+    const currentIndex = tabs.indexOf(activeTab);
+    if (currentIndex > 0) {
+      setActiveTab(tabs[currentIndex - 1]);
+    }
+  };
+
+  // For disabling navigation buttons
+  const isFirstTab = activeTab === tabs[0];
+  const isLastTab = activeTab === tabs[tabs.length - 1];
 
   return (
     <div className="space-y-6 animate-fade-in max-w-6xl mx-auto">
@@ -64,63 +82,91 @@ export default function CreatePropertyPage() {
             Preencha as informações abaixo
           </p>
         </div>
+
+        <div className="flex gap-3 mt-6 pt-6">
+          <Button
+            onClick={goToPreviousTab}
+            disabled={isFirstTab}
+            variant={"outline"}
+          >
+            Anterior
+          </Button>
+          <Button
+            onClick={goToNextTab}
+            disabled={isLastTab}
+            variant={"outline"}
+          >
+            Próximo
+          </Button>
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Card className="p-6 shadow-card">
-          <Tabs defaultValue="basic" className="w-full">
-            <TabsList className="grid w-full grid-cols-6 gap-3 mb-12">
-              <TabsTrigger value="basic">
-                <FileText className="h-4 w-4 mr-2" />
-                Básico
-              </TabsTrigger>
-              <TabsTrigger value="location">
-                <MapPin className="h-4 w-4 mr-2" />
-                Localização
-              </TabsTrigger>
-              <TabsTrigger value="details">
-                <Info className="h-4 w-4 mr-2" />
-                Detalhes
-              </TabsTrigger>
-              <TabsTrigger value="specific">
-                <Building2 className="h-4 w-4 mr-2" />
-                Específico
-              </TabsTrigger>
-              <TabsTrigger value="amenities">
-                <TreePalm className="h-4 w-4 mr-2" />
-                Comodidades
-              </TabsTrigger>
-              <TabsTrigger value="creative">
-                <ImageUp className="h-4 w-4 mr-2" />
-                Criativo
-              </TabsTrigger>
-            </TabsList>
+      {/* Tabs Navigation */}
+      <Card className="p-6 shadow-card">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-6 gap-3 mb-6">
+            <TabsTrigger value="basic">
+              <FileText className="h-4 w-4 mr-2" />
+              Básico
+            </TabsTrigger>
+            <TabsTrigger value="location">
+              <MapPin className="h-4 w-4 mr-2" />
+              Localização
+            </TabsTrigger>
+            <TabsTrigger value="details">
+              <Info className="h-4 w-4 mr-2" />
+              Detalhes
+            </TabsTrigger>
+            <TabsTrigger value="specific">
+              <Building2 className="h-4 w-4 mr-2" />
+              Específico
+            </TabsTrigger>
+            <TabsTrigger value="amenities">
+              <TreePalm className="h-4 w-4 mr-2" />
+              Comodidades
+            </TabsTrigger>
+            <TabsTrigger value="creative">
+              <ImageUp className="h-4 w-4 mr-2" />
+              Criativo
+            </TabsTrigger>
+          </TabsList>
 
-            {/* Basic Info */}
-            <TabBasicInfo form={form} propertyPurposes={propertyPurposes} />
-            {/* Location */}
-            <TabLocation />
-            {/* Details */}
-            <TabDetails />
-            {/* Specific Info */}
-            <TabSpecific />
-            {/* Amenities Selection */}
-            <TabAmenities amenities={amenities} />
-            {/* Creative */}
-            <TabCreative />
-          </Tabs>
+          {/* Basic Info */}
+          <TabBasicInfo
+            form={form}
+            propertyPurposes={propertyPurposes}
+            propertyStatus={propertyStatus}
+          />
 
-          {/* Botões de Ação */}
-          <div className="flex gap-3 justify-end mt-6 pt-6 border-t">
-            <Button
-              type="submit"
-              className="bg-gradient-primary shadow-premium hover:shadow-card transition-shadow"
-            >
-              Cadastrar Imóvel
-            </Button>
-          </div>
-        </Card>
-      </form>
+          {/* Location */}
+          <TabLocation form={form} />
+
+          {/* Details */}
+          <TabDetails />
+
+          {/* Specific Info */}
+          <TabSpecific
+            propertyStandings={propertyStandings}
+            propertyTypologies={propertyTypologies}
+          />
+
+          {/* Amenities Selection */}
+          <TabAmenities amenities={amenities} />
+          {/* Creative */}
+          <TabCreative />
+        </Tabs>
+
+        {/* Botões de Ação */}
+        <div className="flex justify-end mt-6 pt-6 border-t">
+          <Button
+            onClick={onSubmit}
+            type="submit"
+            className="bg-[image:var(--gradient-primary)] hover:brightness-90"
+          >
+            Cadastrar Imóvel
+          </Button>
+        </div>
+      </Card>
     </div>
   );
 }

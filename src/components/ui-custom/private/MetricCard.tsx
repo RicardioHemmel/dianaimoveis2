@@ -19,7 +19,7 @@ export function MetricCard({
   gradient = "primary" 
 }: MetricCardProps) {
   const gradientClasses = {
-    primary: "bg-gradient-primary",
+    primary: "bg-[image:var(--gradient-primary)]",
     accent: "bg-gradient-accent",
     warm: "bg-gradient-warm",
   };

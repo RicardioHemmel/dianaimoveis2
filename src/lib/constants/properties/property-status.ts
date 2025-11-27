@@ -1,6 +1,8 @@
-export const DELIVERY_STATUS = [
+export const STATUS = [
   "Pronto",
+  "Disponível",
   "Vendido",
+  "Alugado",
   "Em Obras",
   "Lançamento",
   "Breve Lançamento",

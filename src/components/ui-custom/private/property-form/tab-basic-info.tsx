@@ -1,15 +1,11 @@
 "use client";
 
 //Next | React
-import { useState } from "react";
-import { useForm, UseFormReturn } from "react-hook-form";
+import { Controller, UseFormReturn } from "react-hook-form";
 
-// Form control
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  propertySchema,
-  PropertyFormData,
-} from "@/lib/schemas/property/property.schema";
+// Types
+import { PropertyFormData } from "@/lib/schemas/property/property.schema";
+import { PropertySelectOption } from "@/lib/schemas/property/property-select-option";
 
 // Shadcnui
 import { Input } from "@/components/ui/input";
@@ -22,28 +18,36 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  InputGroup,
+  InputGroupInput,
+  InputGroupAddon,
+} from "@/components/ui/input-group";
 import { TabsContent } from "@/components/ui/tabs";
 
 // lucide-react
 import { Building2, Home, Store, MapPin, DollarSign } from "lucide-react";
-import { PropertySelectOption } from "@/lib/schemas/property/property-select-option";
 
 interface TabBasicInfoProps {
   form: UseFormReturn<PropertyFormData>;
   propertyPurposes?: PropertySelectOption[];
+  propertyStatus?: PropertySelectOption[];
 }
 
 export default function TabBasicInfo({
   form,
   propertyPurposes,
+  propertyStatus,
 }: TabBasicInfoProps) {
-  const [propertyType, setPropertyType] = useState<string>("apartamento");
+  // Default value set o UsePropertyCreateForm hook as "apartamento"
+  const selectedType = form.watch("propertyType");
 
+  // _id gotta be the same from DB
   const propertyTypes = [
-    { value: "apartamento", label: "Apartamento", icon: Building2 },
-    { value: "casa", label: "Casa", icon: Home },
-    { value: "comercial", label: "Comercial", icon: Store },
-    { value: "terreno", label: "Terreno", icon: MapPin },
+    { _id: "apartamento", label: "Apartamento", icon: Building2 },
+    { _id: "casa", label: "Casa", icon: Home },
+    { _id: "comercial", label: "Comercial", icon: Store },
+    { _id: "terreno", label: "Terreno", icon: MapPin },
   ];
 
   return (
@@ -57,29 +61,27 @@ export default function TabBasicInfo({
             const Icon = type.icon;
             return (
               <button
-                key={type.value}
+                key={type._id}
                 type="button"
                 onClick={() => {
-                  setPropertyType(type.value);
+                  form.setValue("propertyType", type._id);
                 }}
                 className={`p-4 rounded-lg border-2 transition-all cursor-pointer ${
-                  propertyType === type.value
-                    ? "border-[var(--soft-primary-custom)] bg-gradient-primary"
+                  selectedType === type._id
+                    ? "border-[var(--soft-primary-custom)] bg-[image:var(--gradient-primary)]"
                     : "border-border hover:border-primary/50"
                 }`}
               >
                 <Icon
                   className={`h-6 w-6 mx-auto mb-1 ${
-                    propertyType === type.value
+                    selectedType === type._id
                       ? "text-white"
                       : "text-muted-foreground"
                   }`}
                 />
                 <p
                   className={`text-sm font-medium ${
-                    propertyType === type.value
-                      ? "text-white"
-                      : "text-foreground"
+                    selectedType === type._id ? "text-white" : "text-foreground"
                   }`}
                 >
                   {type.label}
@@ -92,69 +94,96 @@ export default function TabBasicInfo({
 
       <div className="grid gap-4">
         <div>
-          <Label htmlFor="titulo">Título *</Label>
+          <Label htmlFor="title">Título *</Label>
           <Input
-            id="titulo"
+            id="title"
             placeholder="Ex: Apartamento Luxo Vista Mar"
             variant={"gray"}
+            {...form.register("title")}
             className="mt-1.5"
           />
         </div>
 
         <div>
-          <Label htmlFor="descricao">Descrição *</Label>
+          <Label htmlFor="description">Descrição *</Label>
           <Textarea
-            id="descricao"
+            id="description"
             placeholder="Descreva o imóvel..."
             className="mt-1.5"
             variant={"gray"}
+            {...form.register("description")}
             rows={4}
           />
         </div>
 
         <div className="grid grid-cols-3 gap-4 items-center">
           <div>
-            <Label htmlFor="preco">Preço *</Label>
+            <Label htmlFor="price">Preço *</Label>
             <div className="relative mt-1.5">
-              <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                id="preco"
-                variant={"gray"}
-                placeholder="R$ 0,00"
-                className="pl-10 mt-1.5 h-10 w-full"
-              />
+              <InputGroup>
+                <InputGroupInput
+                  id="price"
+                  placeholder="R$ 0,00"
+                  {...form.register("price")}
+                />
+                <InputGroupAddon>
+                  <DollarSign />
+                </InputGroupAddon>
+              </InputGroup>
             </div>
           </div>
 
           <div>
-            <Label htmlFor="finalidade">Finalidade</Label>
-            <Select>
-              <SelectTrigger variant="gray" className="mt-1.5 h-10 w-full">
-                <SelectValue placeholder="Selecione uma finalidade" />
-              </SelectTrigger>
+            <Label htmlFor="propertyPurpose">Finalidade</Label>
+            <Controller
+              control={form.control}
+              name="propertyPurpose"
+              render={({ field }) => (
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger
+                    id="propertyPurpose"
+                    variant="gray"
+                    className="mt-1.5 h-10 w-full"
+                  >
+                    <SelectValue placeholder="Selecione uma finalidade" />
+                  </SelectTrigger>
 
-              <SelectContent>
-                {propertyPurposes?.map((purpose) => (
-                  <SelectItem key={purpose._id} value={purpose._id}>
-                    {purpose.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+                  <SelectContent>
+                    {propertyPurposes?.map((purpose) => (
+                      <SelectItem key={purpose._id} value={purpose._id}>
+                        {purpose.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
           </div>
 
           <div>
-            <Label htmlFor="status">Status</Label>
-            <Select defaultValue="disponivel">
-              <SelectTrigger variant={"gray"} className="mt-1.5 h-10 w-full">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="disponivel">Disponível</SelectItem>
-                <SelectItem value="reservado">Reservado</SelectItem>
-                <SelectItem value="vendido">Vendido</SelectItem>
-              </SelectContent>
-            </Select>
+            <Label htmlFor="propertyStatus">Status</Label>
+            <Controller
+              control={form.control}
+              name="propertyStatus"
+              render={({ field }) => (
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger
+                    id="propertyStatus"
+                    variant={"gray"}
+                    className="mt-1.5 h-10 w-full"
+                  >
+                    <SelectValue placeholder="Selecione um status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {propertyStatus?.map((status) => (
+                      <SelectItem key={status._id} value={status._id}>
+                        {status.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
           </div>
         </div>
       </div>

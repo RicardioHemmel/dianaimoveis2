@@ -1,9 +1,9 @@
 import slugify from "slugify";
-import PropertyDeliveryStatus from "@/lib/db/models/property/delivery-status.model";
-import { DELIVERY_STATUS } from "@/lib/constants/properties/property-delivery-status";
+import PropertyDeliveryStatus from "@/lib/db/models/property/status.model";
+import { STATUS } from "@/lib/constants/properties/property-status";
 
-export async function deliveryStatusSeed() {
-  const deliveryStatus = DELIVERY_STATUS.map((name) => {
+export async function statusSeed() {
+  const deliveryStatus = STATUS.map((name) => {
     const slug = slugify(name, { lower: true, strict: true, trim: true });
     return { _id: slug, name };
   });

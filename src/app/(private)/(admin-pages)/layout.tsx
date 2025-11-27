@@ -25,7 +25,7 @@ export default async function PrivateLayout({
         className={`${inter.className} min-h-screen flex w-full bg-background`}
       >
         <AppSidebar />
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col bg-gray-50">
           {/* Top Header */}
           <header className="h-16 border-b bg-card flex items-center px-6 gap-4 sticky top-0 z-10 shadow-sm">
             <SidebarTrigger className="text-muted-foreground hover:text-foreground">

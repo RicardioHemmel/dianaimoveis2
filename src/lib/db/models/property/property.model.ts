@@ -16,13 +16,14 @@ const PropertySchema = new Schema(
   {
     title: { type: String, required: true },
     description: String,
-    price: { type: Number, required: true },
-    area: Number,
 
     roomsQty: Number,
     suitesQty: Number,
     bathroomsQty: Number,
     parkingSpacesQty: Number,
+    price: { type: Number, required: true },
+    area: Number,
+    condominiumFee: Number,
     floorStart: Number,
     floortEnd: Number,
 

@@ -39,7 +39,7 @@ export function PropertyCard({
         {imageUrl ? (
           <img src={imageUrl} alt={title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-primary">
+          <div className="w-full h-full flex items-center justify-center bg-[image:var(--gradient-primary)]">
             <Building2 className="h-16 w-16 text-white/30" />
           </div>
         )}

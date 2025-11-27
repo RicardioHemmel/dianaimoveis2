@@ -2,10 +2,18 @@
   --soft-primary-custom: #018493;
   --default-navlink: #447c9c;
   --default-hover-navlink: #79c6d7;
-  --bg-selected: #0e4c67;
+  --bg-selected: #185e7a;
+  --bg-selected-hover: #0b79a5;
+
   --gradient-primary: linear-gradient(
     135deg,
     hsl(198 76% 23%) 0%,
+    hsl(186 100% 29%) 100%
+  );
+
+  --gradient-primary-hover: linear-gradient(
+    135deg,
+    hsl(198, 76%, 13%) 0%,
     hsl(186 100% 29%) 100%
   );
 }

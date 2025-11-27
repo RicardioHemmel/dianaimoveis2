@@ -39,7 +39,7 @@ export function AppSidebar() {
   }
 
   return (
-    <Sidebar className="bg-gradient-primary">
+    <Sidebar className="bg-[image:var(--gradient-primary)]">
       <SidebarHeader>
         <div className="px-6 py-6 border-b border-white/10">
           <Link href={SIDEBAR_LINKS.dashboard.path}>

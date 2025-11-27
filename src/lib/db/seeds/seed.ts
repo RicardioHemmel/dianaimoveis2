@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import connectMongoDB from "../mongodbConnection";
 import { amenitiesSeed } from "./properties/amenities.seed";
 import { typesSeed } from "./properties/types.seed";
-import { deliveryStatusSeed } from "./properties/delivery-status.seed";
+import { statusSeed } from "./properties/status.seed";
 import { purposesSeed } from "./properties/purposes.seed";
 import { standingsSeed } from "./properties/standings.seed";
 import { typologiesSeed } from "./properties/typologies.seed";
@@ -16,7 +16,7 @@ async function runSeed() {
 
     // Run all seeds
     await amenitiesSeed();
-    await deliveryStatusSeed();
+    await statusSeed();
     await purposesSeed();
     await standingsSeed();
     await typesSeed();

@@ -1,6 +1,6 @@
 "use client";
 
-import { UseFormReturn } from "react-hook-form";
+import { Controller, UseFormReturn } from "react-hook-form";
 import { PropertyFormData } from "@/lib/schemas/property/property.schema";
 
 // Shadcnui
@@ -61,19 +61,25 @@ export default function TabLocation({ form }: TabLocationProps) {
 
         <div>
           <Label htmlFor="state">Estado</Label>
-          <Select>
-            <SelectTrigger variant={"gray"} className="mt-1.5 h-10 w-full">
-              <SelectValue placeholder="Selecione o estado" />
-            </SelectTrigger>
+          <Controller
+            name="state"
+            control={form.control}
+            render={({ field }) => (
+              <Select value={field.value} onValueChange={field.onChange}>
+                <SelectTrigger variant={"gray"} className="mt-1.5 h-10 w-full">
+                  <SelectValue placeholder="Selecione o estado" />
+                </SelectTrigger>
 
-            <SelectContent>
-              {brazilianStates.map((state) => (
-                <SelectItem key={state.uf} value={state.uf}>
-                  {state.nome}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+                <SelectContent>
+                  {brazilianStates.map((state) => (
+                    <SelectItem key={state.uf} value={state.nome}>
+                      {state.nome}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          />
         </div>
 
         <div>

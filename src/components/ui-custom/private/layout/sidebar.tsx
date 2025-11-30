@@ -47,8 +47,9 @@ export function AppSidebar() {
               <Image
                 src="/roundedLogo.png"
                 alt="App logo"
-                width={32}
-                height={32}
+                width={100}
+                height={100}
+                className="w-12 h-12"
               />
               <div>
                 <h2 className="text-lg font-bold text-white">Diana Imóveis</h2>

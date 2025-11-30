@@ -2,7 +2,6 @@
 
 //Next | React
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 
 // Shadcnui
 import { Button } from "@/components/ui/button";
@@ -12,70 +11,19 @@ import { TabsContent } from "@/components/ui/tabs";
 
 // lucide-react
 import { Upload, X, Youtube } from "lucide-react";
+import { UseFormReturn } from "react-hook-form";
+import { PropertyFormData } from "@/lib/schemas/property/property.schema";
 
-export default function TabCreative() {
-  const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
+interface TabCreativeProps {
+  form: UseFormReturn<PropertyFormData>;
+}
+
+export default function TabCreative({ form }: TabCreativeProps) {
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [coverImagePreview, setCoverImagePreview] = useState<string>("");
   const [galleryImages, setGalleryImages] = useState<File[]>([]);
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
   const [isDragging, setIsDragging] = useState(false);
-
-
-  const handleCoverImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setCoverImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setCoverImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleGalleryDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(false);
-
-    const files = Array.from(e.dataTransfer.files).filter((file) =>
-      file.type.startsWith("image/")
-    );
-
-    addGalleryImages(files);
-  };
-
-  const handleGallerySelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    addGalleryImages(files);
-  };
-
-  const addGalleryImages = (files: File[]) => {
-    setGalleryImages((prev) => [...prev, ...files]);
-
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setGalleryPreviews((prev) => [...prev, reader.result as string]);
-      };
-      reader.readAsDataURL(file);
-    });
-  };
-
-  const removeGalleryImage = (index: number) => {
-    setGalleryImages((prev) => prev.filter((_, i) => i !== index));
-    setGalleryPreviews((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(false);
-  };
 
   return (
     <TabsContent value="creative" className="space-y-6">
@@ -88,7 +36,6 @@ export default function TabCreative() {
             type="file"
             id="coverImageInput"
             accept="image/*"
-            onChange={handleCoverImageSelect}
             className="hidden"
           />
           <Button
@@ -130,9 +77,6 @@ export default function TabCreative() {
           Galeria de Imagens
         </h3>
         <div
-          onDrop={handleGalleryDrop}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
           onClick={() => document.getElementById("galleryInput")?.click()}
           className={`border-2 border-dashed rounded-lg p-8 transition-all cursor-pointer ${
             isDragging
@@ -145,16 +89,12 @@ export default function TabCreative() {
             id="galleryInput"
             accept="image/*"
             multiple
-            onChange={handleGallerySelect}
             className="hidden"
           />
           <div className="text-center">
             <Upload className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
             <p className="text-sm font-medium text-foreground mb-1">
               Clique ou arraste imagens aqui
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Suporta múltiplas imagens
             </p>
           </div>
         </div>
@@ -176,10 +116,6 @@ export default function TabCreative() {
                   variant="destructive"
                   size="icon"
                   className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removeGalleryImage(index);
-                  }}
                 >
                   <X className="h-4 w-4" />
                 </Button>
@@ -201,6 +137,7 @@ export default function TabCreative() {
               id="videoYoutube"
               placeholder="https://youtube.com/watch?v=..."
               className="pl-10"
+              {...form.register("youtubeURL")}
             />
           </div>
           <p className="text-xs text-muted-foreground mt-1.5">

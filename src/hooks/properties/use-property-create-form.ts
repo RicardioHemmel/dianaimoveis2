@@ -16,7 +16,7 @@ import {
 } from "@/lib/schemas/property/property.schema";
 
 export default function usePropertyCreateForm() {
-  const amenities = useAmenities();
+  const amenitiesList = useAmenities();
   const propertyPurposes = usePurposes();
   const propertyStatus = useStatus();
   const propertyStandings = useStandings();
@@ -28,11 +28,12 @@ export default function usePropertyCreateForm() {
     defaultValues: {
       title: "",
       description: "",
-      price: 0,
 
       propertyType: "apartamento",
       propertyStatus: "",
       propertyPurpose: "",
+      propertyStanding: "",
+      propertyTypology: "",
 
       street: "",
       neighborhood: "",
@@ -40,17 +41,14 @@ export default function usePropertyCreateForm() {
       state: "",
       zipCode: "",
 
-      area: 0,
-      roomsQty: 0,
-      suitesQty: 0,
-      bathroomsQty: 0,
-      parkingSpacesQty: 0,
+      youtubeURL: "",
 
-      floorEnd: 0,
-      floorStart: 0,
+      propertyAmenities: [],
 
-      isFurnished: true,
-      isPetFriendly: true,
+      isFurnished: false,
+      isPetFriendly: false,
+      isNearSubway: false,
+      showSquareMeterPrice: false,
     },
   });
 
@@ -61,7 +59,7 @@ export default function usePropertyCreateForm() {
   return {
     form,
     onSubmit,
-    amenities: amenities.data,
+    amenitiesList: amenitiesList.data,
     propertyPurposes: propertyPurposes.data,
     propertyStatus: propertyStatus.data,
     propertyStandings: propertyStandings.data,

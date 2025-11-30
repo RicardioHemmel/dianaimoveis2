@@ -14,37 +14,46 @@ import {
   InputGroupInput,
   InputGroupAddon,
 } from "@/components/ui/input-group";
+
+import { UseFormReturn } from "react-hook-form";
+import { PropertyFormData } from "@/lib/schemas/property/property.schema";
 import { PropertySelectOption } from "@/lib/schemas/property/property-select-option";
 
 interface TabAmenitiesProps {
-  amenities?: PropertySelectOption[];
+  form: UseFormReturn<PropertyFormData>;
+  amenitiesList?: PropertySelectOption[];
 }
 
-export default function TabAmenities({ amenities }: TabAmenitiesProps) {
+export default function TabAmenities({
+  form,
+  amenitiesList,
+}: TabAmenitiesProps) {
   // Shows content based on the type
-  const [propertyType, setPropertyType] = useState<string>("apartamento");
+  const { propertyType, propertyAmenities } = form.watch();
 
   // Filter for the amenities search bar
   const [amenitiesFilter, setAmenitiesFilter] = useState<string>("");
 
   // Amenities that were found by the filter
   const filteredAmenities = useMemo(() => {
-    return amenities?.filter((amenity) =>
+    return amenitiesList?.filter((amenity) =>
       amenity.name.toLowerCase().includes(amenitiesFilter.toLowerCase())
     );
-  }, [amenities, amenitiesFilter]);
+  }, [amenitiesList, amenitiesFilter]);
 
-  const allAmenitiesIds = amenities?.map((a) => a._id) ?? [];
+  // Used for setting all amenities as selected
+  const allAmenitiesIds = amenitiesList?.map((a) => a._id) ?? [];
 
-  // Selected amenities by the user
-  const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
-
+  // Add or Remove amenities
   const toggleAmenity = (amenity: string) => {
-    setSelectedAmenities((prev) =>
-      prev.includes(amenity)
-        ? prev.filter((a) => a !== amenity)
-        : [...prev, amenity]
-    );
+    // Amenities registered on the RHF
+    const currentAmenities = form.getValues("propertyAmenities");
+
+    const updatedAmenities = currentAmenities.includes(amenity)
+      ? currentAmenities.filter((a) => a !== amenity)
+      : [...currentAmenities, amenity];
+
+    form.setValue("propertyAmenities", updatedAmenities);
   };
 
   return (
@@ -59,16 +68,18 @@ export default function TabAmenities({ amenities }: TabAmenitiesProps) {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setSelectedAmenities(allAmenitiesIds)}
+                onClick={() =>
+                  form.setValue("propertyAmenities", allAmenitiesIds)
+                }
               >
                 Selecionar Todos
               </Button>
 
               <Button
                 variant={"outline"}
-                disabled={selectedAmenities.length === 0}
+                disabled={form.getValues("propertyAmenities").length === 0}
                 onClick={() => {
-                  setSelectedAmenities([]);
+                  form.setValue("propertyAmenities", []);
                 }}
               >
                 Limpar Seleção
@@ -103,7 +114,7 @@ export default function TabAmenities({ amenities }: TabAmenitiesProps) {
                 type="button"
                 onClick={() => toggleAmenity(amenity._id)}
                 className={`p-3 rounded-lg border-2 text-sm font-medium transition-all cursor-pointer ${
-                  selectedAmenities.includes(amenity._id)
+                  form.getValues("propertyAmenities").includes(amenity._id)
                     ? "border-[var(--bg-selected)] bg-[var(--bg-selected)] text-primary-foreground"
                     : "hover:border-[var(--bg-selected-hover)] hover:bg-[var(--bg-selected-hover)] hover:text-white text-foreground"
                 }`}

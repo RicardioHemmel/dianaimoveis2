@@ -33,7 +33,7 @@ export default function CreatePropertyPage() {
   const {
     form,
     onSubmit,
-    amenities,
+    amenitiesList,
     propertyPurposes,
     propertyStatus,
     propertyStandings,
@@ -142,18 +142,19 @@ export default function CreatePropertyPage() {
           <TabLocation form={form} />
 
           {/* Details */}
-          <TabDetails />
+          <TabDetails form={form} />
 
           {/* Specific Info */}
           <TabSpecific
+            form={form}
             propertyStandings={propertyStandings}
             propertyTypologies={propertyTypologies}
           />
 
           {/* Amenities Selection */}
-          <TabAmenities amenities={amenities} />
+          <TabAmenities form={form} amenitiesList={amenitiesList} />
           {/* Creative */}
-          <TabCreative />
+          <TabCreative form={form}/>
         </Tabs>
 
         {/* Botões de Ação */}

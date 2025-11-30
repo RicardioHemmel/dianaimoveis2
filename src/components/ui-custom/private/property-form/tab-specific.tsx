@@ -1,8 +1,5 @@
 "use client";
 
-//Next | React
-import { useState, useEffect } from "react";
-
 // Shadcnui
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,16 +16,21 @@ import {
 import { MapPin } from "lucide-react";
 import { PropertySelectOption } from "@/lib/schemas/property/property-select-option";
 
+import { Controller, UseFormReturn } from "react-hook-form";
+import { PropertyFormData } from "@/lib/schemas/property/property.schema";
+
 interface TabSpecificProps {
+  form: UseFormReturn<PropertyFormData>;
   propertyStandings?: PropertySelectOption[];
   propertyTypologies?: PropertySelectOption[];
 }
 
 export default function TabSpecific({
+  form,
   propertyStandings,
   propertyTypologies,
 }: TabSpecificProps) {
-  const [propertyType, setPropertyType] = useState<string>("apartamento");
+  const { propertyType } = form.watch();
 
   return (
     <TabsContent value="specific" className="space-y-4">
@@ -45,6 +47,7 @@ export default function TabSpecific({
                 id="andarInicial"
                 placeholder="Ex: 5"
                 className="mt-1.5"
+                {...form.register("floorStart")}
               />
             </div>
 
@@ -55,49 +58,62 @@ export default function TabSpecific({
                 id="andarFinal"
                 placeholder="Ex: 6"
                 className="mt-1.5"
+                {...form.register("floorEnd")}
               />
             </div>
 
             <div>
-              <Label htmlFor="standings">Porte do Imóvel</Label>
-              <Select>
-                <SelectTrigger
-                  id="standings"
-                  variant={"gray"}
-                  className="mt-1.5 h-10 w-full"
-                >
-                  <SelectValue placeholder="Selecione uma finalidade" />
-                </SelectTrigger>
+              <Label htmlFor="propertyStanding">Porte do Imóvel</Label>
+              <Controller
+                name="propertyStanding"
+                control={form.control}
+                render={({ field }) => (
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger
+                      id="propertyStanding"
+                      variant={"gray"}
+                      className="mt-1.5 h-10 w-full"
+                    >
+                      <SelectValue placeholder="Selecione uma finalidade" />
+                    </SelectTrigger>
 
-                <SelectContent>
-                  {propertyStandings?.map((standing) => (
-                    <SelectItem key={standing._id} value={standing._id}>
-                      {standing.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                    <SelectContent>
+                      {propertyStandings?.map((standing) => (
+                        <SelectItem key={standing._id} value={standing._id}>
+                          {standing.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </div>
 
             <div>
-              <Label htmlFor="typologies">Tipologia</Label>
-              <Select>
-                <SelectTrigger
-                  id="typologies"
-                  variant={"gray"}
-                  className="mt-1.5 h-10 w-full"
-                >
-                  <SelectValue placeholder="Selecione uma finalidade" />
-                </SelectTrigger>
+              <Label htmlFor="propertyTypology">Tipologia</Label>
+              <Controller
+                name="propertyTypology"
+                control={form.control}
+                render={({ field }) => (
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger
+                      id="propertyTypology"
+                      variant={"gray"}
+                      className="mt-1.5 h-10 w-full"
+                    >
+                      <SelectValue placeholder="Selecione uma finalidade" />
+                    </SelectTrigger>
 
-                <SelectContent>
-                  {propertyTypologies?.map((tipology) => (
-                    <SelectItem key={tipology._id} value={tipology._id}>
-                      {tipology.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                    <SelectContent>
+                      {propertyTypologies?.map((tipology) => (
+                        <SelectItem key={tipology._id} value={tipology._id}>
+                          {tipology.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Upload } from "lucide-react";
 import { UploadedImage } from "@/lib/schemas/uplodad-image";
@@ -22,13 +22,33 @@ export default function ImageUploader() {
   // Contains all submitted images
   const [images, setImages] = useState<UploadedImage[]>([]);
 
+  // Used to show rich text to the user
+  const [isHovering, setIsHovering] = useState(false);
+
   // Used to define fixed IDs to use on Drag n Drop
   const counterIdRef = useRef(1);
 
+  // Used to control the amount of times a event of onDragEnter e onDragLeave are activeted
+  const dragCounter = useRef(0);
+
+  // Whenever images change (upload completed) remove hover
+  useEffect(() => {
+    dragCounter.current = 0;
+    setIsHovering(false);
+  }, [images]);
+
+  // Kills any image saved on memory for display when desmounting the component
+  useEffect(() => {
+    return () => {
+      images.forEach((img) => URL.revokeObjectURL(img.preview));
+    };
+  }, []);
+
   // Trigger when a image is submitted
-  function handleUpload(e: ChangeEvent<HTMLInputElement>) {
+  function handleUpload(e: ChangeEvent<HTMLInputElement> | FileList) {
     // Gets files from input into list
-    const files = Array.from(e.target.files || []);
+    const files =
+      e instanceof FileList ? Array.from(e) : Array.from(e.target.files || []);
 
     // If there is no file return
     if (!files.length) return;
@@ -66,15 +86,57 @@ export default function ImageUploader() {
       const newIndex = prev.findIndex((img) => img.id === over.id);
 
       // Returns a new array already sorted
-      return arrayMove(prev, oldIndex, newIndex);
+      const sortedImages = arrayMove(prev, oldIndex, newIndex);
+
+      return sortedImages;
     });
   }
 
   // Removes a image based on the ID
   function removeImage(id: number): void {
-    setImages((prev) => prev.filter((image) => image.id !== id));
+    setImages((prev) => {
+      const imageToRemove = prev.find((img) => img.id === id);
+
+      // libera a URL da imagem para evitar vazamento de memória
+      if (imageToRemove) {
+        URL.revokeObjectURL(imageToRemove.preview);
+      }
+
+      return prev.filter((image) => image.id !== id);
+    });
   }
 
+  /**
+   * When files are dropped into the drop area.
+   * Prevents the browser from opening the image and processing the upload.
+   */
+  function handleDrop(e: React.DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Reset drag counter
+    dragCounter.current = 0;
+
+    const files = e.dataTransfer.files;
+    if (files.length) handleUpload(files);
+  }
+
+  // Allows the drop to work (without this the browser opens the file).
+  function handleDragOver(e: React.DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+  }
+
+  function handleDragEnter() {
+    dragCounter.current += 1;
+    setIsHovering(true);
+  }
+
+  function handleDragLeave() {
+    dragCounter.current -= 1;
+    if (dragCounter.current === 0) {
+      setIsHovering(false);
+    }
+  }
   return (
     <div>
       <div>
@@ -82,18 +144,27 @@ export default function ImageUploader() {
           id="fileInput"
           type="file"
           multiple
+          accept="image/*"
           onChange={handleUpload}
           className="hidden"
         />
-        <Button
-          type="button"
-          variant={"outline"}
+        <div
           onClick={() => document.getElementById("fileInput")?.click()}
-          className="w-full"
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+          onDragEnter={handleDragEnter}
+          onDragLeave={handleDragLeave}
+          className={`mb-8 border-2 border-dashed rounded-lg p-8 transition-all cursor-pointer border-neutral-300 bg-white hover:bg-neutral-100 hover:border-neutral-500`}
         >
-          <Upload className="h-4 w-4 mr-2" />
-          Escolher Imagem de Capa
-        </Button>
+          <div className="text-center">
+            <Upload className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
+            <p className="text-sm font-medium text-foreground mb-1">
+              {isHovering
+                ? "Solte os arquivos aqui!"
+                : "Arraste e solte arquivos ou clique para selecionar"}
+            </p>
+          </div>
+        </div>
       </div>
 
       <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
@@ -101,15 +172,24 @@ export default function ImageUploader() {
           items={images.map((image) => image.id)}
           strategy={rectSortingStrategy}
         >
-          <div className="grid grid-cols-3 gap-4">
-            {images.map((image) => (
-              <ImageCard
-                key={image.id}
-                image={image}
-                remove={() => removeImage(image.id)}
-              />
-            ))}
-          </div>
+          {images.length > 0 && (
+            <>
+              <h1 className="text-lg font-semibold mb-4">
+                Defina a ordem de exibição das imagens
+              </h1>
+
+              <div className="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-neutral-100">
+                {images.map((image, index) => (
+                  <ImageCard
+                    index={index}
+                    key={image.id}
+                    image={image}
+                    remove={() => removeImage(image.id)}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </SortableContext>
       </DndContext>
     </div>

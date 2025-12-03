@@ -14,6 +14,7 @@ import {
   propertySchema,
   PropertyFormData,
 } from "@/lib/schemas/property/property.schema";
+import { UploadedImage } from "@/lib/schemas/uplodad-image";
 
 export default function usePropertyCreateForm() {
   const amenitiesList = useAmenities();
@@ -44,6 +45,8 @@ export default function usePropertyCreateForm() {
       youtubeURL: "",
 
       propertyAmenities: [],
+
+      propertyGallery: [],
 
       isFurnished: false,
       isPetFriendly: false,

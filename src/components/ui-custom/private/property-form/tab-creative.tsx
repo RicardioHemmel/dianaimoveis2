@@ -1,10 +1,6 @@
 "use client";
 
-//Next | React
-import { useState } from "react";
-
 // Shadcnui
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { TabsContent } from "@/components/ui/tabs";
@@ -13,116 +9,20 @@ import { TabsContent } from "@/components/ui/tabs";
 import { Upload, X, Youtube } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { PropertyFormData } from "@/lib/schemas/property/property.schema";
+import ImageUploader from "../ImageUploader";
 
 interface TabCreativeProps {
   form: UseFormReturn<PropertyFormData>;
 }
 
 export default function TabCreative({ form }: TabCreativeProps) {
-  const [coverImage, setCoverImage] = useState<File | null>(null);
-  const [coverImagePreview, setCoverImagePreview] = useState<string>("");
-  const [galleryImages, setGalleryImages] = useState<File[]>([]);
-  const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
-  const [isDragging, setIsDragging] = useState(false);
-
   return (
     <TabsContent value="creative" className="space-y-6">
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-foreground">
-          Imagem de Capa
-        </h3>
-        <div className="space-y-3">
-          <input
-            type="file"
-            id="coverImageInput"
-            accept="image/*"
-            className="hidden"
-          />
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => document.getElementById("coverImageInput")?.click()}
-            className="w-full"
-          >
-            <Upload className="h-4 w-4 mr-2" />
-            Escolher Imagem de Capa
-          </Button>
-
-          {coverImagePreview && (
-            <div className="relative rounded-lg overflow-hidden border-2 border-border">
-              <img
-                src={coverImagePreview}
-                alt="Preview da capa"
-                className="w-full h-48 object-cover"
-              />
-              <Button
-                type="button"
-                variant="destructive"
-                size="icon"
-                className="absolute top-2 right-2"
-                onClick={() => {
-                  setCoverImage(null);
-                  setCoverImagePreview("");
-                }}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-foreground">
           Galeria de Imagens
         </h3>
-        <div
-          onClick={() => document.getElementById("galleryInput")?.click()}
-          className={`border-2 border-dashed rounded-lg p-8 transition-all cursor-pointer ${
-            isDragging
-              ? "border-primary bg-primary/5"
-              : "border-border hover:border-primary/50 hover:bg-accent/50"
-          }`}
-        >
-          <input
-            type="file"
-            id="galleryInput"
-            accept="image/*"
-            multiple
-            className="hidden"
-          />
-          <div className="text-center">
-            <Upload className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
-            <p className="text-sm font-medium text-foreground mb-1">
-              Clique ou arraste imagens aqui
-            </p>
-          </div>
-        </div>
-
-        {galleryPreviews.length > 0 && (
-          <div className="grid grid-cols-3 gap-3">
-            {galleryPreviews.map((preview, index) => (
-              <div
-                key={index}
-                className="relative rounded-lg overflow-hidden border-2 border-border group"
-              >
-                <img
-                  src={preview}
-                  alt={`Galeria ${index + 1}`}
-                  className="w-full h-32 object-cover"
-                />
-                <Button
-                  type="button"
-                  variant="destructive"
-                  size="icon"
-                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            ))}
-          </div>
-        )}
+        <ImageUploader />
       </div>
 
       <div className="space-y-4">

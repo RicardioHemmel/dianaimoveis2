@@ -26,12 +26,15 @@ export const propertySchema = z.object({
   propertyAmenities: z.array(z.string()),
 
   featuredImage: z.string(),
+
   propertyGallery: z.array(
     z.object({
       imageId: z.string(),
-      order: z.number(),
+      order: z.number().int().nonnegative(),
+      file: z.instanceof(File).optional(),
     })
   ),
+
   propertyFloorPlanGallery: z.array(
     z.object({
       imageId: z.string(),

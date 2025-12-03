@@ -1,10 +1,11 @@
 "use client";
 
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Upload } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import { UploadedImage } from "@/lib/schemas/uplodad-image";
 import ImageCard from "./drag-n-drop/ImageCard";
+import { Button } from "@/components/ui/button";
+import { PropertyImage } from "@/lib/schemas/property/property-images";
 
 import {
   DndContext, // Contexto principal do drag & drop
@@ -18,7 +19,17 @@ import {
   rectSortingStrategy, // Estratégia de ordenação baseada em grid
 } from "@dnd-kit/sortable";
 
-export default function ImageUploader() {
+interface ImageUploaderProps {
+  inputId: string;
+  InputIcon:  LucideIcon;
+  onChangeImage: (images: PropertyImage[]) => void;
+}
+
+export default function ImagesUploader({
+  inputId,
+  InputIcon,
+  onChangeImage,
+}: ImageUploaderProps) {
   // Contains all submitted images
   const [images, setImages] = useState<UploadedImage[]>([]);
 
@@ -33,6 +44,12 @@ export default function ImageUploader() {
 
   // Whenever images change (upload completed) remove hover
   useEffect(() => {
+    const gallery = images.map((img) => ({
+      imageId: "",
+      order: img.order,
+      file: img.file,
+    }));
+    onChangeImage(gallery);
     dragCounter.current = 0;
     setIsHovering(false);
   }, [images]);
@@ -53,15 +70,34 @@ export default function ImageUploader() {
     // If there is no file return
     if (!files.length) return;
 
+    // Checks if only images were submitted and not repeated ones
+    const invalidFileType = files.find(
+      (file) => !file.type.startsWith("image/")
+    );
+
+    const hasDuplicate = files.some((file) =>
+      images.some(
+        (img) => img.file.name === file.name && img.file.size === file.size
+      )
+    );
+
+    if (invalidFileType || hasDuplicate) {
+      alert(
+        invalidFileType ? "Arquivo inválido" : "Essa imagem já foi inserida"
+      );
+      return;
+    }
+
     // Number to start setting images IDs
     const startId = counterIdRef.current;
 
-    // Maps files so them can have a preview to display and a index to sort
+    // Maps files so them can have a preview to display and a ID to sort
     const mappedImages: UploadedImage[] = files.map((file, index) => {
       return {
         id: startId + index,
         file,
         preview: URL.createObjectURL(file),
+        order: images.length + index + 1,
       };
     });
 
@@ -88,7 +124,10 @@ export default function ImageUploader() {
       // Returns a new array already sorted
       const sortedImages = arrayMove(prev, oldIndex, newIndex);
 
-      return sortedImages;
+      return sortedImages.map((img, index) => ({
+        ...img,
+        order: index + 1,
+      }));
     });
   }
 
@@ -102,7 +141,12 @@ export default function ImageUploader() {
         URL.revokeObjectURL(imageToRemove.preview);
       }
 
-      return prev.filter((image) => image.id !== id);
+      const filteredImages = prev.filter((image) => image.id !== id);
+
+      return filteredImages.map((img, index) => ({
+        ...img,
+        order: index + 1,
+      }));
     });
   }
 
@@ -141,7 +185,7 @@ export default function ImageUploader() {
     <div>
       <div>
         <input
-          id="fileInput"
+          id={inputId}
           type="file"
           multiple
           accept="image/*"
@@ -149,7 +193,7 @@ export default function ImageUploader() {
           className="hidden"
         />
         <div
-          onClick={() => document.getElementById("fileInput")?.click()}
+          onClick={() => document.getElementById(inputId)?.click()}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onDragEnter={handleDragEnter}
@@ -157,7 +201,7 @@ export default function ImageUploader() {
           className={`mb-8 border-2 border-dashed rounded-lg p-8 transition-all cursor-pointer border-neutral-300 bg-white hover:bg-neutral-100 hover:border-neutral-500`}
         >
           <div className="text-center">
-            <Upload className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
+            <InputIcon className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
             <p className="text-sm font-medium text-foreground mb-1">
               {isHovering
                 ? "Solte os arquivos aqui!"
@@ -174,10 +218,15 @@ export default function ImageUploader() {
         >
           {images.length > 0 && (
             <>
-              <h1 className="text-lg font-semibold mb-4">
-                Defina a ordem de exibição das imagens
-              </h1>
+              <div className="flex justify-between px-4">
+                <h1 className="text-lg font-semibold mb-4">
+                  Defina a ordem de exibição das imagens
+                </h1>
 
+                <Button variant={"ghost"} onClick={() => setImages([])}>
+                  Remover Imagens
+                </Button>
+              </div>
               <div className="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-neutral-100">
                 {images.map((image, index) => (
                   <ImageCard

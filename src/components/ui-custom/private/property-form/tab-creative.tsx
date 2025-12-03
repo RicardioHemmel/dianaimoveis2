@@ -6,10 +6,14 @@ import { Label } from "@/components/ui/label";
 import { TabsContent } from "@/components/ui/tabs";
 
 // lucide-react
-import { Upload, X, Youtube } from "lucide-react";
+import { Layers, Images, Youtube } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { PropertyFormData } from "@/lib/schemas/property/property.schema";
-import ImageUploader from "../ImageUploader";
+
+import ImagesUploader from "../ImagesUploader";
+
+import { PropertyImage } from "@/lib/schemas/property/property-images";
+import FileUploader from "../FileUploader";
 
 interface TabCreativeProps {
   form: UseFormReturn<PropertyFormData>;
@@ -18,11 +22,38 @@ interface TabCreativeProps {
 export default function TabCreative({ form }: TabCreativeProps) {
   return (
     <TabsContent value="creative" className="space-y-6">
+      {/* Gallery Input */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-foreground">
           Galeria de Imagens
         </h3>
-        <ImageUploader />
+        <ImagesUploader
+          inputId="galleryInput"
+          InputIcon={Images}
+          onChangeImage={(images: PropertyImage[]) =>
+            form.setValue("propertyGallery", images)
+          }
+        />
+      </div>
+
+      {/* Floor Plan Gallery Input */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold text-foreground">Planta Baixa</h3>
+        <ImagesUploader
+          inputId="floorPlanGalleryInput"
+          InputIcon={Layers}
+          onChangeImage={(images: PropertyImage[]) =>
+            form.setValue("propertyFloorPlanGallery", images)
+          }
+        />
+      </div>
+
+      {/* Technical Specifications Input */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold text-foreground">Ficha Técnica</h3>
+        <div className="flex">
+          <FileUploader />
+        </div>
       </div>
 
       <div className="space-y-4">

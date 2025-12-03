@@ -36,7 +36,7 @@ export default function ImageCard({ image, remove, index }: ImageCardProps) {
       <img src={image.preview} className="w-full h-64 object-cover" />
 
       <p className="text-center font-bold absolute top-2 left-2 bg-[var(--bg-selected)] rounded-full w-7 text-lg text-white">
-        {index}
+        {index + 1}
       </p>
 
       <button

@@ -153,6 +153,7 @@ export default function CreatePropertyPage() {
 
           {/* Amenities Selection */}
           <TabAmenities form={form} amenitiesList={amenitiesList} />
+          
           {/* Creative */}
           <TabCreative form={form}/>
         </Tabs>

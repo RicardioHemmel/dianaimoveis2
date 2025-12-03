@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import DragEvent, { DndContext, DragEndEvent } from "@dnd-kit/core";
-import FileUploader from "@/components/ui-custom/private/ImageUploader";
-import ImageUploader from "@/components/ui-custom/private/ImageUploader";
+import FileUploader from "@/components/ui-custom/private/ImagesUploader";
+import ImageUploader from "@/components/ui-custom/private/ImagesUploader";
 
 
 export default function TestePage() {

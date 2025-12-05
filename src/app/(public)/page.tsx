@@ -1,22 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Search,
-  MapPin,
-  Home,
-  BedDouble,
-  Filter,
-} from "lucide-react";
+import { Search, MapPin, Home, BedDouble, Filter } from "lucide-react";
 
+import TextBox from "@/components/ui-custom/public/TxtBox";
 import FeaturedPropertiesCarousel from "@/components/ui-custom/public/Carousel";
-import TextBox from "@/components/ui-custom/public/Txt-box";
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<"comprar" | "alugar">("comprar");
   return (
     <div>
-      <FeaturedPropertiesCarousel></FeaturedPropertiesCarousel>
+      <FeaturedPropertiesCarousel/>
 
       <div className="hidden w-full lg:flex justify-center 2xl:mt-[-30px] relative">
         <div className="flex justify-around w-full px-6 2xl:px-0 2xl:w-11/12 gap-4 2xl:gap-16 absolute mt-8 2xl:mt-0">

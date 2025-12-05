@@ -1,3 +1,4 @@
+import { LocalImage } from "@/lib/schemas/uplodad-image";
 import { useRef, useState } from "react";
 
 export default function useFileUpload(
@@ -44,21 +45,33 @@ export default function useFileUpload(
     if (files.length) handleLocalUpload(files);
   }
 
-  function validateFileType(file: File, acceptedTypes: string[]): boolean {
-    return acceptedTypes.some((type) => {
-      type.startsWith(file.type);
-    });
+  function validateFilesType(files: File[], acceptedTypes: string[]): boolean {
+    return files.every((file) =>
+      acceptedTypes.some((type) => !file.type.startsWith(type))
+    );
   }
 
-  function validateDuplicateFile(file: File) {}
+  function hasDuplicateFiles(
+    newFiles: File[],
+    oldFiles: LocalImage[]
+  ): boolean {
+    return newFiles.some((newFile) =>
+      oldFiles.some(
+        (oldFile) =>
+          newFile.name === oldFile.file.name &&
+          newFile.size === oldFile.file.size
+      )
+    );
+  }
 
   return {
     isDragging,
-    countRef,
     handleDragEnter,
     handleDragLeave,
     handleDragOver,
     handleDrop,
     handleFilesFromInput,
+    validateFilesType,
+    hasDuplicateFiles,
   };
 }

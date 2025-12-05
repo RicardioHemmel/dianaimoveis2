@@ -1,14 +1,27 @@
+import FullScreenModal from "@/components/ui-custom/private/FullScreenModal";
 import { LocalImage, UploadedImage } from "@/lib/schemas/uplodad-image";
 import { useRef, useState } from "react";
+import { toast } from "sonner";
 
 export default function useFileUpload() {
   // For onDragEnter and onDragLeave control
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [localImages, setLocalImages] = useState<LocalImage[]>([]);
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]); // Images with IDs from cloud storage
+  const [fullscreenImageIndex, setFullscreenImageIndex] = useState<
+    number | null
+  >(null); // Opens full screen modal on double click
+
+  function handleDoubleClick(i: number) {
+    setFullscreenImageIndex(i);
+  }
 
   const countRef = useRef(0); // To prevent flickering when dragging over child elements
   const countImageIdRef = useRef(1); // Used as images IDs
+
+  function formattedOrder(i: number): number {
+    return i + 1;
+  }
 
   function handleDragEnter(): void {
     countRef.current++;
@@ -28,7 +41,7 @@ export default function useFileUpload() {
   }
 
   function validateFilesType(files: File[], acceptedTypes: string[]): boolean {
-    return files.every((file) =>
+    return files.some((file) =>
       acceptedTypes.some((type) => !file.type.startsWith(type))
     );
   }
@@ -47,7 +60,33 @@ export default function useFileUpload() {
   }
 
   function removeImage(id: number): void {
+    setLocalImages((prev) => {
+      // Image to be removed
+      const targetImage = prev.find((image) => image.id === id);
 
+      // Kills any reference to temporary image URL
+      if (targetImage) {
+        URL.revokeObjectURL(targetImage.preview);
+      }
+
+      const filteredImages = prev.filter((img) => img.id !== targetImage?.id);
+
+      // Return all images with their new order
+      return filteredImages.map((img, i) => ({
+        ...img,
+        order: formattedOrder(i),
+      }));
+    });
+  }
+
+  function removeAllLocalImages() {
+    setLocalImages((prev) => {
+      prev?.map((img) => {
+        URL.revokeObjectURL(img.preview);
+      });
+
+      return [];
+    });
   }
 
   // ------------------------------ Local images to be manipulated before go to a cloud storage -----------------------//
@@ -70,15 +109,27 @@ export default function useFileUpload() {
   function handleFilesFromInput(e: React.ChangeEvent<HTMLInputElement>): void {
     const files = Array.from(e.target.files || []);
     if (files.length) handleLocalUpload(files);
+
+    // Cleans file path in memory so it's possible to resent the same image after removing it
+    e.target.value = "";
   }
 
   function handleLocalUpload(files: File[]): void {
     // Validates uploaded files
     const invalidFiles = validateFilesType(files, ["image/"]);
     const hasDuplicates = hasDuplicateFiles(files, localImages);
-    if (!files.length) return alert("Nenhum arquivo selecionado");
-    if (invalidFiles) return alert("Tipo de arquivo inválido");
-    if (hasDuplicates) return alert("Essa imagem já foi inserida");
+    if (!files.length) {
+      toast.error("Nenhum arquivo selecionado");
+      return;
+    }
+    if (invalidFiles) {
+      toast.error("Tipo de arquivo inválido");
+      return;
+    }
+    if (hasDuplicates) {
+      toast.error("Essa imagem já foi inserida");
+      return;
+    }
 
     // Starting point for creating images IDs
     const startId = countImageIdRef.current;
@@ -101,16 +152,13 @@ export default function useFileUpload() {
   }
 
   // ------------------------------ Sends images to a cloud storage and registers them on RHF -----------------------//
-  function handleCloudUpload(): void {
-    alert("Function to uploade images to cloudinary");
+  function handleCloudUpload(files: LocalImage[]): void {
+    console.log(files);
   }
 
   return {
     isDragging,
     localImages,
-    countImageIdRef,
-    uploadedImages,
-    setUploadedImages,
     setLocalImages,
     handleDragEnter,
     handleDragLeave,
@@ -120,7 +168,9 @@ export default function useFileUpload() {
     validateFilesType,
     hasDuplicateFiles,
     handleLocalUpload,
-    handleCloudUpload,  
+    handleCloudUpload,
     removeImage,
+    removeAllLocalImages,
+    formattedOrder,
   };
 }

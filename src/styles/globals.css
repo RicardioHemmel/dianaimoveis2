@@ -44,17 +44,41 @@
   --radius-xl: calc(var(--radius) + 4px);
 
   /* Animation for Drag n Drop images */
-  @keyframes infinity-glow  {
+  @keyframes infinity-glow {
     0%,
     100% {
       box-shadow: 0 0 0 rgba(7, 103, 124, 0);
     }
     50% {
-      box-shadow: 0 0 15px rgba(7, 103, 124, 0.7);
+      box-shadow: 0 0 15px rgba(7, 103, 124, 0.8);
     }
   }
 
-  --animate-infinity-glow : infinity-glow  1.5s ease-in-out infinite;
+  --animate-infinity-glow: infinity-glow 1.5s ease-in-out infinite;
+
+  @keyframes right-shake {
+    0%,
+    100 {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(16px);
+    }
+  }
+
+  --animate-right-shake: right-shake 0.5s ease-in-out 0.5s 2;
+
+  @keyframes scale-up {
+    0%,
+    100 {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.6);
+    }
+  }
+
+  --animate-scale-up: scale-up 0.5s ease-in-out;
 }
 
 :root {

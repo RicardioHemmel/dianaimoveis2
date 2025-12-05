@@ -14,6 +14,7 @@ import ImagesUploader from "../ImagesUploader";
 
 import { PropertyImage } from "@/lib/schemas/property/property-images";
 import FileUploader from "../FileUploader";
+import ImageUploader from "../ImageUploader";
 
 interface TabCreativeProps {
   form: UseFormReturn<PropertyFormData>;
@@ -27,13 +28,7 @@ export default function TabCreative({ form }: TabCreativeProps) {
         <h3 className="text-lg font-semibold text-foreground">
           Galeria de Imagens
         </h3>
-        <ImagesUploader
-          inputId="galleryInput"
-          InputIcon={Images}
-          onChangeImage={(images: PropertyImage[]) =>
-            form.setValue("propertyGallery", images)
-          }
-        />
+        <ImageUploader />
       </div>
 
       {/* Floor Plan Gallery Input */}

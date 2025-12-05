@@ -42,6 +42,16 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  @keyframes circular-rotation {
+    from {
+      transform: rotate(0deg) translateX(2px) rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg) translateX(2px) rotate(-360deg);
+    }
+  }
+
+  --animate-circular-rotation: circular-rotation 1.4s linear infinite;
 }
 
 :root {
@@ -77,10 +87,6 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-
-
-
-
 }
 
 .dark {

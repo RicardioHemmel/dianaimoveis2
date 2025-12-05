@@ -1,5 +1,6 @@
 "use client";
 
+import axios from "axios";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { LucideIcon } from "lucide-react";
 import { UploadedImage } from "@/lib/schemas/uplodad-image";
@@ -21,7 +22,7 @@ import {
 
 interface ImageUploaderProps {
   inputId: string;
-  InputIcon:  LucideIcon;
+  InputIcon: LucideIcon;
   onChangeImage: (images: PropertyImage[]) => void;
 }
 
@@ -31,7 +32,7 @@ export default function ImagesUploader({
   onChangeImage,
 }: ImageUploaderProps) {
   // Contains all submitted images
-  const [images, setImages] = useState<UploadedImage[]>([]);
+  const [images, setImages] = useState<UploadedImage[]>([]); 
 
   // Used to show rich text to the user
   const [isHovering, setIsHovering] = useState(false);
@@ -42,23 +43,75 @@ export default function ImagesUploader({
   // Used to control the amount of times a event of onDragEnter e onDragLeave are activeted
   const dragCounter = useRef(0);
 
+  async function uploadSingleImage(
+    image: UploadedImage,
+    onProgress: (n: number) => void
+  ) {
+    const formData = new FormData();
+    formData.append("file", image.file);
+    formData.append("upload_preset", "propertyImages");
+
+    return axios.post(
+      "https://api.cloudinary.com/v1_1/dktebbtcr/image/upload",
+      formData,
+      {
+        onUploadProgress: (event) => {
+          if (!event.total) return;
+          const percent = Math.round((event.loaded * 100) / event.total);
+          onProgress(percent);
+        },
+      }
+    );
+  }
+
+  async function uploadToCloudinary() {
+    setImages((prev) =>
+      prev.map((img) => ({
+        ...img,
+        uploadStatus: "uploading",
+        uploadProgress: 0,
+      }))
+    );
+
+    const uploads = images.map((image) =>
+      uploadSingleImage(image, (progress) => {
+        setImages((prev) =>
+          prev.map((img) =>
+            img.id === image.id ? { ...img, uploadProgress: progress } : img
+          )
+        );
+      })
+        .then((res) => {
+          setImages((prev) =>
+            prev.map((img) =>
+              img.id === image.id ? { ...img, uploadStatus: "success" } : img
+            )
+          );
+          return res.data;
+        })
+        .catch(() => {
+          setImages((prev) =>
+            prev.map((img) =>
+              img.id === image.id ? { ...img, uploadStatus: "error" } : img
+            )
+          );
+        })
+    );
+
+    const results = await Promise.allSettled(uploads);
+
+    console.log("RESULTADO FINAL:", results);
+  }
+
   // Whenever images change (upload completed) remove hover
   useEffect(() => {
-    const gallery = images.map((img) => ({
-      imageId: "",
-      order: img.order,
-      file: img.file,
-    }));
-    onChangeImage(gallery);
     dragCounter.current = 0;
     setIsHovering(false);
   }, [images]);
 
   // Kills any image saved on memory for display when desmounting the component
   useEffect(() => {
-    return () => {
-      images.forEach((img) => URL.revokeObjectURL(img.preview));
-    };
+    images.forEach((img) => URL.revokeObjectURL(img.preview));
   }, []);
 
   // Trigger when a image is submitted
@@ -98,6 +151,8 @@ export default function ImagesUploader({
         file,
         preview: URL.createObjectURL(file),
         order: images.length + index + 1,
+        uploadProgress: 0,
+        uploadStatus: "pending",
       };
     });
 
@@ -156,7 +211,7 @@ export default function ImagesUploader({
    */
   function handleDrop(e: React.DragEvent<HTMLDivElement>) {
     e.preventDefault();
-    e.stopPropagation();
+    e.stopPropagation();  
 
     // Reset drag counter
     dragCounter.current = 0;
@@ -222,10 +277,21 @@ export default function ImagesUploader({
                 <h1 className="text-lg font-semibold mb-4">
                   Defina a ordem de exibição das imagens
                 </h1>
-
-                <Button variant={"ghost"} onClick={() => setImages([])}>
-                  Remover Imagens
-                </Button>
+                <div className="flex gap-4">
+                  <Button
+                    className="rounded-full"
+                    variant={"destructive"}
+                    onClick={() => setImages([])}
+                  >
+                    Remover Imagens
+                  </Button>
+                  <Button
+                    className="bg-[image:var(--gradient-primary)] rounded-full"
+                    onClick={uploadToCloudinary}
+                  >
+                    Inserir
+                  </Button>
+                </div>
               </div>
               <div className="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-neutral-100">
                 {images.map((image, index) => (

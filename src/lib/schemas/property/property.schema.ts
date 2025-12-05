@@ -29,9 +29,8 @@ export const propertySchema = z.object({
 
   propertyGallery: z.array(
     z.object({
-      imageId: z.string(),
+      imageRef: z.string(),
       order: z.number().int().nonnegative(),
-      file: z.instanceof(File).optional(),
     })
   ),
 

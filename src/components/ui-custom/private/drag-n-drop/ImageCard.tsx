@@ -33,7 +33,21 @@ export default function ImageCard({ image, remove, index }: ImageCardProps) {
       {...listeners}
       className="relative rounded-lg overflow-hidden border bg-gray-200 shadow cursor-grab active:cursor-grabbing"
     >
-      <img src={image.preview} className="w-full h-64 object-cover" />
+      <img
+        src={image.preview}
+        className="w-full h-64 object-cover scale-[1.1] animate-[var(--animate-circular-rotation)]"
+      />
+
+      {image.uploadStatus === "uploading" && (
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="w-[70%] bg-white/40 backdrop-blur-sm h-2 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-[var(--soft-primary-custom)] transition-all"
+              style={{ width: `${image.uploadProgress}%` }}
+            />
+          </div>
+        </div>
+      )}
 
       <p className="text-center font-bold absolute top-2 left-2 bg-[var(--bg-selected)] rounded-full w-7 text-lg text-white">
         {index + 1}

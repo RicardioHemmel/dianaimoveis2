@@ -3,12 +3,12 @@
 import { useState } from "react";
 
 // Tabs
-import TabBasicInfo from "@/components/ui-custom/private/property-form/tab-basic-info";
-import TabLocation from "@/components/ui-custom/private/property-form/tab-location";
-import TabDetails from "@/components/ui-custom/private/property-form/tab-details";
-import TabSpecific from "@/components/ui-custom/private/property-form/tab-specific";
-import TabAmenities from "@/components/ui-custom/private/property-form/tab-amenities";
-import TabCreative from "@/components/ui-custom/private/property-form/tab-creative";
+import TabBasicInfo from "@/components/ui-custom/private/property-form/TabBasicInfo";
+import TabLocation from "@/components/ui-custom/private/property-form/TabLocation";
+import TabDetails from "@/components/ui-custom/private/property-form/TabDetails";
+import TabSpecific from "@/components/ui-custom/private/property-form/TabSpecific";
+import TabAmenities from "@/components/ui-custom/private/property-form/TabAmenities";
+import TabCreative from "@/components/ui-custom/private/property-form/TabCreative";
 
 // Shadcnui
 import { Card } from "@/components/ui/card";

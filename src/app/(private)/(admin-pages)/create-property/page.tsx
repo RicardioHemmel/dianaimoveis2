@@ -104,7 +104,7 @@ export default function CreatePropertyPage() {
       {/* Tabs Navigation */}
       <Card className="p-6 shadow-card">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-6 gap-3 mb-6">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3 mb-6">
             <TabsTrigger value="basic">
               <FileText className="h-4 w-4 mr-2" />
               Básico

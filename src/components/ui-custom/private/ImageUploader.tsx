@@ -1,5 +1,5 @@
 // Icons
-import { Images } from "lucide-react";
+import { Images, X } from "lucide-react";
 
 // React | Next
 import { useState, useRef, useEffect } from "react";
@@ -8,12 +8,20 @@ import { useState, useRef, useEffect } from "react";
 import { UploadedImage, LocalImage } from "@/lib/schemas/uplodad-image";
 
 // Hooks
-import useFileUpload from "@/hooks/useFileUpload";
+import useFileUpload from "@/hooks/use-file-upload";
+
+// Components
+import { Button } from "@/components/ui/button";
 
 export default function ImageUploader() {
   // Custom hook to handle file upload events
   const {
     isDragging,
+    localImages,
+    countImageIdRef,
+    uploadedImages,
+    setUploadedImages,
+    setLocalImages,
     handleDragEnter,
     handleDragLeave,
     handleDragOver,
@@ -21,12 +29,12 @@ export default function ImageUploader() {
     handleFilesFromInput,
     hasDuplicateFiles,
     validateFilesType,
-  } = useFileUpload(handleLocalUpload);
+    handleCloudUpload,
+    handleLocalUpload,
+    removeImage,
+  } = useFileUpload();
 
-  const [localImages, setLocalImages] = useState<LocalImage[]>([]); // Submitted images on the input
-  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]); // Images with IDs from cloud storage
-  const countImageIdRef = useRef(1);
-
+  // When component is dismounted kills any reference in memory of images preview URLs
   useEffect(() => {
     return () => {
       localImages.forEach((img) => URL.revokeObjectURL(img.preview));
@@ -36,34 +44,6 @@ export default function ImageUploader() {
   useEffect(() => {
     console.log(localImages);
   }, [localImages]);
-
-  function handleLocalUpload(files: File[]) {
-    // Validates uploaded files
-    const invalidFiles = validateFilesType(files, ["image/"]);
-    const hasDuplicates = hasDuplicateFiles(files, localImages);
-    if (!files.length) return alert("Nenhum arquivo selecionado");
-    if (invalidFiles) return alert("Tipo de arquivo inválido");
-    if (hasDuplicates) return alert("Essa imagem já foi inserida");
-
-    // Starting point for creating images IDs
-    const startId = countImageIdRef.current;
-
-    const mappedImages: LocalImage[] = files.map((file, i) => {
-      return {
-        id: startId + i,
-        file: file,
-        preview: URL.createObjectURL(file),
-        order: localImages.length + 1 + i,
-        status: "editing",
-      };
-    });
-
-    //Guarantees that the ID of the next images will not be the same as those of previously deleted images
-    countImageIdRef.current = startId + files.length;
-
-    // Adds new images to the previous list
-    setLocalImages((prev) => [...prev, ...mappedImages]);
-  }
 
   return (
     <>
@@ -96,16 +76,50 @@ export default function ImageUploader() {
       </div>
 
       {/* Drag n Drop Grid */}
-      <div className="bg-amber-100 w-full">
-        {localImages.length > 0 &&
-          localImages.map((image) => (
-            <div className="grid grid-cols-3 gap-3" key={image.id}>
-              <div>
-                <img src={image.preview} className="h-64 object-cover" />
-              </div>
+      {localImages.length > 0 && (
+        <>
+          <div className="flex justify-between">
+            <h3 className="text-lg font-semibold mb-3">
+              Defina a ordem de exibição das imagens
+            </h3>
+            <div className="flex gap-3">
+              <Button
+                variant={"destructive"}
+                className="rounded-full"
+                onClick={() => {
+                  setLocalImages([]);
+                }}
+              >
+                Remover imagens
+              </Button>
+              <Button
+                className="rounded-full bg-[image:var(--gradient-primary)]"
+                onClick={handleCloudUpload}
+              >
+                Salvar imagens
+              </Button>
             </div>
-          ))}
-      </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 p-4 rounded-2xl bg-neutral-100">
+            {localImages.map((image, i) => (
+              <div key={image.id} className="flex justify-center relative">
+                <img
+                  src={image.preview}
+                  className="h-64 w-full object-cover rounded-lg animate-[var(--animate-infinity-glow)]"
+                />
+
+                <p className="text-center select-none font-bold absolute top-2 left-2 bg-black rounded-full w-7 text-lg text-white">
+                  {i + 1}
+                </p>
+
+                <button className="absolute top-2 right-2 rounded-full cursor-pointer p-0.5 bg-red-600 hover:bg-red-700">
+                  <X className="w-5 h-5 text-white" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </>
   );
 }

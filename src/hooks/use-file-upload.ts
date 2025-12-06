@@ -1,20 +1,13 @@
-import FullScreenModal from "@/components/ui-custom/private/FullScreenModal";
 import { LocalImage, UploadedImage } from "@/lib/schemas/uplodad-image";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
+import axios from "axios";
 
 export default function useFileUpload() {
   // For onDragEnter and onDragLeave control
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [localImages, setLocalImages] = useState<LocalImage[]>([]);
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]); // Images with IDs from cloud storage
-  const [fullscreenImageIndex, setFullscreenImageIndex] = useState<
-    number | null
-  >(null); // Opens full screen modal on double click
-
-  function handleDoubleClick(i: number) {
-    setFullscreenImageIndex(i);
-  }
 
   const countRef = useRef(0); // To prevent flickering when dragging over child elements
   const countImageIdRef = useRef(1); // Used as images IDs
@@ -140,6 +133,7 @@ export default function useFileUpload() {
         file: file,
         preview: URL.createObjectURL(file),
         order: localImages.length + 1 + i,
+        uploadProgress: 0,
         status: "editing",
       };
     });
@@ -151,9 +145,75 @@ export default function useFileUpload() {
     setLocalImages((prev) => [...prev, ...mappedImages]);
   }
 
+  // Sends a image to Cloudinary
+  function uploadImageToCloud(file: File, onProgress: (n: number) => void) {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "propertyImages");
+
+    return axios.post(
+      "https://api.cloudinary.com/v1_1/dktebbtcr/image/upload",
+      formData,
+      {
+        onUploadProgress: (event) => {
+          if (!event.total) return;
+          const percent = Math.round((event.loaded * 100) / event.total);
+          onProgress(percent);
+        },
+      }
+    );
+  }
+
   // ------------------------------ Sends images to a cloud storage and registers them on RHF -----------------------//
-  function handleCloudUpload(files: LocalImage[]): void {
-    console.log(files);
+  async function handleCloudUpload() {
+    setLocalImages((prev) =>
+      prev.map((img) => ({
+        ...img,
+        status: "uploading",
+        uploadProgress: 0,
+      }))
+    );
+
+    const results = await Promise.allSettled(
+      localImages.map((img) =>
+        uploadImageToCloud(img.file, (progress) => {
+          setLocalImages((prev) =>
+            prev.map((i) =>
+              i.id === img.id ? { ...i, uploadProgress: progress } : i
+            )
+          );
+        })
+          .then((res) => ({
+            id: img.id,
+            status: "success",
+            data: res.data,
+          }))
+          .catch(() => ({
+            id: img.id,
+            status: "error",
+          }))
+      )
+    );
+
+    // atualiza estado final uma única vez
+    setLocalImages((prev) =>
+      prev.map((img) => {
+        const result = results.find((r) =>
+          r.status === "fulfilled"
+            ? r.value.id === img.id
+            : r.reason?.id === img.id
+        );
+
+        if (!result) return img;
+
+        if (result.status === "fulfilled")
+          return { ...img, status: "success" };
+
+        return { ...img, status: "error" };
+      })
+    );
+
+    console.log("FINAL:", results);
   }
 
   return {

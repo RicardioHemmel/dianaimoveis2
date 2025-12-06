@@ -8,7 +8,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { LocalImage, UploadedImage } from "@/lib/schemas/uplodad-image";
 
 // React | Next
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 // Icons
@@ -20,7 +20,7 @@ interface ImageCardProps {
   i: number;
   formattedOrder: (i: number) => number;
   isHighlighted: boolean;
-  onDoubleClick: (i: number) => void;
+  onDoubleClick: (imageIndex: number) => void;
 }
 
 export default function ImageCard({
@@ -32,6 +32,7 @@ export default function ImageCard({
   onDoubleClick,
 }: ImageCardProps) {
   const [canDrag, setCanDrag] = useState(true);
+
 
   const { setNodeRef, attributes, listeners, transform, transition } =
     useSortable({
@@ -53,7 +54,7 @@ export default function ImageCard({
       className="flex justify-center relative active:cursor-grabbing"
       onDoubleClick={() => onDoubleClick(i)}
     >
-      <div className="w-full h-64 relative overflow-hidden rounded-md animate-[var(--animate-infinity-glow)]">
+      <div className="w-full h-64 relative overflow-hidden animate-[var(--animate-infinity-glow)] rounded-lg">
         <Image
           src={image.preview}
           alt={`Preview da imagem ${image.id}`}
@@ -63,11 +64,11 @@ export default function ImageCard({
       </div>
 
       {image.status === "uploading" && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="absolute inset-0 flex items-center justify-center flex-col pointer-events-none bg-black/60 rounded-lg">
+          <p className="text-white font-bold">{image.uploadProgress}%</p>
           <div className="w-[70%] bg-white/40 backdrop-blur-sm h-2 rounded-full overflow-hidden">
             <div
-              className="h-full bg-[var(--soft-primary-custom)] transition-all"
-              style={{ width: `${image.uploadProgress}%` }}
+              className={`h-full bg-[var(--soft-primary-custom)] transition-all w-[${image.uploadProgress}%]`}
             />
           </div>
         </div>
@@ -75,7 +76,7 @@ export default function ImageCard({
 
       <p
         className={`text-center select-none font-bold absolute top-2 left-2 bg-black rounded-full w-7 text-lg text-white
-            ${isHighlighted ? "animate-[var(--animate-scale-up)]" : ""} `}
+            ${isHighlighted && "animate-[var(--animate-scale-up)]"} `}
       >
         {formattedOrder(i)}
       </p>

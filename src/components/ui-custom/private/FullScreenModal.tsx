@@ -1,57 +1,72 @@
-import { LocalImage } from "@/lib/schemas/uplodad-image";
+// Next / React
 import Image from "next/image";
-import { ArrowLeft, ArrowRight, X } from "lucide-react";
 
-interface ModalProps {
-  image: LocalImage;
+// ShadcnUI
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+
+// Types
+import { LocalImage } from "@/lib/schemas/uplodad-image";
+
+// Icons
+import { X } from "lucide-react";
+
+interface FullScreenImageModalProps {
+  localImages: LocalImage[];
+  doubleClickedImageIndex: number | null;
   onClose: () => void;
-  onNext: () => void;
-  onPrev: () => void;
 }
 
-export default function FullscreenModal({
-  image,
+export default function FullScreenImageModal({
+  localImages,
+  doubleClickedImageIndex,
   onClose,
-  onNext,
-  onPrev,
-}: ModalProps) {
+}: FullScreenImageModalProps) {
   return (
     <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center">
-      {/* Prev Button */}
-      <button
-        onClick={onPrev}
-        className="absolute left-4 z-50 text-white text-5xl flex justify-start items-center hover:opacity-75 transition-opacity w-60 h-full cursor-pointer"
+      <Carousel
+        opts={{ loop: true, startIndex: doubleClickedImageIndex ?? 0 }}
+        className="w-[96vw] h-[92vh] flex justify-center"
       >
-        <ArrowLeft className="w-10 h-10 ml-8" />
-      </button>
+        <CarouselContent>
+          {localImages.length > 0 &&
+            localImages.map((img) => (
+              <CarouselItem key={img.id} className="h-screen flex items-center">
+                <Card className="flex justify-center w-full">
+                  <CardContent className="flex justify-center">
+                    {img.preview && (
+                      <Image
+                        alt={`Imagem ${img.id}`}
+                        key={img.id}
+                        className="object-contain"
+                        width={900}
+                        height={900}
+                        src={img.preview}
+                      />
+                    )}
+                  </CardContent>
+                </Card>
+              </CarouselItem>
+            ))}
+        </CarouselContent>
 
-      {/* Image */}
-      <div
-        className="flex items-center justify-center"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <Image
-          src={image.preview}
-          alt="Fullscreen preview"
-          fill={true}
-          className="object-contain"
-        />
-      </div>
+        {/* navigation buttons inside carousel */}
+        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2" />
+        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2" />
+      </Carousel>
 
-      {/* Next button */}
-      <button
-        onClick={onNext}
-        className="absolute right-4 z-50 text-white text-5xl flex justify-end items-center hover:opacity-75 transition-opacity w-60 h-full cursor-pointer"
-      >
-        <ArrowRight className="w-10 h-10 mr-8" />
-      </button>
-
-      {/* Close button */}
+      {/* Close Button */}
       <button
         onClick={onClose}
-        className="absolute top-4 right-8 z-50 text-white text-3xl cursor-pointer hover:opacity-75"
+        className="absolute top-4 right-8 z-50 hover:opacity-75 cursor-pointer"
       >
-        <X className="w-8 h-8" />
+        <X className="size-8 text-white" />
       </button>
     </div>
   );

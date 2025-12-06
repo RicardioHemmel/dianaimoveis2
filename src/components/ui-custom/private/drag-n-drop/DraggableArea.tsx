@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { LocalImage } from "@/lib/schemas/uplodad-image";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import ImageCard from "./ImageCard2";
-import FullScreenModal from "../FullScreenModal";
+import FullScreenImageModal from "../FullScreenModal";
 
 interface DraggableAreaProps {
   localImages: LocalImage[];
@@ -35,56 +35,23 @@ export default function DraggableArea({
 }: DraggableAreaProps) {
   // For highlighting cards during drag n drop
   const [highlightedIds, setHighlightedIds] = useState<number[]>([]);
-
-  // Opens full screen modal on double click
-  const [fullscreenImageIndex, setFullscreenImageIndex] = useState<
+  const [doubleClickedImageIndex, setDoubleClickedImageIndex] = useState<
     number | null
   >(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const closeFullscreen = () => setFullscreenImageIndex(null);
-
-  // Closes fullscreen modal on ESC key press
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (fullscreenImageIndex !== null && e.key === "Escape") {
-        closeFullscreen();
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-
-    // Cleanup event listener on unmount
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [fullscreenImageIndex]);
-
-  function handleDoubleClick(i: number) {
-    setFullscreenImageIndex(i);
-  }
-
-  const navigateFullscreen = (direction: "next" | "prev") => {
-    if (fullscreenImageIndex === null) return;
-
-    const maxIndex = localImages.length - 1;
-    let newIndex = fullscreenImageIndex;
-
-    if (direction === "next") {
-      // Go back to the first image if you are on the last one
-      newIndex =
-        fullscreenImageIndex + 1 > maxIndex ? 0 : fullscreenImageIndex + 1;
-    } else {
-      // 'prev'
-      // Go back to the last image if you are on the first
-      newIndex =
-        fullscreenImageIndex - 1 < 0 ? maxIndex : fullscreenImageIndex - 1;
-    }
-
-    setFullscreenImageIndex(newIndex);
+  const onClose = () => {
+    setDoubleClickedImageIndex(null);
+    setIsModalOpen(false);
   };
 
+  function handleDoubleClick(imageIndex: number): void {
+    setDoubleClickedImageIndex(imageIndex);
+    setIsModalOpen(true);
+  }
+
   // Change images positions
-  function handleDragEnd(event: DragEndEvent) {
+  function handleDragEnd(event: DragEndEvent): void {
     // active = Which item is being carried | over = Where it's dropping
     const { active, over } = event;
 
@@ -160,7 +127,7 @@ export default function DraggableArea({
                   formattedOrder={formattedOrder}
                   key={image.id}
                   isHighlighted={highlightedIds.includes(image.id)}
-                  onDoubleClick={() => handleDoubleClick(i)}
+                  onDoubleClick={handleDoubleClick}
                 />
               ))}
             </div>
@@ -168,12 +135,11 @@ export default function DraggableArea({
         </DndContext>
       )}
 
-      {fullscreenImageIndex !== null && (
-        <FullScreenModal
-          image={localImages[fullscreenImageIndex]}
-          onNext={() => navigateFullscreen("next")}
-          onPrev={() => navigateFullscreen("prev")}
-          onClose={() => closeFullscreen()}
+      {isModalOpen && (
+        <FullScreenImageModal
+          localImages={localImages}
+          onClose={onClose}
+          doubleClickedImageIndex={doubleClickedImageIndex}
         />
       )}
     </>

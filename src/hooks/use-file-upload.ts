@@ -166,6 +166,7 @@ export default function useFileUpload() {
 
   // ------------------------------ Sends images to a cloud storage and registers them on RHF -----------------------//
   async function handleCloudUpload() {
+    // Sets all images to uploading status and resets progress
     setLocalImages((prev) =>
       prev.map((img) => ({
         ...img,
@@ -174,6 +175,7 @@ export default function useFileUpload() {
       }))
     );
 
+    // Waits all uploads to finish
     const results = await Promise.allSettled(
       localImages.map((img) =>
         uploadImageToCloud(img.file, (progress) => {
@@ -195,7 +197,7 @@ export default function useFileUpload() {
       )
     );
 
-    // atualiza estado final uma única vez
+    // updates final state of each image based on upload result
     setLocalImages((prev) =>
       prev.map((img) => {
         const result = results.find((r) =>

@@ -10,6 +10,9 @@ import useFileUpload from "@/hooks/use-file-upload";
 // Components
 import DraggableArea from "./drag-n-drop/DraggableArea";
 
+// Cloudinary
+import {} from "cloudinary"
+
 export default function ImageUploader() {
   // Custom hook to handle file upload events
   const {

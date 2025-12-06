@@ -10,10 +10,11 @@ import {
   rectSortingStrategy, // Estratégia de ordenação baseada em grid
 } from "@dnd-kit/sortable";
 
+
 import { Button } from "@/components/ui/button";
 import { LocalImage } from "@/lib/schemas/uplodad-image";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import ImageCard from "./ImageCard2";
+import ImageCard from "./ImageCard";
 import FullScreenImageModal from "../FullScreenModal";
 
 interface DraggableAreaProps {

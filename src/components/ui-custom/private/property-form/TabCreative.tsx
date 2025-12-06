@@ -10,9 +10,6 @@ import { Layers, Images, Youtube } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { PropertyFormData } from "@/lib/schemas/property/property.schema";
 
-import ImagesUploader from "../ImagesUploader";
-
-import { PropertyImage } from "@/lib/schemas/property/property-images";
 import FileUploader from "../FileUploader";
 import ImageUploader from "../ImageUploader";
 
@@ -34,13 +31,7 @@ export default function TabCreative({ form }: TabCreativeProps) {
       {/* Floor Plan Gallery Input */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-foreground">Planta Baixa</h3>
-        <ImagesUploader
-          inputId="floorPlanGalleryInput"
-          InputIcon={Layers}
-          onChangeImage={(images: PropertyImage[]) =>
-            form.setValue("propertyFloorPlanGallery", images)
-          }
-        />
+        <ImageUploader />
       </div>
 
       {/* Technical Specifications Input */}

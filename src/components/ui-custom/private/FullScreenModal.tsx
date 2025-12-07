@@ -14,19 +14,19 @@ import {
 } from "@/components/ui/carousel";
 
 // Types
-import { LocalImage } from "@/lib/schemas/uplodad-image";
+import { UploadedImage } from "@/lib/schemas/uplodad-image";
 
 // Icons
 import { X } from "lucide-react";
 
 interface FullScreenImageModalProps {
-  localImages: LocalImage[];
+  UploadedImages: UploadedImage[];
   doubleClickedImageIndex: number | null;
   onClose: () => void;
 }
 
 export default function FullScreenImageModal({
-  localImages,
+  UploadedImages,
   doubleClickedImageIndex,
   onClose,
 }: FullScreenImageModalProps) {
@@ -70,8 +70,8 @@ export default function FullScreenImageModal({
         className="w-[96vw] h-[92vh] flex justify-center"
       >
         <CarouselContent>
-          {localImages.length > 0 &&
-            localImages.map((img) => (
+          {UploadedImages.length > 0 &&
+            UploadedImages.map((img) => (
               <CarouselItem key={img.id} className="h-screen flex items-center">
                 <Card className="flex justify-center w-full">
                   <CardContent className="flex justify-center">

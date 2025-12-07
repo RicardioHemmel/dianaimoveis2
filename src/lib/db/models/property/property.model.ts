@@ -1,16 +1,15 @@
 import mongoose, { Schema } from "mongoose";
 
-const RefWithName = {
-  id: { type: Schema.Types.ObjectId, ref: String },
-  name: String,
-  _id: false,
-};
-
 const GalleryItem = {
-  imageUrl: String,
+  imageRef: String,
   order: Number,
   _id: false,
 };
+
+const Ref = (refName: string) => ({
+  id: { type: Schema.Types.ObjectId, ref: refName },
+  _id: false,
+});
 
 const PropertySchema = new Schema(
   {
@@ -37,27 +36,22 @@ const PropertySchema = new Schema(
 
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
 
-    propertyType: { ...RefWithName, ref: "PropertyType" },
-    propertyPurpose: { ...RefWithName, ref: "PropertyPurpose" },
-    propertyStanding: { ...RefWithName, ref: "PropertyStanding" },
-    propertyDeliveryStatus: { ...RefWithName, ref: "PropertyDeliveryStatus" },
-    propertyTypology: { ...RefWithName, ref: "PropertyTypology" },
-    propertyLeisure: [{ ...RefWithName, ref: "PropertyLeisure" }],
+    propertyType: Ref("PropertyType"),
+    propertyPurpose: Ref("PropertyPurpose"),
+    propertyStanding: Ref("PropertyStanding"),
+    propertyStatus: Ref("PropertyStatus"),
+    propertyTypology: Ref("PropertyTypology"),
+    propertyAmenities: [{ type: Schema.Types.ObjectId, ref: "PropertyAmenities" }],
 
     propertyGallery: [GalleryItem],
     propertyFloorPlanGallery: [GalleryItem],
 
     address: {
       street: String,
-      propertyNumber: String,
-      complement: String,
       neighborhood: String,
       city: String,
       state: String,
       zipCode: String,
-      latitude: Number,
-      longitude: Number,
-      zone: String,
       _id: false,
     },
   },

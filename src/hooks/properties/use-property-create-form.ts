@@ -11,10 +11,9 @@ import { useTypologies } from "@/hooks/properties/use-property-typologies";
 // Form control
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  propertySchema,
+  PropertySchema,
   PropertyFormData,
 } from "@/lib/schemas/property/property.schema";
-import { UploadedImage } from "@/lib/schemas/uplodad-image";
 
 export default function usePropertyCreateForm() {
   const amenitiesList = useAmenities();
@@ -25,7 +24,7 @@ export default function usePropertyCreateForm() {
 
   // Form manager
   const form = useForm<PropertyFormData>({
-    resolver: zodResolver(propertySchema),
+    resolver: zodResolver(PropertySchema),
     defaultValues: {
       title: "",
       description: "",
@@ -35,6 +34,7 @@ export default function usePropertyCreateForm() {
       propertyPurpose: "",
       propertyStanding: "",
       propertyTypology: "",
+      
 
       street: "",
       neighborhood: "",
@@ -55,8 +55,8 @@ export default function usePropertyCreateForm() {
     },
   });
 
-  function onSubmit() {
-    console.log(form.getValues());
+  async function onSubmit(data: PropertyFormData) {
+    console.log("Form Data: ", data);
   }
 
   return {

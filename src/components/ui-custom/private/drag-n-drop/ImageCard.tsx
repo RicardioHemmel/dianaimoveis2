@@ -5,17 +5,17 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 // Types
-import { LocalImage } from "@/lib/schemas/uplodad-image";
+import { UploadedImage } from "@/lib/schemas/uplodad-image";
 
 // React | Next
 import { useState } from "react";
 import Image from "next/image";
 
 // Icons
-import { X } from "lucide-react";
+import { CloudCheck, X } from "lucide-react";
 
 interface ImageCardProps {
-  image: LocalImage;
+  image: UploadedImage;
   removeImage: (id: number) => void;
   i: number;
   formattedOrder: (i: number) => number;
@@ -80,6 +80,13 @@ export default function ImageCard({
       >
         {formattedOrder(i)}
       </p>
+
+      {image.status === "success" && (
+        <div className="absolute top-2 right-10 bg-neutral-100 rounded-full p-1">
+          <CloudCheck className="text-[#1dd363] size-4" />
+        </div>
+      )}
+
 
       <button
         onMouseEnter={() => setCanDrag(false)}

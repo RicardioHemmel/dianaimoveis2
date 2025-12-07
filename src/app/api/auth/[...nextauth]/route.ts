@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 
 // DB
-import User from "@/lib/db/models/user/user";
+import User from "@/lib/db/models/user/user.model";
 import connectMongoDB from "@/lib/db/mongodbConnection";
 
 interface AuthUser {

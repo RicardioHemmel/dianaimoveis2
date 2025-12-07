@@ -10,28 +10,27 @@ import {
   rectSortingStrategy, // Estratégia de ordenação baseada em grid
 } from "@dnd-kit/sortable";
 
-
 import { Button } from "@/components/ui/button";
-import { LocalImage } from "@/lib/schemas/uplodad-image";
+import { UploadedImage } from "@/lib/schemas/uplodad-image";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import ImageCard from "./ImageCard";
 import FullScreenImageModal from "../FullScreenModal";
 
 interface DraggableAreaProps {
-  localImages: LocalImage[];
+  UploadedImages: UploadedImage[];
   removeImage: (id: number) => void;
-  removeAllLocalImages: () => void;
-  handleCloudUpload: (files: LocalImage[]) => void;
-  setLocalImages: Dispatch<SetStateAction<LocalImage[]>>;
+  removeAllUploadedImages: () => void;
+  handleCloudUpload: (files: UploadedImage[]) => void;
+  setUploadedImages: Dispatch<SetStateAction<UploadedImage[]>>;
   formattedOrder: (i: number) => number;
 }
 
 export default function DraggableArea({
-  localImages,
+  UploadedImages,
   removeImage,
-  removeAllLocalImages,
+  removeAllUploadedImages,
   handleCloudUpload,
-  setLocalImages,
+  setUploadedImages,
   formattedOrder,
 }: DraggableAreaProps) {
   // For highlighting cards during drag n drop
@@ -60,9 +59,9 @@ export default function DraggableArea({
     if (!over) return;
 
     // Discovers the original position of the image
-    const oldIndex = localImages.findIndex((img) => img.id === active.id);
+    const oldIndex = UploadedImages.findIndex((img) => img.id === active.id);
     // Discovers the new position of the image
-    const newIndex = localImages.findIndex((img) => img.id === over.id);
+    const newIndex = UploadedImages.findIndex((img) => img.id === over.id);
 
     if (oldIndex === newIndex) return; // If there is no real movement
 
@@ -71,13 +70,13 @@ export default function DraggableArea({
     const endIndex = Math.max(oldIndex, newIndex);
 
     // Gets the IDs of all affected images
-    const affectedIds = localImages
+    const affectedIds = UploadedImages
       .slice(startIndex, endIndex + 1)
       .map((img) => img.id);
     setHighlightedIds(affectedIds);
     setTimeout(() => setHighlightedIds([]), 500);
 
-    setLocalImages((prev) => {
+    setUploadedImages((prev) => {
       // Returns a new array already sorted
       const sortedImages = arrayMove(prev, oldIndex, newIndex);
 
@@ -90,13 +89,13 @@ export default function DraggableArea({
   return (
     <>
       {/* Drag n Drop Grid */}
-      {localImages.length > 0 && (
+      {UploadedImages.length > 0 && (
         <DndContext
           collisionDetection={closestCenter} // Collision detection algorithm
           onDragEnd={handleDragEnd} // Event fired when drag ends
         >
           <SortableContext
-            items={localImages.map((img) => img.id)} // IDs of the draggable items
+            items={UploadedImages.map((img) => img.id)} // IDs of the draggable items
             strategy={rectSortingStrategy} // Grid-based sorting strategy
           >
             <div className="flex justify-between">
@@ -107,20 +106,20 @@ export default function DraggableArea({
                 <Button
                   variant={"destructive"}
                   className="rounded-full"
-                  onClick={removeAllLocalImages}
+                  onClick={removeAllUploadedImages}
                 >
                   Remover imagens
                 </Button>
                 <Button
                   className="rounded-full bg-[image:var(--gradient-primary)]"
-                  onClick={() => handleCloudUpload(localImages)}
+                  onClick={() => handleCloudUpload(UploadedImages)}
                 >
                   Salvar imagens
                 </Button>
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 p-4 rounded-2xl bg-neutral-100">
-              {localImages.map((image, i) => (
+              {UploadedImages.map((image, i) => (
                 <ImageCard
                   image={image}
                   removeImage={removeImage}
@@ -138,7 +137,7 @@ export default function DraggableArea({
 
       {isModalOpen && (
         <FullScreenImageModal
-          localImages={localImages}
+          UploadedImages={UploadedImages}
           onClose={onClose}
           doubleClickedImageIndex={doubleClickedImageIndex}
         />

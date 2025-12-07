@@ -1,4 +1,4 @@
-import { LocalImage, UploadedImage } from "@/lib/schemas/uplodad-image";
+import { UploadedImage } from "@/lib/schemas/uplodad-image";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import axios from "axios";
@@ -6,8 +6,7 @@ import axios from "axios";
 export default function useFileUpload() {
   // For onDragEnter and onDragLeave control
   const [isDragging, setIsDragging] = useState<boolean>(false);
-  const [localImages, setLocalImages] = useState<LocalImage[]>([]);
-  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]); // Images with IDs from cloud storage
+  const [UploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
 
   const countRef = useRef(0); // To prevent flickering when dragging over child elements
   const countImageIdRef = useRef(1); // Used as images IDs
@@ -41,7 +40,7 @@ export default function useFileUpload() {
 
   function hasDuplicateFiles(
     newFiles: File[],
-    oldFiles: LocalImage[]
+    oldFiles: UploadedImage[]
   ): boolean {
     return newFiles.some((newFile) =>
       oldFiles.some(
@@ -53,7 +52,7 @@ export default function useFileUpload() {
   }
 
   function removeImage(id: number): void {
-    setLocalImages((prev) => {
+    setUploadedImages((prev) => {
       // Image to be removed
       const targetImage = prev.find((image) => image.id === id);
 
@@ -72,8 +71,8 @@ export default function useFileUpload() {
     });
   }
 
-  function removeAllLocalImages() {
-    setLocalImages((prev) => {
+  function removeAllUploadedImages() {
+    setUploadedImages((prev) => {
       prev?.map((img) => {
         URL.revokeObjectURL(img.preview);
       });
@@ -110,7 +109,7 @@ export default function useFileUpload() {
   function handleLocalUpload(files: File[]): void {
     // Validates uploaded files
     const invalidFiles = validateFilesType(files, ["image/"]);
-    const hasDuplicates = hasDuplicateFiles(files, localImages);
+    const hasDuplicates = hasDuplicateFiles(files, UploadedImages);
     if (!files.length) {
       toast.error("Nenhum arquivo selecionado");
       return;
@@ -127,14 +126,14 @@ export default function useFileUpload() {
     // Starting point for creating images IDs
     const startId = countImageIdRef.current;
 
-    const mappedImages: LocalImage[] = files.map((file, i) => {
+    const mappedImages: UploadedImage[] = files.map((file, i) => {
       return {
         id: startId + i,
         file: file,
         preview: URL.createObjectURL(file),
-        order: localImages.length + 1 + i,
+        order: UploadedImages.length + 1 + i,
         uploadProgress: 0,
-        status: "editing",
+        status: "local",
       };
     });
 
@@ -142,7 +141,7 @@ export default function useFileUpload() {
     countImageIdRef.current = startId + files.length;
 
     // Adds new images to the previous list
-    setLocalImages((prev) => [...prev, ...mappedImages]);
+    setUploadedImages((prev) => [...prev, ...mappedImages]);
   }
 
   // Sends a image to Cloudinary
@@ -166,20 +165,30 @@ export default function useFileUpload() {
 
   // ------------------------------ Sends images to a cloud storage and registers them on RHF -----------------------//
   async function handleCloudUpload() {
+    // Only uploads images that are not already uploaded
+    const inMemoryImages = UploadedImages.filter(
+      (img) => img.status === "local"
+    );
+
+    if (!inMemoryImages.length) {
+      toast.success("Todas as imagens já estão na nuvem!");
+      return;
+    }
+
     // Sets all images to uploading status and resets progress
-    setLocalImages((prev) =>
-      prev.map((img) => ({
-        ...img,
-        status: "uploading",
-        uploadProgress: 0,
-      }))
+    setUploadedImages((prev) =>
+      prev.map((img) =>
+        img.status === "local"
+          ? { ...img, status: "uploading", uploadProgress: 0 }
+          : img
+      )
     );
 
     // Waits all uploads to finish
     const results = await Promise.allSettled(
-      localImages.map((img) =>
+      inMemoryImages.map((img) =>
         uploadImageToCloud(img.file, (progress) => {
-          setLocalImages((prev) =>
+          setUploadedImages((prev) =>
             prev.map((i) =>
               i.id === img.id ? { ...i, uploadProgress: progress } : i
             )
@@ -198,7 +207,7 @@ export default function useFileUpload() {
     );
 
     // updates final state of each image based on upload result
-    setLocalImages((prev) =>
+    setUploadedImages((prev) =>
       prev.map((img) => {
         const result = results.find((r) =>
           r.status === "fulfilled"
@@ -208,8 +217,7 @@ export default function useFileUpload() {
 
         if (!result) return img;
 
-        if (result.status === "fulfilled")
-          return { ...img, status: "success" };
+        if (result.status === "fulfilled") return { ...img, status: "success" };
 
         return { ...img, status: "error" };
       })
@@ -220,8 +228,8 @@ export default function useFileUpload() {
 
   return {
     isDragging,
-    localImages,
-    setLocalImages,
+    UploadedImages,
+    setUploadedImages,
     handleDragEnter,
     handleDragLeave,
     handleDragOver,
@@ -232,7 +240,7 @@ export default function useFileUpload() {
     handleLocalUpload,
     handleCloudUpload,
     removeImage,
-    removeAllLocalImages,
+    removeAllUploadedImages,
     formattedOrder,
   };
 }

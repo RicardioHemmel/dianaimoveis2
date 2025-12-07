@@ -1,11 +1,9 @@
 import mongoose, { Schema } from "mongoose";
 
 const TypologySchema = new Schema({
-  _id: { type: String, required: true },
   name: { type: String, required: true },
 },
   {
-    strict: true,
     collection: "property_typologies",
   });
 

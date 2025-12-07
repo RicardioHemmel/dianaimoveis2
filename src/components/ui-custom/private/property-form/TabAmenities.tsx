@@ -29,7 +29,7 @@ export default function TabAmenities({
   amenitiesList,
 }: TabAmenitiesProps) {
   // Shows content based on the type
-  const { propertyType, propertyAmenities } = form.watch();
+  const { propertyType } = form.watch();
 
   // Filter for the amenities search bar
   const [amenitiesFilter, setAmenitiesFilter] = useState<string>("");
@@ -49,7 +49,9 @@ export default function TabAmenities({
     // Amenities registered on the RHF
     const currentAmenities = form.getValues("propertyAmenities");
 
-    const updatedAmenities = currentAmenities.includes(amenity)
+    if (!currentAmenities) return;
+
+    const updatedAmenities = currentAmenities?.includes(amenity)
       ? currentAmenities.filter((a) => a !== amenity)
       : [...currentAmenities, amenity];
 
@@ -77,7 +79,7 @@ export default function TabAmenities({
 
               <Button
                 variant={"outline"}
-                disabled={form.getValues("propertyAmenities").length === 0}
+                disabled={form.getValues("propertyAmenities")?.length === 0}
                 onClick={() => {
                   form.setValue("propertyAmenities", []);
                 }}
@@ -114,7 +116,7 @@ export default function TabAmenities({
                 type="button"
                 onClick={() => toggleAmenity(amenity._id)}
                 className={`p-3 rounded-lg border-2 text-sm font-medium transition-all cursor-pointer ${
-                  form.getValues("propertyAmenities").includes(amenity._id)
+                  form.getValues("propertyAmenities")?.includes(amenity._id)
                     ? "border-[var(--bg-selected)] bg-[var(--bg-selected)] text-primary-foreground"
                     : "hover:border-[var(--bg-selected-hover)] hover:bg-[var(--bg-selected-hover)] hover:text-white text-foreground"
                 }`}

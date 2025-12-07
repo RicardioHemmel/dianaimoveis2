@@ -1,5 +1,5 @@
 // Icons
-import { Images, X } from "lucide-react";
+import { Images, X, CloudCheck } from "lucide-react";
 
 // React | Next
 import { useEffect } from "react";
@@ -11,14 +11,15 @@ import useFileUpload from "@/hooks/use-file-upload";
 import DraggableArea from "./drag-n-drop/DraggableArea";
 
 // Cloudinary
-import {} from "cloudinary"
+import { CldImage } from "next-cloudinary";
+import { Button } from "@/components/ui/button";
 
 export default function ImageUploader() {
   // Custom hook to handle file upload events
   const {
     isDragging,
-    localImages,
-    setLocalImages,
+    UploadedImages,
+    setUploadedImages,
     handleDragEnter,
     handleDragLeave,
     handleDragOver,
@@ -26,14 +27,14 @@ export default function ImageUploader() {
     handleFilesFromInput,
     handleCloudUpload,
     removeImage,
-    removeAllLocalImages,
+    removeAllUploadedImages,
     formattedOrder,
   } = useFileUpload();
 
   // When component is dismounted kills any reference in memory of images preview URLs
   useEffect(() => {
     return () => {
-      localImages.forEach((img) => URL.revokeObjectURL(img.preview));
+      UploadedImages.forEach((img) => URL.revokeObjectURL(img.preview));
     };
   }, []);
 
@@ -68,11 +69,11 @@ export default function ImageUploader() {
       </div>
 
       <DraggableArea
-        localImages={localImages}
+        UploadedImages={UploadedImages}
         removeImage={removeImage}
-        removeAllLocalImages={removeAllLocalImages}
+        removeAllUploadedImages={removeAllUploadedImages}
         handleCloudUpload={handleCloudUpload}
-        setLocalImages={setLocalImages}
+        setUploadedImages={setUploadedImages}
         formattedOrder={formattedOrder}
       />
     </>

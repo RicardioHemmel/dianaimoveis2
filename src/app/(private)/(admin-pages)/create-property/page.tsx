@@ -153,18 +153,14 @@ export default function CreatePropertyPage() {
 
           {/* Amenities Selection */}
           <TabAmenities form={form} amenitiesList={amenitiesList} />
-          
+
           {/* Creative */}
-          <TabCreative form={form}/>
+          <TabCreative form={form} />
         </Tabs>
 
-        {/* Botões de Ação */}
+        {/* Action Buttons */}
         <div className="flex justify-end mt-6 pt-6 border-t">
-          <Button
-            onClick={onSubmit}
-            type="submit"
-            className="bg-[image:var(--gradient-primary)] hover:brightness-90"
-          >
+          <Button className="bg-[image:var(--gradient-primary)] hover:brightness-90">
             Cadastrar Imóvel
           </Button>
         </div>

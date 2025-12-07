@@ -1,54 +1,53 @@
 import { z } from "zod";
 
-export const propertySchema = z.object({
-  title: z.string().min(3, "Título deve ter no mínimo 3 caracteres"),
+const GalleryItemSchema = z.object({
+  imageRef: z.string(),
+  order: z.number(),
+});
+
+export const PropertySchema = z.object({
+  title: z.string(),
   description: z.string().optional(),
-  price: z.number(),
 
-  propertyType: z.string(),
-  propertyStatus: z.string(),
-  propertyPurpose: z.string(),
-  propertyStanding: z.string(),
-  propertyTypology: z.string(),
-
-  street: z.string().optional(),
-  neighborhood: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  zipCode: z.string().optional(),
-
-  area: z.number().optional(),
   roomsQty: z.number().optional(),
   suitesQty: z.number().optional(),
   bathroomsQty: z.number().optional(),
   parkingSpacesQty: z.number().optional(),
+  price: z.number(),
+  area: z.number().optional(),
   condominiumFee: z.number().optional(),
-  propertyAmenities: z.array(z.string()),
-
-  featuredImage: z.string(),
-
-  propertyGallery: z.array(
-    z.object({
-      imageRef: z.string(),
-      order: z.number().int().nonnegative(),
-    })
-  ),
-
-  propertyFloorPlanGallery: z.array(
-    z.object({
-      imageId: z.string(),
-      order: z.number(),
-    })
-  ),
-  youtubeURL: z.string(),
-
   floorStart: z.number().optional(),
-  floorEnd: z.number().optional(),
+  floortEnd: z.number().optional(),
+
+  videoUrl: z.string().optional(),
+  coverImage: z.string().optional(),
 
   isFurnished: z.boolean().optional(),
-  isPetFriendly: z.boolean().optional(),
   isNearSubway: z.boolean().optional(),
-  showSquareMeterPrice: z.boolean().optional(),
+  isFeatured: z.boolean().optional(),
+  isActive: z.boolean().optional(),
+
+  userId: z.string(),
+
+  propertyType: z.string().optional(),
+  propertyPurpose: z.string().optional(),
+  propertyStanding: z.string().optional(),
+  propertyStatus: z.string().optional(),
+  propertyTypology: z.string().optional(),
+  propertyAmenities: z.array(z.string()).optional(),
+
+  propertyGallery: z.array(GalleryItemSchema).optional(),
+  propertyFloorPlanGallery: z.array(GalleryItemSchema).optional(),
+
+  address: z
+    .object({
+      street: z.string().optional(),
+      neighborhood: z.string().optional(),
+      city: z.string().optional(),
+      state: z.string().optional(),
+      zipCode: z.string().optional(),
+    })
+    .optional(),
 });
 
-export type PropertyFormData = z.infer<typeof propertySchema>;
+export type PropertyFormData = z.infer<typeof PropertySchema>;

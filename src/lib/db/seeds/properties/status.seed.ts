@@ -1,22 +1,20 @@
-import slugify from "slugify";
-import PropertyDeliveryStatus from "@/lib/db/models/property/status.model";
+import PropertyStatus from "@/lib/db/models/property/status.model";
 import { STATUS } from "@/lib/constants/properties/property-status";
 
 export async function statusSeed() {
-  const deliveryStatus = STATUS.map((name) => {
-    const slug = slugify(name, { lower: true, strict: true, trim: true });
-    return { _id: slug, name };
+  const status = STATUS.map((name) => {
+    return name;
   });
 
-  for (const deliveryStatusItem of deliveryStatus) {
-    await PropertyDeliveryStatus.updateOne(
-      { _id: deliveryStatusItem._id },
+  for (const statusItem of status) {
+    await PropertyStatus.updateOne(
+      { name: statusItem },
       {
-        $set: deliveryStatusItem,
+        $setOnInsert: {name: statusItem},
       },
       { upsert: true }
     );
   }
 
-  console.log("DeliveryStatus seed finalizada.");
+  console.log("Status seed finalizada.");
 }

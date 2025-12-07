@@ -33,7 +33,7 @@ export default function TabLocation({ form }: TabLocationProps) {
             id="street"
             placeholder="Digite a rua, avenida, etc..."
             className="mt-1.5"
-            {...form.register("street")}
+            {...form.register("address.street")}
           />
         </div>
 
@@ -44,7 +44,7 @@ export default function TabLocation({ form }: TabLocationProps) {
             id="neighborhood"
             placeholder="Digite seu bairro"
             className="mt-1.5"
-            {...form.register("neighborhood")}
+            {...form.register("address.neighborhood")}
           />
         </div>
 
@@ -55,14 +55,14 @@ export default function TabLocation({ form }: TabLocationProps) {
             id="city"
             placeholder="Digite sua cidade"
             className="mt-1.5"
-            {...form.register("city")}
+            {...form.register("address.city")}
           />
         </div>
 
         <div>
           <Label htmlFor="state">Estado</Label>
           <Controller
-            name="state"
+            name="address.state"
             control={form.control}
             render={({ field }) => (
               <Select value={field.value} onValueChange={field.onChange}>
@@ -89,7 +89,7 @@ export default function TabLocation({ form }: TabLocationProps) {
             id="zipCode"
             placeholder="00000-000"
             className="mt-1.5"
-            {...form.register("zipCode")}
+            {...form.register("address.zipCode")}
           />
         </div>
       </div>

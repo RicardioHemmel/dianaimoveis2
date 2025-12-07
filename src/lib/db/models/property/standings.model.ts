@@ -5,6 +5,7 @@ const StandingSchema = new Schema(
     name: { type: String, required: true },
   },
   {
+    strict: true,
     collection: "property_standings",
   }
 );

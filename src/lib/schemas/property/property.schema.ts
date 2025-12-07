@@ -17,7 +17,7 @@ export const PropertySchema = z.object({
   area: z.number().optional(),
   condominiumFee: z.number().optional(),
   floorStart: z.number().optional(),
-  floortEnd: z.number().optional(),
+  floorEnd: z.number().optional(),
 
   videoUrl: z.string().optional(),
   coverImage: z.string().optional(),
@@ -25,16 +25,19 @@ export const PropertySchema = z.object({
   isFurnished: z.boolean().optional(),
   isNearSubway: z.boolean().optional(),
   isFeatured: z.boolean().optional(),
+  isPetFriendly: z.boolean().optional(),
   isActive: z.boolean().optional(),
+  showSquareMeterPrice:  z.boolean().optional(),
 
   userId: z.string(),
 
-  propertyType: z.string().optional(),
-  propertyPurpose: z.string().optional(),
-  propertyStanding: z.string().optional(),
-  propertyStatus: z.string().optional(),
-  propertyTypology: z.string().optional(),
-  propertyAmenities: z.array(z.string()).optional(),
+  propertyTypeSlug: z.string().optional(),
+  propertyPurposeId: z.string().optional(),
+  propertyStandingId: z.string().optional(),
+  propertyStatusId: z.string().optional(),
+  propertyTypologyId: z.string().optional(),
+  propertyAmenitiesId: z.array(z.string()).optional(),
+
 
   propertyGallery: z.array(GalleryItemSchema).optional(),
   propertyFloorPlanGallery: z.array(GalleryItemSchema).optional(),

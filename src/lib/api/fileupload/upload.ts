@@ -1,4 +1,4 @@
-import { POST } from "@/app/api/(private)/fileupload/route";
+import { POST } from "@/app/api/_private/fileupload/route";
 
 export async function uploadImage(file: File, folder: string) {
   const form = new FormData();

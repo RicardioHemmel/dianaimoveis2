@@ -29,22 +29,23 @@ export default function usePropertyCreateForm() {
       title: "",
       description: "",
 
-      propertyType: "apartamento",
-      propertyStatus: "",
-      propertyPurpose: "",
-      propertyStanding: "",
-      propertyTypology: "",
-      
+      propertyTypeSlug: "apartamento",
+      propertyStatusId: "",
+      propertyPurposeId: "",
+      propertyStandingId: "",
+      propertyTypologyId: "",
+      propertyAmenitiesId: [],
 
-      street: "",
-      neighborhood: "",
-      city: "",
-      state: "",
-      zipCode: "",
+      address: {
+        street: "",
+        neighborhood: "",
+        city: "",
+        state: "",
+        zipCode: "",
+      },
 
-      youtubeURL: "",
+      videoUrl: "",
 
-      propertyAmenities: [],
 
       propertyGallery: [],
 
@@ -55,8 +56,18 @@ export default function usePropertyCreateForm() {
     },
   });
 
-  async function onSubmit(data: PropertyFormData) {
-    console.log("Form Data: ", data);
+  async function onSubmit() {
+    const data = form.getValues();
+
+    console.log(data);
+    const res = await fetch("/api/properties/property/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    const result = await res.json();
+    console.log(result);
   }
 
   return {

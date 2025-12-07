@@ -29,7 +29,7 @@ export default function TabAmenities({
   amenitiesList,
 }: TabAmenitiesProps) {
   // Shows content based on the type
-  const { propertyType } = form.watch();
+  const { propertyTypeSlug } = form.watch();
 
   // Filter for the amenities search bar
   const [amenitiesFilter, setAmenitiesFilter] = useState<string>("");
@@ -47,7 +47,7 @@ export default function TabAmenities({
   // Add or Remove amenities
   const toggleAmenity = (amenity: string) => {
     // Amenities registered on the RHF
-    const currentAmenities = form.getValues("propertyAmenities");
+    const currentAmenities = form.getValues("propertyAmenitiesId");
 
     if (!currentAmenities) return;
 
@@ -55,12 +55,12 @@ export default function TabAmenities({
       ? currentAmenities.filter((a) => a !== amenity)
       : [...currentAmenities, amenity];
 
-    form.setValue("propertyAmenities", updatedAmenities);
+    form.setValue("propertyAmenitiesId", updatedAmenities);
   };
 
   return (
     <TabsContent value="amenities" className="space-y-4">
-      {propertyType === "apartamento" || propertyType === "casa" ? (
+      {propertyTypeSlug === "apartamento" || propertyTypeSlug === "casa" ? (
         <div className="space-y-4">
           <div className="flex justify-between gap-4 my-5 w-full">
             <h3 className="text-lg font-semibold text-foreground">
@@ -71,7 +71,7 @@ export default function TabAmenities({
                 type="button"
                 variant="outline"
                 onClick={() =>
-                  form.setValue("propertyAmenities", allAmenitiesIds)
+                  form.setValue("propertyAmenitiesId", allAmenitiesIds)
                 }
               >
                 Selecionar Todos
@@ -79,9 +79,9 @@ export default function TabAmenities({
 
               <Button
                 variant={"outline"}
-                disabled={form.getValues("propertyAmenities")?.length === 0}
+                disabled={form.getValues("propertyAmenitiesId")?.length === 0}
                 onClick={() => {
-                  form.setValue("propertyAmenities", []);
+                  form.setValue("propertyAmenitiesId", []);
                 }}
               >
                 Limpar Seleção
@@ -116,7 +116,7 @@ export default function TabAmenities({
                 type="button"
                 onClick={() => toggleAmenity(amenity._id)}
                 className={`p-3 rounded-lg border-2 text-sm font-medium transition-all cursor-pointer ${
-                  form.getValues("propertyAmenities")?.includes(amenity._id)
+                  form.getValues("propertyAmenitiesId")?.includes(amenity._id)
                     ? "border-[var(--bg-selected)] bg-[var(--bg-selected)] text-primary-foreground"
                     : "hover:border-[var(--bg-selected-hover)] hover:bg-[var(--bg-selected-hover)] hover:text-white text-foreground"
                 }`}

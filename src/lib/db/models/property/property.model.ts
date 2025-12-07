@@ -36,12 +36,14 @@ const PropertySchema = new Schema(
 
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
 
-    propertyType: Ref("PropertyType"),
-    propertyPurpose: Ref("PropertyPurpose"),
-    propertyStanding: Ref("PropertyStanding"),
-    propertyStatus: Ref("PropertyStatus"),
-    propertyTypology: Ref("PropertyTypology"),
-    propertyAmenities: [{ type: Schema.Types.ObjectId, ref: "PropertyAmenities" }],
+    propertyTypeId: Ref("PropertyType"),
+    propertyPurposeId: Ref("PropertyPurpose"),
+    propertyStandingId: Ref("PropertyStanding"),
+    propertyStatusId: Ref("PropertyStatus"),
+    propertyTypologyId: Ref("PropertyTypology"),
+    propertyAmenitiesId: [
+      { type: Schema.Types.ObjectId, ref: "PropertyAmenities" },
+    ],
 
     propertyGallery: [GalleryItem],
     propertyFloorPlanGallery: [GalleryItem],
@@ -55,7 +57,7 @@ const PropertySchema = new Schema(
       _id: false,
     },
   },
-  { timestamps: true }
+  { strict: true, timestamps: true }
 );
 
 // Checks if the model already exisits to avoid creating multiple models with the same name

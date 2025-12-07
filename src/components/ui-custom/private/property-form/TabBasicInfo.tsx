@@ -40,14 +40,14 @@ export default function TabBasicInfo({
   propertyStatus,
 }: TabBasicInfoProps) {
   // Default value set o UsePropertyCreateForm hook as "apartamento"
-  const selectedType = form.watch("propertyType");
+  const selectedType = form.watch("propertyTypeSlug");
 
   // _id gotta be the same from DB
   const propertyTypes = [
-    { _id: "apartamento", label: "Apartamento", icon: Building2 },
-    { _id: "casa", label: "Casa", icon: Home },
-    { _id: "comercial", label: "Comercial", icon: Store },
-    { _id: "terreno", label: "Terreno", icon: MapPin },
+    { slug: "apartamento", label: "Apartamento", icon: Building2 },
+    { slug: "casa", label: "Casa", icon: Home },
+    { slug: "comercial", label: "Comercial", icon: Store },
+    { slug: "terreno", label: "Terreno", icon: MapPin },
   ];
 
   return (
@@ -61,27 +61,27 @@ export default function TabBasicInfo({
             const Icon = type.icon;
             return (
               <button
-                key={type._id}
+                key={type.slug}
                 type="button"
                 onClick={() => {
-                  form.setValue("propertyType", type._id);
+                  form.setValue("propertyTypeSlug", type.slug);
                 }}
                 className={`p-4 rounded-lg border-2 transition-all cursor-pointer ${
-                  selectedType === type._id
+                  selectedType === type.slug
                     ? "border-[var(--soft-primary-custom)] bg-[image:var(--gradient-primary)]"
                     : "border-border hover:border-primary/50"
                 }`}
               >
                 <Icon
                   className={`h-6 w-6 mx-auto mb-1 ${
-                    selectedType === type._id
+                    selectedType === type.slug
                       ? "text-white"
                       : "text-muted-foreground"
                   }`}
                 />
                 <p
                   className={`text-sm font-medium ${
-                    selectedType === type._id ? "text-white" : "text-foreground"
+                    selectedType === type.slug ? "text-white" : "text-foreground"
                   }`}
                 >
                   {type.label}
@@ -137,7 +137,7 @@ export default function TabBasicInfo({
             <Label htmlFor="propertyPurpose">Finalidade</Label>
             <Controller
               control={form.control}
-              name="propertyPurpose"
+              name="propertyPurposeId"
               render={({ field }) => (
                 <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger
@@ -164,7 +164,7 @@ export default function TabBasicInfo({
             <Label htmlFor="propertyStatus">Status</Label>
             <Controller
               control={form.control}
-              name="propertyStatus"
+              name="propertyStatusId"
               render={({ field }) => (
                 <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger

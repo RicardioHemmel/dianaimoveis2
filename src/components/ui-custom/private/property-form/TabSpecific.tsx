@@ -30,11 +30,11 @@ export default function TabSpecific({
   propertyStandings,
   propertyTypologies,
 }: TabSpecificProps) {
-  const { propertyType } = form.watch();
+  const { propertyTypeSlug } = form.watch();
 
   return (
     <TabsContent value="specific" className="space-y-4">
-      {propertyType === "apartamento" && (
+      {propertyTypeSlug === "apartamento" && (
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-foreground">
             Características do Apartamento
@@ -65,7 +65,7 @@ export default function TabSpecific({
             <div>
               <Label htmlFor="propertyStanding">Porte do Imóvel</Label>
               <Controller
-                name="propertyStanding"
+                name="propertyStandingId"
                 control={form.control}
                 render={({ field }) => (
                   <Select value={field.value} onValueChange={field.onChange}>
@@ -92,7 +92,7 @@ export default function TabSpecific({
             <div>
               <Label htmlFor="propertyTypology">Tipologia</Label>
               <Controller
-                name="propertyTypology"
+                name="propertyTypologyId"
                 control={form.control}
                 render={({ field }) => (
                   <Select value={field.value} onValueChange={field.onChange}>
@@ -119,7 +119,7 @@ export default function TabSpecific({
         </div>
       )}
 
-      {propertyType === "terreno" && (
+      {propertyTypeSlug === "terreno" && (
         <div className="text-center py-12 text-muted-foreground">
           <MapPin className="h-12 w-12 mx-auto mb-3 opacity-50" />
           <p>Não há características específicas para terrenos.</p>

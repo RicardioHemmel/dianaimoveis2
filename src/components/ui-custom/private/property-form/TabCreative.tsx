@@ -54,7 +54,7 @@ export default function TabCreative({ form }: TabCreativeProps) {
               id="videoYoutube"
               placeholder="https://youtube.com/watch?v=..."
               className="pl-10"
-              {...form.register("youtubeURL")}
+              {...form.register("videoUrl")}
             />
           </div>
           <p className="text-xs text-muted-foreground mt-1.5">

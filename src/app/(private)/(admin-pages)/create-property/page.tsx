@@ -160,7 +160,10 @@ export default function CreatePropertyPage() {
 
         {/* Action Buttons */}
         <div className="flex justify-end mt-6 pt-6 border-t">
-          <Button className="bg-[image:var(--gradient-primary)] hover:brightness-90">
+          <Button
+            className="bg-[image:var(--gradient-primary)] hover:brightness-90"
+            onClick={onSubmit}
+          >
             Cadastrar Imóvel
           </Button>
         </div>

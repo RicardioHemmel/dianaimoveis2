@@ -6,11 +6,6 @@ const GalleryItem = {
   _id: false,
 };
 
-const Ref = (refName: string) => ({
-  id: { type: Schema.Types.ObjectId, ref: refName },
-  _id: false,
-});
-
 const PropertySchema = new Schema(
   {
     title: { type: String, required: true },
@@ -24,7 +19,7 @@ const PropertySchema = new Schema(
     area: Number,
     condominiumFee: Number,
     floorStart: Number,
-    floortEnd: Number,
+    floorEnd: Number,
 
     videoUrl: String,
     coverImage: String,
@@ -36,11 +31,20 @@ const PropertySchema = new Schema(
 
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
 
-    propertyTypeId: Ref("PropertyType"),
-    propertyPurposeId: Ref("PropertyPurpose"),
-    propertyStandingId: Ref("PropertyStanding"),
-    propertyStatusId: Ref("PropertyStatus"),
-    propertyTypologyId: Ref("PropertyTypology"),
+    propertyTypeId: { type: Schema.Types.ObjectId, ref: "PropertyType" },
+    propertyPurposeId: {
+      type: Schema.Types.ObjectId,
+      ref: "PropertyPurpose",
+    },
+    propertyStandingId: {
+      type: Schema.Types.ObjectId,
+      ref: "PropertyStanding",
+    },
+    propertyStatusId: { type: Schema.Types.ObjectId, ref: "PropertyStatus" },
+    propertyTypologyId: {
+      type: Schema.Types.ObjectId,
+      ref: "PropertyTypology",
+    },
     propertyAmenitiesId: [
       { type: Schema.Types.ObjectId, ref: "PropertyAmenities" },
     ],

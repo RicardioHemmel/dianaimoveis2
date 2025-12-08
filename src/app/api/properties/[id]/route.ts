@@ -2,21 +2,29 @@ import { NextResponse } from "next/server";
 import Property from "@/lib/db/models/property/property.model";
 import connectMongoDB from "@/lib/db/mongodbConnection";
 
-// 1. Defina o tipo uma vez fora das funções
+// Property ID
 type RouteParams = {
   params: Promise<{ id: string }>;
 };
 
-// --- Rota GET ---
 export async function GET(req: Request, { params }: RouteParams) {
   try {
     const { id } = await params; // Lembre-se do await no Next 15
     await connectMongoDB();
-    
-    const property = await Property.findById(id);
+
+    const property = await Property.findById(id)
+      .populate("propertyTypeId")
+      .populate("propertyPurposeId")
+      .populate("propertyStandingId")
+      .populate("propertyStatusId")
+      .populate("propertyTypologyId")
+      .populate("propertyAmenitiesId");
 
     if (!property) {
-      return NextResponse.json({ message: "Imóvel não encontrado" }, { status: 404 });
+      return NextResponse.json(
+        { message: "Imóvel não encontrado" },
+        { status: 404 }
+      );
     }
 
     return NextResponse.json({ success: true, property }, { status: 200 });
@@ -25,7 +33,6 @@ export async function GET(req: Request, { params }: RouteParams) {
   }
 }
 
-// --- Rota PATCH ---
 export async function PATCH(req: Request, { params }: RouteParams) {
   try {
     // 1. Pega o ID da URL
@@ -44,11 +51,16 @@ export async function PATCH(req: Request, { params }: RouteParams) {
     });
 
     if (!updatedProperty) {
-      return NextResponse.json({ message: "Imóvel não encontrado" }, { status: 404 });
+      return NextResponse.json(
+        { message: "Imóvel não encontrado" },
+        { status: 404 }
+      );
     }
 
-    return NextResponse.json({ success: true, property: updatedProperty }, { status: 200 });
-
+    return NextResponse.json(
+      { success: true, property: updatedProperty },
+      { status: 200 }
+    );
   } catch (error) {
     console.error(error); // Bom para debug
     return NextResponse.json(
@@ -60,14 +72,17 @@ export async function PATCH(req: Request, { params }: RouteParams) {
 
 // --- Rota DELETE (Bônus) ---
 export async function DELETE(req: Request, { params }: RouteParams) {
-    try {
-        const { id } = await params;
-        await connectMongoDB();
+  try {
+    const { id } = await params;
+    await connectMongoDB();
 
-        await Property.findByIdAndDelete(id);
+    await Property.findByIdAndDelete(id);
 
-        return NextResponse.json({ success: true, message: "Deletado com sucesso" });
-    } catch (error) {
-        return NextResponse.json({ message: "Erro ao deletar" }, { status: 500 });
-    }
+    return NextResponse.json({
+      success: true,
+      message: "Deletado com sucesso",
+    });
+  } catch (error) {
+    return NextResponse.json({ message: "Erro ao deletar" }, { status: 500 });
+  }
 }

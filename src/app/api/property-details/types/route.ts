@@ -6,7 +6,7 @@ export async function GET() {
   try {
     await connectMongoDB();
 
-    const types = await PropertyType.find({}, { name: 1 }).sort({
+    const types = await PropertyType.find().sort({
       name: 1,
     });
 

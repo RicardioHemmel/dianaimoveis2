@@ -63,14 +63,14 @@ export default function TabSpecific({
             </div>
 
             <div>
-              <Label htmlFor="propertyStanding">Porte do Imóvel</Label>
+              <Label htmlFor="propertyStandingId">Porte do Imóvel</Label>
               <Controller
                 name="propertyStandingId"
                 control={form.control}
                 render={({ field }) => (
                   <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger
-                      id="propertyStanding"
+                      id="propertyStandingId"
                       variant={"gray"}
                       className="mt-1.5 h-10 w-full"
                     >
@@ -90,14 +90,14 @@ export default function TabSpecific({
             </div>
 
             <div>
-              <Label htmlFor="propertyTypology">Tipologia</Label>
+              <Label htmlFor="propertyTypologyId">Tipologia</Label>
               <Controller
                 name="propertyTypologyId"
                 control={form.control}
                 render={({ field }) => (
                   <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger
-                      id="propertyTypology"
+                      id="propertyTypologyId"
                       variant={"gray"}
                       className="mt-1.5 h-10 w-full"
                     >

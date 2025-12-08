@@ -28,6 +28,8 @@ import { TabsContent } from "@/components/ui/tabs";
 // lucide-react
 import { Building2, Home, Store, MapPin, DollarSign } from "lucide-react";
 
+import { priceMask } from "@/lib/formatters/ui-formatters/Imask";
+
 interface TabBasicInfoProps {
   form: UseFormReturn<PropertyFormData>;
   propertyPurposes?: PropertySelectOption[];
@@ -81,7 +83,9 @@ export default function TabBasicInfo({
                 />
                 <p
                   className={`text-sm font-medium ${
-                    selectedType === type.slug ? "text-white" : "text-foreground"
+                    selectedType === type.slug
+                      ? "text-white"
+                      : "text-foreground"
                   }`}
                 >
                   {type.label}
@@ -134,14 +138,14 @@ export default function TabBasicInfo({
           </div>
 
           <div>
-            <Label htmlFor="propertyPurpose">Finalidade</Label>
+            <Label htmlFor="propertyPurposeId">Finalidade</Label>
             <Controller
               control={form.control}
               name="propertyPurposeId"
               render={({ field }) => (
                 <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger
-                    id="propertyPurpose"
+                    id="propertyPurposeId"
                     variant="gray"
                     className="mt-1.5 h-10 w-full"
                   >
@@ -161,14 +165,14 @@ export default function TabBasicInfo({
           </div>
 
           <div>
-            <Label htmlFor="propertyStatus">Status</Label>
+            <Label htmlFor="propertyStatusId">Status</Label>
             <Controller
               control={form.control}
               name="propertyStatusId"
               render={({ field }) => (
                 <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger
-                    id="propertyStatus"
+                    id="propertyStatusId"
                     variant={"gray"}
                     className="mt-1.5 h-10 w-full"
                   >

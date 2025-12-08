@@ -14,16 +14,15 @@ export async function POST(req: Request) {
 
     if (!parsed.success) {
       return NextResponse.json(
-        { success: false, errors: parsed.error.format() },
+        { success: false, errors: parsed.error.format },
         { status: 400 }
       );
     }
 
     // Busca o tipo
-    const propertyType = await PropertyType.findOne(
-      { slug: parsed.data.propertyTypeSlug },
-      { _id: 1 }
-    );
+    const propertyType = await PropertyType.findOne({
+      slug: parsed.data.propertyTypeSlug,
+    });
 
     if (!propertyType) {
       return NextResponse.json(
@@ -31,6 +30,8 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
+
+    console.log(propertyType)
 
     // Remove o slug do payload
     const { propertyTypeSlug, ...data } = parsed.data;

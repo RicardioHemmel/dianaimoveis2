@@ -6,14 +6,19 @@ const GalleryItemSchema = z.object({
 });
 
 export const PropertySchema = z.object({
-  title: z.string(),
+  title: z.string().min(1, { error: "Título é obrigatório" }),
   description: z.string().optional(),
 
   roomsQty: z.number().optional(),
   suitesQty: z.number().optional(),
   bathroomsQty: z.number().optional(),
   parkingSpacesQty: z.number().optional(),
-  price: z.number(),
+  price: z
+    .number({error: "O preço é obrigatório"})
+    .nullable()
+    .refine((val) => val !== null && val > 0, {
+      error: "O preço é obrigatório",
+    }),
   area: z.number().optional(),
   condominiumFee: z.number().optional(),
   floorStart: z.number().optional(),
@@ -27,9 +32,9 @@ export const PropertySchema = z.object({
   isFeatured: z.boolean().optional(),
   isPetFriendly: z.boolean().optional(),
   isActive: z.boolean().optional(),
-  showSquareMeterPrice:  z.boolean().optional(),
+  showSquareMeterPrice: z.boolean().optional(),
 
-  userId: z.string(),
+  userId: z.string().optional(),
 
   propertyTypeSlug: z.string().optional(),
   propertyPurposeId: z.string().optional(),
@@ -37,7 +42,6 @@ export const PropertySchema = z.object({
   propertyStatusId: z.string().optional(),
   propertyTypologyId: z.string().optional(),
   propertyAmenitiesId: z.array(z.string()).optional(),
-
 
   propertyGallery: z.array(GalleryItemSchema).optional(),
   propertyFloorPlanGallery: z.array(GalleryItemSchema).optional(),

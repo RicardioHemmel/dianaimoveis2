@@ -8,7 +8,7 @@ const textAreaVariants = cva(
     variants: {
       variant: {
         default: "",
-        gray: "bg-gray-50",
+        gray: "bg-gray-100",
       },
       defaultVariants: {
         variant: "default",

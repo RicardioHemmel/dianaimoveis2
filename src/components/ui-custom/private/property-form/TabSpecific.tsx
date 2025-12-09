@@ -18,6 +18,14 @@ import { PropertySelectOption } from "@/lib/schemas/property/property-select-opt
 
 import { Controller, UseFormReturn } from "react-hook-form";
 import { PropertyFormData } from "@/lib/schemas/property/property.schema";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { NumericFormat } from "react-number-format";
 
 interface TabSpecificProps {
   form: UseFormReturn<PropertyFormData>;
@@ -40,43 +48,67 @@ export default function TabSpecific({
             Características do Apartamento
           </h3>
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="andarInicial">Andar Inicial</Label>
-              <Input
-                variant={"gray"}
-                id="andarInicial"
-                placeholder="Ex: 5"
-                className="mt-1.5"
-                {...form.register("floorStart")}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="andarFinal">Andar Final</Label>
-              <Input
-                variant={"gray"}
-                id="andarFinal"
-                placeholder="Ex: 6"
-                className="mt-1.5"
-                {...form.register("floorEnd")}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="propertyStandingId">Porte do Imóvel</Label>
-              <Controller
-                name="propertyStandingId"
-                control={form.control}
-                render={({ field }) => (
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger
-                      id="propertyStandingId"
+            <FormField
+              name={"floorStart"}
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Andar Inicial</FormLabel>
+                  <FormControl>
+                    <NumericFormat
+                      customInput={Input}
+                      placeholder="Ex: 5"
+                      className="mt-1.5"
                       variant={"gray"}
-                      className="mt-1.5 h-10 w-full"
-                    >
-                      <SelectValue placeholder="Selecione uma finalidade" />
-                    </SelectTrigger>
+                      onValueChange={(values) => {
+                        field.onChange(values.floatValue);
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
+            <FormField
+              name={"floorEnd"}
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Andar Final</FormLabel>
+                  <FormControl>
+                    <NumericFormat
+                      customInput={Input}
+                      placeholder="Ex: 10"
+                      className="mt-1.5"
+                      variant={"gray"}
+                      onValueChange={(values) => {
+                        field.onChange(values.floatValue);
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Property Standing */}
+            <FormField
+              control={form.control}
+              name="propertyStandingId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Porte</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    value={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger variant="gray" className="mt-1.5 w-full">
+                        <SelectValue placeholder="Selecione um porte" />
+                      </SelectTrigger>
+                    </FormControl>
                     <SelectContent>
                       {propertyStandings?.map((standing) => (
                         <SelectItem key={standing._id} value={standing._id}>
@@ -85,36 +117,40 @@ export default function TabSpecific({
                       ))}
                     </SelectContent>
                   </Select>
-                )}
-              />
-            </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-            <div>
-              <Label htmlFor="propertyTypologyId">Tipologia</Label>
-              <Controller
-                name="propertyTypologyId"
-                control={form.control}
-                render={({ field }) => (
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger
-                      id="propertyTypologyId"
-                      variant={"gray"}
-                      className="mt-1.5 h-10 w-full"
-                    >
-                      <SelectValue placeholder="Selecione uma finalidade" />
-                    </SelectTrigger>
-
+            {/* Property Typology */}
+            <FormField
+              control={form.control}
+              name="propertyTypologyId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tipologia</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    value={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger variant="gray" className="mt-1.5 w-full">
+                        <SelectValue placeholder="Selecione uma tipologia" />
+                      </SelectTrigger>
+                    </FormControl>
                     <SelectContent>
-                      {propertyTypologies?.map((tipology) => (
-                        <SelectItem key={tipology._id} value={tipology._id}>
-                          {tipology.name}
+                      {propertyStandings?.map((standing) => (
+                        <SelectItem key={standing._id} value={standing._id}>
+                          {standing.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
-                )}
-              />
-            </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
         </div>
       )}

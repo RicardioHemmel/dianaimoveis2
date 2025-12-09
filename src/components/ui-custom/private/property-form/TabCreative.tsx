@@ -6,12 +6,25 @@ import { Label } from "@/components/ui/label";
 import { TabsContent } from "@/components/ui/tabs";
 
 // lucide-react
-import { Layers, Images, Youtube } from "lucide-react";
+import { Layers, Images, Youtube, Ruler } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { PropertyFormData } from "@/lib/schemas/property/property.schema";
 
 import FileUploader from "../FileUploader";
 import ImageUploader from "../ImageUploader";
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  InputGroup,
+  InputGroupInput,
+  InputGroupAddon,
+} from "@/components/ui/input-group";
+import { NumericFormat } from "react-number-format";
 
 interface TabCreativeProps {
   form: UseFormReturn<PropertyFormData>;
@@ -46,21 +59,30 @@ export default function TabCreative({ form }: TabCreativeProps) {
         <h3 className="text-lg font-semibold text-foreground">
           Vídeo do YouTube
         </h3>
-        <div>
-          <Label htmlFor="videoYoutube">URL do Vídeo</Label>
-          <div className="relative mt-1.5">
-            <Youtube className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              id="videoYoutube"
-              placeholder="https://youtube.com/watch?v=..."
-              className="pl-10"
-              {...form.register("videoUrl")}
-            />
-          </div>
-          <p className="text-xs text-muted-foreground mt-1.5">
-            Cole o link completo do vídeo do YouTube
-          </p>
-        </div>
+
+        <FormField
+          control={form.control}
+          name="videoUrl"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor={field.name}>URL do Vídeo</FormLabel>
+              <FormControl>
+                <div className="relative mt-1.5">
+                  <InputGroup>
+                    <InputGroupInput placeholder="https://youtube.com/watch?v=..." />
+                    <InputGroupAddon>
+                      <Youtube className="h-4 w-4" />
+                    </InputGroupAddon>
+                  </InputGroup>
+                </div>
+              </FormControl>
+              <p className="text-xs text-muted-foreground">
+                Cole o link completo do vídeo do YouTube
+              </p>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </div>
     </TabsContent>
   );

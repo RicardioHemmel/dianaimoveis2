@@ -118,7 +118,7 @@ export default function TabAmenities({
                 className={`p-3 rounded-lg border-2 text-sm font-medium transition-all cursor-pointer ${
                   form.getValues("propertyAmenitiesId")?.includes(amenity._id)
                     ? "border-[var(--bg-selected)] bg-[var(--bg-selected)] text-primary-foreground"
-                    : "hover:border-[var(--bg-selected-hover)] hover:bg-[var(--bg-selected-hover)] hover:text-white text-foreground"
+                    : " hover:bg-neutral-200 text-foreground"
                 }`}
               >
                 {amenity.name}

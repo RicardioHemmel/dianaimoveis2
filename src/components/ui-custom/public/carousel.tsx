@@ -21,9 +21,6 @@ import { ExternalLink } from "lucide-react";
 // Animation inside de Carousel
 import { motion } from "framer-motion";
 
-// Formatter
-import { propertyPriceFormatter } from "@/lib/formatters/ui-formatters/property-price.formatter";
-
 const featuredProperties = [
   {
     id: 1,
@@ -117,8 +114,8 @@ export default function FeaturedPropertiesCarousel() {
                               {property.title}
                             </h2>
                             <p className="text-[13px] sm:text-[18px] lg:text-[19px] font-normal mt-1 md:mt-0">
-                              A partir de: R${" "}
-                              {propertyPriceFormatter(property.price)}
+                              A partir de: R$
+                              {property.price}
                             </p>
                           </div>
                         </motion.div>

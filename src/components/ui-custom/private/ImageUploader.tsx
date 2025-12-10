@@ -1,5 +1,5 @@
 // Icons
-import { Images, X, CloudCheck } from "lucide-react";
+import { Images } from "lucide-react";
 
 // React | Next
 import { useEffect } from "react";
@@ -10,9 +10,6 @@ import useFileUpload from "@/hooks/use-file-upload";
 // Components
 import DraggableArea from "./drag-n-drop/DraggableArea";
 
-// Cloudinary
-import { CldImage } from "next-cloudinary";
-import { Button } from "@/components/ui/button";
 
 export default function ImageUploader() {
   // Custom hook to handle file upload events

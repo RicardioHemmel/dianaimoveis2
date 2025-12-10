@@ -230,9 +230,11 @@ export default function TabDetails({ form }: TabDetailsProps) {
                         customInput={InputGroupInput}
                         thousandSeparator="."
                         decimalSeparator=","
+                        prefix="R$ "
                         fixedDecimalScale
                         allowNegative={false}
-                        placeholder="0"
+                        decimalScale={2}
+                        placeholder="R$ 0,00"
                         onValueChange={(values) => {
                           field.onChange(values.floatValue);
                         }}

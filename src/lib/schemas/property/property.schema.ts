@@ -6,6 +6,7 @@ const GalleryItemSchema = z.object({
 });
 
 export const PropertySchema = z.object({
+  _id: z.string().optional(),
   title: z.string().min(1, { error: "Título é obrigatório" }),
   description: z.string().optional(),
 
@@ -14,7 +15,7 @@ export const PropertySchema = z.object({
   bathroomsQty: z.number().optional(),
   parkingSpacesQty: z.number().optional(),
   price: z
-    .number({error: "O preço é obrigatório"})
+    .number({ error: "O preço é obrigatório" })
     .nullable()
     .refine((val) => val !== null && val > 0, {
       error: "O preço é obrigatório",
@@ -34,9 +35,9 @@ export const PropertySchema = z.object({
   isActive: z.boolean().optional(),
   showSquareMeterPrice: z.boolean().optional(),
 
-  userId: z.string().optional(),
+  userId: z.string(),
 
-  propertyTypeSlug: z.string().optional(),
+  propertyTypeSlug: z.string(),
   propertyPurposeId: z.string().optional(),
   propertyStandingId: z.string().optional(),
   propertyStatusId: z.string().optional(),

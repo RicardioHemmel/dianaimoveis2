@@ -1,9 +1,10 @@
 // app/api/properties/route.ts
 import { NextResponse } from "next/server";
-import Property from "@/lib/db/models/property/property.model";
+import PropertyDraft from "@/lib/db/models/property/property-draft.model";
 import PropertyType from "@/lib/db/models/property/types.model";
 import connectMongoDB from "@/lib/db/mongodbConnection";
 import { PropertySchema } from "@/lib/schemas/property/property.schema";
+import mongoose from "mongoose";
 
 export async function POST(req: Request) {
   try {
@@ -31,21 +32,44 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log(propertyType)
-
     // Remove o slug do payload
-    const { propertyTypeSlug, ...data } = parsed.data;
+    const { propertyTypeSlug, _id, ...data } = parsed.data;
 
-    // Cria o imóvel
-    const property = await Property.create({
+    const payloadToSave = {
       ...data,
-      propertyTypeId: propertyType._id,
-    });
+      propertyTypeId: propertyType._id as string,
+    };
 
-    return NextResponse.json({ success: true, property }, { status: 201 });
+    let draftProperty;
+
+    if (_id && mongoose.Types.ObjectId.isValid(_id)) {
+      draftProperty = await PropertyDraft.findByIdAndUpdate(
+        _id,
+        { $set: payloadToSave },
+        { new: true }
+      );
+
+      if (!draftProperty) {
+        return NextResponse.json(
+          { success: false, message: "Rascunho não encontrado" },
+          { status: 404 }
+        );
+      }
+
+      return NextResponse.json(
+        { success: true, draftProperty },
+        { status: 200 }
+      );
+    } else {
+      draftProperty = await PropertyDraft.create(payloadToSave);
+      return NextResponse.json(
+        { success: true, draftProperty },
+        { status: 201 }
+      );
+    }
   } catch (error) {
     return NextResponse.json(
-      { success: false, message: "Erro interno ao criar imóvel" },
+      { success: false, message: error },
       { status: 500 }
     );
   }

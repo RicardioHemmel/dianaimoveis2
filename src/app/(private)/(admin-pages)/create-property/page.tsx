@@ -28,13 +28,13 @@ import {
 // Hooks
 import usePropertyCreateForm from "@/hooks/properties/use-property-create-form";
 import { Form } from "@/components/ui/form";
-import { toast } from "sonner";
 
 export default function CreatePropertyPage() {
   // Gets data from the custom hook to populate each tab
   const {
     form,
     onSubmit,
+    saveDraft,
     amenitiesList,
     propertyPurposes,
     propertyStatus,
@@ -71,6 +71,19 @@ export default function CreatePropertyPage() {
   // For disabling navigation buttons
   const isFirstTab = activeTab === tabs[0];
   const isLastTab = activeTab === tabs[tabs.length - 1];
+
+  // Register a property draft
+  const { title, propertyTypeSlug, price } = form.watch();
+  const watchedValues = form.watch();
+
+  useEffect(() => {
+    if (!title || !propertyTypeSlug || !price) return;
+    const timer = setTimeout(() => {
+      saveDraft();
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, [watchedValues]);
 
   return (
     <div className="space-y-6 animate-fade-in max-w-6xl mx-auto">

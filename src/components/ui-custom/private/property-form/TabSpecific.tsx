@@ -140,9 +140,9 @@ export default function TabSpecific({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {propertyStandings?.map((standing) => (
-                        <SelectItem key={standing._id} value={standing._id}>
-                          {standing.name}
+                      {propertyTypologies?.map((typology) => (
+                        <SelectItem key={typology._id} value={typology._id}>
+                          {typology.name}
                         </SelectItem>
                       ))}
                     </SelectContent>

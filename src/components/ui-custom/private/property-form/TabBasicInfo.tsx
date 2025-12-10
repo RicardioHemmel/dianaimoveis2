@@ -79,7 +79,7 @@ export default function TabBasicInfo({
                         key={type.slug}
                         type="button"
                         onClick={() => field.onChange(type.slug)}
-                        className={`p-4 rounded-lg border-2 transition-all cursor-pointer flex flex-col items-center justify-center ${
+                        className={`p-4 rounded-lg border-2 transition-all cursor-pointer flex flex-col items-center justify-center bg-gray-50 ${
                           isSelected
                             ? "border-[var(--soft-primary-custom)] bg-[image:var(--gradient-primary)]"
                             : "border-border hover:border-primary/50"
@@ -135,7 +135,7 @@ export default function TabBasicInfo({
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Descrição *</FormLabel>
+              <FormLabel>Descrição</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Descreva o imóvel..."

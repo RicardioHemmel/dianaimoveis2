@@ -1,7 +1,6 @@
 "use client";
 
-// Shadcnui
-import { Label } from "@/components/ui/label";
+// COMPONENTS
 import { Checkbox } from "@/components/ui/checkbox";
 import { TabsContent } from "@/components/ui/tabs";
 import {
@@ -12,7 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-// lucide-react
+// ICONS
 import {
   Ruler,
   Bed,
@@ -26,8 +25,8 @@ import {
   HandCoins,
 } from "lucide-react";
 
-import { Controller, UseFormReturn } from "react-hook-form";
-import { PropertyFormData } from "@/lib/schemas/property/property.schema";
+import { UseFormReturn } from "react-hook-form";
+import { PropertyFormData } from "@/lib/schemas/property/zod/property-base.schema";
 import {
   InputGroup,
   InputGroupInput,
@@ -114,7 +113,7 @@ export default function TabDetails({ form }: TabDetailsProps) {
 
           <FormField
             control={form.control}
-            name="bathbedroomsQty"
+            name="bathroomsQty"
             render={({ field }) => (
               <FormItem>
                 <FormLabel htmlFor={field.name}>Banheiros</FormLabel>

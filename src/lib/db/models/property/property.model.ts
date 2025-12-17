@@ -1,19 +1,8 @@
 import mongoose, { Schema } from "mongoose";
 
-const GalleryItem = {
-  imageRef: String,
-  order: Number,
-  _id: false,
-};
-
-enum STATUS {
-  DRAFT,
-  PUBLISHED,
-}
-
 const PropertySchema = new Schema(
   {
-    title: {type: String, unique: true},
+    title: { type: String, unique: true },
     description: String,
 
     price: Number,
@@ -29,6 +18,8 @@ const PropertySchema = new Schema(
     isFurnished: Boolean,
     isNearSubway: Boolean,
     isFeatured: Boolean,
+    showSquareMeterPrice: Boolean,
+    isPetFriendly: Boolean,
 
     propertyTypeId: {
       type: Schema.Types.ObjectId,
@@ -51,9 +42,9 @@ const PropertySchema = new Schema(
       { type: Schema.Types.ObjectId, ref: "PropertyAmenities" },
     ],
 
-    coverImage: String,
-    propertyGallery: [GalleryItem],
-    propertyFloorPlanGallery: [GalleryItem],
+    propertyGallery: [{ type: Schema.Types.ObjectId, ref: "Media", order: Number }],
+    propertyFloorPlanGallery: [{ type: Schema.Types.ObjectId, ref: "Media", order: Number }],
+    coverImage: { type: Schema.Types.ObjectId, ref: "Media" },
     videoUrl: String,
 
     status: {
@@ -72,7 +63,6 @@ const PropertySchema = new Schema(
     },
 
     isActive: { type: Boolean, default: true },
-    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },
   { strict: true, timestamps: true }
 );

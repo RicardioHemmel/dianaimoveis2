@@ -5,7 +5,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 // Types
-import { UploadedImage } from "@/lib/schemas/uplodad-image";
+import { MediaDraft } from "@/lib/schemas/media/media-draft";
 
 // React | Next
 import { useState } from "react";
@@ -15,7 +15,7 @@ import Image from "next/image";
 import { CloudCheck, X } from "lucide-react";
 
 interface ImageCardProps {
-  image: UploadedImage;
+  image: MediaDraft;
   removeImage: (id: number) => void;
   i: number;
   formattedOrder: (i: number) => number;
@@ -35,7 +35,7 @@ export default function ImageCard({
 
   const { setNodeRef, attributes, listeners, transform, transition } =
     useSortable({
-      id: image.id,
+      id: image.tempId,
       disabled: !canDrag,
     });
 
@@ -56,7 +56,7 @@ export default function ImageCard({
       <div className="w-full h-64 relative overflow-hidden animate-[var(--animate-infinity-glow)] rounded-lg">
         <Image
           src={image.preview}
-          alt={`Preview da imagem ${image.id}`}
+          alt={`Preview da imagem ${image.tempId}`}
           fill={true}
           className="object-cover"
         />
@@ -91,7 +91,7 @@ export default function ImageCard({
       <button
         onMouseEnter={() => setCanDrag(false)}
         onMouseLeave={() => setCanDrag(true)}
-        onClick={() => removeImage(image.id)}
+        onClick={() => removeImage(image.tempId)}
         className="absolute top-2 right-2 rounded-full cursor-pointer p-0.5 bg-red-600 hover:bg-red-700"
       >
         <X className="w-5 h-5 text-white" />

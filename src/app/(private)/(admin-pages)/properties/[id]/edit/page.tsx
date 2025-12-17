@@ -1,5 +1,5 @@
 import PropertyFormShell from "@/components/ui-custom/private/property-form/PropertyFormShell";
-import { getPropertyById } from "@/lib/api/properties/property/fetch-property";
+import { getPropertyById } from "@/lib/server/properties/get-property-by-id";
 import { notFound } from "next/navigation";
 
 export default async function EditPropertyPage({

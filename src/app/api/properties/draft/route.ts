@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import Property from "@/lib/db/models/property/property.model";
 import PropertyType from "@/lib/db/models/property/types.model";
 import connectMongoDB from "@/lib/db/mongodbConnection";
-import { PropertySchema } from "@/lib/schemas/property/property.schema";
+import { PropertySchema } from "@/lib/schemas/property/zod/property.schema";
 import mongoose from "mongoose";
 
 // Creates a property draft

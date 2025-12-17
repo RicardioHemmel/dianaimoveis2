@@ -1,7 +1,7 @@
 "use client";
 
 import { UseFormReturn } from "react-hook-form";
-import { PropertyFormData } from "@/lib/schemas/property/property.schema";
+import { PropertyFormData } from "@/lib/schemas/property/zod/property-base.schema";
 
 // Shadcnui
 import { Input } from "@/components/ui/input";
@@ -121,21 +121,22 @@ export default function TabLocation({ form }: TabLocationProps) {
         />
 
         <FormField
-          name={"address.zipCode"}
           control={form.control}
+          name={"address.zipCode"}
           render={({ field }) => (
             <FormItem>
               <FormLabel>CEP</FormLabel>
               <FormControl>
                 <PatternFormat
                   format="#####-###"
+                  value={field.value}
                   valueIsNumericString
                   customInput={Input}
                   placeholder="00000-000"
                   className="mt-1.5"
                   variant={"gray"}
                   onValueChange={(values) => {
-                    field.onChange(values.formattedValue);
+                    field.onChange(values.value);
                   }}
                 />
               </FormControl>

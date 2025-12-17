@@ -1,15 +1,17 @@
-import { UploadedImage } from "@/lib/schemas/uplodad-image";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import axios from "axios";
+import { MediaDraft } from "@/lib/schemas/media/media-draft";
+
+//UPLOAD FILE WITH AXIOS TO ACCESS THE "UPLOAD PROGRESS"
+import axios from "axios"; 
 
 export default function useFileUpload() {
-  // For onDragEnter and onDragLeave control
+  // FOR ONDRAGENTER AND ONDRAGLEAVE CONTROL
   const [isDragging, setIsDragging] = useState<boolean>(false);
-  const [UploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
+  const [mediaDrafts, setMediaDrafts] = useState<MediaDraft[]>([]);
 
-  const countRef = useRef(0); // To prevent flickering when dragging over child elements
-  const countImageIdRef = useRef(1); // Used as images IDs
+  const countRef = useRef(0); // TO PREVENT FLICKERING WHEN DRAGGING OVER CHILD ELEMENTS
+  const countImageIdRef = useRef(1); // USED AS IMAGES IDS
 
   function formattedOrder(i: number): number {
     return i + 1;
@@ -27,7 +29,7 @@ export default function useFileUpload() {
     }
   }
 
-  // Allows the drop to work (without this the browser opens the file).
+  // ALLOWS THE DROP TO WORK (WITHOUT THIS THE BROWSER OPENS THE FILE).
   function handleDragOver(e: React.DragEvent<HTMLDivElement>): void {
     e.preventDefault();
   }
@@ -40,7 +42,7 @@ export default function useFileUpload() {
 
   function hasDuplicateFiles(
     newFiles: File[],
-    oldFiles: UploadedImage[]
+    oldFiles: MediaDraft[]
   ): boolean {
     return newFiles.some((newFile) =>
       oldFiles.some(
@@ -52,18 +54,18 @@ export default function useFileUpload() {
   }
 
   function removeImage(id: number): void {
-    setUploadedImages((prev) => {
-      // Image to be removed
-      const targetImage = prev.find((image) => image.id === id);
+    setMediaDrafts((prev) => {
+      // IMAGE TO BE REMOVED
+      const targetImage = prev.find((image) => image.tempId === id);
 
-      // Kills any reference to temporary image URL
+      // KILLS ANY REFERENCE TO TEMPORARY IMAGE URL
       if (targetImage) {
         URL.revokeObjectURL(targetImage.preview);
       }
 
-      const filteredImages = prev.filter((img) => img.id !== targetImage?.id);
+      const filteredImages = prev.filter((img) => img.tempId !== targetImage?.tempId);
 
-      // Return all images with their new order
+      // RETURN ALL IMAGES WITH THEIR NEW ORDER
       return filteredImages.map((img, i) => ({
         ...img,
         order: formattedOrder(i),
@@ -71,8 +73,8 @@ export default function useFileUpload() {
     });
   }
 
-  function removeAllUploadedImages() {
-    setUploadedImages((prev) => {
+  function removeAllMediaDrafts() {
+    setMediaDrafts((prev) => {
       prev?.map((img) => {
         URL.revokeObjectURL(img.preview);
       });
@@ -81,35 +83,35 @@ export default function useFileUpload() {
     });
   }
 
-  // ------------------------------ Local images to be manipulated before go to a cloud storage -----------------------//
+  // ------------------------------ LOCAL IMAGES TO BE MANIPULATED BEFORE GO TO A CLOUD STORAGE -----------------------//
 
-  // Calls the upload handler when files are dropped into the drop area
+  // CALLS THE UPLOAD HANDLER WHEN FILES ARE DROPPED INTO THE DROP AREA
   function handleDrop(e: React.DragEvent<HTMLDivElement>): void {
     e.preventDefault();
     e.stopPropagation();
 
-    // Reset drag counter
+    // RESET DRAG COUNTER
     countRef.current = 0;
     setIsDragging(false);
 
-    // Verifies if files were dropped
+    // VERIFIES IF FILES WERE DROPPED
     const files = Array.from(e.dataTransfer.files);
     if (files.length) handleLocalUpload(files);
   }
 
-  // Calls the upload handler when files are selected from the input
+  // CALLS THE UPLOAD HANDLER WHEN FILES ARE SELECTED FROM THE INPUT
   function handleFilesFromInput(e: React.ChangeEvent<HTMLInputElement>): void {
     const files = Array.from(e.target.files || []);
     if (files.length) handleLocalUpload(files);
 
-    // Cleans file path in memory so it's possible to resent the same image after removing it
+    // CLEANS FILE PATH IN MEMORY SO IT'S POSSIBLE TO RESENT THE SAME IMAGE AFTER REMOVING IT
     e.target.value = "";
   }
 
   function handleLocalUpload(files: File[]): void {
-    // Validates uploaded files
+    // VALIDATES UPLOADED FILES
     const invalidFiles = validateFilesType(files, ["image/"]);
-    const hasDuplicates = hasDuplicateFiles(files, UploadedImages);
+    const hasDuplicates = hasDuplicateFiles(files, mediaDrafts);
     if (!files.length) {
       toast.error("Nenhum arquivo selecionado");
       return;
@@ -123,28 +125,28 @@ export default function useFileUpload() {
       return;
     }
 
-    // Starting point for creating images IDs
+    // START POINT FOR CREATING IMAGES IDS
     const startId = countImageIdRef.current;
 
-    const mappedImages: UploadedImage[] = files.map((file, i) => {
+    const mappedImages: MediaDraft[] = files.map((file, i) => {
       return {
-        id: startId + i,
-        file: file,
-        preview: URL.createObjectURL(file),
-        order: UploadedImages.length + 1 + i,
-        uploadProgress: 0,
-        status: "local",
+        tempId: startId + i, // IMAGE ID
+        file: file, // FILE ITSELF
+        preview: URL.createObjectURL(file), // FOR IMAGE PREVIEW
+        order: mediaDrafts.length + 1 + i, // POSITION ON ARRAY
+        uploadProgress: 0, // UPLOAD PROGRESS FOR USER FEEDBACK
+        status: "local", // FILE STATE
       };
     });
 
-    //Guarantees that the ID of the next images will not be the same as those of previously deleted images
+    // GUARANTEES THAT THE ID OF THE NEXT IMAGES WILL NOT BE THE SAME AS THOSE OF PREVIOUSLY DELETED IMAGES
     countImageIdRef.current = startId + files.length;
 
-    // Adds new images to the previous list
-    setUploadedImages((prev) => [...prev, ...mappedImages]);
+    // ADDS NEW IMAGES TO THE PREVIOUS LIST
+    setMediaDrafts((prev) => [...prev, ...mappedImages]);
   }
 
-  // Sends a image to Cloudinary
+  // SENDS A IMAGE TO CLOUDINARY
   function uploadImageToCloud(file: File, onProgress: (n: number) => void) {
     const formData = new FormData();
     formData.append("file", file);
@@ -166,7 +168,7 @@ export default function useFileUpload() {
   // ------------------------------ Sends images to a cloud storage and registers them on RHF -----------------------//
   async function handleCloudUpload() {
     // Only uploads images that are not already uploaded
-    const inMemoryImages = UploadedImages.filter(
+    const inMemoryImages = mediaDrafts.filter(
       (img) => img.status === "local"
     );
 
@@ -176,7 +178,7 @@ export default function useFileUpload() {
     }
 
     // Sets all images to uploading status and resets progress
-    setUploadedImages((prev) =>
+    setMediaDrafts((prev) =>
       prev.map((img) =>
         img.status === "local"
           ? { ...img, status: "uploading", uploadProgress: 0 }
@@ -188,31 +190,31 @@ export default function useFileUpload() {
     const results = await Promise.allSettled(
       inMemoryImages.map((img) =>
         uploadImageToCloud(img.file, (progress) => {
-          setUploadedImages((prev) =>
+          setMediaDrafts((prev) =>
             prev.map((i) =>
-              i.id === img.id ? { ...i, uploadProgress: progress } : i
+              i.tempId === img.tempId ? { ...i, uploadProgress: progress } : i
             )
           );
         })
           .then((res) => ({
-            id: img.id,
+            id: img.tempId,
             status: "success",
             data: res.data,
           }))
           .catch(() => ({
-            id: img.id,
+            id: img.tempId,
             status: "error",
           }))
       )
     );
 
     // updates final state of each image based on upload result
-    setUploadedImages((prev) =>
+    setMediaDrafts((prev) =>
       prev.map((img) => {
         const result = results.find((r) =>
           r.status === "fulfilled"
-            ? r.value.id === img.id
-            : r.reason?.id === img.id
+            ? r.value.id === img.tempId
+            : r.reason?.id === img.tempId
         );
 
         if (!result) return img;
@@ -228,8 +230,8 @@ export default function useFileUpload() {
 
   return {
     isDragging,
-    UploadedImages,
-    setUploadedImages,
+    mediaDrafts,
+    setMediaDrafts,
     handleDragEnter,
     handleDragLeave,
     handleDragOver,
@@ -240,7 +242,7 @@ export default function useFileUpload() {
     handleLocalUpload,
     handleCloudUpload,
     removeImage,
-    removeAllUploadedImages,
+    removeAllMediaDrafts,
     formattedOrder,
   };
 }

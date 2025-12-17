@@ -1,17 +1,9 @@
 "use client";
 
-// Shadcnui
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+// COMPONENTS
 import { TabsContent } from "@/components/ui/tabs";
-
-// lucide-react
-import { Layers, Images, Youtube, Ruler } from "lucide-react";
-import { UseFormReturn } from "react-hook-form";
-import { PropertyFormData } from "@/lib/schemas/property/property.schema";
-
-import FileUploader from "../FileUploader";
-import ImageUploader from "../ImageUploader";
+import FileUploader from "../media/FileUploader";
+import ImageUploader from "../media/ImageUploader";
 import {
   FormField,
   FormItem,
@@ -24,7 +16,11 @@ import {
   InputGroupInput,
   InputGroupAddon,
 } from "@/components/ui/input-group";
-import { NumericFormat } from "react-number-format";
+
+// ICONS
+import { Youtube, Images, Layers } from "lucide-react";
+import { UseFormReturn } from "react-hook-form";
+import { PropertyFormData } from "@/lib/schemas/property/zod/property-base.schema";
 
 interface TabCreativeProps {
   form: UseFormReturn<PropertyFormData>;
@@ -33,18 +29,18 @@ interface TabCreativeProps {
 export default function TabCreative({ form }: TabCreativeProps) {
   return (
     <TabsContent value="creative" className="space-y-6">
-      {/* Gallery Input */}
+      {/* GALLERY INPUT */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-foreground">
           Galeria de Imagens
         </h3>
-        <ImageUploader />
+        <ImageUploader Icon={Images} fileInputId="galleryInput"/>
       </div>
 
-      {/* Floor Plan Gallery Input */}
+      {/* FLOOR PLAN GALLERY INPUT */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-foreground">Planta Baixa</h3>
-        <ImageUploader />
+        <ImageUploader Icon={Layers} fileInputId="floorPlanGalleryInput" />
       </div>
 
       {/* Technical Specifications Input */}
@@ -69,7 +65,10 @@ export default function TabCreative({ form }: TabCreativeProps) {
               <FormControl>
                 <div className="relative mt-1.5">
                   <InputGroup>
-                    <InputGroupInput placeholder="https://youtube.com/watch?v=..." />
+                    <InputGroupInput
+                      placeholder="https://youtube.com/watch?v=..."
+                      {...field}
+                    />
                     <InputGroupAddon>
                       <Youtube className="h-4 w-4" />
                     </InputGroupAddon>

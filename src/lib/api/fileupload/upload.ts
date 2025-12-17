@@ -1,5 +1,3 @@
-import { POST } from "@/app/api/fileupload/route";
-
 export async function uploadImage(file: File, folder: string) {
   const form = new FormData();
   form.append("file", file);

@@ -1,31 +1,73 @@
-// React | Next
-import { useForm } from "react-hook-form";
+// REACT | NEXT
+import { Path, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
-// Form control
+// FORM CONTROL
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  PropertySchema,
+  PropertyBaseSchema,
   PropertyFormData,
   DefaultValuesPropertyForm,
-} from "@/lib/schemas/property/property.schema";
+} from "@/lib/schemas/property/zod/property-base.schema"; // BASE PROPERTY FORM SCHEMA
+import { PropertySchema } from "@/lib/schemas/property/zod/property.schema"; // PROPERTY SCHEMA FOR PUBLISHING
+import { PropertyDraftSchema } from "@/lib/schemas/property/zod/property-draft.schema"; // PROPERTY SCHEMA FOR SAVING AS DRAFT
+
+// MESSAGE BOX
+import { toast } from "sonner";
+
+// FORM VALIDATION
+import { z } from "zod";
 
 export default function usePropertyForm(initialData?: PropertyFormData) {
+  // REDIRECT USER TO EDIT PAGE AFTER SAVING PROPERTY
   const router = useRouter();
 
-  // Form manager
+  // FORM MANAGER
   const form = useForm<PropertyFormData>({
-    resolver: zodResolver(PropertySchema),
+    resolver: zodResolver(PropertyBaseSchema),
     defaultValues: initialData ?? DefaultValuesPropertyForm,
   });
 
-  async function publish(data: PropertyFormData) {
-    console.log(data);
+  //--------------------- AUXILIARY FUN ----------------------
+  function parseForm<T>(data: PropertyFormData, schema: z.Schema<T>): T | null {
+    // Clear previous errors state to set a new one
+    form.clearErrors();
+
+    // Use zod to parse data
+    const parsedData = schema.safeParse(data);
+
+    // Validates inputs and sets errors manually
+    if (parsedData.error) {
+      parsedData.error.issues.forEach((issue) => {
+        form.setError(issue.path.join(".") as Path<PropertyFormData>, {
+          type: "manual",
+          message: issue.message,
+        });
+      });
+      toast.error("Confira os campos pendentes");
+      return null;
+    } else {
+      return parsedData.data;
+    }
   }
 
-  async function saveDraft() {
+  async function publish(data: PropertyFormData): Promise<void> {
+    // Validates data with zod
+    const parsedData = parseForm(data, PropertySchema);
+    if (!parsedData) return;
+
+    console.log(parsedData);
+  }
+
+  async function saveDraft(): Promise<void> {
+    // Gets Form data
     const data = form.getValues();
-    const propertyId = data._id;
+
+    // Validates data with zod
+    const parsedData = parseForm(data, PropertyDraftSchema);
+    if (!parsedData) return;
+
+    const propertyId = parsedData._id;
 
     const method = propertyId ? "PATCH" : "POST";
     const url = propertyId
@@ -34,7 +76,7 @@ export default function usePropertyForm(initialData?: PropertyFormData) {
 
     const response = await fetch(url, {
       method,
-      body: JSON.stringify(data),
+      body: JSON.stringify(parsedData),
     });
 
     const result = await response.json();

@@ -17,8 +17,8 @@ import { usePurposes } from "@/hooks/properties/use-property-purposes";
 import { useStandings } from "@/hooks/properties/use-property-standings";
 import { useTypologies } from "@/hooks/properties/use-property-typologies";
 
-// Property Schema
-import { PropertyFormData } from "@/lib/schemas/property/property.schema";
+// PROPERTY SCHEMA
+import { PropertyFormData } from "@/lib/schemas/property/zod/property-base.schema";
 
 // DEFINES WHETHER THE FORM IS TO CREATE OR UPDATE
 type Props = {
@@ -27,17 +27,17 @@ type Props = {
 };
 
 export default function PropertyFormShell({ mode, initialData }: Props) {
-  // Inicialize hook passing initialData to populate RHF
+  // INICIALIZE HOOK PASSING INITIALDATA TO POPULATE RHF
   const { form, saveDraft, publish } = usePropertyForm(initialData);
 
-  // Fetches data for Form Selects
+  // FETCHES DATA FOR FORM SELECTS
   const amenitiesList = useAmenities().data;
   const propertyPurposes = usePurposes().data;
   const propertyStatus = useStatus().data;
   const propertyStandings = useStandings().data;
   const propertyTypologies = useTypologies().data;
 
-  // Tabs List for navigation
+  // TABS LIST FOR NAVIGATION
   const tabs = [
     "basic",
     "location",
@@ -59,7 +59,7 @@ export default function PropertyFormShell({ mode, initialData }: Props) {
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
-      {/* Header */}
+      {/* HEADER */}
       <div className="flex justify-between items-center">
         <div className="px-4">
           <h2 className="text-3xl font-bold">Cadastrar Imóvel</h2>
@@ -68,7 +68,7 @@ export default function PropertyFormShell({ mode, initialData }: Props) {
           </p>
         </div>
 
-        {/* Tabs navigation */}
+        {/* TABS NAVIGATION */}
         <div className="flex gap-3">
           <Button
             variant="outline"
@@ -91,7 +91,7 @@ export default function PropertyFormShell({ mode, initialData }: Props) {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(publish)}>
           <Card className="p-6 shadow-card bg-white border-2 border-neutral-100">
-            {/* All tabs containing pieces of the form */}
+            {/* ALL TABS CONTAINING PIECES OF THE FORM */}
             <PropertyFormTabs
               form={form}
               activeTab={activeTab}
@@ -103,18 +103,18 @@ export default function PropertyFormShell({ mode, initialData }: Props) {
               propertyTypologies={propertyTypologies}
             />
 
-            {/* Saves property as a Draft */}
+            {/* SAVES PROPERTY AS A DRAFT */}
             <div className="flex justify-end gap-4 mt-6 pt-6 border-t">
               <Button type="button" variant="outline" onClick={saveDraft}>
                 Salvar rascunho
               </Button>
 
-              {/* Saves property as a Published Property */}
+              {/* SAVES PROPERTY AS A PUBLISHED PROPERTY */}
               <Button
                 className="bg-[image:var(--gradient-primary)] hover:brightness-90"
                 type="submit"
               >
-                {mode === "edit" ? "Atualizar imóvel" : "Cadastrar imóvel"}
+                {mode === "edit" ? "Publicar imóvel" : "Cadastrar imóvel"}
               </Button>
             </div>
           </Card>

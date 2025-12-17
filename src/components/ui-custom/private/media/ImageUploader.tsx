@@ -1,22 +1,29 @@
-// Icons
-import { Images } from "lucide-react";
+// ICONS
+import { Images, LucideIcon } from "lucide-react";
 
-// React | Next
+// REACT | NEXT
 import { useEffect } from "react";
 
-// Hooks
+// HOOKS
 import useFileUpload from "@/hooks/use-file-upload";
 
-// Components
-import DraggableArea from "./drag-n-drop/DraggableArea";
+// COMPONENTS
+import DraggableArea from "../drag-n-drop/DraggableArea";
 
+interface ImageUploaderProps {
+  Icon: LucideIcon;
+  fileInputId: string;
+}
 
-export default function ImageUploader() {
+export default function ImageUploader({
+  Icon,
+  fileInputId,
+}: ImageUploaderProps) {
   // Custom hook to handle file upload events
   const {
     isDragging,
-    UploadedImages,
-    setUploadedImages,
+    mediaDrafts,
+    setMediaDrafts,
     handleDragEnter,
     handleDragLeave,
     handleDragOver,
@@ -24,14 +31,14 @@ export default function ImageUploader() {
     handleFilesFromInput,
     handleCloudUpload,
     removeImage,
-    removeAllUploadedImages,
+    removeAllMediaDrafts,
     formattedOrder,
   } = useFileUpload();
 
   // When component is dismounted kills any reference in memory of images preview URLs
   useEffect(() => {
     return () => {
-      UploadedImages.forEach((img) => URL.revokeObjectURL(img.preview));
+      mediaDrafts.forEach((img) => URL.revokeObjectURL(img.preview));
     };
   }, []);
 
@@ -44,19 +51,19 @@ export default function ImageUploader() {
           multiple
           accept="image/*"
           type="file"
-          id="imageUploadInput"
+          id={fileInputId}
           className="hidden"
         />
         {/* Droppable area */}
         <div
           className="mb-8 border-2 border-dashed rounded-lg p-8 transition-all cursor-pointer border-neutral-300 bg-white hover:bg-neutral-100 hover:border-neutral-500"
-          onClick={() => document.getElementById("imageUploadInput")?.click()}
+          onClick={() => document.getElementById(fileInputId)?.click()}
           onDragEnter={handleDragEnter}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
         >
-          <Images className="w-12 h-12 mx-auto mb-3 text-muted-foreground" />
+          <Icon className="w-12 h-12 mx-auto mb-3 text-muted-foreground" />
           <p className="text-foreground text-center text-sm font-medium">
             {isDragging
               ? "Solte os arquivos aqui!"
@@ -66,11 +73,11 @@ export default function ImageUploader() {
       </div>
 
       <DraggableArea
-        UploadedImages={UploadedImages}
+        mediaDrafts={mediaDrafts}
         removeImage={removeImage}
-        removeAllUploadedImages={removeAllUploadedImages}
+        removeAllMediaDrafts={removeAllMediaDrafts}
         handleCloudUpload={handleCloudUpload}
-        setUploadedImages={setUploadedImages}
+        setMediaDrafts={setMediaDrafts}
         formattedOrder={formattedOrder}
       />
     </>

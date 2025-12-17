@@ -1,13 +1,15 @@
 import { z } from "zod";
 
+// AUXILIAR TYPE FOR IMAGES
 const GalleryItemSchema = z.object({
   imageRef: z.string(),
   order: z.number(),
 });
 
-export const PropertySchema = z.object({
+// BASE SCHEMA TO VALIDATE ONLY EXPECTED FIELDS
+export const PropertyBaseSchema = z.object({
   _id: z.string().optional(),
-  title: z.string().min(1, { error: "Título é obrigatório" }),
+  title: z.string(),
   description: z.string().optional(),
 
   bedroomsQty: z.number().optional(),
@@ -15,13 +17,8 @@ export const PropertySchema = z.object({
   bathroomsQty: z.number().optional(),
   parkingSpacesQty: z.number().optional(),
   price: z.number().optional(),
-  // price: z
-  //   .number({ error: "O preço é obrigatório" })
-  //   .nullable()
-  //   .refine((val) => val !== null && val > 0, {
-  //     error: "O preço é obrigatório",
-  //   }),
   area: z.number().optional(),
+
   condominiumFee: z.number().optional(),
   floorStart: z.number().optional(),
   floorEnd: z.number().optional(),
@@ -36,9 +33,7 @@ export const PropertySchema = z.object({
   isActive: z.boolean().optional(),
   showSquareMeterPrice: z.boolean().optional(),
 
-  userId: z.string(),
-
-  propertyTypeSlug: z.string({ error: "O tipo do imóvel é obrigatório" }),
+  propertyTypeSlug: z.string(),
   propertyPurposeId: z.string().optional(),
   propertyStandingId: z.string().optional(),
   propertyStatusId: z.string().optional(),
@@ -57,23 +52,24 @@ export const PropertySchema = z.object({
       zipCode: z.string().optional(),
     })
     .optional(),
-
 });
 
-export type PropertyFormData = z.infer<typeof PropertySchema>;
+export type PropertyFormData = z.infer<typeof PropertyBaseSchema>;
 
+// INITIALIZE FORM WITH DEFAULT VALUES
 export const DefaultValuesPropertyForm: PropertyFormData = {
   _id: undefined,
   title: "",
   description: "",
-  isFurnished: false,
-  isNearSubway: false,
   propertyTypeSlug: "apartamento",
   propertyPurposeId: "",
   propertyStandingId: "",
   propertyStatusId: "",
   propertyTypologyId: "",
   propertyAmenitiesId: [],
+  isFeatured: false,
+  isFurnished: false,
+  isNearSubway: false,
   showSquareMeterPrice: false,
   isPetFriendly: false,
   address: {
@@ -84,7 +80,5 @@ export const DefaultValuesPropertyForm: PropertyFormData = {
     zipCode: "",
   },
   coverImage: "",
-  isFeatured: false,
-  userId: "",
   videoUrl: "",
 };

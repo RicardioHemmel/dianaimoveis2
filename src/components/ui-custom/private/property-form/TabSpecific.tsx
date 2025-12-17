@@ -1,8 +1,7 @@
 "use client";
 
-// Shadcnui
+// COMPONENTS
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { TabsContent } from "@/components/ui/tabs";
 import {
   Select,
@@ -12,12 +11,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-// lucide-react
+// ICONS
 import { MapPin } from "lucide-react";
 import { PropertySelectOption } from "@/lib/schemas/property/property-select-option";
 
-import { Controller, UseFormReturn } from "react-hook-form";
-import { PropertyFormData } from "@/lib/schemas/property/property.schema";
+import { UseFormReturn } from "react-hook-form";
+import { PropertyFormData } from "@/lib/schemas/property/zod/property-base.schema";
 import {
   FormControl,
   FormField,
@@ -58,6 +57,7 @@ export default function TabSpecific({
                     <NumericFormat
                       customInput={Input}
                       placeholder="Ex: 5"
+                      value={field.value}
                       className="mt-1.5"
                       variant={"gray"}
                       onValueChange={(values) => {
@@ -80,6 +80,7 @@ export default function TabSpecific({
                     <NumericFormat
                       customInput={Input}
                       placeholder="Ex: 10"
+                      value={field.value}
                       className="mt-1.5"
                       variant={"gray"}
                       onValueChange={(values) => {

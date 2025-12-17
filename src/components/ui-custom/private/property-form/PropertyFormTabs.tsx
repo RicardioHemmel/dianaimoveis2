@@ -1,4 +1,17 @@
+// REACT | NEXT
+import { UseFormReturn } from "react-hook-form";
+import { Dispatch, SetStateAction } from "react";
+
+// COMPONENTS
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import TabBasicInfo from "@/components/ui-custom/private/property-form/TabBasicInfo";
+import TabLocation from "@/components/ui-custom/private/property-form/TabLocation";
+import TabDetails from "@/components/ui-custom/private/property-form/TabDetails";
+import TabSpecific from "@/components/ui-custom/private/property-form/TabSpecific";
+import TabAmenities from "@/components/ui-custom/private/property-form/TabAmenities";
+import TabCreative from "@/components/ui-custom/private/property-form/TabCreative";
+
+// ICONS
 import {
   FileText,
   MapPin,
@@ -8,16 +21,9 @@ import {
   ImageUp,
 } from "lucide-react";
 
-import TabBasicInfo from "@/components/ui-custom/private/property-form/TabBasicInfo";
-import TabLocation from "@/components/ui-custom/private/property-form/TabLocation";
-import TabDetails from "@/components/ui-custom/private/property-form/TabDetails";
-import TabSpecific from "@/components/ui-custom/private/property-form/TabSpecific";
-import TabAmenities from "@/components/ui-custom/private/property-form/TabAmenities";
-import TabCreative from "@/components/ui-custom/private/property-form/TabCreative";
-import { UseFormReturn } from "react-hook-form";
-import { Dispatch, SetStateAction } from "react";
+// SCHEMAS
 import { PropertySelectOption } from "@/lib/schemas/property/property-select-option";
-import { PropertyFormData } from "@/lib/schemas/property/property.schema";
+import { PropertyFormData } from "@/lib/schemas/property/zod/property-base.schema";
 
 interface PropertyFormTabsProps {
   form: UseFormReturn<PropertyFormData>;
@@ -42,6 +48,7 @@ export default function PropertyFormTabs({
 }: PropertyFormTabsProps) {
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab}>
+      {/* TABS NAVIGATION */}
       <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3 mb-6">
         <TabsTrigger value="basic">
           <FileText className="w-4 h-4 mr-2" />
@@ -69,6 +76,7 @@ export default function PropertyFormTabs({
         </TabsTrigger>
       </TabsList>
 
+      {/* ----------------------------- FORM TABS -------------------------------- */}
       <TabBasicInfo
         form={form}
         propertyPurposes={propertyPurposes}

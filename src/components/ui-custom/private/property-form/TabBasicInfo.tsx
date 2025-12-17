@@ -4,7 +4,7 @@
 import { UseFormReturn } from "react-hook-form";
 
 // Types
-import { PropertyFormData } from "@/lib/schemas/property/property.schema";
+import { PropertyFormData } from "@/lib/schemas/property/zod/property-base.schema";
 import { PropertySelectOption } from "@/lib/schemas/property/property-select-option";
 
 // Shadcnui components

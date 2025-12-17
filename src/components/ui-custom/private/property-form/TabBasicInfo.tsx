@@ -158,7 +158,7 @@ export default function TabBasicInfo({
             name="price"
             render={({ field }) => (
               <FormItem>
-                <FormLabel htmlFor={field.name}>Preço *</FormLabel>
+                <FormLabel htmlFor={field.name}>Preço</FormLabel>
                 <FormControl>
                   <div className="relative mt-1.5">
                     <InputGroup>

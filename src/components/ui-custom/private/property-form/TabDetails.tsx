@@ -80,7 +80,7 @@ export default function TabDetails({ form }: TabDetailsProps) {
         <>
           <FormField
             control={form.control}
-            name="roomsQty"
+            name="bedroomsQty"
             render={({ field }) => (
               <FormItem>
                 <FormLabel htmlFor={field.name}>Quartos</FormLabel>
@@ -114,7 +114,7 @@ export default function TabDetails({ form }: TabDetailsProps) {
 
           <FormField
             control={form.control}
-            name="bathroomsQty"
+            name="bathbedroomsQty"
             render={({ field }) => (
               <FormItem>
                 <FormLabel htmlFor={field.name}>Banheiros</FormLabel>

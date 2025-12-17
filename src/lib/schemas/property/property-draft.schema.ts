@@ -5,22 +5,16 @@ const GalleryItemSchema = z.object({
   order: z.number(),
 });
 
-export const PropertySchema = z.object({
+export const PropertyDraftSchema = z.object({
   _id: z.string().optional(),
   title: z.string().min(1, { error: "Título é obrigatório" }),
   description: z.string().optional(),
 
   bedroomsQty: z.number().optional(),
   suitesQty: z.number().optional(),
-  bathroomsQty: z.number().optional(),
+  bathbedroomsQty: z.number().optional(),
   parkingSpacesQty: z.number().optional(),
   price: z.number().optional(),
-  // price: z
-  //   .number({ error: "O preço é obrigatório" })
-  //   .nullable()
-  //   .refine((val) => val !== null && val > 0, {
-  //     error: "O preço é obrigatório",
-  //   }),
   area: z.number().optional(),
   condominiumFee: z.number().optional(),
   floorStart: z.number().optional(),
@@ -38,7 +32,7 @@ export const PropertySchema = z.object({
 
   userId: z.string(),
 
-  propertyTypeSlug: z.string({ error: "O tipo do imóvel é obrigatório" }),
+  propertyTypeSlug: z.string().optional(),
   propertyPurposeId: z.string().optional(),
   propertyStandingId: z.string().optional(),
   propertyStatusId: z.string().optional(),
@@ -57,34 +51,6 @@ export const PropertySchema = z.object({
       zipCode: z.string().optional(),
     })
     .optional(),
-
 });
 
-export type PropertyFormData = z.infer<typeof PropertySchema>;
-
-export const DefaultValuesPropertyForm: PropertyFormData = {
-  _id: undefined,
-  title: "",
-  description: "",
-  isFurnished: false,
-  isNearSubway: false,
-  propertyTypeSlug: "apartamento",
-  propertyPurposeId: "",
-  propertyStandingId: "",
-  propertyStatusId: "",
-  propertyTypologyId: "",
-  propertyAmenitiesId: [],
-  showSquareMeterPrice: false,
-  isPetFriendly: false,
-  address: {
-    street: "",
-    city: "",
-    neighborhood: "",
-    state: "",
-    zipCode: "",
-  },
-  coverImage: "",
-  isFeatured: false,
-  userId: "",
-  videoUrl: "",
-};
+export type PropertyFormData = z.infer<typeof PropertyDraftSchema>;

@@ -31,7 +31,7 @@ export function AppSidebar() {
   const NAV_GROUPS = [
     SIDEBAR_LINKS.dashboard,
     SIDEBAR_LINKS.propertyList,
-    SIDEBAR_LINKS.createProperty,
+    SIDEBAR_LINKS.newProperty,
   ];
 
   function handleLogout() {

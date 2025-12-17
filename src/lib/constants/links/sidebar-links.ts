@@ -12,6 +12,6 @@ export const SIDEBAR_LINKS = {
     icon: ChartNoAxesColumnIncreasing,
   },
   propertyList: { title: "Imóveis", path: "/property-list", icon: Building2 },
-  createProperty: { title: "Cadastrar Imóvel", path: "/create-property", icon: Plus },
+  newProperty: { title: "Cadastrar Imóvel", path: "/properties/new", icon: Plus },
   profile: { title: "Perfil", path: "/profile", icon: User },
 } as const;

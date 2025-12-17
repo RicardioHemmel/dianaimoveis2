@@ -1,88 +1,64 @@
 import { NextResponse } from "next/server";
-import Property from "@/lib/db/models/property/property.model";
-import connectMongoDB from "@/lib/db/mongodbConnection";
+import mongoose from "mongoose";
 
-// Property ID
+import connectMongoDB from "@/lib/db/mongodbConnection";
+import Property from "@/lib/db/models/property/property.model";
+import PropertyType from "@/lib/db/models/property/types.model";
+
 type RouteParams = {
   params: Promise<{ id: string }>;
 };
 
 export async function GET(req: Request, { params }: RouteParams) {
   try {
-    const { id } = await params; // Lembre-se do await no Next 15
+    const { id } = await params; 
     await connectMongoDB();
 
-    const property = await Property.findById(id)
-      .populate("propertyTypeId")
-      .populate("propertyPurposeId")
-      .populate("propertyStandingId")
-      .populate("propertyStatusId")
-      .populate("propertyTypologyId")
-      .populate("propertyAmenitiesId");
+    // 1️⃣ Validação de ID (rápida e barata)
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { success: false, message: "ID inválido" },
+        { status: 400 }
+      );
+    }
+
+    // 2️⃣ Busca do imóvel
+    const property = await Property.findById(id).lean();
 
     if (!property) {
       return NextResponse.json(
-        { message: "Imóvel não encontrado" },
+        { success: false, message: "Imóvel não encontrado" },
         { status: 404 }
       );
     }
 
-    return NextResponse.json({ success: true, property }, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ message: "Erro interno" }, { status: 500 });
-  }
-}
+    // 3️⃣ Buscar slug do tipo (frontend trabalha com slug)
+    const propertyType = await PropertyType.findById(
+      property.propertyTypeId
+    ).lean();
 
-export async function PATCH(req: Request, { params }: RouteParams) {
-  try {
-    // 1. Pega o ID da URL
-    const { id } = await params;
+    // 4️⃣ Normalização do payload para o FORM
+    const propertyForForm = {
+      ...property,
+      _id: property._id.toString(),
+      propertyTypeSlug: propertyType?.slug ?? null,
+    };
 
-    // 2. Pega os dados enviados no corpo da requisição (JSON)
-    const body = await req.json();
-
-    await connectMongoDB();
-
-    // 3. Atualiza no Banco (findByIdAndUpdate do Mongoose)
-    // { new: true } retorna o objeto atualizado, não o antigo
-    const updatedProperty = await Property.findByIdAndUpdate(id, body, {
-      new: true,
-      runValidators: true, // Garante que as regras do Schema sejam respeitadas
-    });
-
-    if (!updatedProperty) {
-      return NextResponse.json(
-        { message: "Imóvel não encontrado" },
-        { status: 404 }
-      );
-    }
-
+    // 5️⃣ Retorno limpo e previsível
     return NextResponse.json(
-      { success: true, property: updatedProperty },
+      {
+        success: true,
+        data: propertyForForm,
+      },
       { status: 200 }
     );
   } catch (error) {
-    console.error(error); // Bom para debug
     return NextResponse.json(
-      { success: false, message: "Erro ao atualizar imóvel" },
+      {
+        success: false,
+        message: "Erro ao buscar imóvel",
+      },
       { status: 500 }
     );
-  }
-}
-
-// --- Rota DELETE (Bônus) ---
-export async function DELETE(req: Request, { params }: RouteParams) {
-  try {
-    const { id } = await params;
-    await connectMongoDB();
-
-    await Property.findByIdAndDelete(id);
-
-    return NextResponse.json({
-      success: true,
-      message: "Deletado com sucesso",
-    });
-  } catch (error) {
-    return NextResponse.json({ message: "Erro ao deletar" }, { status: 500 });
   }
 }

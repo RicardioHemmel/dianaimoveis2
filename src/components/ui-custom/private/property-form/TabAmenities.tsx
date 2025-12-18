@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/input-group";
 
 import { UseFormReturn } from "react-hook-form";
-import { PropertyFormData } from "@/lib/schemas/property/zod/property.schema";
+import { PropertyFormData } from "@/lib/schemas/property/zod/property-base.schema";
 import { PropertySelectOption } from "@/lib/schemas/property/property-select-option";
 
 interface TabAmenitiesProps {

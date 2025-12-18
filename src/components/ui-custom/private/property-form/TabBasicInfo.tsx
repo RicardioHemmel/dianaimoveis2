@@ -189,7 +189,7 @@ export default function TabBasicInfo({
             )}
           />
 
-          {/* Purpose */}
+          {/* PURPOSE */}
           <FormField
             control={form.control}
             name="propertyPurposeId"
@@ -198,8 +198,8 @@ export default function TabBasicInfo({
                 <FormLabel>Finalidade</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  value={field.value}
+                  defaultValue={field.value ?? undefined}
+                  value={field.value ?? undefined}
                 >
                   <FormControl>
                     <SelectTrigger variant="gray" className="mt-1.5 w-full">
@@ -219,7 +219,7 @@ export default function TabBasicInfo({
             )}
           />
 
-          {/* Status */}
+          {/* STATUS */}
           <FormField
             control={form.control}
             name="propertyStatusId"
@@ -228,8 +228,8 @@ export default function TabBasicInfo({
                 <FormLabel>Status</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  value={field.value}
+                  defaultValue={field.value ?? undefined}
+                  value={field.value ?? undefined}
                 >
                   <FormControl>
                     <SelectTrigger variant="gray" className="mt-1.5 w-full">

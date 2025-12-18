@@ -44,13 +44,9 @@ export function AppSidebar() {
         <div className="px-6 py-6 border-b border-white/10">
           <Link href={SIDEBAR_LINKS.dashboard.path}>
             <div className="flex items-center gap-2">
-              <Image
-                src="/roundedLogo.png"
-                alt="App logo"
-                width={100}
-                height={100}
-                className="w-12 h-12"
-              />
+              <div className="w-14 h-14 relative">
+                <Image src="/roundedLogo.svg" alt="App logo" fill />
+              </div>
               <div>
                 <h2 className="text-lg font-bold text-white">Diana Imóveis</h2>
                 <p className="text-xs text-white/70">Painel Administrativo</p>

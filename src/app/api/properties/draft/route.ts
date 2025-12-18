@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import Property from "@/lib/db/models/property/property.model";
 import PropertyType from "@/lib/db/models/property/types.model";
 import connectMongoDB from "@/lib/db/mongodbConnection";
-import { PropertySchema } from "@/lib/schemas/property/zod/property.schema";
+import { PropertyDraftSchema } from "@/lib/schemas/property/zod/property-draft.schema";
 import mongoose from "mongoose";
 
 // Creates a property draft
@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     await connectMongoDB();
     const json = await req.json();
 
-    const parsed = PropertySchema.safeParse(json);
+    const parsed = PropertyDraftSchema.safeParse(json);
 
     if (!parsed.success) {
       return NextResponse.json(

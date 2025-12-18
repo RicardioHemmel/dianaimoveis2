@@ -24,24 +24,25 @@ export const PropertyBaseSchema = z.object({
   floorEnd: z.number().optional(),
 
   videoUrl: z.string().optional(),
-  coverImage: z.string().optional(),
+  // coverImage: z.string().optional(),
 
   isFurnished: z.boolean().optional(),
   isNearSubway: z.boolean().optional(),
   isFeatured: z.boolean().optional(),
   isPetFriendly: z.boolean().optional(),
-  isActive: z.boolean().optional(),
   showSquareMeterPrice: z.boolean().optional(),
 
   propertyTypeSlug: z.string(),
-  propertyPurposeId: z.string().optional(),
-  propertyStandingId: z.string().optional(),
-  propertyStatusId: z.string().optional(),
-  propertyTypologyId: z.string().optional(),
-  propertyAmenitiesId: z.array(z.string()).optional(),
+  propertyPurposeId: z.string().nullable().optional(),
+  propertyStandingId: z.string().nullable().optional(),
+  propertyStatusId: z.string().nullable().optional(),
+  propertyTypologyId: z.string().nullable().optional(),
+  propertyAmenitiesId: z.array(z.string().nullable()).optional(),
 
-  propertyGallery: z.array(GalleryItemSchema).optional(),
-  propertyFloorPlanGallery: z.array(GalleryItemSchema).optional(),
+  // propertyGallery: z.array(GalleryItemSchema).optional(),
+  // propertyFloorPlanGallery: z.array(GalleryItemSchema).optional(),
+
+  status: z.string().optional(),
 
   address: z
     .object({
@@ -62,15 +63,16 @@ export const DefaultValuesPropertyForm: PropertyFormData = {
   title: "",
   description: "",
   propertyTypeSlug: "apartamento",
-  propertyPurposeId: "",
-  propertyStandingId: "",
-  propertyStatusId: "",
-  propertyTypologyId: "",
+  propertyPurposeId: undefined,
+  propertyStandingId: undefined,
+  propertyStatusId: undefined,
+  propertyTypologyId: undefined,
   propertyAmenitiesId: [],
   isFeatured: false,
   isFurnished: false,
   isNearSubway: false,
   showSquareMeterPrice: false,
+  status: "",
   isPetFriendly: false,
   address: {
     street: "",
@@ -79,6 +81,6 @@ export const DefaultValuesPropertyForm: PropertyFormData = {
     state: "",
     zipCode: "",
   },
-  coverImage: "",
+  //coverImage: "",
   videoUrl: "",
 };

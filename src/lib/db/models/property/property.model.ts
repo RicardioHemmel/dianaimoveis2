@@ -8,7 +8,7 @@ const PropertySchema = new Schema(
     price: Number,
     bedroomsQty: Number,
     suitesQty: Number,
-    bathbedroomsQty: Number,
+    bathroomsQty: Number,
     parkingSpacesQty: Number,
     area: Number,
     condominiumFee: Number,
@@ -42,9 +42,9 @@ const PropertySchema = new Schema(
       { type: Schema.Types.ObjectId, ref: "PropertyAmenities" },
     ],
 
-    propertyGallery: [{ type: Schema.Types.ObjectId, ref: "Media", order: Number }],
-    propertyFloorPlanGallery: [{ type: Schema.Types.ObjectId, ref: "Media", order: Number }],
-    coverImage: { type: Schema.Types.ObjectId, ref: "Media" },
+    // propertyGallery: [{ type: Schema.Types.ObjectId, ref: "Media", order: Number }],
+    // propertyFloorPlanGallery: [{ type: Schema.Types.ObjectId, ref: "Media", order: Number }],
+    // coverImage: { type: Schema.Types.ObjectId, ref: "Media" },
     videoUrl: String,
 
     status: {
@@ -62,7 +62,6 @@ const PropertySchema = new Schema(
       _id: false,
     },
 
-    isActive: { type: Boolean, default: true },
   },
   { strict: true, timestamps: true }
 );

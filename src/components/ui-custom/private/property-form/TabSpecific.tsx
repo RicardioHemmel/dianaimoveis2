@@ -93,7 +93,7 @@ export default function TabSpecific({
               )}
             />
 
-            {/* Property Standing */}
+            {/* PROPERTY STANDING */}
             <FormField
               control={form.control}
               name="propertyStandingId"
@@ -102,8 +102,8 @@ export default function TabSpecific({
                   <FormLabel>Porte</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    value={field.value}
+                    defaultValue={field.value ?? undefined}
+                    value={field.value ?? undefined}
                   >
                     <FormControl>
                       <SelectTrigger variant="gray" className="mt-1.5 w-full">
@@ -123,7 +123,7 @@ export default function TabSpecific({
               )}
             />
 
-            {/* Property Typology */}
+            {/* PROPERTY TYPOLOGY */}
             <FormField
               control={form.control}
               name="propertyTypologyId"
@@ -132,8 +132,8 @@ export default function TabSpecific({
                   <FormLabel>Tipologia</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    value={field.value}
+                    defaultValue={field.value ?? undefined}
+                    value={field.value ?? undefined}
                   >
                     <FormControl>
                       <SelectTrigger variant="gray" className="mt-1.5 w-full">

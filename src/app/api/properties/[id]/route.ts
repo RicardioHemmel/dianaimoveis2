@@ -11,7 +11,7 @@ type RouteParams = {
 
 export async function GET(req: Request, { params }: RouteParams) {
   try {
-    const { id } = await params; 
+    const { id } = await params;
     await connectMongoDB();
 
     // 1️⃣ Validação de ID (rápida e barata)

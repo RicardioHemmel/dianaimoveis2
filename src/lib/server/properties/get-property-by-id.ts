@@ -2,36 +2,23 @@ import connectMongoDB from "@/lib/db/mongodbConnection";
 import Property from "@/lib/db/models/property/property.model";
 import PropertyType from "@/lib/db/models/property/types.model";
 import { PropertyFormData } from "@/lib/schemas/property/zod/property-base.schema";
+import { PropertyDB } from "@/lib/schemas/property/property-db";
+import { mapPropertyDBToForm } from "@/lib/db/mappers/property/property.mapper";
 
 export async function getPropertyById(
   id: string
 ): Promise<PropertyFormData | null> {
-  try {
-    await connectMongoDB();
+  await connectMongoDB();
 
-    let property = await Property.findById(id).lean();
+  const property = await Property.findById(id).lean<PropertyDB>();
 
-    if (!property) return null;
+  if (!property) return null;
 
-    const { propertyTypeId, ...propertyWithoutType } = property;
+  const propertyType = await PropertyType.findById(
+    property.propertyTypeId
+  ).lean<{ slug: string }>();
 
-    const propertyTypeSlug = await PropertyType.findById({
-      _id: property.propertyTypeId,
-    });
+  if (!propertyType) return null;
 
-    return {
-      ...propertyWithoutType,
-      _id: property._id.toString(),
-      propertyTypeSlug: propertyTypeSlug.slug,
-      propertyAmenitiesId: property.propertyAmenitiesId?.toString(),
-      propertyPurposeId: property.propertyPurposeId?.toString(),
-      propertyStandingId: property.propertyStandingId?.toString(),
-      propertyStatusId: property.propertyStatusId?.toString(),
-      propertyTypologyId: property.propertyTypologyId?.toString(),
-      userId: property.userId?.toString(),
-    } as PropertyFormData;
-  } catch (error) {
-    console.error("Erro ao buscar imóvel no DB:", error);
-    return null;
-  }
+  return mapPropertyDBToForm(property, propertyType.slug);
 }

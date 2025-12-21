@@ -15,13 +15,17 @@ const generatedPublicRoutes = navLinks.map((item) => ({
   whenAuthenticated: "stay",
 }));
 
-//Login Page
+// Public pages to redirect
 const loginPage = "/diana-corretora";
+const forgetPasswordPage = "/forget-password";
+const resetPasswordPage = "/reset-password";
 
 // Free access routes
 const publicRoutes = [
   ...generatedPublicRoutes,
   { path: loginPage, whenAuthenticated: "redirect" }, //Redirect to dashboard if authenticated
+  { path: forgetPasswordPage, whenAuthenticated: "redirect" },
+  { path: resetPasswordPage, whenAuthenticated: "redirect" },
 ] as const; // Says to typeScript that the objects inside publicRoutes wont change their values so it can assume a more specific type to them
 
 // Redirect page when not authenticated
@@ -32,7 +36,17 @@ const REDIRECT_WHEN_AUTHENTICATED = "/dashboard";
 
 export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname; // Get the current request path
-  const publicRoute = publicRoutes.find((route) => route.path === path); // Check if the current path is public
+  const publicRoute = publicRoutes.find((route) => {
+    if (route.path === path) return true;
+    if (
+      route.path === resetPasswordPage &&
+      path.startsWith(`${resetPasswordPage}/`)
+    ) {
+      return true;
+    }
+
+    return false;
+  }); // Check if the current path is public
 
   // Reads the token and validates it including the exp time
   const session = await getToken({ req: request });
@@ -67,8 +81,9 @@ export const config: MiddlewareConfig = {
      * - api (API routes)
      * - _next/static (static files)
      * - _next/image (image optimization files)
-     * - favicon.ico, sitemap.xml, robots.txt (metadata files)
+     * - metadata files & static assets (svg, png, etc.)
+     * - reset password page
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\.svg$|.*\\.png$).*)",
   ],
 };

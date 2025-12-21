@@ -1,6 +1,9 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
+
+// PROVIDERS
+import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 
 // DB
 import User from "@/lib/db/models/user/user.model";
@@ -13,40 +16,49 @@ interface AuthUser {
   role: string;
 }
 
-// Configs NextAuth to use JWT sessions
+// ENV VARIABLES
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+
+if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET)
+  throw new Error("Env variables not defined");
+
+// CONFIGS NEXTAUTH TO USE JWT SESSIONS
 export const authOptions: NextAuthOptions = {
   pages: {
-    signIn: "diana-corretora"
+    signIn: "diana-corretora",
   },
   session: {
     strategy: "jwt",
   },
 
-  // Possible ways to log in
+  // POSSIBLE WAYS TO LOG IN
   providers: [
     CredentialsProvider({
       name: "Credentials",
 
-      // Expected fields to log with credentials
+      // EXPECTED FIELDS TO LOG WITH CREDENTIALS
       credentials: {
         email: { label: "E-mail", type: "email" },
         password: { label: "Senha", type: "password" },
       },
 
-      // Validates if the user is able to log in
+      // VALIDATES IF THE USER IS ABLE TO LOG IN
       async authorize(credentials): Promise<AuthUser | null> {
         // Connects with MongoDB
         await connectMongoDB();
 
+        const ERROR_MSG = "Credenciais inválidas"
+
         // Checks if the credentials were provided
         if (!credentials?.email || !credentials.password) {
-          throw new Error("Credenciais inválidas");
+          throw new Error(ERROR_MSG);
         }
 
         // Searchs user on DB by email
-        const user = await User.findOne({ email: credentials.email }).lean();
+        const user = await User.findOne({ email: credentials?.email }).lean();
         if (!user) {
-          throw new Error("Usuário não encontrado");
+          throw new Error(ERROR_MSG);
         }
 
         // If user found checks his password
@@ -55,7 +67,7 @@ export const authOptions: NextAuthOptions = {
           user.password
         );
         if (!isValid) {
-          throw new Error("Senha incorreta");
+          throw new Error(ERROR_MSG);
         }
 
         // Return data to use in the session without password
@@ -66,6 +78,11 @@ export const authOptions: NextAuthOptions = {
           role: user.role,
         };
       },
+    }),
+    GoogleProvider({
+      name: "Google",
+      clientId: GOOGLE_CLIENT_ID,
+      clientSecret: GOOGLE_CLIENT_SECRET,
     }),
   ],
 

@@ -4,6 +4,8 @@
   --default-hover-navlink: #79c6d7;
   --bg-selected: #185e7a;
   --bg-selected-hover: #0b79a5;
+  --bg-dark-blue: #0f2936;
+  --bg-dark-blue-hover: #0a222e;
 
   --gradient-primary: linear-gradient(
     135deg,

@@ -9,6 +9,12 @@ import GoogleProvider from "next-auth/providers/google";
 import User from "@/lib/db/models/user/user.model";
 import connectMongoDB from "@/lib/db/mongodbConnection";
 
+// --- GMAIL WHITELIST ---
+const ALLOWED_EMAILS = [
+  "ricardohh.websites@gmail.com",
+  "hemnelricardo@gmail.com",
+];
+
 interface AuthUser {
   id: string;
   name: string;
@@ -26,17 +32,18 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET)
 // CONFIGS NEXTAUTH TO USE JWT SESSIONS
 export const authOptions: NextAuthOptions = {
   pages: {
-    signIn: "diana-corretora",
+    signIn: "/diana-corretora",
+    error: "/diana-corretora",
   },
   session: {
     strategy: "jwt",
   },
+  secret: process.env.NEXTAUTH_SECRET,
 
   // POSSIBLE WAYS TO LOG IN
   providers: [
     CredentialsProvider({
       name: "Credentials",
-
       // EXPECTED FIELDS TO LOG WITH CREDENTIALS
       credentials: {
         email: { label: "E-mail", type: "email" },
@@ -45,32 +52,31 @@ export const authOptions: NextAuthOptions = {
 
       // VALIDATES IF THE USER IS ABLE TO LOG IN
       async authorize(credentials): Promise<AuthUser | null> {
-        // Connects with MongoDB
         await connectMongoDB();
 
-        const ERROR_MSG = "Credenciais inválidas"
+        const ERROR_MSG = "Credenciais inválidas";
 
-        // Checks if the credentials were provided
+        // CHECKS IF THE CREDENTIALS WERE PROVIDED
         if (!credentials?.email || !credentials.password) {
           throw new Error(ERROR_MSG);
         }
 
-        // Searchs user on DB by email
+        // SEARCHS USER ON DB BY EMAIL
         const user = await User.findOne({ email: credentials?.email }).lean();
         if (!user) {
           throw new Error(ERROR_MSG);
         }
 
-        // If user found checks his password
+        // IF USER FOUND CHECKS HIS PASSWORD
         const isValid = await bcrypt.compare(
           credentials.password,
-          user.password
+          user.password!
         );
         if (!isValid) {
           throw new Error(ERROR_MSG);
         }
 
-        // Return data to use in the session without password
+        // RETURN DATA TO USE IN THE SESSION WITHOUT PASSWORD
         return {
           id: user._id.toString(),
           name: user.name,
@@ -86,24 +92,78 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
 
-  // After success on login creates token and session
+  // AFTER SUCCESS ON LOGIN CREATES TOKEN AND SESSION
   callbacks: {
-    async jwt({ token, user }) {
+    // CHECK PERMISSION AND CREATE USER IF NECESSARY
+    async signIn({ user, account }) {
+      if (account?.provider === "google") {
+        const userEmail = user?.email?.toLowerCase().trim();
+        const normalizedWhiteList = ALLOWED_EMAILS.map((email) =>
+          email.toLowerCase().trim()
+        );
+
+        //IF THE EMAIL IS NOT ON THE LIST, DENY ACCESS IMMEDIATELY.
+        if (!userEmail || !normalizedWhiteList.includes(userEmail)) {
+          console.log(`Acesso negado para: ${user.email}`);
+          // USED TO VALIDATE ERROR BASED ON URL ON FRONTEND
+          throw new Error("AccessDenied");
+        }
+
+        try {
+          await connectMongoDB();
+
+          const existingUser = await User.findOne({ email: user.email });
+
+          if (!existingUser) {
+            await User.create({
+              name: user.name ?? "Google User",
+              email: userEmail,
+              role: "admin",
+              // No password
+            });
+          }
+          return true;
+        } catch (error) {
+          console.error("Erro ao salvar usuário Google:", error);
+          return false;
+        }
+      }
+      //FOR CREDENTIALS, VALIDATION HAS ALREADY OCCURRED IN AUTHORIZE, SO IT RETURNS TRUE
+      return true;
+    },
+
+    // SEARCH REAL DB ID AND ROLE TO ENSURE CONSISTENCY
+    async jwt({ token, user, account }) {
       if (user) {
-        token.id = user.id;
-        token.role = user.role;
+        if (account?.provider === "google") {
+          // CONNECT TO GET THE REAL MONGO _ID AND ROLE (WHICH MAY HAVE CHANGED)
+          await connectMongoDB();
+          const dbUser = await User.findOne({ email: user.email }).lean();
+
+          if (dbUser) {
+            token.id = dbUser._id.toString();
+            token.role = dbUser.role;
+          }
+        } else {
+          //LOGIN VIA CREDENTIALS ALREADY COMES WITH EVERYTHING FILLED IN THE AUTHORIZE
+          token.id = user.id;
+          token.role = (user as AuthUser).role;
+        }
       }
       return token;
     },
 
+    // CREATES SESSION WITH TOKEN DATA
     async session({ session, token }) {
-      session.user.id = token.id;
-      session.user.role = token.role;
+      if (token && session.user) {
+        session.user.id = token.id as string;
+        session.user.role = token.role as string;
+      }
       return session;
     },
   },
 };
 
-// Creates the handler that will handle this API route with the previously config
+// CREATES THE HANDLER THAT WILL HANDLE THIS API ROUTE WITH THE PREVIOUSLY CONFIG
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };

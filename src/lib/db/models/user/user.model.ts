@@ -9,13 +9,13 @@ export enum UserRole {
 // Interface for TS inferance
 export interface IUser extends Document {
   email: string;
-  password: string;
+  password?: string;
   name: string;
   isActive: boolean;
   avatar?: string;
 
-  resetToken?: string;
-  resetTokenExpiry?: Date | number;
+  resetToken?: string | null;
+  resetTokenExpiry?: Date | number | null;
 
   role: UserRole;
 
@@ -28,10 +28,10 @@ export interface IUser extends Document {
 // MONGODB SCHEMA
 const UserSchema = new Schema<IUser>(
   {
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
     name: { type: String, required: true },
-    isActive: { type: Boolean, default: true, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: false, select: false },
+    isActive: { type: Boolean, default: true },
     avatar: String,
 
     resetToken: { type: String, required: false },

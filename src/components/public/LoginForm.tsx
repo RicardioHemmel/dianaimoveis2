@@ -4,12 +4,11 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
 
 //ICONS
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
-
-// NEXT AUTH
-import { signIn } from "next-auth/react";
 
 // SCHEMA
 import {
@@ -18,11 +17,21 @@ import {
 } from "@/lib/schemas/login/login-form.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+// SERVICES
+import { credentialsLogin } from "@/lib/services/auth/credentials-login.service";
+import { googleLogin } from "@/lib/services/auth/google-login.service";
+
 import { Button } from "../ui/button";
-import { useRouter } from "next/navigation";
 
 export function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const authError = searchParams.get("error");
+
+  // MANAGES CRENDITAL LOGIN STATES
+  const { mutateAsync, isPending, error } = useMutation({
+    mutationFn: credentialsLogin,
+  });
 
   // LOGIN FORM
   const form = useForm<LoginSchema>({
@@ -31,32 +40,24 @@ export function LoginForm() {
 
   // TOGGLE PASSWORD VISIBILITY
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState<string | null | undefined>("");
-  const [isPending, setIsPending] = useState(false);
 
   // LOGIN WITH CREDENTIALS
   const handleCredentialsLogin = form.handleSubmit(async (data) => {
-    setIsPending(true);
-    const result = await signIn("credentials", {
-      ...data,
-      redirect: false,
-    });
-
-    if (!result?.ok) {
-      setIsPending(false);
-      return setError(result?.error);
+    try {
+      await mutateAsync(data);
+      router.replace("/dashboard");
+    } catch (e) {
+      console.log("Erro ao logar: ", e);
     }
-
-    router.replace("/dashboard");
-    setError("");
-    setIsPending(false);
   });
 
   // LOGIN WITH GOOGLE THIRD PARTY
-  const handleGoogleLogin = () => {
-    signIn("google", {
-      callbackUrl: "/dashboard",
-    });
+  const handleGoogleLogin = async () => {
+    try {
+      await googleLogin();
+    } catch (e) {
+      console.log("Erro ao iniciar login Google: ", e);
+    }
   };
 
   return (
@@ -86,6 +87,12 @@ export function LoginForm() {
           </Button>
         </div>
 
+        {/* WHITELIST ERROR FROM URL */}
+        {authError === "AccessDenied" && (
+          <p className="text-sm text-red-600 mb-4 text-center bg-red-50 p-2 rounded">
+            Gmail não autorizado.
+          </p>
+        )}
         {/* DIVIDER */}
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
@@ -172,7 +179,7 @@ export function LoginForm() {
             </label>
           </div>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-sm text-red-600">{error.message}</p>}
 
           <button
             type="submit"

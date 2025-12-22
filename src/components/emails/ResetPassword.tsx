@@ -52,7 +52,7 @@ export default function ResetPasswordEmail({
                 e-mail para ninguém
               </Text>
               <Text className="text-base text-[#404040] leading-[26px]">
-                Com carinho, Ricardo Hemmel!
+                Com carinho, suporte técnico do Diana Imóveis ❤️!
               </Text>
 
               <Button

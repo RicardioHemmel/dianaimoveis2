@@ -9,33 +9,12 @@ import { useMutation } from "@tanstack/react-query";
 // ICONS
 import { Eye, EyeOff, Lock } from "lucide-react";
 
+// SERVICES
+import { verifyResetToken } from "@/lib/services/auth/verify-reset-token.service";
+import { resetPassword } from "@/lib/services/auth/reset-password.service";
+
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
-
-// ROUTE TO SEND EMAIL
-async function fetchResetPassword({
-  token,
-  newPassword,
-}: {
-  token: string;
-  newPassword: string;
-}) {
-  const response = await fetch("/api/users/reset-password", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ token, newPassword }),
-  });
-
-  const result = await response.json();
-
-  if (!response.ok) {
-    throw new Error(result.error ?? "Erro ao redefinir senha");
-  }
-
-  return result;
-}
 
 interface ResetPasswordFormProps {
   token: string;
@@ -59,10 +38,34 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   const [newPassword, setNewPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [validationError, setValidationError] = useState("");
+  const [tokenError, setTokenError] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+
   const { mutateAsync, isPending, isError, isSuccess, error, data } =
     useMutation({
-      mutationFn: fetchResetPassword,
+      mutationFn: resetPassword,
     });
+
+  // VERIFIES RESET TOKEN
+  useEffect(() => {
+    async function fetchVerifyResetToken() {
+      try {
+        const result = await verifyResetToken(token);
+        console.log("Token válido:", result);
+      } catch (e) {
+        if (e instanceof Error) {
+          setTokenError(e.message);
+          console.log("Token inválido:", e.message);
+        } else {
+          setTokenError("Erro inesperado");
+        }
+      }
+    }
+
+    if (token) {
+      fetchVerifyResetToken();
+    }
+  }, [token]);
 
   // FORM SUBMIT
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -72,7 +75,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     if (!validation.success) {
       return setValidationError(validation.error.issues[0].message);
     }
-    await mutateAsync({ token, newPassword });
+    await mutateAsync(newPassword);
   }
 
   return (
@@ -132,6 +135,8 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
           {validationError && (
             <p className="text-sm text-red-600">{validationError}</p>
           )}
+
+          {tokenError && <p className="text-sm text-red-600">{tokenError}</p>}
 
           {isSuccess && (
             <p className="text-sm text-green-600">{data.success}</p>

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 
 // ROUTE TO SEND EMAIL
@@ -20,7 +20,7 @@ async function fetchForgetPassword(email: string) {
   const result = await response.json();
 
   if (!response.ok) {
-    throw new Error(result.error ?? "Erro ao enviar email");
+    throw new Error(result.error);
   }
 
   return result;
@@ -41,14 +41,6 @@ export function ForgetPasswordForm() {
     e.preventDefault();
     await mutateAsync(email);
   }
-
-  useEffect(() => {
-    if (isSuccess) {
-      setTimeout(() => {
-        router.replace("/diana-corretora");
-      }, 5000);
-    }
-  }, [isSuccess]);
 
   return (
     <div className="w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden">

@@ -12,9 +12,9 @@ import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 
 // SCHEMA
 import {
-  LoginSchema,
-  loginSchema,
-} from "@/lib/schemas/login/login-form.schema";
+  loginCredentialsSchema,
+  LoginCredentialsSchema,
+} from "@/lib/schemas/auth/credentials.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // SERVICES
@@ -26,7 +26,7 @@ import { Button } from "../ui/button";
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const authError = searchParams.get("error");
+  const googleThirdPartyError = searchParams.get("error");
 
   // MANAGES CRENDITAL LOGIN STATES
   const { mutateAsync, isPending, error } = useMutation({
@@ -34,15 +34,19 @@ export function LoginForm() {
   });
 
   // LOGIN FORM
-  const form = useForm<LoginSchema>({
-    resolver: zodResolver(loginSchema),
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginCredentialsSchema>({
+    resolver: zodResolver(loginCredentialsSchema),
   });
 
   // TOGGLE PASSWORD VISIBILITY
   const [showPassword, setShowPassword] = useState(false);
 
   // LOGIN WITH CREDENTIALS
-  const handleCredentialsLogin = form.handleSubmit(async (data) => {
+  const handleCredentialsLogin = handleSubmit(async (data) => {
     try {
       await mutateAsync(data);
       router.replace("/dashboard");
@@ -88,7 +92,7 @@ export function LoginForm() {
         </div>
 
         {/* WHITELIST ERROR FROM URL */}
-        {authError === "AccessDenied" && (
+        {googleThirdPartyError === "AccessDenied" && (
           <p className="text-sm text-red-600 mb-4 text-center bg-red-50 p-2 rounded">
             Gmail não autorizado.
           </p>
@@ -121,10 +125,15 @@ export function LoginForm() {
                 type="email"
                 placeholder="seu@email.com"
                 className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2c4c5b] focus:border-transparent transition-all text-gray-900 placeholder:text-gray-400"
-                {...form.register("email")}
+                {...register("email")}
                 required
               />
             </div>
+            {errors.email && (
+              <p className="text-sm text-red-600 mt-1">
+                {errors.email.message}
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -151,7 +160,7 @@ export function LoginForm() {
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
                 className="w-full pl-10 pr-12 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2c4c5b] focus:border-transparent transition-all text-gray-900 placeholder:text-gray-400"
-                {...form.register("password")}
+                {...register("password")}
                 required
               />
               <button
@@ -166,6 +175,12 @@ export function LoginForm() {
                 )}
               </button>
             </div>
+
+            {errors.password && (
+              <p className="text-sm text-red-600 mt-1">
+                {errors.password.message}
+              </p>
+            )}
           </div>
 
           <div className="flex items-center space-x-2">

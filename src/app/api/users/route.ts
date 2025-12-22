@@ -3,6 +3,7 @@ import connectMongoDB from "@/lib/db/mongodbConnection";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 
+// VERIFIES IF RESET TOKEN IS VALID
 export async function POST(request: Request) {
   try {
     const body = await request.json();

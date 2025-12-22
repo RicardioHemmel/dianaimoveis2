@@ -21,11 +21,11 @@ const ForgotPasswordSchema = z.email({ error: "Formato inválido para email" });
 const successMsg =
   "Se o email estiver cadastrado, você receberá um link de redefinição.";
 
+// SENDS A RESET TOKEN TO REDEFINE PASSWORD ON EMAIL
 export async function POST(req: Request) {
   // VALIDATES JSON BODY
   const body = await req.json();
   const { email } = body;
-
   const validation = ForgotPasswordSchema.safeParse(email);
 
   if (validation.error) {
@@ -37,11 +37,28 @@ export async function POST(req: Request) {
 
   await connectMongoDB();
 
-  const existingUser = await User.findOne({ email });
+  const existingUser = await User.findOne({
+    email,
+    password: { $exists: true, $ne: null },
+  });
 
   // SIMULATES SUCCESS FOR ENUMERATION PROTECTION
   if (!existingUser) {
-    console.log("usuário não existe no banco", existingUser);
+    console.log("Usuário não existe no banco", existingUser);
+    return NextResponse.json(
+      {
+        success: successMsg,
+      },
+      { status: 200 }
+    );
+  }
+
+  // SIMULATES SUCCESS FOR ENUMERATION PROTECTION AND PREVENTS TO SEND UNECESSARY EMAILS
+  if (
+    existingUser.resetTokenExpiry &&
+    existingUser.resetTokenExpiry > new Date()
+  ) {
+    console.log("Usuário existe, mas o token ainda é válido");
     return NextResponse.json(
       {
         success: successMsg,
@@ -59,7 +76,7 @@ export async function POST(req: Request) {
     .update(resetToken)
     .digest("hex");
 
-  // 1 HOUR SINCE GENERATED
+  // VALID FOR 1 HOUR SINCE GENERATED
   const hashedResetTokenExpiresIn = Date.now() + 3600000;
 
   // STORES TOKEN LOGIC

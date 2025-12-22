@@ -1,39 +1,25 @@
 "use client";
 
+// REACT | NEXT
 import Link from "next/link";
-import { Mail } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 
-// ROUTE TO SEND EMAIL
-async function fetchForgetPassword(email: string) {
-  const response = await fetch("/api/users/forget-password", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email }),
-  });
+// ICONS
+import { Mail } from "lucide-react";
 
-  const result = await response.json();
+// SERVICES
+import { forgetPassword } from "@/lib/services/auth/forget-password.service";
 
-  if (!response.ok) {
-    throw new Error(result.error);
-  }
-
-  return result;
-}
+// COMPONENTS
+import { Button } from "@/components/ui/button";
 
 export function ForgetPasswordForm() {
-  const router = useRouter();
-
   // STATE MANAGEMENT
   const [email, setEmail] = useState("");
   const { mutateAsync, isPending, isError, isSuccess, error, data } =
     useMutation({
-      mutationFn: fetchForgetPassword,
+      mutationFn: forgetPassword,
     });
 
   // FORM SUBMIT

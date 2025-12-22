@@ -29,25 +29,10 @@ export async function POST(req: Request) {
     );
   }
 
-  // INVALIDATES TOKEN
-  try {
-    user.resetToken = null;
-    user.resetTokenExpiry = null;
-    user.save();
+  const safeUser = {
+    email: user.email,
+  };
 
-    const safeUser = {
-      email: user.email,
-    };
-
-    return NextResponse.json(safeUser, { status: 200 });
-  } catch (e) {
-    return NextResponse.json(
-      {
-        error: `Falha ao validar o token`,
-      },
-      {
-        status: 500,
-      }
-    );
-  }
+  
+  return NextResponse.json(safeUser, { status: 200 });
 }

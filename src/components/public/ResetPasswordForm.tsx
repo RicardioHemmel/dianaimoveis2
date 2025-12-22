@@ -2,7 +2,6 @@
 
 // REACT | NEXT
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 
@@ -13,33 +12,22 @@ import { Eye, EyeOff, Lock } from "lucide-react";
 import { verifyResetToken } from "@/lib/services/auth/verify-reset-token.service";
 import { resetPassword } from "@/lib/services/auth/reset-password.service";
 
-import { Button } from "@/components/ui/button";
-import { z } from "zod";
+// SCHEMA
+import { passwordSchema } from "@/lib/schemas/auth/credentials.schema";
 
+import { Button } from "@/components/ui/button";
+
+// PROPS
 interface ResetPasswordFormProps {
   token: string;
 }
 
 export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
-  const router = useRouter();
-  const PasswordSchema = z
-    .string()
-    .min(8, { message: "Senha precisa ter no mínimo 8 caracteres" })
-    .max(20, { message: "Senha não pode ter mais do que 20 caracteres" })
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/,
-      {
-        message:
-          "Senha deve conter letra maiúscula, minúscula, número e caractere especial",
-      }
-    );
-
-  // STATE MANAGEMENT
-  const [newPassword, setNewPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [validationError, setValidationError] = useState("");
-  const [tokenError, setTokenError] = useState("");
-  const [userEmail, setUserEmail] = useState("");
+  const [newPassword, setNewPassword] = useState<string>(""); // NEW PASSWORD TYPED BY THE USER
+  const [showPassword, setShowPassword] = useState<boolean>(false); // TOGGLE PASSWORD VISIBILITY
+  const [userEmail, setUserEmail] = useState<string | null>(null); // IF TOKEN IS VALID RETURN USER EMAIL FOR PASSWORD DEFINITION
+  const [validationError, setValidationError] = useState<string>(""); // ZOD VALIDATION FOR THE NEW PASSWORD
+  const [tokenError, setTokenError] = useState<string>(""); // IF ANY PROBLEM IN THE TOKEN VALIDATION ROUTE
 
   const { mutateAsync, isPending, isError, isSuccess, error, data } =
     useMutation({
@@ -50,12 +38,11 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   useEffect(() => {
     async function fetchVerifyResetToken() {
       try {
-        const result = await verifyResetToken(token);
-        console.log("Token válido:", result);
+        const userEmail = await verifyResetToken(token);
+        setUserEmail(userEmail);
       } catch (e) {
         if (e instanceof Error) {
           setTokenError(e.message);
-          console.log("Token inválido:", e.message);
         } else {
           setTokenError("Erro inesperado");
         }
@@ -67,15 +54,27 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     }
   }, [token]);
 
+  function validatePassword(value: string) {
+    const result = passwordSchema.safeParse(value);
+
+    if (!result.success) {
+      setValidationError(result.error.issues[0].message);
+    } else {
+      setValidationError("");
+    }
+  }
+
   // FORM SUBMIT
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const validation = PasswordSchema.safeParse(newPassword);
+    const validation = passwordSchema.safeParse(newPassword);
 
     if (!validation.success) {
       return setValidationError(validation.error.issues[0].message);
     }
-    await mutateAsync(newPassword);
+    if (!newPassword || !userEmail) return;
+
+    await mutateAsync({ newPassword, userEmail });
   }
 
   return (
@@ -110,7 +109,11 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                 id="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
-                onChange={(e) => setNewPassword(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setNewPassword(value);
+                  validatePassword(value);
+                }}
                 className="w-full pl-10 pr-4 py-3 border rounded-lg"
                 required
               />

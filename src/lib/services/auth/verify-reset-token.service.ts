@@ -13,5 +13,5 @@ export async function verifyResetToken(token: string) {
     throw new Error(result.error);
   }
 
-  return result;
+  return result.email;
 }

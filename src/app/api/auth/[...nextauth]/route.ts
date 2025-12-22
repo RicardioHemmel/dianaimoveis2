@@ -9,11 +9,16 @@ import GoogleProvider from "next-auth/providers/google";
 import User from "@/lib/db/models/user/user.model";
 import connectMongoDB from "@/lib/db/mongodbConnection";
 
+// SCHEMA
+import { loginCredentialsSchema } from "@/lib/schemas/auth/credentials.schema";
+import { Select } from "@radix-ui/react-select";
+
 // --- GMAIL WHITELIST ---
-const ALLOWED_EMAILS = [
-  "ricardohh.websites@gmail.com",
-  "hemnelricardo@gmail.com",
-];
+const ALLOWED_GMAILS = process.env.ALLOWED_GMAILS
+  ? process.env.ALLOWED_GMAILS.split(",").map((email) =>
+      email.trim().toLowerCase()
+    )
+  : [];
 
 interface AuthUser {
   id: string;
@@ -25,6 +30,9 @@ interface AuthUser {
 // ENV VARIABLES
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+
+// GENERIC ERROR MESSAGE
+const ERROR_MSG = "Credenciais inválidas";
 
 if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET)
   throw new Error("Env variables not defined");
@@ -52,27 +60,31 @@ export const authOptions: NextAuthOptions = {
 
       // VALIDATES IF THE USER IS ABLE TO LOG IN
       async authorize(credentials): Promise<AuthUser | null> {
-        await connectMongoDB();
+        const parsed = loginCredentialsSchema.safeParse(credentials);
 
-        const ERROR_MSG = "Credenciais inválidas";
-
-        // CHECKS IF THE CREDENTIALS WERE PROVIDED
-        if (!credentials?.email || !credentials.password) {
-          throw new Error(ERROR_MSG);
+        if (!parsed.success) {
+          throw new Error("Dados Inválidos");
         }
 
+        // PARSED DATA WITH ZOD
+        const { email, password } = parsed.data;
+
+        await connectMongoDB();
+
         // SEARCHS USER ON DB BY EMAIL
-        const user = await User.findOne({ email: credentials?.email }).lean();
+        const user = await User.findOne({ email }).select("+password").lean();
         if (!user) {
           throw new Error(ERROR_MSG);
         }
 
+        if (!user.password) {
+          throw new Error(ERROR_MSG);
+        }
+
         // IF USER FOUND CHECKS HIS PASSWORD
-        const isValid = await bcrypt.compare(
-          credentials.password,
-          user.password!
-        );
-        if (!isValid) {
+        const validPassword = await bcrypt.compare(password, user.password);
+
+        if (!validPassword) {
           throw new Error(ERROR_MSG);
         }
 
@@ -98,12 +110,9 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, account }) {
       if (account?.provider === "google") {
         const userEmail = user?.email?.toLowerCase().trim();
-        const normalizedWhiteList = ALLOWED_EMAILS.map((email) =>
-          email.toLowerCase().trim()
-        );
 
         //IF THE EMAIL IS NOT ON THE LIST, DENY ACCESS IMMEDIATELY.
-        if (!userEmail || !normalizedWhiteList.includes(userEmail)) {
+        if (!userEmail || !ALLOWED_GMAILS.includes(userEmail)) {
           console.log(`Acesso negado para: ${user.email}`);
           // USED TO VALIDATE ERROR BASED ON URL ON FRONTEND
           throw new Error("AccessDenied");

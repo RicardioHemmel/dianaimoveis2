@@ -4,6 +4,7 @@ interface LoginData {
   email: string;
   password: string;
 }
+
 export async function credentialsLogin(data: LoginData) {
   const response = await signIn("credentials", {
     ...data,

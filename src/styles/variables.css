@@ -1,4 +1,24 @@
 :root {
+  /* DIANA IMÓVEIS VARIABLES */
+  --text-primary: #ffffff;
+  --text-secondary: hsla(0, 0%, 100%, 0.8);
+  
+  --text-tag: #ebbd36;
+  --bg-tag: #f7f4e6;
+
+  --surface-base: #f9fafb;
+  --surface-muted: #f5f7f8;
+
+  --gradient-hero-from: hsl(220, 60%, 20%);
+  --gradient-hero-via: hsl(219, 52%, 39%);
+  --gradient-hero-to: hsl(220, 66%, 18%);
+
+  --bg-hero: #142952;
+
+  --action-primary: #f1c644;
+  --action-primary-hover: #e0b639;
+
+  /* DASHBOARD VARIABLES */
   --soft-primary-custom: #018493;
   --default-navlink: #447c9c;
   --default-hover-navlink: #79c6d7;

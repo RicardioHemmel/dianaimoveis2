@@ -1,6 +1,19 @@
 import type { Metadata } from "next";
-import "../styles/globals.css";
 import ReactQueryProvider from "@/providers/react-query-provider";
+import "../styles/globals.css";
+import { Playfair_Display, Inter } from "next/font/google";
+
+const playfair_display = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-primary",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-secondary",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -19,8 +32,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
-      <body className={`antialiased`}>
+    <html
+      lang="pt-BR"
+      className={`${inter.variable} ${playfair_display.variable}`}
+    >
+      <body className="antialiased">
         <ReactQueryProvider>{children}</ReactQueryProvider>
       </body>
     </html>

@@ -1,12 +1,13 @@
 "use client";
 
-// Shadcnui components
+// COMPONENTS
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
+
 import {
   Sheet,
   SheetContent,
@@ -14,20 +15,21 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-// Component that hides elements but keep them on screen for screen read users
+// COMPONENT THAT HIDES ELEMENTS BUT KEEP THEM ON SCREEN FOR SCREEN READ USERS
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
-// Icons
-import { Menu } from "lucide-react";
+// ICONS
+import { Menu, Phone, Search } from "lucide-react";
 
-// Next / React
+// NEXT / REACT
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 
-// NavLinks
+// NAVLINKS
 import { navLinks } from "@/lib/constants/links/navbar-links";
+import { Button } from "@/components/ui/button";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -36,7 +38,7 @@ export function Navbar() {
   return (
     <header className="flex justify-center min-h-20 border-b">
       <div className="w-[90%] max-w-7xl flex justify-between items-center">
-        {/* Logo */}
+        {/* LOGO */}
         <div>
           <Link href="/">
             <Image
@@ -49,7 +51,7 @@ export function Navbar() {
           </Link>
         </div>
 
-        {/* Menu Desktop */}
+        {/* MENU DESKTOP */}
         <NavigationMenu className="hidden md:block ml-10">
           <NavigationMenuList className="gap-2 lg:gap-6">
             {navLinks.map((item) => {
@@ -60,8 +62,8 @@ export function Navbar() {
                     <Link
                       href={item.path}
                       className={`${
-                        isActive ? "text-[var(--default-navlink)]" : ""
-                      } font-semibold hover:text-[var(--default-hover-navlink)]`}
+                        isActive ? "text-action-primary" : ""
+                      } font-semibold hover:bg-zinc-200/70`}
                     >
                       {item.title}
                     </Link>
@@ -72,43 +74,32 @@ export function Navbar() {
           </NavigationMenuList>
         </NavigationMenu>
 
-        {/* Ações (Whats + redes) - escondo no mobile */}
-        <div className="hidden xl:flex items-center gap-10">
-          <a
-            href={`https://wa.me/5511966536993?text=Olá%20Diana,`}
-            className={`flex items-center gap-3`}
+        {/* ACTIONS (WHATS + REDES) */}
+        <div className="hidden xl:flex items-center gap-5">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="bg-gray-100 hover:bg-bg-tag hover:text-tag transition-all duration-300"
+            asChild
           >
-            <p className="font-medium text-[15px]">(11) 96653-6993</p>
-            <Image
-              className="w-[19px] h-[19px]"
-              src="/whatsappIcon.png"
-              alt="Whatsapp Icon"
-              width={19}
-              height={19}
-            />
-          </a>
+            <Link href="/properties">
+              <Search className="h-5 w-5" />
+            </Link>
+          </Button>
 
-          <div className="flex gap-4">
-            <a href="/" target="_blank">
-              <Image
-                src="/facebookIcon.png"
-                alt="Facebook"
-                width={21}
-                height={21}
-              />
+          <Button asChild size={"lg"} variant={"gold"}>
+            <a
+              href="https://wa.me/5511966536993?text=Olá%20Diana,"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Phone className="w-5 h-5 mr-2" />
+              Fale Comigo
             </a>
-            <a href="/" target="_blank">
-              <Image
-                src="/instagramIcon.png"
-                alt="Instagram"
-                width={21}
-                height={21}
-              />
-            </a>
-          </div>
+          </Button>
         </div>
 
-        {/* Botão Hamburger Mobile */}
+        {/* HAMBURGER MOBILE BUTTON */}
         <div className="md:hidden">
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
@@ -121,7 +112,7 @@ export function Navbar() {
               className="bg-white w-screen sm:max-w-screen "
               aria-describedby={undefined}
             >
-              {/* Its necessary to have a title for screen reader users*/}
+              {/* ITS NECESSARY TO HAVE A TITLE FOR SCREEN READER USERS*/}
               <VisuallyHidden>
                 <SheetTitle>Menu de navegação</SheetTitle>
               </VisuallyHidden>

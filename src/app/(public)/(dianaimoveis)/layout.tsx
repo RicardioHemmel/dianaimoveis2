@@ -1,10 +1,6 @@
+import '@/styles/public.css'
+import { Footer } from "@/components/public/layout/Footer";
 import { Navbar } from "@/components/public/layout/Navbar";
-import { Poppins } from "next/font/google";
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
 
 export default function PublicLayout({
   children,
@@ -12,9 +8,10 @@ export default function PublicLayout({
   children: React.ReactNode;
 }) {
   return (
-    <section className={`${poppins.className}`}>
+    <section>
       <Navbar />
       {children}
+      <Footer />
     </section>
   );
 }

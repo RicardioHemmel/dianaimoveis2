@@ -3,12 +3,7 @@ import { AppSidebar } from "@/components/private/layout/Sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Menu } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
-import { Inter } from "next/font/google";
 
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
 
 export const metadata: Metadata = {
   title: "Painel Administrativo",
@@ -22,7 +17,7 @@ export default async function PrivateLayout({
   return (
     <SidebarProvider defaultOpen={true}>
       <section
-        className={`${inter.className} min-h-screen flex w-full bg-background`}
+        className={`min-h-screen flex w-full bg-background`}
       >
         <AppSidebar />
         <div className="flex-1 flex flex-col bg-gray-50">

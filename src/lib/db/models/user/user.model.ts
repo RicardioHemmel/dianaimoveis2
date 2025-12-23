@@ -15,7 +15,7 @@ export interface IUser extends Document {
   avatar?: string;
 
   resetToken?: string | null;
-  resetTokenExpiry?: Date | number | null;
+  resetTokenExpiry?: Date | null;
 
   role: UserRole;
 

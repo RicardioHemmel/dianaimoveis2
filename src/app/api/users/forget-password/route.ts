@@ -12,11 +12,10 @@ import ResetPasswordEmail from "@/components/emails/ResetPassword";
 import { Resend } from "resend";
 
 // SCHEMA
-import z from "zod";
+import { emailSchema } from "@/lib/schemas/auth/credentials.schema";
 
+// EMAIL PROVIDER
 const resend = new Resend(process.env.RESEND_API_KEY);
-
-const ForgotPasswordSchema = z.email({ error: "Formato inválido para email" });
 
 const successMsg =
   "Se o email estiver cadastrado, você receberá um link de redefinição.";
@@ -26,7 +25,7 @@ export async function POST(req: Request) {
   // VALIDATES JSON BODY
   const body = await req.json();
   const { email } = body;
-  const validation = ForgotPasswordSchema.safeParse(email);
+  const validation = emailSchema.safeParse(email);
 
   if (validation.error) {
     return NextResponse.json(

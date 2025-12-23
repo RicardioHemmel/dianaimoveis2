@@ -13,7 +13,7 @@ import { verifyResetToken } from "@/lib/services/auth/verify-reset-token.service
 import { resetPassword } from "@/lib/services/auth/reset-password.service";
 
 // SCHEMA
-import { passwordSchema } from "@/lib/schemas/auth/credentials.schema";
+import { passwordResetSchema } from "@/lib/schemas/auth/credentials.schema";
 
 import { Button } from "@/components/ui/button";
 
@@ -55,7 +55,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   }, [token]);
 
   function validatePassword(value: string) {
-    const result = passwordSchema.safeParse(value);
+    const result = passwordResetSchema.safeParse(value);
 
     if (!result.success) {
       setValidationError(result.error.issues[0].message);
@@ -67,11 +67,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   // FORM SUBMIT
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const validation = passwordSchema.safeParse(newPassword);
 
-    if (!validation.success) {
-      return setValidationError(validation.error.issues[0].message);
-    }
     if (!newPassword || !userEmail) return;
 
     await mutateAsync({ newPassword, userEmail });
@@ -136,7 +132,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
           )}
 
           {validationError && (
-            <p className="text-sm text-red-600">{validationError}</p>
+            <p className="text-sm">{validationError}</p>
           )}
 
           {tokenError && <p className="text-sm text-red-600">{tokenError}</p>}
@@ -147,7 +143,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
 
           <Button
             type="submit"
-            disabled={isPending || validationError.length > 0}
+            disabled={isPending || validationError.length > 0 || tokenError.length > 0 || isError }
             className="w-full bg-[var(--bg-selected)] hover:bg-[var(--bg-selected-hover)]"
           >
             {isPending ? "Enviando..." : "Enviar"}
@@ -156,7 +152,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
           <div className="flex justify-center">
             <Link
               href="/diana-corretora"
-              className="text-xs font-medium text-[#2c4c5b]"
+              className="text-sm font-medium text-[#2c4c5b]"
             >
               Voltar para Login
             </Link>

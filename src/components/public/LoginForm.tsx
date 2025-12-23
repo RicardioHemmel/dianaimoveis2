@@ -183,17 +183,6 @@ export function LoginForm() {
             )}
           </div>
 
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="remember"
-              className="h-4 w-4 rounded border-gray-300 text-[#2c4c5b] focus:ring-[#2c4c5b]"
-            />
-            <label htmlFor="remember" className="text-sm text-gray-600">
-              Lembrar-me
-            </label>
-          </div>
-
           {error && <p className="text-sm text-red-600">{error.message}</p>}
 
           <button

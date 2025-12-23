@@ -23,6 +23,17 @@ export async function POST(req: Request) {
     );
   }
 
+  if (
+    !user.resetToken ||
+    !user.resetTokenExpiry ||
+    user.resetTokenExpiry <= new Date()
+  ) {
+    return NextResponse.json(
+      { error: "Token inválido ou expirado" },
+      { status: 400 }
+    );
+  }
+
   const newPasswordHash = await bcrypt.hash(newPassword, 10);
 
   // INVALIDATES TOKEN

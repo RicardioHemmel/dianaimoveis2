@@ -11,7 +11,6 @@ import connectMongoDB from "@/lib/db/mongodbConnection";
 
 // SCHEMA
 import { loginCredentialsSchema } from "@/lib/schemas/auth/credentials.schema";
-import { Select } from "@radix-ui/react-select";
 
 // --- GMAIL WHITELIST ---
 const ALLOWED_GMAILS = process.env.ALLOWED_GMAILS

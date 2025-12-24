@@ -49,7 +49,7 @@ export async function proxy(request: NextRequest) {
   }); // Check if the current path is public
 
   // Reads the token and validates it including the exp time
-  const session = await getToken({ req: request });
+  const session = await getToken({ req: request, secret: process.env.AUTH_SECRET });
 
   // If user doesn't have token but wants to access a public route, he is able to
   if (!session && publicRoute) {

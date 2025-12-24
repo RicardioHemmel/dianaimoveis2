@@ -1,7 +1,7 @@
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 
 export default async function DashboardPage() {
-  const session = await getServerSession();
+  const session = await auth();
   return (
     <div>
       <div className="bg-[image:var(--gradient-primary)] rounded-2xl p-8 text-white shadow-premium">

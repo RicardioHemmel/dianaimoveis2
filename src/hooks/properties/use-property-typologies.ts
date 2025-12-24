@@ -1,4 +1,4 @@
-import { fetchTypologies } from "@/lib/actions/property-typologies/fetch-typologies";
+import { fetchTypologies } from "@/lib/server-actions/property-typologies/fetch-typologies";
 import { PropertySelectOption } from "@/lib/schemas/property/property-select-option";
 import { useQuery } from "@tanstack/react-query";
 

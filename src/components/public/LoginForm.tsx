@@ -2,67 +2,26 @@
 
 // REACT | NEXT
 import Link from "next/link";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
+import { useState, useActionState } from "react";
 
-//ICONS
+// ACTIONS
+import { loginGoogleAction } from "@/lib/server-actions/auth/login-google.action";
+import { loginCredentialsAction } from "@/lib/server-actions/auth/login-credentials.action";
+
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
-
-// SCHEMA
-import {
-  loginCredentialsSchema,
-  LoginCredentialsSchema,
-} from "@/lib/schemas/auth/credentials.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-// SERVICES
-import { credentialsLogin } from "@/lib/services/auth/credentials-login.service";
-import { googleLogin } from "@/lib/services/auth/google-login.service";
-
 import { Button } from "../ui/button";
 
-export function LoginForm() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const googleThirdPartyError = searchParams.get("error");
+interface LoginFormProps {
+  googleError?: string;
+}
 
-  // MANAGES CRENDITAL LOGIN STATES
-  const { mutateAsync, isPending, error } = useMutation({
-    mutationFn: credentialsLogin,
-  });
-
-  // LOGIN FORM
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginCredentialsSchema>({
-    resolver: zodResolver(loginCredentialsSchema),
-  });
-
-  // TOGGLE PASSWORD VISIBILITY
+export function LoginForm({ googleError }: LoginFormProps) {
   const [showPassword, setShowPassword] = useState(false);
 
-  // LOGIN WITH CREDENTIALS
-  const handleCredentialsLogin = handleSubmit(async (data) => {
-    try {
-      await mutateAsync(data);
-      router.replace("/dashboard");
-    } catch (e) {
-      console.log("Erro ao logar: ", e);
-    }
-  });
-
-  // LOGIN WITH GOOGLE THIRD PARTY
-  const handleGoogleLogin = async () => {
-    try {
-      await googleLogin();
-    } catch (e) {
-      console.log("Erro ao iniciar login Google: ", e);
-    }
-  };
+  const [state, credentialsFormAction, pending] = useActionState(
+    loginCredentialsAction,
+    null
+  );
 
   return (
     <div className="w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden relative">
@@ -75,24 +34,25 @@ export function LoginForm() {
         </div>
 
         {/* GOOGLE LOGIN */}
-        <div className="my-6">
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full h-12 gap-3 border-gray-200 hover:bg-gray-50 text-gray-700 bg-transparent"
-            onClick={handleGoogleLogin}
-          >
-            <img
-              src="/icons/googleIcon.png"
-              alt="Google Icone"
-              className="w-5 h-auto"
-            />
-            Continuar com Google
-          </Button>
-        </div>
+        <form action={loginGoogleAction}>
+          <div className="my-6">
+            <Button
+              type="submit"
+              variant="outline"
+              className="w-full h-12 gap-3 border-gray-200 hover:bg-gray-50 text-gray-700 bg-transparent"
+            >
+              <img
+                src="/icons/googleIcon.png"
+                alt="Google Icone"
+                className="w-5 h-auto"
+              />
+              Continuar com Google
+            </Button>
+          </div>
+        </form>
 
         {/* WHITELIST ERROR FROM URL */}
-        {googleThirdPartyError === "AccessDenied" && (
+        {googleError === "AccessDenied" && (
           <p className="text-sm text-red-600 mb-4 text-center bg-red-50 p-2 rounded">
             Gmail não autorizado.
           </p>
@@ -108,7 +68,7 @@ export function LoginForm() {
         </div>
 
         {/* CREDENTIALS LOGIN */}
-        <form className="space-y-5" onSubmit={handleCredentialsLogin}>
+        <form className="space-y-5" action={credentialsFormAction}>
           <div className="space-y-2">
             <label
               htmlFor="email"
@@ -122,16 +82,17 @@ export function LoginForm() {
               </div>
               <input
                 id="email"
+                name="email"
+                defaultValue={state?.email}
                 type="email"
                 placeholder="seu@email.com"
                 className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2c4c5b] focus:border-transparent transition-all text-gray-900 placeholder:text-gray-400"
-                {...register("email")}
                 required
               />
             </div>
-            {errors.email && (
+            {state?.fieldsErrors?.email && (
               <p className="text-sm text-red-600 mt-1">
-                {errors.email.message}
+                {state.fieldsErrors.email}
               </p>
             )}
           </div>
@@ -157,10 +118,10 @@ export function LoginForm() {
               </div>
               <input
                 id="password"
+                name="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
                 className="w-full pl-10 pr-12 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2c4c5b] focus:border-transparent transition-all text-gray-900 placeholder:text-gray-400"
-                {...register("password")}
                 required
               />
               <button
@@ -176,21 +137,23 @@ export function LoginForm() {
               </button>
             </div>
 
-            {errors.password && (
+            {state?.fieldsErrors?.password && (
               <p className="text-sm text-red-600 mt-1">
-                {errors.password.message}
+                {state.fieldsErrors.password}
               </p>
             )}
           </div>
 
-          {error && <p className="text-sm text-red-600">{error.message}</p>}
+          {state?.message && (
+            <p className="text-sm text-red-600">{state.message}</p>
+          )}
 
           <button
             type="submit"
-            disabled={isPending}
+            disabled={pending}
             className="w-full bg-[#2c4c5b] hover:bg-[#1e3641] text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg cursor-pointer"
           >
-            <span>{isPending ? "Entrando" : "Entrar"}</span>
+            <span>{pending ? "Entrando..." : "Entrar"}</span>
           </button>
         </form>
       </div>

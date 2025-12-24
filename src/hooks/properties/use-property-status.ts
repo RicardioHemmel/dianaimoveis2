@@ -1,4 +1,4 @@
-import { fetchStatus } from "@/lib/actions/property-status/fetch-status";
+import { fetchStatus } from "@/lib/server-actions/property-status/fetch-status";
 import { useQuery } from "@tanstack/react-query";
 import { PropertySelectOption } from "@/lib/schemas/property/property-select-option";
 

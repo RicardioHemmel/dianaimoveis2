@@ -2,31 +2,22 @@
 
 // REACT | NEXT
 import Link from "next/link";
-import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useActionState } from "react";
 
 // ICONS
 import { Mail } from "lucide-react";
 
-// SERVICES
-import { forgetPassword } from "@/lib/services/auth/forget-password.service";
+// SERVER ACTION
+import { forgetPasswordAction } from "@/lib/server-actions/auth/forget-password.action";
 
 // COMPONENTS
 import { Button } from "@/components/ui/button";
 
 export function ForgetPasswordForm() {
-  // STATE MANAGEMENT
-  const [email, setEmail] = useState("");
-  const { mutateAsync, isPending, isError, isSuccess, error, data } =
-    useMutation({
-      mutationFn: forgetPassword,
-    });
-
-  // FORM SUBMIT
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    await mutateAsync(email);
-  }
+  const [state, formAction, pending] = useActionState(
+    forgetPasswordAction,
+    null
+  );
 
   return (
     <div className="w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden">
@@ -40,7 +31,7 @@ export function ForgetPasswordForm() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form action={formAction} className="space-y-5">
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700 block">
               E-mail
@@ -51,29 +42,28 @@ export function ForgetPasswordForm() {
 
               <input
                 type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                name="email"
                 required
                 placeholder="seu@email.com"
                 className="w-full pl-10 pr-4 py-3 border rounded-lg"
               />
             </div>
           </div>
-
-          {isError && (
-            <p className="text-sm text-red-600">{(error as Error).message}</p>
+          
+          {state?.error && (
+            <p className="text-sm text-red-600">{state.error}</p>
           )}
 
-          {isSuccess && (
-            <p className="text-sm text-green-600">{data.success}</p>
+          {state?.success && (
+            <p className="text-sm text-green-600">{state.success}</p>
           )}
 
           <Button
             type="submit"
-            disabled={isPending}
+            disabled={pending}
             className="w-full bg-[var(--bg-selected)] hover:bg-[var(--bg-selected-hover)]"
           >
-            {isPending ? "Enviando..." : "Enviar"}
+            {pending ? "Enviando..." : "Enviar"}
           </Button>
 
           <div className="flex justify-center">

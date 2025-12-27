@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+"use server";
 
 // MONGODB
 import User from "@/lib/db/models/user/user.model";
@@ -20,18 +20,14 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const successMsg =
   "Se o email estiver cadastrado, você receberá um link de redefinição.";
 
-// SENDS A RESET TOKEN TO REDEFINE PASSWORD ON EMAIL
-export async function POST(req: Request) {
-  // VALIDATES JSON BODY
-  const body = await req.json();
-  const { email } = body;
-  const validation = emailSchema.safeParse(email);
+export async function forgetPasswordAction(_: unknown, formData: FormData) {
+  const email = formData.get("email")?.toString().toLowerCase();
+  const parsed = emailSchema.safeParse(email);
 
-  if (validation.error) {
-    return NextResponse.json(
-      { error: validation.error.issues[0].message },
-      { status: 400 }
-    );
+  if (!parsed.success) {
+    return {
+      error: parsed.error.issues[0].message,
+    };
   }
 
   await connectMongoDB();
@@ -44,12 +40,9 @@ export async function POST(req: Request) {
   // SIMULATES SUCCESS FOR ENUMERATION PROTECTION
   if (!existingUser) {
     console.log("Usuário não existe no banco", existingUser);
-    return NextResponse.json(
-      {
-        success: successMsg,
-      },
-      { status: 200 }
-    );
+    return {
+      success: successMsg,
+    };
   }
 
   // SIMULATES SUCCESS FOR ENUMERATION PROTECTION AND PREVENTS TO SEND UNECESSARY EMAILS
@@ -57,13 +50,9 @@ export async function POST(req: Request) {
     existingUser.resetTokenExpiry &&
     existingUser.resetTokenExpiry > new Date()
   ) {
-    console.log("Usuário existe, mas o token ainda é válido");
-    return NextResponse.json(
-      {
-        success: successMsg,
-      },
-      { status: 200 }
-    );
+    return {
+      success: successMsg,
+    };
   }
 
   // TOKEN TO SEND BY EMAIL
@@ -98,30 +87,23 @@ export async function POST(req: Request) {
       }),
     });
 
-    // IF ANY ERROR WITH "RESEND API" INVALIDATES TOKEN
+    // IF ANY ERROR ON "RESEND API" INVALIDATES TOKEN
     if (error) {
       existingUser.resetToken = undefined;
       existingUser.resetTokenExpiry = undefined;
       await existingUser.save();
 
-      console.error("Erro ao enviar email:", error);
-      return NextResponse.json(
-        { error: "Erro ao enviar o email. Tente novamente." },
-        { status: 500 }
-      );
+      return {
+        error: "Erro ao enviar o email. Tente novamente.",
+      };
     }
 
-    return NextResponse.json(
-      {
-        success: successMsg,
-      },
-      { status: 200 }
-    );
+    return {
+      success: successMsg,
+    };
   } catch (error) {
-    console.error("Erro interno no forgot-password:", error);
-    return NextResponse.json(
-      { error: "Ocorreu um erro interno." },
-      { status: 500 }
-    );
+    return {
+      error: "Ocorreu um erro interno.",
+    };
   }
 }

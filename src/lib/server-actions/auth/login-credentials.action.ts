@@ -5,7 +5,7 @@ import { loginCredentialsSchema } from "@/lib/schemas/auth/credentials.schema";
 import { AuthError } from "next-auth";
 
 export async function loginCredentialsAction(
-  initialState: any,
+  _: unknown,
   formData: FormData
 ) {
   //RECOVERS & VALIDATES DATA

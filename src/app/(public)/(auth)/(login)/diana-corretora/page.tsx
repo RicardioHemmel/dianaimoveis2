@@ -12,7 +12,7 @@ export default async function LoginPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const resolvedParams = await searchParams;
-  const googleError = resolvedParams.error as string | undefined;
+  const googleAuthError = resolvedParams.error as string | undefined;
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-[#0f2936] p-4 md:p-8">
@@ -40,7 +40,7 @@ export default async function LoginPage({
 
         {/* RIGHT SIDE - FORMS */}
         <div className="flex justify-center md:justify-end">
-          <LoginForm googleError={googleError} />
+          <LoginForm googleAuthError={googleAuthError} />
         </div>
       </div>
     </div>

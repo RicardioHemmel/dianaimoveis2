@@ -2,12 +2,19 @@
 
 import { signIn } from "@/auth";
 import { loginCredentialsSchema } from "@/lib/schemas/auth/credentials.schema";
+import ServerActionResponse from "@/lib/types/server-action-response";
 import { AuthError } from "next-auth";
+
+
+export interface LoginCredentialsResponse extends ServerActionResponse {
+  fieldErrors?: Record<string, string[]> | undefined
+  email?: string;
+}
 
 export async function loginCredentialsAction(
   _: unknown,
   formData: FormData
-) {
+): Promise<LoginCredentialsResponse> {
   //RECOVERS & VALIDATES DATA
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
@@ -16,8 +23,9 @@ export async function loginCredentialsAction(
 
   if (!parsed.success) {
     return {
-      fieldsErrors: parsed.error.flatten().fieldErrors,
-      email,
+      success: false,
+      fieldErrors: parsed.error.flatten().fieldErrors,
+      email: email ?? "",
     };
   }
 
@@ -34,12 +42,19 @@ export async function loginCredentialsAction(
     });
   } catch (error) {
     if (error instanceof AuthError) {
-      const errorMessage = error.cause?.err?.message;
       return {
-        message: errorMessage,
-        email,
+        success: false,
+        message: error.cause?.err?.message,
+        email: parsed.data.email,
+
       };
     }
     throw error;
   }
+
+  // Default return if signIn does not throw and does not redirect
+  return {
+    success: true,
+    email: parsed.data.email
+  };
 }

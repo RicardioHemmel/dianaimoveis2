@@ -50,12 +50,12 @@ export function ForgetPasswordForm() {
             </div>
           </div>
           
-          {state?.error && (
-            <p className="text-sm text-red-600">{state.error}</p>
+          {state?.success === false && (
+            <p className="text-sm text-red-600">{state.message}</p>
           )}
 
           {state?.success && (
-            <p className="text-sm text-green-600">{state.success}</p>
+            <p className="text-sm text-green-600">{state.message}</p>
           )}
 
           <Button

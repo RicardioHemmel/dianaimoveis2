@@ -13,6 +13,7 @@ import { Resend } from "resend";
 
 // SCHEMA
 import { emailSchema } from "@/lib/schemas/auth/credentials.schema";
+import ServerActionResponse from "@/lib/types/server-action-response"
 
 // EMAIL PROVIDER
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -20,13 +21,14 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const successMsg =
   "Se o email estiver cadastrado, você receberá um link de redefinição.";
 
-export async function forgetPasswordAction(_: unknown, formData: FormData) {
+export async function forgetPasswordAction(_: unknown, formData: FormData): Promise<ServerActionResponse> {
   const email = formData.get("email")?.toString().toLowerCase();
   const parsed = emailSchema.safeParse(email);
 
   if (!parsed.success) {
     return {
-      error: parsed.error.issues[0].message,
+      success: false,
+      message: parsed.error.issues[0].message,
     };
   }
 
@@ -41,7 +43,8 @@ export async function forgetPasswordAction(_: unknown, formData: FormData) {
   if (!existingUser) {
     console.log("Usuário não existe no banco", existingUser);
     return {
-      success: successMsg,
+      success: true,
+      message: successMsg,
     };
   }
 
@@ -51,7 +54,8 @@ export async function forgetPasswordAction(_: unknown, formData: FormData) {
     existingUser.resetTokenExpiry > new Date()
   ) {
     return {
-      success: successMsg,
+      success: true,
+      message: successMsg,
     };
   }
 
@@ -92,18 +96,23 @@ export async function forgetPasswordAction(_: unknown, formData: FormData) {
       existingUser.resetToken = undefined;
       existingUser.resetTokenExpiry = undefined;
       await existingUser.save();
-
       return {
-        error: "Erro ao enviar o email. Tente novamente.",
+        success: false,
+        message: "Erro ao enviar o email. Tente novamente.",
       };
+
     }
 
     return {
-      success: successMsg,
+      success: true,
+      message: successMsg,
     };
+
   } catch (error) {
     return {
-      error: "Ocorreu um erro interno.",
+      success: false,
+      message: "Ocorreu um erro interno.",
     };
+
   }
 }

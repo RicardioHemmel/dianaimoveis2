@@ -12,10 +12,10 @@ import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { Button } from "../ui/button";
 
 interface LoginFormProps {
-  googleError?: string;
+  googleAuthError?: string;
 }
 
-export function LoginForm({ googleError }: LoginFormProps) {
+export function LoginForm({ googleAuthError }: LoginFormProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const [state, credentialsFormAction, pending] = useActionState(
@@ -52,7 +52,7 @@ export function LoginForm({ googleError }: LoginFormProps) {
         </form>
 
         {/* WHITELIST ERROR FROM URL */}
-        {googleError === "AccessDenied" && (
+        {googleAuthError === "AccessDenied" && (
           <p className="text-sm text-red-600 mb-4 text-center bg-red-50 p-2 rounded">
             Gmail não autorizado.
           </p>
@@ -90,9 +90,9 @@ export function LoginForm({ googleError }: LoginFormProps) {
                 required
               />
             </div>
-            {state?.fieldsErrors?.email && (
+            {state?.fieldErrors?.email && (
               <p className="text-sm text-red-600 mt-1">
-                {state.fieldsErrors.email}
+                {state.fieldErrors.email[0]}
               </p>
             )}
           </div>
@@ -137,14 +137,14 @@ export function LoginForm({ googleError }: LoginFormProps) {
               </button>
             </div>
 
-            {state?.fieldsErrors?.password && (
+            {state?.fieldErrors?.password && (
               <p className="text-sm text-red-600 mt-1">
-                {state.fieldsErrors.password}
+                {state.fieldErrors.password[0]}
               </p>
             )}
           </div>
 
-          {state?.message && (
+          {state?.success === false && (
             <p className="text-sm text-red-600">{state.message}</p>
           )}
 

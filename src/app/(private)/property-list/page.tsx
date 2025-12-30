@@ -1,17 +1,23 @@
 import { PropertyCardHorizontal } from "@/components/custom/HorizontalPropertyCard";
-// import { getAllProperties } from "@/lib/actions/properties/fetch-properties";
-import { notFound } from "next/navigation";
+import { getProperties } from "@/lib/services/properties/properties";
 
 export default async function PropertiesListPage() {
-  // const properties = await getAllProperties();
+  const property = await getProperties();
 
-  // if (!properties) {
-  //   notFound();
-  // }
+  return (
+    <>
+      <div>                  <h1 className="text-4xl text-green-500">{property.propertyType?.name ?? "propertyType"}</h1>
+      </div>
+      <div>                  <h1 className="text-4xl text-green-500">{property.propertyPurpose?.name ?? "propertyPurpose"}</h1>
+      </div>
+      <div>                  <h1 className="text-4xl text-green-500">{property.propertyStanding?.name ?? "propertyStanding"}</h1>
+      </div>
+      <div>                  <h1 className="text-4xl text-green-500">{property.propertyStatus?.name ?? "propertyStatus"}</h1>
+      </div>
+      <div>                  <h1 className="text-4xl text-green-500">{property.propertyTypology?.name ?? "propertyTypology"}</h1>
+      </div>
+    </>
+    // <PropertyCardHorizontal property={property} key={property._id}/>
+  );
 
-  // return properties.map((property) => (
-  //   <PropertyCardHorizontal property={property} key={property._id} />
-  // ));
-
-  return <h1>listing page</h1>
 }

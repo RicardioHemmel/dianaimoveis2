@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const AmenitiesSchema = new Schema(
+const amenitiesSchema = new Schema(
   {
     name: { type: String, required: true },
   },
@@ -11,4 +11,4 @@ const AmenitiesSchema = new Schema(
 );
 
 export default mongoose.models.PropertyAmenities ||
-  mongoose.model("PropertyAmenities", AmenitiesSchema);
+  mongoose.model("PropertyAmenities", amenitiesSchema);

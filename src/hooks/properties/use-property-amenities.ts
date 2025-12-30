@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchAmenities } from "@/lib/services/property-amenities/fetch-amenities";
-import { PropertySelectOption } from "@/lib/schemas/property/property-select-option";
+import { PropertyDetails } from "@/lib/schemas/property/property.schema";
 
 export function useAmenities() {
-  return useQuery<PropertySelectOption[]>({
+  return useQuery<PropertyDetails[]>({
     queryKey: ["amenities"],
     queryFn: fetchAmenities,
   });

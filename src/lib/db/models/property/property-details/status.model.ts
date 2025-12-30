@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const StatusSchema = new Schema(
+const statusSchema = new Schema(
   {
     name: { type: String, required: true },
   },
@@ -11,4 +11,4 @@ const StatusSchema = new Schema(
 );
 
 export default mongoose.models.PropertyStatus ||
-  mongoose.model("PropertyStatus", StatusSchema);
+  mongoose.model("PropertyStatus", statusSchema);

@@ -1,3 +1,5 @@
+"use client";
+
 // REACT | NEXT
 import { UseFormReturn } from "react-hook-form";
 import { Dispatch, SetStateAction } from "react";
@@ -22,18 +24,17 @@ import {
 } from "lucide-react";
 
 // SCHEMAS
-import { PropertySelectOption } from "@/lib/schemas/property/property-select-option";
-import { PropertyFormData } from "@/lib/schemas/property/zod/property-base.schema";
+import { PropertyInputSchema, PropertyDetails } from "@/lib/schemas/property/property.schema";
 
 interface PropertyFormTabsProps {
-  form: UseFormReturn<PropertyFormData>;
+  form: UseFormReturn<PropertyInputSchema>;
   activeTab: string;
   setActiveTab: Dispatch<SetStateAction<string>>;
-  amenitiesList?: PropertySelectOption[];
-  propertyPurposes?: PropertySelectOption[];
-  propertyStatus?: PropertySelectOption[];
-  propertyStandings?: PropertySelectOption[];
-  propertyTypologies?: PropertySelectOption[];
+  amenitiesList?: PropertyDetails[];
+  propertyPurposes?: PropertyDetails[];
+  propertyStatus?: PropertyDetails[];
+  propertyStandings?: PropertyDetails[];
+  propertyTypologies?: PropertyDetails[];
 }
 
 export default function PropertyFormTabs({

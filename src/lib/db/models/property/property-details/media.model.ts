@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const MediaSchema = new Schema({
+const mediaSchema = new Schema({
 
   ownerType: {
     type: String,
@@ -42,4 +42,4 @@ const MediaSchema = new Schema({
   },
 });
 
-export default mongoose.models.Media || mongoose.model("Media", MediaSchema);
+export default mongoose.models.Media || mongoose.model("Media", mediaSchema);

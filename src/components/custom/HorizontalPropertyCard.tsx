@@ -21,10 +21,10 @@ import {
 } from "lucide-react";
 
 import Link from "next/link";
-import { PropertyData } from "@/lib/schemas/property/property-data";
+import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 
 interface PropertyCardHorizontalProps {
-  property: PropertyData;
+  property: PropertyViewSchema;
 }
 
 export function PropertyCardHorizontal({
@@ -47,19 +47,13 @@ export function PropertyCardHorizontal({
       <div className="flex flex-col md:flex-row">
         {/* Image Section */}
         <div className="relative w-full md:w-64 h-48 md:h-auto bg-muted overflow-hidden flex-shrink-0">
-          {property.coverImage ? (
-            <img
-              src={property.coverImage}
-              alt={property.coverImage}
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gradient-primary">
-              <Building2 className="h-16 w-16 text-white/30" />
-            </div>
-          )}
+          (
+          <div className="w-full h-full flex items-center justify-center bg-gradient-primary">
+            <Building2 className="h-16 w-16" />
+          </div>
+          )
           <Badge className={`absolute top-3 left-3`}>
-            {property.propertyStatus}
+            {property.propertyStatus?.name}
           </Badge>
         </div>
 
@@ -85,7 +79,7 @@ export function PropertyCardHorizontal({
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Bath className="h-5 w-5" />
                   <span className="text-sm font-medium">
-                    {property.bathbedroomsQty} banheiros
+                    {property.bathroomsQty} banheiros
                   </span>
                 </div>
               </div>
@@ -96,7 +90,7 @@ export function PropertyCardHorizontal({
                 </p>
 
                 <div className="flex items-center gap-2">
-                  <Link href={`properties/${property._id}/edit`}>
+                                <Link href={`properties/${property._id}/edit`}>
                     Ver Detalhes
                   </Link>
 

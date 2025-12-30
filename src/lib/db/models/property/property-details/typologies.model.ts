@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const TypologySchema = new Schema(
+const typologySchema = new Schema(
   {
     name: { type: String, required: true },
   },
@@ -11,4 +11,4 @@ const TypologySchema = new Schema(
 );
 
 export default mongoose.models.PropertyTypology ||
-  mongoose.model("PropertyTypology", TypologySchema);
+  mongoose.model("PropertyTypology", typologySchema);

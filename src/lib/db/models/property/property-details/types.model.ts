@@ -1,8 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
-const TypeSchema = new Schema(
+const typeSchema = new Schema(
   {
-    slug: {type: String, required: true},
     name: { type: String, required: true },
   },
   {
@@ -12,4 +11,4 @@ const TypeSchema = new Schema(
 );
 
 export default mongoose.models.PropertyType ||
-  mongoose.model("PropertyType", TypeSchema);
+  mongoose.model("PropertyType", typeSchema);

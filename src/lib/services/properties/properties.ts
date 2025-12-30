@@ -1,18 +1,23 @@
 import connectMongoDB from "@/lib/db/mongodbConnection";
-import Property from "@/lib/db/models/property/property.model";
+import Property from "@/lib/db/models/property/property.model"
+import PropertyType from "@/lib/db/models/property/property-details/types.model"
+
+import { PropertyMapper } from "@/lib/db/mappers/property/property.mapper"
+import { IPropertyPopulated } from "@/lib/schemas/property/IProperty";
 
 export async function getProperties() {
-  try {
-    await connectMongoDB();
+  await connectMongoDB();
 
-    const properties = await Property.find().lean();
+  const teste = PropertyType.find();
 
-if (!properties || properties.length === 0) return;
-    
+  const property = await Property.find().populate("propertyTypeId")
+    .lean<IPropertyPopulated[]>();
 
+  console.log(property[0])
 
-  } catch (error) {
-    console.error("Erro ao buscar imóveis no DB:", error);
-    return null; 
-  }
+  const mappedProperty = PropertyMapper.toSchema(property[0]);
+
+  console.log("This one is mapped", mappedProperty)
+
+  return mappedProperty;
 }

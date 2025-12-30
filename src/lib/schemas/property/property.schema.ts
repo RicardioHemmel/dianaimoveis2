@@ -1,12 +1,21 @@
 import { z } from "zod";
 
-// AUXILIAR TYPE FOR IMAGES
+//-------------------------------------------------- AUXULIAR TYPES ------------------------------------------------------
 const GalleryItemSchema = z.object({
   imageRef: z.string(),
   order: z.number(),
 });
 
-export const propertySchema = z.object({
+const propertyDetails = z.object({
+  _id: z.string(),
+  name: z.string(),
+}).optional();
+
+export type PropertyDetails = z.infer<typeof propertyDetails> 
+
+
+//---------------------------------------------------- BASE SCHEMA -----------------------------------------------------------
+const propertyBaseSchema = {
   _id: z.string().optional(),
   title: z.string(),
   description: z.string().optional(),
@@ -30,48 +39,71 @@ export const propertySchema = z.object({
   isPetFriendly: z.boolean().optional(),
   showSquareMeterPrice: z.boolean().optional(),
 
-  propertyTypeSlug: z.string(),
-  propertyPurposeId: z.string().nullable().optional(),
-  propertyStandingId: z.string().nullable().optional(),
-  propertyStatusId: z.string().nullable().optional(),
-  propertyTypologyId: z.string().nullable().optional(),
-  propertyAmenitiesId: z.array(z.string().nullable()).optional(),
+  status: z.enum(["DRAFT", "PUBLISHED"]),
 
   // propertyGallery: z.array(GalleryItemSchema).optional(),
   // propertyFloorPlanGallery: z.array(GalleryItemSchema).optional(),
 
-  status: z.string().optional(),
+  address: z.object({
+    street: z.string().optional(),
+    neighborhood: z.string().optional(),
+    city: z.string().optional(),
+    state: z.string().optional(),
+    zipCode: z.string().optional(),
+  }).optional(),
+};
 
-  address: z
-    .object({
-      street: z.string().optional(),
-      neighborhood: z.string().optional(),
-      city: z.string().optional(),
-      state: z.string().optional(),
-      zipCode: z.string().optional(),
-    })
-    .optional(),
+//---------------------------------------------------- VIEW SCHEMA -----------------------------------------------------------
+export const propertyViewSchema = z.object({
+  ...propertyBaseSchema,
+
+  propertyType: propertyDetails,
+  propertyPurpose: propertyDetails,
+  propertyStanding: propertyDetails,
+  propertyStatus: propertyDetails,
+  propertyTypology: propertyDetails,
+  propertyAmenities: z.array(propertyDetails),
+
 });
 
-export type PropertySchema = z.infer<typeof propertySchema>;
+export type PropertyViewSchema = z.infer<typeof propertyViewSchema>;
 
-// INITIALIZE FORM WITH DEFAULT VALUES
-export const DefaultValuesPropertyForm: PropertySchema = {
+
+
+//---------------------------------------------------- CREATE FORM SCHEMA -----------------------------------------------------------
+
+export const propertyInputSchema = z.object({
+  ...propertyBaseSchema,
+
+  propertyTypeId: z.string(),
+  propertyPurposeId: z.string().optional(),
+  propertyStandingId: z.string().optional(),
+  propertyStatusId: z.string().optional(),
+  propertyTypologyId: z.string().optional(),
+  propertyAmenitiesIds: z.array(z.string()),
+
+});
+
+export type PropertyInputSchema = z.infer<typeof propertyInputSchema>;
+
+//---------------------------------------------------- DEFAULT VALUES TO POPULATE CREATE PROPERTY FORM -----------------------------------------------------------
+export const DefaultValuesPropertyForm: PropertyInputSchema = {
   _id: undefined,
   title: "",
   description: "",
-  propertyTypeSlug: "apartamento",
+  propertyTypeId: "69358e0c5d4b73fa0adff185",
   propertyPurposeId: undefined,
   propertyStandingId: undefined,
   propertyStatusId: undefined,
   propertyTypologyId: undefined,
-  propertyAmenitiesId: [],
+  propertyAmenitiesIds: [],
   isFeatured: false,
   isFurnished: false,
   isNearSubway: false,
   showSquareMeterPrice: false,
-  status: "",
+  status: "DRAFT",
   isPetFriendly: false,
+  videoUrl: "",
   address: {
     street: "",
     city: "",
@@ -79,6 +111,4 @@ export const DefaultValuesPropertyForm: PropertySchema = {
     state: "",
     zipCode: "",
   },
-  //coverImage: "",
-  videoUrl: "",
 };

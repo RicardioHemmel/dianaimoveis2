@@ -1,32 +1,8 @@
 import mongoose, { Schema, Model, Types } from "mongoose";
-
-export enum UserRole {
-  SUPER_ADMIN = "super_admin",
-  ADMIN = "admin",
-  USER = "user",
-}
-
-// Interface for TS inferance
-export interface IUser {
-  email: string;
-  password?: string;
-  name: string;
-  isActive: boolean;
-  avatar?: string;
-
-  resetToken?: string | null;
-  resetTokenExpiry?: Date | null;
-
-  role: UserRole;
-
-  propertyIds: Types.ObjectId[];
-
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { IUser, UserRole } from "@/lib/schemas/user/IUser";
 
 // MONGODB SCHEMA
-const UserSchema = new Schema<IUser>(
+const userSchema = new Schema<IUser>(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
@@ -55,6 +31,6 @@ const UserSchema = new Schema<IUser>(
 //MONGOOSE.MODELS.USER CHECKS IF IT HAS ALREADY BEEN COMPILED TO AVOID RECOMPILATION ERROR IN NEXT.JS (HOT RELOAD)
 const UserModel =
   (mongoose.models.User as Model<IUser>) ||
-  mongoose.model<IUser>("User", UserSchema);
+  mongoose.model<IUser>("User", userSchema);
 
 export default UserModel;

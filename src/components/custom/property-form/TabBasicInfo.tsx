@@ -4,8 +4,8 @@
 import { UseFormReturn } from "react-hook-form";
 
 // Types
-import { PropertyFormData } from "@/lib/schemas/property/zod/property-base.schema";
-import { PropertySelectOption } from "@/lib/schemas/property/property-select-option";
+import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
+import { PropertyDetails } from "@/lib/schemas/property/property.schema";
 
 // Shadcnui components
 import { Input } from "@/components/ui/input";
@@ -38,9 +38,9 @@ import { Building2, Home, Store, MapPin, DollarSign } from "lucide-react";
 import { NumericFormat } from "react-number-format";
 
 interface TabBasicInfoProps {
-  form: UseFormReturn<PropertyFormData>;
-  propertyPurposes?: PropertySelectOption[];
-  propertyStatus?: PropertySelectOption[];
+  form: UseFormReturn<PropertyInputSchema>;
+  propertyPurposes?: PropertyDetails[];
+  propertyStatus?: PropertyDetails[];
 }
 
 export default function TabBasicInfo({
@@ -62,7 +62,7 @@ export default function TabBasicInfo({
       <div className="space-y-4">
         <FormField
           control={form.control}
-          name="propertyTypeSlug"
+          name="propertyType"
           render={({ field }) => (
             <FormItem className="space-y-3">
               <FormLabel className="text-lg font-semibold text-foreground">

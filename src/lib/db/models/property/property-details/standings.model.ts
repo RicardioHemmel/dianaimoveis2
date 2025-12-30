@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const StandingSchema = new Schema(
+const standingSchema = new Schema(
   {
     name: { type: String, required: true },
   },
@@ -11,4 +11,4 @@ const StandingSchema = new Schema(
 );
 
 export default mongoose.models.PropertyStanding ||
-  mongoose.model("PropertyStanding", StandingSchema);
+  mongoose.model("PropertyStanding", standingSchema);

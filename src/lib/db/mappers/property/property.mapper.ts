@@ -1,53 +1,137 @@
-import { PropertyDB } from "@/lib/schemas/property/property-db";
-import { PropertyFormData } from "@/lib/schemas/property/zod/property-base.schema";
+import { IPropertyRaw, IPropertyPopulated } from "@/lib/schemas/property/IProperty";
+import { PropertyInputSchema, PropertyViewSchema } from "@/lib/schemas/property/property.schema";
+import { Types } from "mongoose";
 
-export function mapPropertyDBToForm(
-  property: PropertyDB,
-  propertyTypeSlug: string
-): PropertyFormData {
+//------------------------------------------ HELPERS -------------------------------------------------
+type ViewRef = {
+  _id: string;
+  name: string;
+};
+
+const toObjectId = (id?: string) => {
+  return id ? new Types.ObjectId(id) : undefined
+}
+
+const toObjectIdArray = (ids?: string[]) =>
+  ids?.map(id => new Types.ObjectId(id)) ?? [];
+
+const toStringId = (id?: Types.ObjectId) => {
+  return id ? id.toString() : undefined
+}
+
+const mapPopulatedRefToView = (
+  ref?: { _id: Types.ObjectId; name: string }
+) => {
+  if (!ref) return undefined;
+
   return {
-    _id: property._id.toString(),
-    title: property.title,
-    description: property.description,
-
-    price: property.price,
-    bedroomsQty: property.bedroomsQty,
-    suitesQty: property.suitesQty,
-    bathroomsQty: property.bathroomsQty,
-    parkingSpacesQty: property.parkingSpacesQty,
-    area: property.area,
-    condominiumFee: property.condominiumFee,
-    floorStart: property.floorStart,
-    floorEnd: property.floorEnd,
-
-    isFurnished: property.isFurnished,
-    isNearSubway: property.isNearSubway,
-    isFeatured: property.isFeatured,
-    showSquareMeterPrice: property.showSquareMeterPrice,
-    isPetFriendly: property.isPetFriendly,
-
-    propertyTypeSlug,
-    propertyPurposeId: property.propertyPurposeId?.toString(),
-    propertyStandingId: property.propertyStandingId?.toString(),
-    propertyStatusId: property.propertyStatusId?.toString(),
-    propertyTypologyId: property.propertyTypologyId?.toString(),
-    propertyAmenitiesId: property.propertyAmenitiesId?.map((amenity) =>
-      amenity?.toString()
-    ),
-
-    // // propertyGallery: [{ type: Schema.Types.ObjectId, ref: "Media", order: number }],
-    // // propertyFloorPlanGallery: [{ type: Schema.Types.ObjectId, ref: "Media", order: number }],
-    // // coverImage: { type: Schema.Types.ObjectId, ref: "Media" },
-    videoUrl: property.videoUrl,
-
-    status: property.status,
-
-    address: {
-      street: property?.address?.street,
-      neighborhood: property?.address?.neighborhood,
-      city: property?.address?.city,
-      state: property?.address?.state,
-      zipCode: property?.address?.zipCode,
-    },
+    _id: ref._id.toString(),
+    name: ref.name,
   };
+};
+
+const mapPopulatedRefArrayToView = (
+  refs?: { _id: Types.ObjectId; name: string }[]
+) => {
+  return refs?.map(mapPopulatedRefToView).filter(Boolean) as ViewRef[] ?? [];
+};
+
+
+const mapAddressToPersistence = (address?: IPropertyRaw["address"]) =>
+  address && {
+    street: address.street,
+    neighborhood: address.neighborhood,
+    city: address.city,
+    state: address.state,
+    zipCode: address.zipCode,
+  };
+
+const mapAddressToSchema = (address?: IPropertyPopulated["address"]) =>
+  address && {
+    street: address.street,
+    neighborhood: address.neighborhood,
+    city: address.city,
+    state: address.state,
+    zipCode: address.zipCode,
+  };
+
+//---------------------------------------------------- MAPPER -------------------------------------------------
+
+export class PropertyMapper {
+
+  static toPersistence(property: PropertyInputSchema): IPropertyRaw {
+
+    return {
+      title: property.title,
+      description: property.description,
+
+      price: property.price,
+      bedroomsQty: property.bedroomsQty,
+      suitesQty: property.suitesQty,
+      bathroomsQty: property.bathroomsQty,
+      parkingSpacesQty: property.parkingSpacesQty,
+      area: property.area,
+      condominiumFee: property.condominiumFee,
+      floorStart: property.floorStart,
+      floorEnd: property.floorEnd,
+
+      isFurnished: property.isFurnished,
+      isNearSubway: property.isNearSubway,
+      isFeatured: property.isFeatured,
+      showSquareMeterPrice: property.showSquareMeterPrice,
+      isPetFriendly: property.isPetFriendly,
+
+      videoUrl: property.videoUrl,
+      status: property.status,
+
+      address: mapAddressToPersistence(property.address),
+      
+      propertyTypeId: new Types.ObjectId(property.propertyTypeId),
+      propertyPurposeId: toObjectId(property.propertyPurposeId),
+      propertyStandingId: toObjectId(property.propertyStandingId),
+      propertyStatusId: toObjectId(property.propertyStatusId),
+      propertyTypologyId: toObjectId(property.propertyTypologyId),
+      propertyAmenitiesIds: toObjectIdArray(property.propertyAmenitiesIds),
+
+    }
+  }
+
+  static toSchema(
+    property: IPropertyPopulated
+  ): PropertyViewSchema {
+    return {
+      _id: toStringId(property?._id),
+      title: property?.title,
+      description: property?.description,
+
+      price: property?.price,
+      bedroomsQty: property?.bedroomsQty,
+      suitesQty: property?.suitesQty,
+      bathroomsQty: property?.bathroomsQty,
+      parkingSpacesQty: property?.parkingSpacesQty,
+      area: property?.area,
+      condominiumFee: property?.condominiumFee,
+      floorStart: property?.floorStart,
+      floorEnd: property?.floorEnd,
+
+      isFurnished: property?.isFurnished,
+      isNearSubway: property?.isNearSubway,
+      isFeatured: property?.isFeatured,
+      showSquareMeterPrice: property?.showSquareMeterPrice,
+      isPetFriendly: property?.isPetFriendly,
+
+      videoUrl: property?.videoUrl,
+      status: property?.status,
+
+      address: mapAddressToSchema(property?.address),
+
+      propertyType: {_id: property?.propertyType?._id.toString(), name: property?.propertyType?.name},
+      propertyPurpose: mapPopulatedRefToView(property?.propertyPurpose),
+      propertyStanding: mapPopulatedRefToView(property?.propertyStanding),
+      propertyStatus: mapPopulatedRefToView(property?.propertyStatus),
+      propertyTypology: mapPopulatedRefToView(property?.propertyTypology),
+      propertyAmenities: mapPopulatedRefArrayToView(property?.propertyAmenities),
+    };
+  }
+
 }

@@ -1,4 +1,4 @@
-import PropertyStatus from "@/lib/db/models/property/status.model";
+import PropertyStatus from "@/lib/db/models/property/property-details/status.model";
 import { STATUS } from "@/lib/constants/properties/property-status";
 
 export async function statusSeed() {

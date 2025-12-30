@@ -1,132 +1,132 @@
-// REACT | NEXT
-import { Path, useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
+// // REACT | NEXT
+// import { Path, useForm } from "react-hook-form";
+// import { useRouter } from "next/navigation";
 
-// FORM CONTROL
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  PropertyBaseSchema,
-  PropertyFormData,
-  DefaultValuesPropertyForm,
-} from "@/lib/schemas/property/zod/property-base.schema"; // BASE PROPERTY FORM SCHEMA
-import { PropertySchema } from "@/lib/schemas/property/zod/property.schema"; // PROPERTY SCHEMA FOR PUBLISHING
-import { PropertyDraftSchema } from "@/lib/schemas/property/zod/property-draft.schema"; // PROPERTY SCHEMA FOR SAVING AS DRAFT
+// // FORM CONTROL
+// import { zodResolver } from "@hookform/resolvers/zod";
+// import {
+//   propertySchema,
+//   PropertySchema,
+//   DefaultValuesPropertyForm,
+// } from "@/lib/schemas/property/property.schema"; // BASE PROPERTY FORM SCHEMA
 
-// MESSAGE BOX
-import { toast } from "sonner";
+// import { PropertyDraftSchema } from "@/lib/schemas/property/zod/property-draft.schema"; // PROPERTY SCHEMA FOR SAVING AS DRAFT
 
-// FORM VALIDATION
-import { z } from "zod";
+// // MESSAGE BOX
+// import { toast } from "sonner";
 
-export default function usePropertyForm(initialData?: PropertyFormData) {
-  // REDIRECT USER TO EDIT PAGE AFTER SAVING PROPERTY
-  const router = useRouter();
+// // FORM VALIDATION
+// import { z } from "zod";
 
-  // FORM MANAGER
-  const form = useForm<PropertyFormData>({
-    resolver: zodResolver(PropertyBaseSchema),
-    defaultValues: initialData ?? DefaultValuesPropertyForm,
-  });
+// export default function usePropertyForm(initialData?: PropertyFormData) {
+//   // REDIRECT USER TO EDIT PAGE AFTER SAVING PROPERTY
+//   const router = useRouter();
 
-  //--------------------- AUXILIARY FUN ----------------------
-  function parseForm<T>(data: PropertyFormData, schema: z.Schema<T>): T | null {
-    // CLEAR PREVIOUS ERRORS STATE TO SET A NEW ONE
-    form.clearErrors();
+//   // FORM MANAGER
+//   const form = useForm<PropertyFormData>({
+//     resolver: zodResolver(PropertyBaseSchema),
+//     defaultValues: initialData ?? DefaultValuesPropertyForm,
+//   });
 
-    // USE ZOD TO PARSE DATA
-    const parsedData = schema.safeParse(data);
+//   //--------------------- AUXILIARY FUN ----------------------
+//   function parseForm<T>(data: PropertyFormData, schema: z.Schema<T>): T | null {
+//     // CLEAR PREVIOUS ERRORS STATE TO SET A NEW ONE
+//     form.clearErrors();
 
-    // VALIDATES INPUTS AND SETS ERRORS MANUALLY
-    if (parsedData.error) {
-      parsedData.error.issues.forEach((issue) => {
-        form.setError(issue.path.join(".") as Path<PropertyFormData>, {
-          type: "manual",
-          message: issue.message,
-        });
-      });
-      console.log(parsedData.error);
-      toast.error("Confira os campos pendentes");
-      return null;
-    } else {
-      return parsedData.data;
-    }
-  }
+//     // USE ZOD TO PARSE DATA
+//     const parsedData = schema.safeParse(data);
 
-  // ------------------------------------------------ SAVES PROPERTY AS PUBLISHED  --------------------------------------
-  async function publish(data: PropertyFormData): Promise<void> {
-    // VALIDATES DATA WITH ZOD
-    const parsedData = parseForm(data, PropertySchema);
-    if (!parsedData) return;
+//     // VALIDATES INPUTS AND SETS ERRORS MANUALLY
+//     if (parsedData.error) {
+//       parsedData.error.issues.forEach((issue) => {
+//         form.setError(issue.path.join(".") as Path<PropertyFormData>, {
+//           type: "manual",
+//           message: issue.message,
+//         });
+//       });
+//       console.log(parsedData.error);
+//       toast.error("Confira os campos pendentes");
+//       return null;
+//     } else {
+//       return parsedData.data;
+//     }
+//   }
 
-    console.log(parsedData);
-  }
+//   // ------------------------------------------------ SAVES PROPERTY AS PUBLISHED  --------------------------------------
+//   async function publish(data: PropertyFormData): Promise<void> {
+//     // VALIDATES DATA WITH ZOD
+//     const parsedData = parseForm(data, PropertySchema);
+//     if (!parsedData) return;
 
-  // ------------------------------------------------ SAVES PROPERTY AS A DRAFT --------------------------------------
-  async function saveDraft(): Promise<void> {
-    // GETS FORM DATA
-    const data = form.getValues();
+//     console.log(parsedData);
+//   }
 
-    // VALIDATES DATA WITH ZOD
-    const parsedData = parseForm(data, PropertyDraftSchema);
-    if (!parsedData) return;
+//   // ------------------------------------------------ SAVES PROPERTY AS A DRAFT --------------------------------------
+//   async function saveDraft(): Promise<void> {
+//     // GETS FORM DATA
+//     const data = form.getValues();
 
-    // VERIFIES IF A PROPERTY ID EXISTS TO DECIDE WHETER TO CREATE A DRAFT OR UPDATE IT
-    const propertyId = parsedData?._id;
-    const method = propertyId ? "PATCH" : "POST";
-    const url = propertyId
-      ? `/api/properties/${propertyId}/draft`
-      : `/api/properties/draft`;
+//     // VALIDATES DATA WITH ZOD
+//     const parsedData = parseForm(data, PropertyDraftSchema);
+//     if (!parsedData) return;
 
-    const response = await fetch(url, {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(parsedData),
-    });
+//     // VERIFIES IF A PROPERTY ID EXISTS TO DECIDE WHETER TO CREATE A DRAFT OR UPDATE IT
+//     const propertyId = parsedData?._id;
+//     const method = propertyId ? "PATCH" : "POST";
+//     const url = propertyId
+//       ? `/api/properties/${propertyId}/draft`
+//       : `/api/properties/draft`;
 
-    let result;
-    try {
-      result = await response.json();
-    } catch (error) {
-      console.error("Erro ao fazer parse do JSON:", error);
-      toast.error("Erro interno do servidor.");
-      return;
-    }
+//     const response = await fetch(url, {
+//       method,
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify(parsedData),
+//     });
 
-    if (!response.ok || !result.success) {
-      // Log mais detalhado para ajudar no debug
-      console.error("Erro retornado pela API:", result);
+//     let result;
+//     try {
+//       result = await response.json();
+//     } catch (error) {
+//       console.error("Erro ao fazer parse do JSON:", error);
+//       toast.error("Erro interno do servidor.");
+//       return;
+//     }
 
-      // Tentar mostrar o erro específico do Zod se existir
-      const errorMessage =
-        result.errors?.title?._errors?.[0] ||
-        result.message ||
-        "Falha ao salvar rascunho";
+//     if (!response.ok || !result.success) {
+//       // Log mais detalhado para ajudar no debug
+//       console.error("Erro retornado pela API:", result);
 
-      toast.error(`Erro: ${errorMessage}`);
-      return; // Não dê throw new Error aqui se quiser que o toast apareça e a UI não quebre
-    }
+//       // Tentar mostrar o erro específico do Zod se existir
+//       const errorMessage =
+//         result.errors?.title?._errors?.[0] ||
+//         result.message ||
+//         "Falha ao salvar rascunho";
 
-    // IF YOU JUST CREATED IT, REDIRECTS USER TO EDIT PAGE USING THE RETURNED ID FROM DRAFT CREATION
-    if (!propertyId && result.draftProperty?._id) {
-      router.replace(`/properties/${result.draftProperty._id}/edit`);
-      toast.success("Rascunho Salvo");
-      return;
-    }
+//       toast.error(`Erro: ${errorMessage}`);
+//       return; // Não dê throw new Error aqui se quiser que o toast apareça e a UI não quebre
+//     }
 
-    // UPDATES THE FORM SILENTLY
-    form.reset(result.draftProperty, {
-      keepDirty: false,
-      keepTouched: false,
-    });
+//     // IF YOU JUST CREATED IT, REDIRECTS USER TO EDIT PAGE USING THE RETURNED ID FROM DRAFT CREATION
+//     if (!propertyId && result.draftProperty?._id) {
+//       router.replace(`/properties/${result.draftProperty._id}/edit`);
+//       toast.success("Rascunho Salvo");
+//       return;
+//     }
 
-    toast.success("Rascunho Atualizado");
-  }
+//     // UPDATES THE FORM SILENTLY
+//     form.reset(result.draftProperty, {
+//       keepDirty: false,
+//       keepTouched: false,
+//     });
 
-  return {
-    form,
-    saveDraft,
-    publish,
-  };
-}
+//     toast.success("Rascunho Atualizado");
+//   }
+
+//   return {
+//     form,
+//     saveDraft,
+//     publish,
+//   };
+// }

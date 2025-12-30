@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import Property from "@/lib/db/models/property/property.model";
-import PropertyType from "@/lib/db/models/property/types.model";
+import PropertyType from "@/lib/db/models/property/property-details/types.model";
 import connectMongoDB from "@/lib/db/mongodbConnection";
 import { PropertyDraftSchema } from "@/lib/schemas/property/zod/property-draft.schema";
 

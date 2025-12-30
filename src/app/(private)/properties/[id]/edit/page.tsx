@@ -1,4 +1,4 @@
-import PropertyFormShell from "@/components/private/property-form/PropertyForm";
+import PropertyFormShell from "@/components/custom/property-form/PropertyForm";
 import { getPropertyById } from "@/lib/actions/properties/get-property-by-id";
 import { notFound } from "next/navigation";
 

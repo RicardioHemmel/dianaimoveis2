@@ -1,5 +1,5 @@
 import connectMongoDB from "@/lib/db/mongodbConnection";
-import PropertyTypology from "@/lib/db/models/property/typologies.model";
+import PropertyTypology from "@/lib/db/models/property/property-details/typologies.model";
 import { NextResponse } from "next/server";
 
 export async function GET() {

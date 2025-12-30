@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { MediaDraft } from "@/lib/schemas/media/media-draft";
+import { MediaDraft } from "@/lib/schemas/media/media-draft.schema";
 
 //UPLOAD FILE WITH AXIOS TO ACCESS THE "UPLOAD PROGRESS"
 import axios from "axios"; 

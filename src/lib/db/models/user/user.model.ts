@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Model, Types } from "mongoose";
+import mongoose, { Schema, Model, Types } from "mongoose";
 
 export enum UserRole {
   SUPER_ADMIN = "super_admin",
@@ -7,7 +7,7 @@ export enum UserRole {
 }
 
 // Interface for TS inferance
-export interface IUser extends Document {
+export interface IUser {
   email: string;
   password?: string;
   name: string;
@@ -32,7 +32,6 @@ const UserSchema = new Schema<IUser>(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: false, select: false },
     isActive: { type: Boolean, default: true },
-    avatar: String,
 
     resetToken: { type: String, required: false },
     resetTokenExpiry: { type: Date, required: false },

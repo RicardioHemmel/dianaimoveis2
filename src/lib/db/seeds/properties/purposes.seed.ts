@@ -1,4 +1,4 @@
-import PropertyPurpose from "@/lib/db/models/property/purposes.model";
+import PropertyPurpose from "@/lib/db/models/property/property-details/purposes.model";
 import { PROPERTY_PURPOSES } from "@/lib/constants/properties/property-purposes";
 
 export async function purposesSeed() {

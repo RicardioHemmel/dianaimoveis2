@@ -1,4 +1,4 @@
-import { PropertyCardHorizontal } from "@/components/private/HorizontalPropertyCard";
+import { PropertyCardHorizontal } from "@/components/custom/HorizontalPropertyCard";
 // import { getAllProperties } from "@/lib/actions/properties/fetch-properties";
 import { notFound } from "next/navigation";
 

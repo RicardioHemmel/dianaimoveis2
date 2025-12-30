@@ -1,4 +1,4 @@
-import { ResetPasswordForm } from "@/components/public/ResetPasswordForm";
+import { ResetPasswordForm } from "@/components/custom/ResetPasswordForm";
 import { Metadata } from "next";
 import { verifyResetTokenAction } from "@/lib/server-actions/auth/verify-reset-token.action"
 import { resetPasswordAction } from "@/lib/server-actions/auth/reset-password.action";
@@ -15,9 +15,10 @@ export default async function ResetPasswordPage({
   const { token } = await params;
   const verifyResetTokenResponse = await verifyResetTokenAction(token)
 
-  const boundResetPasswordAction = resetPasswordAction.bind(
+
+const boundResetPasswordAction = resetPasswordAction.bind(
   null,
-  verifyResetTokenResponse.email!
+  verifyResetTokenResponse.email ?? ""
 );
 
   return (

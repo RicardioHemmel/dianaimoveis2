@@ -1,4 +1,4 @@
-import PropertyType from "@/lib/db/models/property/types.model";
+import PropertyType from "@/lib/db/models/property/property-details/types.model";
 import { PROPERTY_TYPES } from "@/lib/constants/properties/property-types";
 import slugify from "slugify";
 

@@ -1,4 +1,47 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema, Types, Model } from "mongoose";
+
+export interface IProperty {
+  title: string;
+  description?: string,
+
+  price?: number,
+  bedroomsQty?: number,
+  suitesQty?: number,
+  bathroomsQty?: number,
+  parkingSpacesQty?: number,
+  area?: number,
+  condominiumFee?: number,
+  floorStart?: number,
+  floorEnd?: number,
+
+  isFurnished?: boolean,
+  isNearSubway?: boolean,
+  isFeatured?: boolean,
+  showSquareMeterPrice?: boolean,
+  isPetFriendly?: boolean,
+
+  propertyTypeId: Types.ObjectId,
+  propertyPurposeId: Types.ObjectId,
+  propertyStandingId: Types.ObjectId,
+  propertyStatusId: Types.ObjectId,
+  propertyTypologyId: Types.ObjectId,
+  propertyAmenitiesId: Types.ObjectId[],
+
+  // propertyGallery: [{ type: Schema.Types.ObjectId, ref: "Media", order: number }],
+  // propertyFloorPlanGallery: [{ type: Schema.Types.ObjectId, ref: "Media", order: number }],
+  videoUrl: string,
+
+  status: "DRAFT" | "PUBLISHED",
+
+  address: {
+    street: string,
+    neighborhood: string,
+    city: string,
+    state: string,
+    zipCode: string,
+  },
+
+}
 
 const PropertySchema = new Schema(
   {
@@ -44,7 +87,6 @@ const PropertySchema = new Schema(
 
     // propertyGallery: [{ type: Schema.Types.ObjectId, ref: "Media", order: Number }],
     // propertyFloorPlanGallery: [{ type: Schema.Types.ObjectId, ref: "Media", order: Number }],
-    // coverImage: { type: Schema.Types.ObjectId, ref: "Media" },
     videoUrl: String,
 
     status: {
@@ -66,5 +108,7 @@ const PropertySchema = new Schema(
   { strict: true, timestamps: true }
 );
 
-export default mongoose.models.Property ||
-  mongoose.model("Property", PropertySchema);
+
+const PropertyModel = (mongoose.models.Property as Model<IProperty>) || mongoose.model<IProperty>("Property", PropertySchema)
+export default PropertyModel;
+

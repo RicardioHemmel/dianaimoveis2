@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { Search, MapPin, Home, BedDouble, Filter } from "lucide-react";
 
-import TextBox from "@/components/public/TxtBox";
-import FeaturedPropertiesCarousel from "@/components/public/Carousel";
+import TextBox from "@/components/custom/TxtBox";
+import FeaturedPropertiesCarousel from "@/components/custom/Carousel";
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<"comprar" | "alugar">("comprar");

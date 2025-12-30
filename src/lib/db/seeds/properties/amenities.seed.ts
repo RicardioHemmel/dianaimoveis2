@@ -1,4 +1,4 @@
-import PropertyAmenities from "@/lib/db/models/property/amenities.model";
+import PropertyAmenities from "@/lib/db/models/property/property-details/amenities.model";
 import { PROPERTY_AMENITIES } from "@/lib/constants/properties/property-amenities";
 import { toTitleCase } from "@/lib/formatters/capitalize.formatter";
 

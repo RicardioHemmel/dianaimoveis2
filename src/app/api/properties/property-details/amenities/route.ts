@@ -1,5 +1,5 @@
 import connectMongoDB from "@/lib/db/mongodbConnection";
-import PropertyAmenities from "@/lib/db/models/property/amenities.model";
+import PropertyAmenities from "@/lib/db/models/property/property-details/amenities.model";
 import { NextResponse } from "next/server";
 
 export async function GET() {

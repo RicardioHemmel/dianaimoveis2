@@ -1,5 +1,5 @@
 import connectMongoDB from "@/lib/db/mongodbConnection";
-import PropertyStanding from "@/lib/db/models/property/standings.model";
+import PropertyStanding from "@/lib/db/models/property/property-details/standings.model";
 import { NextResponse } from "next/server";
 
 export async function GET() {

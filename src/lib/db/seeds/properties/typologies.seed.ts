@@ -1,4 +1,4 @@
-import PropertyTypologies from "@/lib/db/models/property/typologies.model";
+import PropertyTypologies from "@/lib/db/models/property/property-details/typologies.model";
 import { PROPERTY_TYPOLOGIES } from "@/lib/constants/properties/property-typologies";
 
 export async function typologiesSeed() {

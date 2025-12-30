@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import connectMongoDB from "@/lib/db/mongodbConnection";
-import Media from "@/lib/db/models/property/media.model";
+import Media from "@/lib/db/models/property/property-details/media.model";
 
 export async function POST(req: Request) {
   function generateMediaPath({

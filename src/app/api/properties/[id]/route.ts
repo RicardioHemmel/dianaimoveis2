@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 import connectMongoDB from "@/lib/db/mongodbConnection";
 import Property from "@/lib/db/models/property/property.model";
-import PropertyType from "@/lib/db/models/property/types.model";
+import PropertyType from "@/lib/db/models/property/property-details/types.model";
 
 type RouteParams = {
   params: Promise<{ id: string }>;

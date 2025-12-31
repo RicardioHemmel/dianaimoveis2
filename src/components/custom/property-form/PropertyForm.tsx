@@ -21,12 +21,12 @@ import { useTypologies } from "@/hooks/properties/use-property-typologies";
 import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
 
 // DEFINES WHETHER THE FORM IS TO CREATE OR UPDATE
-type Props = {
+type PropertyFormProps = {
   mode: "create" | "edit";
   initialData?: PropertyInputSchema;
 };
 
-export default function PropertyFormShell({ mode, initialData }: Props) {
+export default function PropertyForm({ mode, initialData }: PropertyFormProps) {
   // INICIALIZE HOOK PASSING INITIALDATA TO POPULATE RHF
   const { form } = usePropertyForm(initialData);
 
@@ -63,7 +63,7 @@ export default function PropertyFormShell({ mode, initialData }: Props) {
           </p>
         </div>
 
-        {/* TABS NAVIGATION */}
+        {/* NAVIGATION TABS */}
         <div className="flex gap-3">
           <Button
             variant="outline"
@@ -86,7 +86,7 @@ export default function PropertyFormShell({ mode, initialData }: Props) {
       <Form {...form}>
         <form action={""}>
           <Card className="p-6 shadow-card bg-white border-2 border-neutral-100">
-            {/* ALL TABS CONTAINING PIECES OF THE FORM */}
+            {/* ALL TABS CONTAINING PARTS OF THE FORM */}
             <PropertyFormTabs
               form={form}
               activeTab={activeTab}
@@ -100,9 +100,9 @@ export default function PropertyFormShell({ mode, initialData }: Props) {
 
             {/* SAVES PROPERTY AS A DRAFT */}
             <div className="flex justify-end gap-4 mt-6 pt-6 border-t">
-              {/* <Button type="button" variant="outline" onClick={saveDraft}>
+              <Button type="button" variant="outline">
                 Salvar rascunho
-              </Button> */}
+              </Button>
 
               {/* SAVES PROPERTY AS A PUBLISHED PROPERTY */}
               <Button

@@ -9,7 +9,7 @@ const GalleryItemSchema = z.object({
 const propertyDetails = z.object({
   _id: z.string(),
   name: z.string(),
-}).optional();
+});
 
 export type PropertyDetails = z.infer<typeof propertyDetails> 
 

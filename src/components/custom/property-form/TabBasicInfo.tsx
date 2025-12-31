@@ -3,11 +3,11 @@
 // Next | React
 import { UseFormReturn } from "react-hook-form";
 
-// Types
+// SCHEMAS
 import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
 import { PropertyDetails } from "@/lib/schemas/property/property.schema";
 
-// Shadcnui components
+// COMPONENTS
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -30,12 +30,11 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
+import { NumericFormat } from "react-number-format"; // MASKED INPUT
 
-// lucide-react
+// ICONS
 import { Building2, Home, Store, MapPin, DollarSign } from "lucide-react";
 
-// Masked Input
-import { NumericFormat } from "react-number-format";
 
 interface TabBasicInfoProps {
   form: UseFormReturn<PropertyInputSchema>;
@@ -48,7 +47,7 @@ export default function TabBasicInfo({
   propertyPurposes,
   propertyStatus,
 }: TabBasicInfoProps) {
-  // Property Types Definition
+
   const propertyTypes = [
     { slug: "apartamento", label: "Apartamento", icon: Building2 },
     { slug: "casa", label: "Casa", icon: Home },
@@ -62,7 +61,7 @@ export default function TabBasicInfo({
       <div className="space-y-4">
         <FormField
           control={form.control}
-          name="propertyType"
+          name="propertyTypeId"
           render={({ field }) => (
             <FormItem className="space-y-3">
               <FormLabel className="text-lg font-semibold text-foreground">
@@ -79,21 +78,18 @@ export default function TabBasicInfo({
                         key={type.slug}
                         type="button"
                         onClick={() => field.onChange(type.slug)}
-                        className={`p-4 rounded-lg border-2 transition-all cursor-pointer flex flex-col items-center justify-center bg-gray-50 ${
-                          isSelected
-                            ? "border-[var(--soft-primary-custom)] bg-[image:var(--gradient-primary)]"
-                            : "border-border hover:border-primary/50"
-                        }`}
+                        className={`p-4 rounded-lg border-2 transition-all cursor-pointer flex flex-col items-center justify-center bg-gray-50 ${isSelected
+                          ? "border-[var(--soft-primary-custom)] bg-[image:var(--gradient-primary)]"
+                          : "border-border hover:border-primary/50"
+                          }`}
                       >
                         <Icon
-                          className={`h-6 w-6 mb-1 ${
-                            isSelected ? "text-white" : "text-muted-foreground"
-                          }`}
+                          className={`h-6 w-6 mb-1 ${isSelected ? "text-white" : "text-muted-foreground"
+                            }`}
                         />
                         <p
-                          className={`text-sm font-medium ${
-                            isSelected ? "text-white" : "text-foreground"
-                          }`}
+                          className={`text-sm font-medium ${isSelected ? "text-white" : "text-foreground"
+                            }`}
                         >
                           {type.label}
                         </p>

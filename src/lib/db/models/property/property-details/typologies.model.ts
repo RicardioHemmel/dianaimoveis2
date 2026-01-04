@@ -1,4 +1,5 @@
-import mongoose, { Schema } from "mongoose";
+import { IPopulatedRef } from "@/lib/schemas/property/IProperty";
+import mongoose, { Model, Schema } from "mongoose";
 
 const typologySchema = new Schema(
   {
@@ -10,5 +11,7 @@ const typologySchema = new Schema(
   }
 );
 
-export default mongoose.models.PropertyTypology ||
-  mongoose.model("PropertyTypology", typologySchema);
+const TypologyModel =
+  (mongoose.models.PropertyTypology as Model<IPopulatedRef>) ||
+  mongoose.model<IPopulatedRef>("PropertyTypology", typologySchema);
+export default TypologyModel;

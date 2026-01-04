@@ -1,4 +1,5 @@
-import mongoose, { Schema } from "mongoose";
+import { IPopulatedRef } from "@/lib/schemas/property/IProperty";
+import mongoose, { Model, Schema } from "mongoose";
 
 const amenitiesSchema = new Schema(
   {
@@ -10,5 +11,7 @@ const amenitiesSchema = new Schema(
   }
 );
 
-export default mongoose.models.PropertyAmenities ||
-  mongoose.model("PropertyAmenities", amenitiesSchema);
+const AmenitiesModel =
+  (mongoose.models.PropertyAmenities as Model<IPopulatedRef>) ||
+  mongoose.model<IPopulatedRef>("PropertyAmenities", amenitiesSchema);
+export default AmenitiesModel;

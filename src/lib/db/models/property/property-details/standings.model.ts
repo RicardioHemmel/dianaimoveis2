@@ -1,4 +1,5 @@
-import mongoose, { Schema } from "mongoose";
+import { IPopulatedRef } from "@/lib/schemas/property/IProperty";
+import mongoose, { Model, Schema } from "mongoose";
 
 const standingSchema = new Schema(
   {
@@ -10,5 +11,7 @@ const standingSchema = new Schema(
   }
 );
 
-export default mongoose.models.PropertyStanding ||
-  mongoose.model("PropertyStanding", standingSchema);
+const StandingModel =
+  (mongoose.models.PropertyStanding as Model<IPopulatedRef>) ||
+  mongoose.model<IPopulatedRef>("PropertyStanding", standingSchema);
+export default StandingModel;

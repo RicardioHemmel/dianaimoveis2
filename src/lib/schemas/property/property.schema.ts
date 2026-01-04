@@ -6,13 +6,13 @@ const GalleryItemSchema = z.object({
   order: z.number(),
 });
 
-const propertyDetails = z.object({
-  _id: z.string(),
-  name: z.string(),
-});
+const PropertyDetail = z
+  .object({
+    _id: z.string(),
+    name: z.string(),
+  });
 
-export type PropertyDetails = z.infer<typeof propertyDetails> 
-
+export type PropertyDetail = z.infer<typeof PropertyDetail>;
 
 //---------------------------------------------------- BASE SCHEMA -----------------------------------------------------------
 const propertyBaseSchema = {
@@ -44,44 +44,42 @@ const propertyBaseSchema = {
   // propertyGallery: z.array(GalleryItemSchema).optional(),
   // propertyFloorPlanGallery: z.array(GalleryItemSchema).optional(),
 
-  address: z.object({
-    street: z.string().optional(),
-    neighborhood: z.string().optional(),
-    city: z.string().optional(),
-    state: z.string().optional(),
-    zipCode: z.string().optional(),
-  }).optional(),
+  address: z
+    .object({
+      street: z.string().optional(),
+      neighborhood: z.string().optional(),
+      city: z.string().optional(),
+      state: z.string().optional(),
+      zipCode: z.string().optional(),
+    })
+    .optional(),
 };
 
 //---------------------------------------------------- VIEW SCHEMA -----------------------------------------------------------
 export const propertyViewSchema = z.object({
   ...propertyBaseSchema,
 
-  propertyType: propertyDetails,
-  propertyPurpose: propertyDetails,
-  propertyStanding: propertyDetails,
-  propertyStatus: propertyDetails,
-  propertyTypology: propertyDetails,
-  propertyAmenities: z.array(propertyDetails),
-
+  propertyType: PropertyDetail,
+  propertyPurpose: PropertyDetail,
+  propertyStanding: PropertyDetail,
+  propertyStatus: PropertyDetail,
+  propertyTypology: PropertyDetail,
+  propertyAmenities: z.array(PropertyDetail),
 });
 
 export type PropertyViewSchema = z.infer<typeof propertyViewSchema>;
-
-
 
 //---------------------------------------------------- CREATE FORM SCHEMA -----------------------------------------------------------
 
 export const propertyInputSchema = z.object({
   ...propertyBaseSchema,
 
-  propertyTypeId: z.string(),
+  propertyTypeId: z.string().optional(),
   propertyPurposeId: z.string().optional(),
   propertyStandingId: z.string().optional(),
   propertyStatusId: z.string().optional(),
   propertyTypologyId: z.string().optional(),
   propertyAmenitiesIds: z.array(z.string()),
-
 });
 
 export type PropertyInputSchema = z.infer<typeof propertyInputSchema>;
@@ -91,7 +89,7 @@ export const DefaultValuesPropertyForm: PropertyInputSchema = {
   _id: undefined,
   title: "",
   description: "",
-  propertyTypeId: "69358e0c5d4b73fa0adff185",
+  propertyTypeId: undefined,
   propertyPurposeId: undefined,
   propertyStandingId: undefined,
   propertyStatusId: undefined,
@@ -111,4 +109,14 @@ export const DefaultValuesPropertyForm: PropertyInputSchema = {
     state: "",
     zipCode: "",
   },
+};
+
+//-------------------------------------------------- PROPS CONTROLS ------------------------------------------------------
+export type PropertyDetailsData = {
+  amenities: PropertyDetail[];
+  purposes: PropertyDetail[];
+  standings: PropertyDetail[];
+  status: PropertyDetail[];
+  types: PropertyDetail[];
+  typologies: PropertyDetail[];
 };

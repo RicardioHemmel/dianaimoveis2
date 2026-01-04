@@ -1,4 +1,6 @@
-import mongoose, { Schema } from "mongoose";
+import { IPopulatedRef } from "@/lib/schemas/property/IProperty";
+import mongoose, { Model, Schema } from "mongoose";
+import StandingModel from "./standings.model";
 
 const statusSchema = new Schema(
   {
@@ -10,5 +12,7 @@ const statusSchema = new Schema(
   }
 );
 
-export default mongoose.models.PropertyStatus ||
-  mongoose.model("PropertyStatus", statusSchema);
+const StatusModel =
+  (mongoose.models.PropertyStatus as Model<IPopulatedRef>) ||
+  mongoose.model<IPopulatedRef>("PropertyStatus", statusSchema);
+export default StatusModel;

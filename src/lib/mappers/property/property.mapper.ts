@@ -1,5 +1,13 @@
-import { IPropertyRaw, IPropertyPopulated } from "@/lib/schemas/property/IProperty";
-import { PropertyInputSchema, PropertyViewSchema } from "@/lib/schemas/property/property.schema";
+import {
+  IPropertyRaw,
+  IPropertyPopulated,
+  IPopulatedRef,
+} from "@/lib/schemas/property/IProperty";
+import {
+  PropertyInputSchema,
+  PropertyViewSchema,
+  PropertyDetail,
+} from "@/lib/schemas/property/property.schema";
 import { Types } from "mongoose";
 
 //------------------------------------------ HELPERS -------------------------------------------------
@@ -9,19 +17,17 @@ type ViewRef = {
 };
 
 const toObjectId = (id?: string) => {
-  return id ? new Types.ObjectId(id) : undefined
-}
+  return id ? new Types.ObjectId(id) : undefined;
+};
 
 const toObjectIdArray = (ids?: string[]) =>
-  ids?.map(id => new Types.ObjectId(id)) ?? [];
+  ids?.map((id) => new Types.ObjectId(id)) ?? [];
 
 const toStringId = (id?: Types.ObjectId) => {
-  return id ? id.toString() : undefined
-}
+  return id ? id.toString() : undefined;
+};
 
-const mapPopulatedRefToView = (
-  ref?: { _id: Types.ObjectId; name: string }
-) => {
+const mapPopulatedRefToView = (ref?: { _id: Types.ObjectId; name: string }) => {
   if (!ref) return undefined;
 
   return {
@@ -33,9 +39,8 @@ const mapPopulatedRefToView = (
 const mapPopulatedRefArrayToView = (
   refs?: { _id: Types.ObjectId; name: string }[]
 ) => {
-  return refs?.map(mapPopulatedRefToView).filter(Boolean) as ViewRef[] ?? [];
+  return (refs?.map(mapPopulatedRefToView).filter(Boolean) as ViewRef[]) ?? [];
 };
-
 
 const mapAddressToPersistence = (address?: IPropertyRaw["address"]) =>
   address && {
@@ -58,9 +63,7 @@ const mapAddressToSchema = (address?: IPropertyPopulated["address"]) =>
 //---------------------------------------------------- MAPPER -------------------------------------------------
 
 export class PropertyMapper {
-
   static toPersistence(property: PropertyInputSchema): IPropertyRaw {
-
     return {
       title: property.title,
       description: property.description,
@@ -85,20 +88,17 @@ export class PropertyMapper {
       status: property.status,
 
       address: mapAddressToPersistence(property.address),
-      
+
       propertyTypeId: new Types.ObjectId(property.propertyTypeId),
       propertyPurposeId: toObjectId(property.propertyPurposeId),
       propertyStandingId: toObjectId(property.propertyStandingId),
       propertyStatusId: toObjectId(property.propertyStatusId),
       propertyTypologyId: toObjectId(property.propertyTypologyId),
       propertyAmenitiesIds: toObjectIdArray(property.propertyAmenitiesIds),
-
-    }
+    };
   }
 
-  static toSchema(
-    property: IPropertyPopulated
-  ): PropertyViewSchema {
+  static toView(property: IPropertyPopulated): PropertyViewSchema {
     return {
       _id: toStringId(property?._id),
       title: property?.title,
@@ -125,12 +125,26 @@ export class PropertyMapper {
 
       address: mapAddressToSchema(property?.address),
 
-      propertyType: {_id: property?.propertyType?._id.toString(), name: property?.propertyType?.name},
+      propertyType: {
+        _id: property?.propertyType?._id.toString(),
+        name: property?.propertyType?.name,
+      },
       propertyPurpose: mapPopulatedRefToView(property?.propertyPurpose),
       propertyStanding: mapPopulatedRefToView(property?.propertyStanding),
       propertyStatus: mapPopulatedRefToView(property?.propertyStatus),
       propertyTypology: mapPopulatedRefToView(property?.propertyTypology),
-      propertyAmenities: mapPopulatedRefArrayToView(property?.propertyAmenities),
+      propertyAmenities: mapPopulatedRefArrayToView(
+        property?.propertyAmenities
+      ),
+    };
+  }
+
+  static PropertyDetailToView(
+    PropertyDetail: IPopulatedRef
+  ): PropertyDetail {
+    return {
+      _id: PropertyDetail._id.toString(),
+      name: PropertyDetail.name,
     };
   }
 

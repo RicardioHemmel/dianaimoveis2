@@ -1,7 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
 const mediaSchema = new Schema({
-
   ownerType: {
     type: String,
     enum: ["PROPERTY"],
@@ -42,4 +41,6 @@ const mediaSchema = new Schema({
   },
 });
 
-export default mongoose.models.Media || mongoose.model("Media", mediaSchema);
+const MediaModel =
+  mongoose.models.Media || mongoose.model("PropertyMedia", mediaSchema);
+export default MediaModel;

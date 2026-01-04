@@ -24,28 +24,23 @@ import {
 } from "lucide-react";
 
 // SCHEMAS
-import { PropertyInputSchema, PropertyDetails } from "@/lib/schemas/property/property.schema";
+import {
+  PropertyInputSchema,
+  PropertyDetailsData,
+} from "@/lib/schemas/property/property.schema";
 
 interface PropertyFormTabsProps {
   form: UseFormReturn<PropertyInputSchema>;
   activeTab: string;
   setActiveTab: Dispatch<SetStateAction<string>>;
-  amenitiesList?: PropertyDetails[];
-  propertyPurposes?: PropertyDetails[];
-  propertyStatus?: PropertyDetails[];
-  propertyStandings?: PropertyDetails[];
-  propertyTypologies?: PropertyDetails[];
+  propertyDetails?: PropertyDetailsData;
 }
 
 export default function PropertyFormTabs({
   form,
   activeTab,
   setActiveTab,
-  amenitiesList,
-  propertyPurposes,
-  propertyStatus,
-  propertyStandings,
-  propertyTypologies,
+  propertyDetails,
 }: PropertyFormTabsProps) {
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -80,17 +75,18 @@ export default function PropertyFormTabs({
       {/* ----------------------------- FORM TABS -------------------------------- */}
       <TabBasicInfo
         form={form}
-        propertyPurposes={propertyPurposes}
-        propertyStatus={propertyStatus}
+        propertyTypes={propertyDetails?.types}
+        propertyPurposes={propertyDetails?.purposes}
+        propertyStatus={propertyDetails?.status}
       />
       <TabLocation form={form} />
       <TabDetails form={form} />
       <TabSpecific
         form={form}
-        propertyStandings={propertyStandings}
-        propertyTypologies={propertyTypologies}
+        propertyStandings={propertyDetails?.standings}
+        propertyTypologies={propertyDetails?.typologies}
       />
-      <TabAmenities form={form} amenitiesList={amenitiesList} />
+      <TabAmenities form={form} amenitiesList={propertyDetails?.amenities} />
       <TabCreative form={form} />
     </Tabs>
   );

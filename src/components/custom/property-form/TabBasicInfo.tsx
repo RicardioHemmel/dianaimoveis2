@@ -5,7 +5,7 @@ import { UseFormReturn } from "react-hook-form";
 
 // SCHEMAS
 import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
-import { PropertyDetails } from "@/lib/schemas/property/property.schema";
+import { PropertyDetail } from "@/lib/schemas/property/property.schema";
 
 // COMPONENTS
 import { Input } from "@/components/ui/input";
@@ -33,27 +33,40 @@ import {
 import { NumericFormat } from "react-number-format"; // MASKED INPUT
 
 // ICONS
-import { Building2, Home, Store, MapPin, DollarSign } from "lucide-react";
-
+import {
+  Building2,
+  Home,
+  Store,
+  MapPin,
+  DollarSign,
+  LucideIcon,
+} from "lucide-react";
 
 interface TabBasicInfoProps {
   form: UseFormReturn<PropertyInputSchema>;
-  propertyPurposes?: PropertyDetails[];
-  propertyStatus?: PropertyDetails[];
+  propertyTypes?: PropertyDetail[];
+  propertyPurposes?: PropertyDetail[];
+  propertyStatus?: PropertyDetail[];
 }
 
 export default function TabBasicInfo({
   form,
+  propertyTypes,
   propertyPurposes,
   propertyStatus,
 }: TabBasicInfoProps) {
+  // List possible icons for property types
+  const propertyTypeIcons: Record<string, LucideIcon> = {
+    Apartamento: Building2,
+    Casa: Home,
+    Comercial: Store,
+    Terreno: MapPin,
+  } as const;
 
-  const propertyTypes = [
-    { slug: "apartamento", label: "Apartamento", icon: Building2 },
-    { slug: "casa", label: "Casa", icon: Home },
-    { slug: "comercial", label: "Comercial", icon: Store },
-    { slug: "terreno", label: "Terreno", icon: MapPin },
-  ];
+  const mappedPropertyTypes = propertyTypes?.map((type) => ({
+    ...type,
+    icon: propertyTypeIcons[type.name] ?? Building2,
+  }));
 
   return (
     <TabsContent value="basic" className="space-y-6">
@@ -69,29 +82,32 @@ export default function TabBasicInfo({
               </FormLabel>
               <FormControl>
                 <div className="grid grid-cols-4 gap-3">
-                  {propertyTypes.map((type) => {
+                  {mappedPropertyTypes?.map((type) => {
                     const Icon = type.icon;
-                    const isSelected = field.value === type.slug;
+                    const isSelected = field.value === type._id;
 
                     return (
                       <button
-                        key={type.slug}
+                        key={type._id}
                         type="button"
-                        onClick={() => field.onChange(type.slug)}
-                        className={`p-4 rounded-lg border-2 transition-all cursor-pointer flex flex-col items-center justify-center bg-gray-50 ${isSelected
-                          ? "border-[var(--soft-primary-custom)] bg-[image:var(--gradient-primary)]"
-                          : "border-border hover:border-primary/50"
-                          }`}
+                        onClick={() => field.onChange(type._id)}
+                        className={`p-4 rounded-lg border-2 transition-all cursor-pointer flex flex-col items-center justify-center bg-gray-50 ${
+                          isSelected
+                            ? "border-[var(--soft-primary-custom)] bg-[image:var(--gradient-primary)]"
+                            : "border-border hover:border-primary/50"
+                        }`}
                       >
                         <Icon
-                          className={`h-6 w-6 mb-1 ${isSelected ? "text-white" : "text-muted-foreground"
-                            }`}
+                          className={`h-6 w-6 mb-1 ${
+                            isSelected ? "text-white" : "text-muted-foreground"
+                          }`}
                         />
                         <p
-                          className={`text-sm font-medium ${isSelected ? "text-white" : "text-foreground"
-                            }`}
+                          className={`text-sm font-medium ${
+                            isSelected ? "text-white" : "text-foreground"
+                          }`}
                         >
-                          {type.label}
+                          {type.name}
                         </p>
                       </button>
                     );

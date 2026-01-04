@@ -10,32 +10,28 @@ import { Button } from "@/components/ui/button";
 import PropertyFormTabs from "@/components/custom/property-form/PropertyFormTabs";
 
 // HOOKS
-import usePropertyForm from "@/hooks/properties/form/use-property-form";
-import { useAmenities } from "@/hooks/properties/use-property-amenities";
-import { useStatus } from "@/hooks/properties/use-property-status";
-import { usePurposes } from "@/hooks/properties/use-property-purposes";
-import { useStandings } from "@/hooks/properties/use-property-standings";
-import { useTypologies } from "@/hooks/properties/use-property-typologies";
+import usePropertyForm from "@/hooks/properties/use-property-form";
 
 // PROPERTY SCHEMA
-import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
+import {
+  PropertyDetailsData,
+  PropertyInputSchema,
+} from "@/lib/schemas/property/property.schema";
 
 // DEFINES WHETHER THE FORM IS TO CREATE OR UPDATE
 type PropertyFormProps = {
   mode: "create" | "edit";
   initialData?: PropertyInputSchema;
+  propertyDetails?: PropertyDetailsData;
 };
 
-export default function PropertyForm({ mode, initialData }: PropertyFormProps) {
+export default function PropertyForm({
+  mode,
+  initialData,
+  propertyDetails,
+}: PropertyFormProps) {
   // INICIALIZE HOOK PASSING INITIALDATA TO POPULATE RHF
-  const { form } = usePropertyForm(initialData);
-
-  // FETCHES DATA FOR FORM SELECTS
-  const amenitiesList = useAmenities().data;
-  const propertyPurposes = usePurposes().data;
-  const propertyStatus = useStatus().data;
-  const propertyStandings = useStandings().data;
-  const propertyTypologies = useTypologies().data;
+  const { form } = usePropertyForm(propertyDetails?.types ?? [], initialData);
 
   // TABS LIST FOR NAVIGATION
   const tabs = [
@@ -50,7 +46,6 @@ export default function PropertyForm({ mode, initialData }: PropertyFormProps) {
   const [activeTab, setActiveTab] = useState("basic");
   const isFirstTab = activeTab === tabs[0];
   const isLastTab = activeTab === tabs[tabs.length - 1];
-
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
@@ -91,11 +86,7 @@ export default function PropertyForm({ mode, initialData }: PropertyFormProps) {
               form={form}
               activeTab={activeTab}
               setActiveTab={setActiveTab}
-              amenitiesList={amenitiesList}
-              propertyPurposes={propertyPurposes}
-              propertyStatus={propertyStatus}
-              propertyStandings={propertyStandings}
-              propertyTypologies={propertyTypologies}
+              propertyDetails={propertyDetails}
             />
 
             {/* SAVES PROPERTY AS A DRAFT */}

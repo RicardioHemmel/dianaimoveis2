@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 
-interface IPopulatedRef {
+export interface IPopulatedRef {
   _id: Types.ObjectId;
   name: string;
 }

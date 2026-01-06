@@ -1,7 +1,7 @@
 "use client";
 
 import { UseFormReturn } from "react-hook-form";
-import { PropertyFormData } from "@/lib/schemas/property/zod/property-base.schema";
+import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
 
 // Shadcnui
 import { Input } from "@/components/ui/input";
@@ -26,7 +26,7 @@ import {
 import { PatternFormat } from "react-number-format";
 
 interface TabLocationProps {
-  form: UseFormReturn<PropertyFormData>;
+  form: UseFormReturn<PropertyInputSchema>;
 }
 
 export default function TabLocation({ form }: TabLocationProps) {

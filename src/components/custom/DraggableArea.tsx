@@ -19,23 +19,21 @@ import DraggableImageCard from "@/components/custom/DraggableImageCard";
 import FullScreenImageModal from "@/components/custom/FullScreenModal";
 
 // SCHEMAS
-import { MediaDraft } from "@/lib/schemas/media/media-draft.schema";
+import { FileUpload } from "@/lib/schemas/media/file.schema";
 
 interface DraggableAreaProps {
-  mediaDrafts: MediaDraft[];
-  removeImage: (id: number) => void;
-  removeAllMediaDrafts: () => void;
-  handleCloudUpload: (files: MediaDraft[]) => void;
-  setMediaDrafts: Dispatch<SetStateAction<MediaDraft[]>>;
+  filesUpload: FileUpload[];
+  removeOneCloudFile: (key: string) => Promise<void>;
+  removeAllFiles: () => void;
+  setFilesUpload: Dispatch<SetStateAction<FileUpload[]>>;
   formattedOrder: (i: number) => number;
 }
 
 export default function DraggableArea({
-  mediaDrafts,
-  removeImage,
-  removeAllMediaDrafts,
-  handleCloudUpload,
-  setMediaDrafts,
+  filesUpload,
+  removeOneCloudFile,
+  removeAllFiles,
+  setFilesUpload,
   formattedOrder,
 }: DraggableAreaProps) {
   // For highlighting cards during drag n drop
@@ -64,9 +62,9 @@ export default function DraggableArea({
     if (!over) return;
 
     // Discovers the original position of the image
-    const oldIndex = mediaDrafts.findIndex((img) => img.tempId === active.id);
+    const oldIndex = filesUpload.findIndex((img) => img.tempId === active.id);
     // Discovers the new position of the image
-    const newIndex = mediaDrafts.findIndex((img) => img.tempId === over.id);
+    const newIndex = filesUpload.findIndex((img) => img.tempId === over.id);
 
     if (oldIndex === newIndex) return; // If there is no real movement
 
@@ -75,13 +73,13 @@ export default function DraggableArea({
     const endIndex = Math.max(oldIndex, newIndex);
 
     // Gets the IDs of all affected images
-    const affectedIds = mediaDrafts
+    const affectedIds = filesUpload
       .slice(startIndex, endIndex + 1)
       .map((img) => img.tempId);
     setHighlightedIds(affectedIds);
     setTimeout(() => setHighlightedIds([]), 500);
 
-    setMediaDrafts((prev) => {
+    setFilesUpload((prev) => {
       // Returns a new array already sorted
       const sortedImages = arrayMove(prev, oldIndex, newIndex);
 
@@ -94,13 +92,13 @@ export default function DraggableArea({
   return (
     <>
       {/* Drag n Drop Grid */}
-      {mediaDrafts.length > 0 && (
+      {filesUpload.length > 0 && (
         <DndContext
           collisionDetection={closestCenter} // Collision detection algorithm
           onDragEnd={handleDragEnd} // Event fired when drag ends
         >
           <SortableContext
-            items={mediaDrafts.map((img) => img.tempId)} // IDs of the draggable items
+            items={filesUpload.map((img) => img.tempId)} // IDs of the draggable items
             strategy={rectSortingStrategy} // Grid-based sorting strategy
           >
             <div className="flex justify-between">
@@ -111,23 +109,17 @@ export default function DraggableArea({
                 <Button
                   variant={"destructive"}
                   className="rounded-full"
-                  onClick={removeAllMediaDrafts}
+                  onClick={removeAllFiles}
                 >
                   Remover imagens
-                </Button>
-                <Button
-                  className="rounded-full bg-[image:var(--gradient-primary)]"
-                  onClick={() => handleCloudUpload(mediaDrafts)}
-                >
-                  Salvar imagens
                 </Button>
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 p-4 rounded-2xl bg-neutral-100">
-              {mediaDrafts.map((image, i) => (
+              {filesUpload.map((image, i) => (
                 <DraggableImageCard
                   image={image}
-                  removeImage={removeImage}
+                  removeOneCloudMedia={removeOneCloudFile}
                   i={i}
                   formattedOrder={formattedOrder}
                   key={image.tempId}
@@ -142,7 +134,7 @@ export default function DraggableArea({
 
       {isModalOpen && (
         <FullScreenImageModal
-          mediaDrafts={mediaDrafts}
+          filesUpload={filesUpload}
           onClose={onClose}
           doubleClickedImageIndex={doubleClickedImageIndex}
         />

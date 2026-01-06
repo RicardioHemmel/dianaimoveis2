@@ -8,7 +8,7 @@ import connectMongoDB from "@/lib/db/mongodbConnection";
 import crypto from "crypto";
 
 // EMAIL SERVICE
-import ResetPasswordEmail from "@/components/emails/ResetPassword";
+import ResetPasswordEmail from "@/components/custom/emails/ResetPassword";
 import { Resend } from "resend";
 
 // SCHEMA

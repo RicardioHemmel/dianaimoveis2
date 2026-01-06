@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 
 import { UseFormReturn } from "react-hook-form";
-import { PropertyFormData } from "@/lib/schemas/property/zod/property-base.schema";
+import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
 import {
   InputGroup,
   InputGroupInput,
@@ -35,7 +35,7 @@ import {
 import { NumericFormat } from "react-number-format";
 
 interface TabDetailsProps {
-  form: UseFormReturn<PropertyFormData>;
+  form: UseFormReturn<PropertyInputSchema>;
 }
 
 export default function TabDetails({ form }: TabDetailsProps) {

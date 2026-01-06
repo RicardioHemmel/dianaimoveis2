@@ -72,7 +72,7 @@ export default function AboutPage() {
                   <img
                     src={"/dianaPhoto.webp"}
                     alt="Corretora Diana"
-                    className="w-[full] h-auto object-cover"
+                    className="w-full h-auto object-cover"
                   />
                 </div>
 

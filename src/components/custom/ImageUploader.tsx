@@ -22,23 +22,22 @@ export default function ImageUploader({
   // Custom hook to handle file upload events
   const {
     isDragging,
-    mediaDrafts,
-    setMediaDrafts,
+    filesUpload,
+    removeOneCloudFile,
+    removeAllFiles,
+    setFilesUpload,
     handleDragEnter,
     handleDragLeave,
     handleDragOver,
     handleDrop,
     handleFilesFromInput,
-    handleCloudUpload,
-    removeImage,
-    removeAllMediaDrafts,
     formattedOrder,
   } = useFileUpload();
 
   // When component is dismounted kills any reference in memory of images preview URLs
   useEffect(() => {
     return () => {
-      mediaDrafts.forEach((img) => URL.revokeObjectURL(img.preview));
+      filesUpload.forEach((img) => URL.revokeObjectURL(img.previewURL));
     };
   }, []);
 
@@ -73,11 +72,10 @@ export default function ImageUploader({
       </div>
 
       <DraggableArea
-        mediaDrafts={mediaDrafts}
-        removeImage={removeImage}
-        removeAllMediaDrafts={removeAllMediaDrafts}
-        handleCloudUpload={handleCloudUpload}
-        setMediaDrafts={setMediaDrafts}
+        filesUpload={filesUpload}
+        removeOneCloudFile={removeOneCloudFile}
+        removeAllFiles={removeAllFiles}
+        setFilesUpload={setFilesUpload}
         formattedOrder={formattedOrder}
       />
     </>

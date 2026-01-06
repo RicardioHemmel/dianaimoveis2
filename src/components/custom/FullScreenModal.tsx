@@ -14,19 +14,19 @@ import {
 } from "@/components/ui/carousel";
 
 // Types
-import { MediaDraft } from "@/lib/schemas/media/media-draft.schema";
+import { FileUpload } from "@/lib/schemas/media/file.schema";
 
 // Icons
 import { X } from "lucide-react";
 
 interface FullScreenImageModalProps {
-  mediaDrafts: MediaDraft[];
+  filesUpload: FileUpload[];
   doubleClickedImageIndex: number | null;
   onClose: () => void;
 }
 
 export default function FullScreenImageModal({
-  mediaDrafts,
+  filesUpload,
   doubleClickedImageIndex,
   onClose,
 }: FullScreenImageModalProps) {
@@ -70,12 +70,12 @@ export default function FullScreenImageModal({
         className="w-[96vw] h-[92vh] flex justify-center"
       >
         <CarouselContent>
-          {mediaDrafts.length > 0 &&
-            mediaDrafts.map((img) => (
+          {filesUpload.length > 0 &&
+            filesUpload.map((img) => (
               <CarouselItem key={img.tempId} className="h-screen flex items-center">
                 <Card className="flex justify-center w-full">
                   <CardContent className="flex justify-center">
-                    {img.preview && (
+                    {img.previewURL && (
                       <>
                         <div
                           key={img.tempId}
@@ -83,7 +83,7 @@ export default function FullScreenImageModal({
                         >
                           <Image
                             alt={`Imagem ${img.tempId}`}
-                            src={img.preview}
+                            src={img.previewURL}
                             fill={true}
                             className="object-contain"
                           />

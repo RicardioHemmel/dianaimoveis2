@@ -5,7 +5,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 // Types
-import { MediaDraft } from "@/lib/schemas/media/media-draft.schema";
+import { FileUpload } from "@/lib/schemas/media/file.schema";
 
 // React | Next
 import { useState } from "react";
@@ -15,8 +15,8 @@ import Image from "next/image";
 import { CloudCheck, X } from "lucide-react";
 
 interface ImageCardProps {
-  image: MediaDraft;
-  removeImage: (id: number) => void;
+  image: FileUpload;
+  removeOneCloudMedia: (key: string) => Promise<void>;
   i: number;
   formattedOrder: (i: number) => number;
   isHighlighted: boolean;
@@ -25,7 +25,7 @@ interface ImageCardProps {
 
 export default function DraggableImageCard({
   image,
-  removeImage,
+  removeOneCloudMedia,
   i,
   formattedOrder,
   isHighlighted,
@@ -50,12 +50,12 @@ export default function DraggableImageCard({
       style={style}
       {...attributes}
       {...listeners}
-      className="flex justify-center relative active:cursor-grabbing"
+      className={`flex justify-center relative active:cursor-grabbing ${i === 0 ? "sm:col-span-2" : ""}`}
       onDoubleClick={() => onDoubleClick(i)}
     >
       <div className="w-full h-64 relative overflow-hidden animate-[var(--animate-infinity-glow)] rounded-lg">
         <Image
-          src={image.preview}
+          src={image.previewURL}
           alt={`Preview da imagem ${image.tempId}`}
           fill={true}
           className="object-cover"
@@ -81,17 +81,24 @@ export default function DraggableImageCard({
         {formattedOrder(i)}
       </p>
 
+      {i === 0 && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <p className="text-white font-bold bg-black/80 rounded-3xl px-5 py-1">
+            Imagem de Capa
+          </p>
+        </div>
+      )}
+
       {image.status === "success" && (
         <div className="absolute top-2 right-10 bg-neutral-100 rounded-full p-1">
           <CloudCheck className="text-[#1dd363] size-4" />
         </div>
       )}
 
-
       <button
         onMouseEnter={() => setCanDrag(false)}
         onMouseLeave={() => setCanDrag(true)}
-        onClick={() => removeImage(image.tempId)}
+        onClick={() => removeOneCloudMedia(image.key!)}
         className="absolute top-2 right-2 rounded-full cursor-pointer p-0.5 bg-red-600 hover:bg-red-700"
       >
         <X className="w-5 h-5 text-white" />

@@ -74,7 +74,7 @@ export default function TabBasicInfo({
       <div className="space-y-4">
         <FormField
           control={form.control}
-          name="propertyTypeId"
+          name="propertyType"
           render={({ field }) => (
             <FormItem className="space-y-3">
               <FormLabel className="text-lg font-semibold text-foreground">
@@ -84,13 +84,13 @@ export default function TabBasicInfo({
                 <div className="grid grid-cols-4 gap-3">
                   {mappedPropertyTypes?.map((type) => {
                     const Icon = type.icon;
-                    const isSelected = field.value === type._id;
+                    const isSelected = field.value?._id === type._id;
 
                     return (
                       <button
                         key={type._id}
                         type="button"
-                        onClick={() => field.onChange(type._id)}
+                        onClick={() => field.onChange(type)}
                         className={`p-4 rounded-lg border-2 transition-all cursor-pointer flex flex-col items-center justify-center bg-gray-50 ${
                           isSelected
                             ? "border-[var(--soft-primary-custom)] bg-[image:var(--gradient-primary)]"
@@ -204,7 +204,7 @@ export default function TabBasicInfo({
           {/* PURPOSE */}
           <FormField
             control={form.control}
-            name="propertyPurposeId"
+            name="propertyPurpose"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Finalidade</FormLabel>
@@ -234,7 +234,7 @@ export default function TabBasicInfo({
           {/* STATUS */}
           <FormField
             control={form.control}
-            name="propertyStatusId"
+            name="propertyStatus"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Status</FormLabel>

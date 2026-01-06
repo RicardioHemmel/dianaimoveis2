@@ -23,6 +23,8 @@ import {
 import Link from "next/link";
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 
+import { NumericFormat } from "react-number-format";
+
 interface PropertyCardHorizontalProps {
   property: PropertyViewSchema;
 }
@@ -42,16 +44,20 @@ export function PropertyCardHorizontal({
     pending: "Pendente",
   };
 
+  const formatted = new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(property.price);
+
   return (
     <Card className="overflow-hidden hover:shadow-premium transition-all duration-300 group cursor-pointer">
       <div className="flex flex-col md:flex-row">
         {/* Image Section */}
         <div className="relative w-full md:w-64 h-48 md:h-auto bg-muted overflow-hidden flex-shrink-0">
-          (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-primary">
-            <Building2 className="h-16 w-16" />
+          <div className="w-full h-full flex items-center justify-center bg-[image:var(--gradient-primary)]">
+            <Building2 className="h-16 w-16 text-white/70" />
           </div>
-          )
+
           <Badge className={`absolute top-3 left-3`}>
             {property.propertyStatus?.name}
           </Badge>
@@ -85,12 +91,10 @@ export function PropertyCardHorizontal({
               </div>
 
               <div className="flex flex-wrap items-center justify-between gap-4">
-                <p className="text-3xl font-bold text-primary">
-                  {property.price}
-                </p>
+                <p className="text-3xl font-bold text-[var(--bg-selected)]">{formatted}</p>
 
                 <div className="flex items-center gap-2">
-                                <Link href={`properties/${property._id}/edit`}>
+                  <Link href={`properties/${property._id}/edit`}>
                     Ver Detalhes
                   </Link>
 

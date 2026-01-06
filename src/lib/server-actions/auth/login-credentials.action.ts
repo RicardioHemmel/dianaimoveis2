@@ -7,7 +7,6 @@ import { AuthError } from "next-auth";
 
 
 export interface LoginCredentialsResponse extends ServerActionResponse {
-  fieldErrors?: Record<string, string[]> | undefined
   email?: string;
 }
 

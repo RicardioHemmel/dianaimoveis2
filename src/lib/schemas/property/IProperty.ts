@@ -27,12 +27,12 @@ export interface IPropertyRaw {
   showSquareMeterPrice?: boolean;
   isPetFriendly?: boolean;
 
-  propertyTypeId: Types.ObjectId;
-  propertyPurposeId?: Types.ObjectId;
-  propertyStandingId?: Types.ObjectId;
-  propertyStatusId?: Types.ObjectId;
-  propertyTypologyId?: Types.ObjectId;
-  propertyAmenitiesIds: Types.ObjectId[];
+  propertyType: Types.ObjectId;
+  propertyPurpose?: Types.ObjectId;
+  propertyStanding?: Types.ObjectId;
+  propertyStatus?: Types.ObjectId;
+  propertyTypology?: Types.ObjectId;
+  propertyAmenities: Types.ObjectId[];
 
   // propertyGallery: [{ type: Schema.Types.ObjectId, ref: "Media", order: number }],
   // propertyFloorPlanGallery: [{ type: Schema.Types.ObjectId, ref: "Media", order: number }],
@@ -47,20 +47,18 @@ export interface IPropertyRaw {
     state?: string;
     zipCode?: string;
   };
-
 }
 
 // USED FOR MAPPING DATA TO FRONTEND
-export interface IPropertyPopulated
-  extends Omit<
-    IPropertyRaw,
-    | "propertyTypeId"
-    | "propertyPurposeId"
-    | "propertyStandingId"
-    | "propertyStatusId"
-    | "propertyTypologyId"
-    | "propertyAmenitiesIds"
-  > {
+export interface IPropertyPopulated extends Omit<
+  IPropertyRaw,
+  | "propertyType"
+  | "propertyPurpose"
+  | "propertyStanding"
+  | "propertyStatus"
+  | "propertyTypology"
+  | "propertyAmenities"
+> {
   propertyType: IPopulatedRef;
   propertyPurpose?: IPopulatedRef;
   propertyStanding?: IPopulatedRef;

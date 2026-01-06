@@ -20,10 +20,10 @@ import {
 // ICONS
 import { Youtube, Images, Layers } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
-import { PropertyFormData } from "@/lib/schemas/property/zod/property-base.schema";
+import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
 
 interface TabCreativeProps {
-  form: UseFormReturn<PropertyFormData>;
+  form: UseFormReturn<PropertyInputSchema>;
 }
 
 export default function TabCreative({ form }: TabCreativeProps) {

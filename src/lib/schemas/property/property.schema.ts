@@ -2,29 +2,36 @@ import { z } from "zod";
 
 //-------------------------------------------------- AUXULIAR TYPES ------------------------------------------------------
 const GalleryItemSchema = z.object({
-  imageRef: z.string(),
+  imageKey: z.string(),
   order: z.number(),
 });
 
-const PropertyDetail = z
-  .object({
-    _id: z.string(),
-    name: z.string(),
-  });
+const PropertyDetail = z.object({
+  _id: z.string(),
+  name: z.string(),
+});
 
 export type PropertyDetail = z.infer<typeof PropertyDetail>;
+
+//-------------------------------------------------- PROPERTY IMAGE UPLOAD ------------------------------------------------------
+
+export const uploadRequestSchema = z.object({
+  fileName: z.string(),
+  contentType: z.string(),
+  size: z.number(),
+});
 
 //---------------------------------------------------- BASE SCHEMA -----------------------------------------------------------
 const propertyBaseSchema = {
   _id: z.string().optional(),
-  title: z.string(),
+  title: z.string().min(1, "O título é obrigatório"),
   description: z.string().optional(),
 
   bedroomsQty: z.number().optional(),
   suitesQty: z.number().optional(),
   bathroomsQty: z.number().optional(),
   parkingSpacesQty: z.number().optional(),
-  price: z.number().optional(),
+  price: z.number("O preço é obrigatório").nonnegative(),
   area: z.number().optional(),
 
   condominiumFee: z.number().optional(),
@@ -41,8 +48,8 @@ const propertyBaseSchema = {
 
   status: z.enum(["DRAFT", "PUBLISHED"]),
 
-  // propertyGallery: z.array(GalleryItemSchema).optional(),
-  // propertyFloorPlanGallery: z.array(GalleryItemSchema).optional(),
+  propertyGallery: z.array(GalleryItemSchema).optional(),
+  propertyFloorPlanGallery: z.array(GalleryItemSchema).optional(),
 
   address: z
     .object({
@@ -59,12 +66,12 @@ const propertyBaseSchema = {
 export const propertyViewSchema = z.object({
   ...propertyBaseSchema,
 
-  propertyType: PropertyDetail,
-  propertyPurpose: PropertyDetail,
-  propertyStanding: PropertyDetail,
-  propertyStatus: PropertyDetail,
-  propertyTypology: PropertyDetail,
-  propertyAmenities: z.array(PropertyDetail),
+  propertyType: PropertyDetail.optional(),
+  propertyPurpose: PropertyDetail.optional(),
+  propertyStanding: PropertyDetail.optional(),
+  propertyStatus: PropertyDetail.optional(),
+  propertyTypology: PropertyDetail.optional(),
+  propertyAmenities: z.array(PropertyDetail).optional(),
 });
 
 export type PropertyViewSchema = z.infer<typeof propertyViewSchema>;
@@ -74,12 +81,12 @@ export type PropertyViewSchema = z.infer<typeof propertyViewSchema>;
 export const propertyInputSchema = z.object({
   ...propertyBaseSchema,
 
-  propertyTypeId: z.string().optional(),
-  propertyPurposeId: z.string().optional(),
-  propertyStandingId: z.string().optional(),
-  propertyStatusId: z.string().optional(),
-  propertyTypologyId: z.string().optional(),
-  propertyAmenitiesIds: z.array(z.string()),
+  propertyType: PropertyDetail.optional(),
+  propertyPurpose: z.string().optional(),
+  propertyStanding: z.string().optional(),
+  propertyStatus: z.string().optional(),
+  propertyTypology: z.string().optional(),
+  propertyAmenities: z.array(z.string()),
 });
 
 export type PropertyInputSchema = z.infer<typeof propertyInputSchema>;
@@ -89,12 +96,13 @@ export const DefaultValuesPropertyForm: PropertyInputSchema = {
   _id: undefined,
   title: "",
   description: "",
-  propertyTypeId: undefined,
-  propertyPurposeId: undefined,
-  propertyStandingId: undefined,
-  propertyStatusId: undefined,
-  propertyTypologyId: undefined,
-  propertyAmenitiesIds: [],
+  price: undefined as unknown as number,
+  propertyType: undefined,
+  propertyPurpose: undefined,
+  propertyStanding: undefined,
+  propertyStatus: undefined,
+  propertyTypology: undefined,
+  propertyAmenities: [],
   isFeatured: false,
   isFurnished: false,
   isNearSubway: false,

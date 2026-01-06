@@ -10,13 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-// ICONS
-import { MapPin } from "lucide-react";
-import { PropertySelectOption } from "@/lib/schemas/property/property-select-option";
-
-import { UseFormReturn } from "react-hook-form";
-import { PropertyFormData } from "@/lib/schemas/property/zod/property-base.schema";
 import {
   FormControl,
   FormField,
@@ -24,12 +17,21 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
+// ICONS
+import { MapPin } from "lucide-react";
+
+// SCHEMAS
+import { PropertyDetail } from "@/lib/schemas/property/property.schema";
+import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
+
+import { UseFormReturn } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 
 interface TabSpecificProps {
-  form: UseFormReturn<PropertyFormData>;
-  propertyStandings?: PropertySelectOption[];
-  propertyTypologies?: PropertySelectOption[];
+  form: UseFormReturn<PropertyInputSchema>;
+  propertyStandings?: PropertyDetail[];
+  propertyTypologies?: PropertyDetail[];
 }
 
 export default function TabSpecific({
@@ -37,11 +39,12 @@ export default function TabSpecific({
   propertyStandings,
   propertyTypologies,
 }: TabSpecificProps) {
-  const { propertyTypeSlug } = form.watch();
+
+  const { propertyType } = form.watch();
 
   return (
     <TabsContent value="specific" className="space-y-4">
-      {propertyTypeSlug === "apartamento" && (
+      {propertyType?.name === "Apartamento" && (
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-foreground">
             Características do Apartamento
@@ -96,7 +99,7 @@ export default function TabSpecific({
             {/* PROPERTY STANDING */}
             <FormField
               control={form.control}
-              name="propertyStandingId"
+              name="propertyStanding"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Porte</FormLabel>
@@ -126,7 +129,7 @@ export default function TabSpecific({
             {/* PROPERTY TYPOLOGY */}
             <FormField
               control={form.control}
-              name="propertyTypologyId"
+              name="propertyTypology"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Tipologia</FormLabel>
@@ -156,7 +159,7 @@ export default function TabSpecific({
         </div>
       )}
 
-      {propertyTypeSlug === "terreno" && (
+      {propertyType?.name === "Terreno" && (
         <div className="text-center py-12 text-muted-foreground">
           <MapPin className="h-12 w-12 mx-auto mb-3 opacity-50" />
           <p>Não há características específicas para terrenos.</p>

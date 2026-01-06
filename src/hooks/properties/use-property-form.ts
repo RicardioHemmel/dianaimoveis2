@@ -1,9 +1,7 @@
 // REACT | NEXT
-import { Path, useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 
 // FORM CONTROL
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   propertyInputSchema,
@@ -12,129 +10,55 @@ import {
   PropertyDetail,
 } from "@/lib/schemas/property/property.schema";
 
-import { PropertyDraftSchema } from "@/lib/schemas/property/property-draft.schema"; // PROPERTY SCHEMA FOR SAVING AS DRAFT
-
 // MESSAGE BOX
 import { toast } from "sonner";
+import createProperty from "@/lib/server-actions/properties/create-property";
 
 export default function usePropertyForm(
   propertyTypes: PropertyDetail[],
   initialData?: PropertyInputSchema
 ) {
-  // REDIRECT USER TO EDIT PAGE AFTER SAVING PROPERTY
-  // const router = useRouter();
-
-  const defaultPropertyTypeId = propertyTypes.find(
+  const defaultPropertyType = propertyTypes.find(
     (type) => type.name === "Apartamento"
-  )?._id;
+  );
 
   // FORM MANAGER
   const form = useForm<PropertyInputSchema>({
     resolver: zodResolver(propertyInputSchema),
+    mode: "onSubmit",
     defaultValues: {
       ...DefaultValuesPropertyForm,
-      propertyTypeId: defaultPropertyTypeId,
+      propertyType: defaultPropertyType,
       ...initialData,
     },
   });
 
-  //--------------------- AUXILIARY FUN ----------------------
-  // function parseForm<T>(data: PropertyInputSchema, schema: z.Schema<T>): T | null {
-  //     // CLEAR PREVIOUS ERRORS STATE TO SET A NEW ONE
-  //     form.clearErrors();
+  const handleCreateProperty = async (data: PropertyInputSchema) => {
+    const result = await createProperty(data);
 
-  //     // USE ZOD TO PARSE DATA
-  //     const parsedData = schema.safeParse(data);
+    if (result.success) {
+      toast.success(result.message);
+      return;
+    }
 
-  //     // VALIDATES INPUTS AND SETS ERRORS MANUALLY
-  //     if (parsedData.error) {
-  //         parsedData.error.issues.forEach((issue) => {
-  //             form.setError(issue.path.join(".") as Path<PropertyInputSchema>, {
-  //                 type: "manual",
-  //                 message: issue.message,
-  //             });
-  //         });
-  //         console.log(parsedData.error);
-  //         toast.error("Confira os campos pendentes");
-  //         return null;
-  //     } else {
-  //         return parsedData.data;
-  //     }
-  // }
+    if (result.message) {
+      toast.error(result.message);
+    }
 
-  // ------------------------------------------------ SAVES PROPERTY AS PUBLISHED  --------------------------------------
-  // async function publish(data: PropertyInputSchema): Promise<void> {
-  //     // VALIDATES DATA WITH ZOD
-  //     const parsedData = parseForm(data, propertyInputSchema);
-  //     if (!parsedData) return;
+    if (result.fieldErrors) {
+      Object.entries(result.fieldErrors).forEach(([field, messages]) => {
+        if (!messages?.length) return;
 
-  //     console.log(parsedData);
-  // }
-
-  // ------------------------------------------------ SAVES PROPERTY AS A DRAFT --------------------------------------
-  // async function saveDraft(): Promise<void> {
-  //     // GETS FORM DATA
-  //     const data = form.getValues();
-
-  //     // VALIDATES DATA WITH ZOD
-  //     const parsedData = parseForm(data, PropertyDraftSchema);
-  //     if (!parsedData) return;
-
-  //     // VERIFIES IF A PROPERTY ID EXISTS TO DECIDE WHETER TO CREATE A DRAFT OR UPDATE IT
-  //     const propertyId = parsedData?._id;
-  //     const method = propertyId ? "PATCH" : "POST";
-  //     const url = propertyId
-  //         ? `/api/properties/${propertyId}/draft`
-  //         : `/api/properties/draft`;
-
-  //     const response = await fetch(url, {
-  //         method,
-  //         headers: {
-  //             "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify(parsedData),
-  //     });
-
-  //     let result;
-  //     try {
-  //         result = await response.json();
-  //     } catch (error) {
-  //         console.error("Erro ao fazer parse do JSON:", error);
-  //         toast.error("Erro interno do servidor.");
-  //         return;
-  //     }
-
-  //     if (!response.ok || !result.success) {
-  //         // Log mais detalhado para ajudar no debug
-  //         console.error("Erro retornado pela API:", result);
-
-  //         // Tentar mostrar o erro específico do Zod se existir
-  //         const errorMessage =
-  //             result.errors?.title?._errors?.[0] ||
-  //             result.message ||
-  //             "Falha ao salvar rascunho";
-
-  //         toast.error(`Erro: ${errorMessage}`);
-  //         return; // Não dê throw new Error aqui se quiser que o toast apareça e a UI não quebre
-  //     }
-
-  //     // IF YOU JUST CREATED IT, REDIRECTS USER TO EDIT PAGE USING THE RETURNED ID FROM DRAFT CREATION
-  //     if (!propertyId && result.draftProperty?._id) {
-  //         router.replace(`/properties/${result.draftProperty._id}/edit`);
-  //         toast.success("Rascunho Salvo");
-  //         return;
-  //     }
-
-  //     // UPDATES THE FORM SILENTLY
-  //     form.reset(result.draftProperty, {
-  //         keepDirty: false,
-  //         keepTouched: false,
-  //     });
-
-  //     toast.success("Rascunho Atualizado");
-  // }
+        form.setError(field as keyof PropertyInputSchema, {
+          type: "server",
+          message: messages[0],
+        });
+      });
+    }
+  };
 
   return {
     form,
+    handleCreateProperty,
   };
 }

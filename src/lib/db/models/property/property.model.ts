@@ -43,8 +43,8 @@ const propertySchema = new Schema(
       { type: Schema.Types.ObjectId, ref: "PropertyAmenities" },
     ],
 
-    // propertyGallery: [{ type: Schema.Types.ObjectId, ref: "Media", order: Number }],
-    // propertyFloorPlanGallery: [{ type: Schema.Types.ObjectId, ref: "Media", order: Number }],
+    propertyGallery: [{ imageKey: String, order: Number }],
+    propertyFloorPlanGallery: [{ imageKey: String, order: Number }],
     videoUrl: String,
 
     status: {
@@ -61,12 +61,11 @@ const propertySchema = new Schema(
       zipCode: String,
       _id: false,
     },
-
   },
   { strict: true, timestamps: true }
 );
 
-
-const PropertyModel = (mongoose.models.Property as Model<IPropertyRaw>) || mongoose.model<IPropertyRaw>("Property", propertySchema)
+const PropertyModel =
+  (mongoose.models.Property as Model<IPropertyRaw>) ||
+  mongoose.model<IPropertyRaw>("Property", propertySchema);
 export default PropertyModel;
-

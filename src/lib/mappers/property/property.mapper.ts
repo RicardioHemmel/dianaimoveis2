@@ -89,12 +89,12 @@ export class PropertyMapper {
 
       address: mapAddressToPersistence(property.address),
 
-      propertyTypeId: new Types.ObjectId(property.propertyTypeId),
-      propertyPurposeId: toObjectId(property.propertyPurposeId),
-      propertyStandingId: toObjectId(property.propertyStandingId),
-      propertyStatusId: toObjectId(property.propertyStatusId),
-      propertyTypologyId: toObjectId(property.propertyTypologyId),
-      propertyAmenitiesIds: toObjectIdArray(property.propertyAmenitiesIds),
+      propertyType: new Types.ObjectId(property.propertyType?._id),
+      propertyPurpose: toObjectId(property.propertyPurpose),
+      propertyStanding: toObjectId(property.propertyStanding),
+      propertyStatus: toObjectId(property.propertyStatus),
+      propertyTypology: toObjectId(property.propertyTypology),
+      propertyAmenities: toObjectIdArray(property.propertyAmenities),
     };
   }
 
@@ -104,7 +104,7 @@ export class PropertyMapper {
       title: property?.title,
       description: property?.description,
 
-      price: property?.price,
+      price: property?.price ?? 0,
       bedroomsQty: property?.bedroomsQty,
       suitesQty: property?.suitesQty,
       bathroomsQty: property?.bathroomsQty,
@@ -139,13 +139,10 @@ export class PropertyMapper {
     };
   }
 
-  static PropertyDetailToView(
-    PropertyDetail: IPopulatedRef
-  ): PropertyDetail {
+  static PropertyDetailToView(PropertyDetail: IPopulatedRef): PropertyDetail {
     return {
       _id: PropertyDetail._id.toString(),
       name: PropertyDetail.name,
     };
   }
-
 }

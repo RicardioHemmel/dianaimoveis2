@@ -34,13 +34,13 @@ export default function TabCreative({ form }: TabCreativeProps) {
         <h3 className="text-lg font-semibold text-foreground">
           Galeria de Imagens
         </h3>
-        <ImageUploader Icon={Images} fileInputId="galleryInput"/>
+        <ImageUploader Icon={Images} fileInputId="galleryInput" form={form} />
       </div>
 
       {/* FLOOR PLAN GALLERY INPUT */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-foreground">Planta Baixa</h3>
-        <ImageUploader Icon={Layers} fileInputId="floorPlanGalleryInput" />
+        <ImageUploader Icon={Layers} fileInputId="floorPlanGalleryInput" form={form} />
       </div>
 
       {/* Technical Specifications Input */}

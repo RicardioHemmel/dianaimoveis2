@@ -1,3 +1,4 @@
+import { resolveImageUrl } from "@/lib/media/resolveImageUrl";
 import {
   IPropertyRaw,
   IPropertyPopulated,
@@ -84,6 +85,10 @@ export class PropertyMapper {
       showSquareMeterPrice: property.showSquareMeterPrice,
       isPetFriendly: property.isPetFriendly,
 
+      coverImage: property.coverImage,
+      propertyGallery: property.propertyGallery,
+      propertyFloorPlanGallery: property.propertyFloorPlanGallery,
+
       videoUrl: property.videoUrl,
       status: property.status,
 
@@ -120,6 +125,19 @@ export class PropertyMapper {
       showSquareMeterPrice: property?.showSquareMeterPrice,
       isPetFriendly: property?.isPetFriendly,
 
+      coverImage: resolveImageUrl(property?.coverImage),
+      propertyFloorPlanGallery:
+        property?.propertyFloorPlanGallery?.map((img) => ({
+          key: img.key,
+          order: img.order,
+          url: resolveImageUrl(img.key),
+        })) ?? [],
+      propertyGallery:
+        property?.propertyGallery?.map((img) => ({
+          key: img.key,
+          order: img.order,
+          url: resolveImageUrl(img.key),
+        })) ?? [],
       videoUrl: property?.videoUrl,
       status: property?.status,
 
@@ -135,6 +153,60 @@ export class PropertyMapper {
       propertyTypology: mapPopulatedRefToView(property?.propertyTypology),
       propertyAmenities: mapPopulatedRefArrayToView(
         property?.propertyAmenities
+      ),
+    };
+  }
+
+  static toInput(property: IPropertyPopulated): PropertyInputSchema {
+    return {
+      _id: toStringId(property?._id),
+      title: property?.title,
+      description: property?.description,
+
+      price: property?.price ?? 0,
+      bedroomsQty: property?.bedroomsQty,
+      suitesQty: property?.suitesQty,
+      bathroomsQty: property?.bathroomsQty,
+      parkingSpacesQty: property?.parkingSpacesQty,
+      area: property?.area,
+      condominiumFee: property?.condominiumFee,
+      floorStart: property?.floorStart,
+      floorEnd: property?.floorEnd,
+
+      isFurnished: property?.isFurnished,
+      isNearSubway: property?.isNearSubway,
+      isFeatured: property?.isFeatured,
+      showSquareMeterPrice: property?.showSquareMeterPrice,
+      isPetFriendly: property?.isPetFriendly,
+
+      coverImage: resolveImageUrl(property?.coverImage),
+      propertyFloorPlanGallery:
+        property?.propertyFloorPlanGallery?.map((img) => ({
+          key: img.key,
+          order: img.order,
+          url: resolveImageUrl(img.key),
+        })) ?? [],
+      propertyGallery:
+        property?.propertyGallery?.map((img) => ({
+          key: img.key,
+          order: img.order,
+          url: resolveImageUrl(img.key),
+        })) ?? [],
+      videoUrl: property?.videoUrl,
+      status: property?.status,
+
+      address: mapAddressToSchema(property?.address),
+
+      propertyType: {
+        _id: property?.propertyType?._id.toString(),
+        name: property?.propertyType?.name,
+      },
+      propertyPurpose: property.propertyPurpose?._id.toString(),
+      propertyStanding: property.propertyStanding?._id.toString(),
+      propertyStatus: property.propertyStatus?._id.toString(),
+      propertyTypology: property.propertyTypology?._id.toString(),
+      propertyAmenities: property.propertyAmenities.map((amenity) =>
+        amenity._id.toString()
       ),
     };
   }

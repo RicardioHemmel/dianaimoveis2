@@ -1,6 +1,14 @@
 import mongoose, { Schema, Model } from "mongoose";
 import { IPropertyRaw } from "@/lib/schemas/property/IProperty";
 
+const galleryItemSchema = new Schema(
+  {
+    key: { type: String, required: true },
+    order: { type: Number, required: true },
+  },
+  { _id: false }
+);
+
 const propertySchema = new Schema(
   {
     title: { type: String, unique: true },
@@ -43,8 +51,10 @@ const propertySchema = new Schema(
       { type: Schema.Types.ObjectId, ref: "PropertyAmenities" },
     ],
 
-    propertyGallery: [{ imageKey: String, order: Number }],
-    propertyFloorPlanGallery: [{ imageKey: String, order: Number }],
+    coverImage: String,
+    propertyGallery: [galleryItemSchema],
+    propertyFloorPlanGallery: [galleryItemSchema],
+
     videoUrl: String,
 
     status: {

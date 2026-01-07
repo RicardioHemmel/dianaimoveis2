@@ -24,7 +24,7 @@ import { FileUpload } from "@/lib/schemas/media/file.schema";
 interface DraggableAreaProps {
   filesUpload: FileUpload[];
   removeOneCloudFile: (key: string) => Promise<void>;
-  removeAllFiles: () => void;
+  removeAllCloudFiles: () => void;
   setFilesUpload: Dispatch<SetStateAction<FileUpload[]>>;
   formattedOrder: (i: number) => number;
 }
@@ -32,12 +32,12 @@ interface DraggableAreaProps {
 export default function DraggableArea({
   filesUpload,
   removeOneCloudFile,
-  removeAllFiles,
+  removeAllCloudFiles,
   setFilesUpload,
   formattedOrder,
 }: DraggableAreaProps) {
   // For highlighting cards during drag n drop
-  const [highlightedIds, setHighlightedIds] = useState<number[]>([]);
+  const [highlightedIds, setHighlightedIds] = useState<string[]>([]);
   const [doubleClickedImageIndex, setDoubleClickedImageIndex] = useState<
     number | null
   >(null);
@@ -53,34 +53,34 @@ export default function DraggableArea({
     setIsModalOpen(true);
   }
 
-  // Change images positions
+  // CHANGE IMAGES POSITIONS
   function handleDragEnd(event: DragEndEvent): void {
-    // active = Which item is being carried | over = Where it's dropping
+    // ACTIVE = WHICH ITEM IS BEING CARRIED | OVER = WHERE IT'S DROPPING
     const { active, over } = event;
 
-    // If user is dropping in something not dropabble
+    // IF USER IS DROPPING IN SOMETHING NOT DROPABBLE
     if (!over) return;
 
-    // Discovers the original position of the image
-    const oldIndex = filesUpload.findIndex((img) => img.tempId === active.id);
-    // Discovers the new position of the image
-    const newIndex = filesUpload.findIndex((img) => img.tempId === over.id);
+    // DISCOVERS THE ORIGINAL POSITION OF THE IMAGE
+    const oldIndex = filesUpload.findIndex((img) => img.id === active.id);
+    // DISCOVERS THE NEW POSITION OF THE IMAGE
+    const newIndex = filesUpload.findIndex((img) => img.id === over.id);
 
-    if (oldIndex === newIndex) return; // If there is no real movement
+    if (oldIndex === newIndex) return; // IF THERE IS NO REAL MOVEMENT
 
-    // Identifies the range of moved items for highlighting
+    // IDENTIFIES THE RANGE OF MOVED ITEMS FOR HIGHLIGHTING
     const startIndex = Math.min(oldIndex, newIndex);
     const endIndex = Math.max(oldIndex, newIndex);
 
-    // Gets the IDs of all affected images
-    const affectedIds = filesUpload
+    // GETS THE IDS OF ALL AFFECTED IMAGES
+    const affectedImages = filesUpload
       .slice(startIndex, endIndex + 1)
-      .map((img) => img.tempId);
-    setHighlightedIds(affectedIds);
+      .map((img) => img.id);
+    setHighlightedIds(affectedImages);
     setTimeout(() => setHighlightedIds([]), 500);
 
     setFilesUpload((prev) => {
-      // Returns a new array already sorted
+      // RETURNS A NEW ARRAY ALREADY SORTED
       const sortedImages = arrayMove(prev, oldIndex, newIndex);
 
       return sortedImages.map((img, i) => ({
@@ -98,7 +98,7 @@ export default function DraggableArea({
           onDragEnd={handleDragEnd} // Event fired when drag ends
         >
           <SortableContext
-            items={filesUpload.map((img) => img.tempId)} // IDs of the draggable items
+            items={filesUpload.map((img) => img.id)} // IDs of the draggable items
             strategy={rectSortingStrategy} // Grid-based sorting strategy
           >
             <div className="flex justify-between">
@@ -109,7 +109,7 @@ export default function DraggableArea({
                 <Button
                   variant={"destructive"}
                   className="rounded-full"
-                  onClick={removeAllFiles}
+                  onClick={removeAllCloudFiles}
                 >
                   Remover imagens
                 </Button>
@@ -122,8 +122,8 @@ export default function DraggableArea({
                   removeOneCloudMedia={removeOneCloudFile}
                   i={i}
                   formattedOrder={formattedOrder}
-                  key={image.tempId}
-                  isHighlighted={highlightedIds.includes(image.tempId)}
+                  key={image.id}
+                  isHighlighted={highlightedIds.includes(image.id)}
                   onDoubleClick={handleDoubleClick}
                 />
               ))}

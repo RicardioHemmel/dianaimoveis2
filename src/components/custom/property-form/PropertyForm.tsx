@@ -1,7 +1,8 @@
 "use client";
 
 // REACT | NEXT
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { use, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 
 // COMPONENTS
 import { Form } from "@/components/ui/form";
@@ -11,7 +12,6 @@ import PropertyFormTabs from "@/components/custom/property-form/PropertyFormTabs
 
 // HOOKS
 import usePropertyForm from "@/hooks/properties/use-property-form";
-import useFileUpload from "@/hooks/use-file-upload";
 
 // SCHEMA
 import {
@@ -20,7 +20,8 @@ import {
 } from "@/lib/schemas/property/property.schema";
 
 // SERVER ACTION
-import createProperty from "@/lib/server-actions/properties/create-property";
+import { createPropertyAction } from "@/lib/server-actions/properties/create-property.action";
+import { updatePropertyAction } from "@/lib/server-actions/properties/update-property.action";
 
 import { toast } from "sonner";
 
@@ -37,32 +38,44 @@ export default function PropertyForm({
   propertyDetails,
 }: PropertyFormProps) {
   // INICIALIZE HOOK PASSING INITIALDATA TO POPULATE RHF
-  const { form, handleCreateProperty } = usePropertyForm(
-    propertyDetails?.types ?? [],
-    initialData
-  );
-
-  // FOR SERVER ACTION STATE
+  const { form } = usePropertyForm(propertyDetails?.types ?? [], initialData);
   const [isPending, startTransition] = useTransition();
 
-  // IMAGE UPLOADER HOOK
-  const { filesUpload } = useFileUpload();
+  const router = useRouter();
 
-  // UPDATES THE FORM IMAGES FIELD WHEN IMAGES UPLOAD CHANGE
-  const uploadedImages = useMemo(
-    () =>
-      filesUpload
-        .filter((img) => img.status === "success")
-        .map((img) => ({
-          imageKey: img.key!,
-          order: img.order,
-        })),
-    [filesUpload]
-  );
+  const [status, setStatus] = useState<"DRAFT" | "PUBLISHED">("DRAFT");
 
-  useEffect(() => {
-    form.setValue("propertyGallery", uploadedImages);
-  }, [uploadedImages, form]);
+  function onSubmit(data: PropertyInputSchema) {
+    startTransition(async () => {
+      const payload = {
+        ...data,
+        status: status,
+      };
+
+      let result;
+
+      if (data._id) {
+        result = await updatePropertyAction(data._id, payload);
+
+        if (!result.success) {
+          toast.error(result.message ?? "Erro ao atualizar imóvel");
+          return;
+        }
+
+        toast.success("Imóvel atualizado com sucesso");
+      } else {
+        result = await createPropertyAction(payload);
+
+        if (!result.success) {
+          toast.error(result.message ?? "Erro ao criar imóvel");
+          return;
+        }
+
+        router.push(`/properties/${result?.data?.id}/edit`);
+        toast.success("Imóvel cadastrado com sucesso");
+      }
+    });
+  }
 
   // TABS LIST FOR NAVIGATION
   const tabs = [
@@ -110,11 +123,7 @@ export default function PropertyForm({
       </div>
 
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(async (data) => {
-            startTransition(async () => handleCreateProperty(data));
-          })}
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <Card className="p-6 shadow-card bg-white border-2 border-neutral-100">
             {/* ALL TABS CONTAINING PARTS OF THE FORM */}
             <PropertyFormTabs
@@ -129,7 +138,8 @@ export default function PropertyForm({
               <Button
                 type="submit"
                 variant="outline"
-                onClick={() => form.setValue("status", "DRAFT")}
+                disabled={isPending}
+                onClick={() => setStatus("DRAFT")}
               >
                 Salvar rascunho
               </Button>
@@ -139,9 +149,9 @@ export default function PropertyForm({
                 className="bg-[image:var(--gradient-primary)] hover:brightness-90"
                 type="submit"
                 disabled={isPending}
-                onClick={() => form.setValue("status", "PUBLISHED")}
+                onClick={() => setStatus("PUBLISHED")}
               >
-                {mode === "edit" ? "Publicar imóvel" : "Cadastrar imóvel"}
+                {mode === "edit" ? "Salvar imóvel" : "Cadastrar imóvel"}
               </Button>
             </div>
           </Card>

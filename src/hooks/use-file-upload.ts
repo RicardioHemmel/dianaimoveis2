@@ -1,6 +1,9 @@
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { FileUpload } from "@/lib/schemas/media/file.schema";
+import {
+  GalleryItemSchema,
+} from "@/lib/schemas/property/property.schema";
 
 export default function useFileUpload() {
   // FOR ONDRAGENTER AND ONDRAGLEAVE CONTROL
@@ -8,7 +11,6 @@ export default function useFileUpload() {
   const [filesUpload, setFilesUpload] = useState<FileUpload[]>([]);
 
   const countRef = useRef(0); // TO PREVENT FLICKERING WHEN DRAGGING OVER CHILD ELEMENTS
-  const countImageIdRef = useRef(1); // USED AS IMAGES IDS
 
   // ---------------------------------------------------- DRAG N DROP  ------------------------------------------ //
 
@@ -56,6 +58,17 @@ export default function useFileUpload() {
     e.target.value = "";
   }
 
+  // MAPS IMAGES TO SHOW ON EDIT PROPERTY MODE
+  function mapRemoteFiles(images: GalleryItemSchema[]): FileUpload[] {
+    return images.map((image, i) => ({
+      id: window.crypto.randomUUID(),
+      key: image.key,
+      previewURL: image.url,
+      order: image.order ?? i,
+      status: "success",
+    }));
+  }
+
   async function handleFileUpload(files: File[]): Promise<void> {
     // VALIDATES UPLOADED FILES
     const invalidFiles = validateFilesType(files, ["image/"]);
@@ -80,12 +93,9 @@ export default function useFileUpload() {
       return;
     }
 
-    // START POINT FOR CREATING IMAGES IDS
-    const startId = countImageIdRef.current;
-
     const mappedImages: FileUpload[] = files.map((file, i) => {
       return {
-        tempId: startId + i, // IMAGE ID
+        id: window.crypto.randomUUID(), // UNIQUE ID FOR DND KIT
         file: file, // FILE ITSELF
         previewURL: URL.createObjectURL(file), // FOR IMAGE PREVIEW
         order: filesUpload.length + 1 + i, // POSITION ON ARRAY
@@ -93,9 +103,6 @@ export default function useFileUpload() {
         status: "idle",
       };
     });
-
-    // GUARANTEES THAT THE ID OF THE NEXT IMAGES WILL NOT BE THE SAME AS THOSE OF PREVIOUSLY DELETED IMAGES
-    countImageIdRef.current = startId + files.length;
 
     // ADDS NEW IMAGES TO THE PREVIOUS LIST
     setFilesUpload((prev) => [...prev, ...mappedImages]);
@@ -123,6 +130,7 @@ export default function useFileUpload() {
     return newFiles.some((newFile) =>
       oldFiles.some(
         (oldFile) =>
+          oldFile.file &&
           newFile.name === oldFile.file.name &&
           newFile.size === oldFile.file.size
       )
@@ -226,10 +234,12 @@ export default function useFileUpload() {
     );
 
     for (const img of images) {
-      try {
-        await uploadSingleImage(img.file);
-      } catch {
-        return toast.error("Erro ao enviar imagem");
+      if (img.file) {
+        try {
+          await uploadSingleImage(img.file);
+        } catch {
+          return toast.error("Erro ao enviar imagem");
+        }
       }
     }
 
@@ -250,7 +260,7 @@ export default function useFileUpload() {
 
       setFilesUpload((prev) =>
         prev.map((img) =>
-          img.key === key ? { ...img, isDeliting: true } : img
+          img.key === key ? { ...img, isDeleting: true } : img
         )
       );
 
@@ -267,7 +277,7 @@ export default function useFileUpload() {
 
         setFilesUpload((prev) =>
           prev.map((img) =>
-            img.key === key ? { ...img, isDeliting: false, error: true } : img
+            img.key === key ? { ...img, isDeleting: false, error: true } : img
           )
         );
 
@@ -280,14 +290,14 @@ export default function useFileUpload() {
       toast.error("Erro ao remover imagem da nuvem");
       setFilesUpload((prev) =>
         prev.map((img) =>
-          img.key === key ? { ...img, isDeliting: false, error: true } : img
+          img.key === key ? { ...img, isDeleting: false, error: true } : img
         )
       );
     }
   }
 
   // REMOVES ALL IMAGES FROM MEMORY AND KILLS THEIR OBJECT URLS
-  async function removeAllFiles() {
+  async function removeAllCloudFiles() {
     const filesToRemove = filesUpload.map((file) => file?.key);
 
     for (const key of filesToRemove) {
@@ -301,7 +311,7 @@ export default function useFileUpload() {
     isDragging,
     filesUpload,
     removeOneCloudFile,
-    removeAllFiles,
+    removeAllCloudFiles,
     setFilesUpload,
     handleDragEnter,
     handleDragLeave,
@@ -313,5 +323,6 @@ export default function useFileUpload() {
     handleFileUpload,
     handleCloudUpload,
     formattedOrder,
+    mapRemoteFiles,
   };
 }

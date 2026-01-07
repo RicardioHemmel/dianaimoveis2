@@ -12,7 +12,6 @@ import {
 
 // MESSAGE BOX
 import { toast } from "sonner";
-import createProperty from "@/lib/server-actions/properties/create-property";
 
 export default function usePropertyForm(
   propertyTypes: PropertyDetail[],
@@ -33,32 +32,8 @@ export default function usePropertyForm(
     },
   });
 
-  const handleCreateProperty = async (data: PropertyInputSchema) => {
-    const result = await createProperty(data);
-
-    if (result.success) {
-      toast.success(result.message);
-      return;
-    }
-
-    if (result.message) {
-      toast.error(result.message);
-    }
-
-    if (result.fieldErrors) {
-      Object.entries(result.fieldErrors).forEach(([field, messages]) => {
-        if (!messages?.length) return;
-
-        form.setError(field as keyof PropertyInputSchema, {
-          type: "server",
-          message: messages[0],
-        });
-      });
-    }
-  };
 
   return {
     form,
-    handleCreateProperty,
   };
 }

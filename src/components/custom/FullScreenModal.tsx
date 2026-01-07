@@ -72,17 +72,17 @@ export default function FullScreenImageModal({
         <CarouselContent>
           {filesUpload.length > 0 &&
             filesUpload.map((img) => (
-              <CarouselItem key={img.tempId} className="h-screen flex items-center">
+              <CarouselItem key={img.id} className="h-screen flex items-center">
                 <Card className="flex justify-center w-full">
                   <CardContent className="flex justify-center">
                     {img.previewURL && (
                       <>
                         <div
-                          key={img.tempId}
+                          key={img.id}
                           className="relative w-[70vw] h-[70vh]"
                         >
                           <Image
-                            alt={`Imagem ${img.tempId}`}
+                            alt={`Imagem ${img.id}`}
                             src={img.previewURL}
                             fill={true}
                             className="object-contain"
@@ -90,7 +90,7 @@ export default function FullScreenImageModal({
                         </div>
                         <div className="absolute top-4 rounded-4xl py-2 px-4 w-full flex justify-center">
                           <h2 className="text-white text-lg">
-                            {img.file.name}
+                            {img.file?.name ?? ""}
                           </h2>
                         </div>
                       </>

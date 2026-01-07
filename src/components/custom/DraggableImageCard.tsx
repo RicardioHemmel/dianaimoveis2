@@ -35,7 +35,7 @@ export default function DraggableImageCard({
 
   const { setNodeRef, attributes, listeners, transform, transition } =
     useSortable({
-      id: image.tempId,
+      id: image.id,
       disabled: !canDrag,
     });
 
@@ -54,10 +54,9 @@ export default function DraggableImageCard({
       onDoubleClick={() => onDoubleClick(i)}
     >
       <div className="w-full h-64 relative overflow-hidden animate-[var(--animate-infinity-glow)] rounded-lg">
-        <Image
+        <img
           src={image.previewURL}
-          alt={`Preview da imagem ${image.tempId}`}
-          fill={true}
+          alt={`Preview da imagem ${image.id}`}
           className="object-cover"
         />
       </div>

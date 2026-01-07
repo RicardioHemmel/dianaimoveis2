@@ -1,8 +1,9 @@
 // ICONS
-import { Images, LucideIcon } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 
 // REACT | NEXT
 import { useEffect } from "react";
+import { UseFormReturn } from "react-hook-form";
 
 // HOOKS
 import useFileUpload from "@/hooks/use-file-upload";
@@ -10,21 +11,26 @@ import useFileUpload from "@/hooks/use-file-upload";
 // COMPONENTS
 import DraggableArea from "./DraggableArea";
 
+// SCHEMAS
+import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
+
 interface ImageUploaderProps {
+  form: UseFormReturn<PropertyInputSchema>;
   Icon: LucideIcon;
   fileInputId: string;
 }
 
 export default function ImageUploader({
+  form,
   Icon,
   fileInputId,
 }: ImageUploaderProps) {
-  // Custom hook to handle file upload events
+  // CUSTOM HOOK TO HANDLE FILE UPLOAD EVENTS
   const {
     isDragging,
     filesUpload,
     removeOneCloudFile,
-    removeAllFiles,
+    removeAllCloudFiles,
     setFilesUpload,
     handleDragEnter,
     handleDragLeave,
@@ -32,19 +38,51 @@ export default function ImageUploader({
     handleDrop,
     handleFilesFromInput,
     formattedOrder,
+    mapRemoteFiles,
   } = useFileUpload();
 
-  // When component is dismounted kills any reference in memory of images preview URLs
+  // WHEN COMPONENT IS DISMOUNTED KILLS ANY REFERENCE IN MEMORY OF IMAGES PREVIEW URLS
   useEffect(() => {
     return () => {
       filesUpload.forEach((img) => URL.revokeObjectURL(img.previewURL));
     };
   }, []);
 
+  // SETS IMAGES FROM DB ON FILESUPLOAD LIST FOR DISPLAY
+  useEffect(() => {
+    if (filesUpload.length > 0) {
+      form.setValue(
+        "propertyGallery",
+        filesUpload
+          .map((file) => {
+            if (!file.key || !file.order) return null;
+            return {
+              key: file.key,
+              order: file.order,
+              url: file.previewURL || "",
+            };
+          })
+          .filter((item) => item !== null)
+      );
+    }
+
+    form.setValue("coverImage", filesUpload[0]?.key || "");
+  }, [filesUpload]);
+
+  useEffect(() => {
+    const galleryItems = form.getValues("propertyGallery");
+
+    if (!galleryItems?.length) return;
+
+    const mapped = mapRemoteFiles(galleryItems);
+
+    setFilesUpload((prev) => [...prev, ...mapped]);
+  }, []);
+
   return (
     <>
       <div>
-        {/* File Input */}
+        {/* FILE INPUT */}
         <input
           onChange={handleFilesFromInput}
           multiple
@@ -53,7 +91,7 @@ export default function ImageUploader({
           id={fileInputId}
           className="hidden"
         />
-        {/* Droppable area */}
+        {/* DROPPABLE AREA */}
         <div
           className="mb-8 border-2 border-dashed rounded-lg p-8 transition-all cursor-pointer border-neutral-300 bg-white hover:bg-neutral-100 hover:border-neutral-500"
           onClick={() => document.getElementById(fileInputId)?.click()}
@@ -71,10 +109,11 @@ export default function ImageUploader({
         </div>
       </div>
 
+      {/* DRAGGABLE AREA WITH ALL IMAGES */}
       <DraggableArea
         filesUpload={filesUpload}
         removeOneCloudFile={removeOneCloudFile}
-        removeAllFiles={removeAllFiles}
+        removeAllCloudFiles={removeAllCloudFiles}
         setFilesUpload={setFilesUpload}
         formattedOrder={formattedOrder}
       />

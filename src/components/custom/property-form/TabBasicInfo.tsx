@@ -55,6 +55,7 @@ export default function TabBasicInfo({
   propertyPurposes,
   propertyStatus,
 }: TabBasicInfoProps) {
+
   // List possible icons for property types
   const propertyTypeIcons: Record<string, LucideIcon> = {
     Apartamento: Building2,

@@ -5,6 +5,11 @@ export interface IPopulatedRef {
   name: string;
 }
 
+interface PropertyImages {
+  key: string;
+  order: number;
+}
+
 // USED FOR MAPPING DATA TO BACKEND
 export interface IPropertyRaw {
   _id?: Types.ObjectId;
@@ -34,8 +39,9 @@ export interface IPropertyRaw {
   propertyTypology?: Types.ObjectId;
   propertyAmenities: Types.ObjectId[];
 
-  // propertyGallery: [{ type: Schema.Types.ObjectId, ref: "Media", order: number }],
-  // propertyFloorPlanGallery: [{ type: Schema.Types.ObjectId, ref: "Media", order: number }],
+  coverImage?: string;
+  propertyGallery: PropertyImages[];
+  propertyFloorPlanGallery: PropertyImages[];
   videoUrl?: string;
 
   status: "DRAFT" | "PUBLISHED";

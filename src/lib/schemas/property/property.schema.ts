@@ -1,17 +1,20 @@
 import { z } from "zod";
 
 //-------------------------------------------------- AUXULIAR TYPES ------------------------------------------------------
-const GalleryItemSchema = z.object({
-  imageKey: z.string(),
+const galleryItemSchema = z.object({
+  key: z.string(),
   order: z.number(),
+  url: z.string(),
 });
 
-const PropertyDetail = z.object({
+export type GalleryItemSchema = z.infer<typeof galleryItemSchema>;
+
+const propertyDetail = z.object({
   _id: z.string(),
   name: z.string(),
 });
 
-export type PropertyDetail = z.infer<typeof PropertyDetail>;
+export type PropertyDetail = z.infer<typeof propertyDetail>;
 
 //-------------------------------------------------- PROPERTY IMAGE UPLOAD ------------------------------------------------------
 
@@ -48,8 +51,9 @@ const propertyBaseSchema = {
 
   status: z.enum(["DRAFT", "PUBLISHED"]),
 
-  propertyGallery: z.array(GalleryItemSchema).optional(),
-  propertyFloorPlanGallery: z.array(GalleryItemSchema).optional(),
+  coverImage: z.string().optional(),
+  propertyGallery: z.array(galleryItemSchema),
+  propertyFloorPlanGallery: z.array(galleryItemSchema),
 
   address: z
     .object({
@@ -66,12 +70,12 @@ const propertyBaseSchema = {
 export const propertyViewSchema = z.object({
   ...propertyBaseSchema,
 
-  propertyType: PropertyDetail.optional(),
-  propertyPurpose: PropertyDetail.optional(),
-  propertyStanding: PropertyDetail.optional(),
-  propertyStatus: PropertyDetail.optional(),
-  propertyTypology: PropertyDetail.optional(),
-  propertyAmenities: z.array(PropertyDetail).optional(),
+  propertyType: propertyDetail.optional(),
+  propertyPurpose: propertyDetail.optional(),
+  propertyStanding: propertyDetail.optional(),
+  propertyStatus: propertyDetail.optional(),
+  propertyTypology: propertyDetail.optional(),
+  propertyAmenities: z.array(propertyDetail).optional(),
 });
 
 export type PropertyViewSchema = z.infer<typeof propertyViewSchema>;
@@ -81,7 +85,7 @@ export type PropertyViewSchema = z.infer<typeof propertyViewSchema>;
 export const propertyInputSchema = z.object({
   ...propertyBaseSchema,
 
-  propertyType: PropertyDetail.optional(),
+  propertyType: propertyDetail.optional(),
   propertyPurpose: z.string().optional(),
   propertyStanding: z.string().optional(),
   propertyStatus: z.string().optional(),
@@ -108,6 +112,8 @@ export const DefaultValuesPropertyForm: PropertyInputSchema = {
   isNearSubway: false,
   showSquareMeterPrice: false,
   status: "DRAFT",
+  propertyGallery: [],
+  propertyFloorPlanGallery: [],
   isPetFriendly: false,
   videoUrl: "",
   address: {

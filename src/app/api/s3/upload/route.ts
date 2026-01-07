@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import z from "zod";
 import { v4 as uuidv4 } from "uuid";
 import path from "path";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
@@ -34,8 +33,6 @@ export async function POST(req: Request) {
     });
 
     const presignedUrl = await getSignedUrl(S3, command, { expiresIn: 360 }); // Valid for 6 minutes
-
-    console.log("Presigned URL generated:", presignedUrl);
 
     // Return the presigned URL and the unique key
     const response = {

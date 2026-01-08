@@ -1,22 +1,21 @@
 "use client";
 
 // REACT | NEXT
-import { use, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { FieldErrors } from "react-hook-form";
 
 // COMPONENTS
 import { Form } from "@/components/ui/form";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import PropertyFormTabs from "@/components/custom/property-form/PropertyFormTabs";
-
-// HOOKS
-import usePropertyForm from "@/hooks/properties/use-property-form";
+import { Badge } from "@/components/ui/badge";
 
 // SCHEMA
 import {
-  PropertyDetailsData,
   PropertyInputSchema,
+  extractFieldLabels,
 } from "@/lib/schemas/property/property.schema";
 
 // SERVER ACTION
@@ -25,28 +24,34 @@ import { updatePropertyAction } from "@/lib/server-actions/properties/update-pro
 
 import { toast } from "sonner";
 
+// CONTEXT
+import { usePropertyFormContext } from "@/context/PropertyFormContext";
+
+// ICONS
+import { Pencil, Plus } from "lucide-react";
+
 // DEFINES WHETHER THE FORM IS TO CREATE OR UPDATE
 type PropertyFormProps = {
   mode: "create" | "edit";
-  initialData?: PropertyInputSchema;
-  propertyDetails?: PropertyDetailsData;
 };
 
-export default function PropertyForm({
-  mode,
-  initialData,
-  propertyDetails,
-}: PropertyFormProps) {
-  // INICIALIZE HOOK PASSING INITIALDATA TO POPULATE RHF
-  const { form } = usePropertyForm(propertyDetails?.types ?? [], initialData);
+export default function PropertyForm({ mode }: PropertyFormProps) {
+  // CONTEXT
+  const { form, initialData, status, setStatus } = usePropertyFormContext();
   const [isPending, startTransition] = useTransition();
-
   const router = useRouter();
 
-  const [status, setStatus] = useState<"DRAFT" | "PUBLISHED">("DRAFT");
+  // PROPERTY FORM CONTEXT
+  const { fileUploadHook, nextTab, prevTab, isFirstTab, isLastTab } =
+    usePropertyFormContext();
 
-  function onSubmit(data: PropertyInputSchema) {
+  async function onSubmit(data: PropertyInputSchema) {
     startTransition(async () => {
+      const uploadedImages = await fileUploadHook.handleCloudUpload(
+        fileUploadHook.filesUpload
+      );
+      form.setValue("propertyGallery", uploadedImages);
+
       const payload = {
         ...data,
         status: status,
@@ -62,6 +67,7 @@ export default function PropertyForm({
           return;
         }
 
+        form.reset(result.data);
         toast.success("Imóvel atualizado com sucesso");
       } else {
         result = await createPropertyAction(payload);
@@ -77,61 +83,74 @@ export default function PropertyForm({
     });
   }
 
-  // TABS LIST FOR NAVIGATION
-  const tabs = [
-    "basic",
-    "location",
-    "details",
-    "specific",
-    "amenities",
-    "creative",
-  ];
-
-  const [activeTab, setActiveTab] = useState("basic");
-  const isFirstTab = activeTab === tabs[0];
-  const isLastTab = activeTab === tabs[tabs.length - 1];
+  const onError = (errors: FieldErrors<PropertyInputSchema>) => {
+    const fields = extractFieldLabels(errors);
+    if (fields.length > 0) {
+      toast.error(`Verifique: ${fields.join(", ")}`);
+    }
+  };
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
       {/* HEADER */}
       <div className="flex justify-between items-center">
         <div className="px-4">
-          <h2 className="text-3xl font-bold">Cadastrar Imóvel</h2>
-          <p className="text-muted-foreground mt-1">
-            Preencha as informações abaixo
-          </p>
+          {mode === "create" ? (
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <Badge
+                  variant="outline"
+                  className="bg-emerald-500/10 text-emerald-600 border-emerald-500/30 px-3 py-1"
+                >
+                  <Plus className="h-3 w-3 mr-1.5" />
+                  Modo Criação
+                </Badge>
+              </div>
+              <h2 className="text-3xl font-bold text-foreground">
+                Cadastrar imóvel
+              </h2>
+              <p className="text-muted-foreground">
+                Editando informações do imóvel
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <Badge
+                  variant="outline"
+                  className="bg-amber-500/10 text-amber-600 border-amber-500/30 px-3 py-1"
+                >
+                  <Pencil className="h-3 w-3 mr-1.5" />
+                  Modo Edição
+                </Badge>
+              </div>
+              <h2 className="text-3xl font-bold text-foreground">
+                {initialData?.title}
+              </h2>
+              <p className="text-muted-foreground">
+                Editando informações do imóvel
+              </p>
+            </div>
+          )}
         </div>
 
         {/* NAVIGATION TABS */}
         <div className="flex gap-3">
-          <Button
-            variant="outline"
-            onClick={() => setActiveTab(tabs[tabs.indexOf(activeTab) - 1])}
-            disabled={isFirstTab}
-          >
+          <Button variant="outline" onClick={prevTab} disabled={isFirstTab}>
             Anterior
           </Button>
 
-          <Button
-            variant="outline"
-            onClick={() => setActiveTab(tabs[tabs.indexOf(activeTab) + 1])}
-            disabled={isLastTab}
-          >
+          <Button variant="outline" onClick={nextTab} disabled={isLastTab}>
             Próximo
           </Button>
         </div>
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={form.handleSubmit(onSubmit, onError)}>
           <Card className="p-6 shadow-card bg-white border-2 border-neutral-100">
             {/* ALL TABS CONTAINING PARTS OF THE FORM */}
-            <PropertyFormTabs
-              form={form}
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-              propertyDetails={propertyDetails}
-            />
+            <PropertyFormTabs />
 
             {/* SAVES PROPERTY AS A DRAFT */}
             <div className="flex justify-end gap-4 mt-6 pt-6 border-t">

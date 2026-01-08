@@ -5,78 +5,46 @@ import { LucideIcon } from "lucide-react";
 import { useEffect } from "react";
 import { UseFormReturn } from "react-hook-form";
 
-// HOOKS
-import useFileUpload from "@/hooks/use-file-upload";
-
 // COMPONENTS
 import DraggableArea from "./DraggableArea";
 
 // SCHEMAS
 import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
+import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
 interface ImageUploaderProps {
-  form: UseFormReturn<PropertyInputSchema>;
   Icon: LucideIcon;
-  fileInputId: string;
+  uploaderId: string;
 }
 
 export default function ImageUploader({
-  form,
   Icon,
-  fileInputId,
+  uploaderId,
 }: ImageUploaderProps) {
   // CUSTOM HOOK TO HANDLE FILE UPLOAD EVENTS
+  const { fileUploadHook } = usePropertyFormContext();
+
   const {
     isDragging,
     filesUpload,
-    removeOneCloudFile,
-    removeAllCloudFiles,
+    removeCloudFile,
+    removeLocalFile,
+    removeAllFiles,
     setFilesUpload,
     handleDragEnter,
     handleDragLeave,
     handleDragOver,
-    handleDrop,
+    handleFilesDrop,
     handleFilesFromInput,
     formattedOrder,
-    mapRemoteFiles,
-  } = useFileUpload();
+    mapRemoteFilesToFileUpload,
+  } = fileUploadHook;
 
-  // WHEN COMPONENT IS DISMOUNTED KILLS ANY REFERENCE IN MEMORY OF IMAGES PREVIEW URLS
+  // IMAGES CLEANUP
   useEffect(() => {
     return () => {
-      filesUpload.forEach((img) => URL.revokeObjectURL(img.previewURL));
+      filesUpload.forEach((img) => URL.revokeObjectURL(img.previewURL ?? ""));
     };
-  }, []);
-
-  // SETS IMAGES FROM DB ON FILESUPLOAD LIST FOR DISPLAY
-  useEffect(() => {
-    if (filesUpload.length > 0) {
-      form.setValue(
-        "propertyGallery",
-        filesUpload
-          .map((file) => {
-            if (!file.key || !file.order) return null;
-            return {
-              key: file.key,
-              order: file.order,
-              url: file.previewURL || "",
-            };
-          })
-          .filter((item) => item !== null)
-      );
-    }
-
-    form.setValue("coverImage", filesUpload[0]?.key || "");
-  }, [filesUpload]);
-
-  useEffect(() => {
-    const galleryItems = form.getValues("propertyGallery");
-
-    if (!galleryItems?.length) return;
-
-    const mapped = mapRemoteFiles(galleryItems);
-
-    setFilesUpload((prev) => [...prev, ...mapped]);
   }, []);
 
   return (
@@ -88,16 +56,16 @@ export default function ImageUploader({
           multiple
           accept="image/*"
           type="file"
-          id={fileInputId}
+          id={uploaderId}
           className="hidden"
         />
         {/* DROPPABLE AREA */}
         <div
           className="mb-8 border-2 border-dashed rounded-lg p-8 transition-all cursor-pointer border-neutral-300 bg-white hover:bg-neutral-100 hover:border-neutral-500"
-          onClick={() => document.getElementById(fileInputId)?.click()}
+          onClick={() => document.getElementById(uploaderId)?.click()}
           onDragEnter={handleDragEnter}
           onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
+          onDrop={handleFilesDrop}
           onDragOver={handleDragOver}
         >
           <Icon className="w-12 h-12 mx-auto mb-3 text-muted-foreground" />
@@ -112,8 +80,9 @@ export default function ImageUploader({
       {/* DRAGGABLE AREA WITH ALL IMAGES */}
       <DraggableArea
         filesUpload={filesUpload}
-        removeOneCloudFile={removeOneCloudFile}
-        removeAllCloudFiles={removeAllCloudFiles}
+        removeCloudFile={removeCloudFile}
+        removeLocalFile={removeLocalFile}
+        removeAllFiles={removeAllFiles}
         setFilesUpload={setFilesUpload}
         formattedOrder={formattedOrder}
       />

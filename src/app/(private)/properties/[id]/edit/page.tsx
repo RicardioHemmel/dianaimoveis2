@@ -1,4 +1,4 @@
-import PropertyFormShell from "@/components/custom/property-form/PropertyForm";
+import PropertyFormWrapper from "@/components/custom/property-form/PropertyFormWrapper";
 import {
   getAllPropertyDetails,
   getPropertyById,
@@ -14,7 +14,6 @@ export default async function EditPropertyPage({
   const id = resolvedParams.id;
 
   const property = await getPropertyById(id);
-  console.log(property);
   const propertyDetails = await getAllPropertyDetails();
 
   if (!property) {
@@ -22,10 +21,10 @@ export default async function EditPropertyPage({
   }
 
   return (
-    <PropertyFormShell
+    <PropertyFormWrapper
       mode="edit"
-      initialData={property}
       propertyDetails={propertyDetails}
+      initialData={property}
     />
   );
 }

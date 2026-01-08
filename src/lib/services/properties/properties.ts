@@ -27,7 +27,7 @@ export async function getProperties(): Promise<PropertyViewSchema[]> {
     .lean<IPropertyPopulated[]>();
 
   const mappedProperties = properties.map((property) =>
-    PropertyMapper.toView(property)
+    PropertyMapper.toViewSchema(property)
   );
 
   return mappedProperties;
@@ -46,7 +46,7 @@ export async function getPropertyById(
     return null;
   }
 
-  const mappedProperty = PropertyMapper.toInput(property);
+  const mappedProperty = PropertyMapper.toInputSchema(property);
   return mappedProperty;
 }
 
@@ -101,14 +101,15 @@ export async function updateProperty(id: string, data: PropertyInputSchema) {
 
   const mappedProperty = PropertyMapper.toPersistence(data);
 
-  const updatedProperty = await Property.findByIdAndUpdate(id, mappedProperty)
+  const updatedProperty = await Property.findByIdAndUpdate(id, mappedProperty, {
+    new: true,
+  })
     .populate("propertyType")
     .lean<IPropertyPopulated>();
-
 
   if (!updatedProperty) {
     throw new Error("Erro ao atualizar o imóvel");
   }
 
-  return {property: PropertyMapper.toInput(updatedProperty)};
+  return { property: PropertyMapper.toInputSchema(updatedProperty) };
 }

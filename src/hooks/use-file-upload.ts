@@ -36,7 +36,7 @@ export default function useFileUpload() {
   }
 
   // CALLS THE UPLOAD HANDLER WHEN FILES ARE DROPPED INTO THE DROP AREA
-  function handleDrop(e: React.DragEvent<HTMLDivElement>): void {
+  function handleFilesDrop(e: React.DragEvent<HTMLDivElement>): void {
     e.preventDefault();
     e.stopPropagation();
 
@@ -46,30 +46,32 @@ export default function useFileUpload() {
 
     // VERIFIES IF FILES WERE DROPPED
     const files = Array.from(e.dataTransfer.files);
-    if (files.length) handleFileUpload(files);
+    if (files.length) handleLocalFilesUpload(files);
   }
 
   // CALLS THE UPLOAD HANDLER WHEN FILES ARE SELECTED FROM THE INPUT
   function handleFilesFromInput(e: React.ChangeEvent<HTMLInputElement>): void {
     const files = Array.from(e.target.files || []);
-    if (files.length) handleFileUpload(files);
+    if (files.length) handleLocalFilesUpload(files);
 
     // CLEANS FILE PATH IN MEMORY SO IT'S POSSIBLE TO RESENT THE SAME IMAGE AFTER REMOVING IT
     e.target.value = "";
   }
 
   // MAPS IMAGES TO SHOW ON EDIT PROPERTY MODE
-  function mapRemoteFiles(images: GalleryItemSchema[]): FileUpload[] {
+  function mapRemoteFilesToFileUpload(
+    images: GalleryItemSchema[]
+  ): FileUpload[] {
     return images.map((image, i) => ({
       id: window.crypto.randomUUID(),
       key: image.key,
       previewURL: image.url,
-      order: image.order ?? i,
+      order: image.order ?? formattedOrder(i),
       status: "success",
     }));
   }
 
-  async function handleFileUpload(files: File[]): Promise<void> {
+  async function handleLocalFilesUpload(files: File[]): Promise<void> {
     // VALIDATES UPLOADED FILES
     const invalidFiles = validateFilesType(files, ["image/"]);
     const hasDuplicates = hasDuplicateFiles(files, filesUpload);
@@ -98,7 +100,7 @@ export default function useFileUpload() {
         id: window.crypto.randomUUID(), // UNIQUE ID FOR DND KIT
         file: file, // FILE ITSELF
         previewURL: URL.createObjectURL(file), // FOR IMAGE PREVIEW
-        order: filesUpload.length + 1 + i, // POSITION ON ARRAY
+        order: filesUpload.length + formattedOrder(i), // POSITION ON ARRAY
         uploadProgress: 0, // UPLOAD PROGRESS FOR USER FEEDBACK
         status: "idle",
       };
@@ -106,8 +108,48 @@ export default function useFileUpload() {
 
     // ADDS NEW IMAGES TO THE PREVIOUS LIST
     setFilesUpload((prev) => [...prev, ...mappedImages]);
+  }
 
-    await handleCloudUpload(mappedImages);
+  function removeLocalFile(id: string): void {
+    setFilesUpload((prev) => {
+      // IMAGE TO BE REMOVED
+      const targetImage = prev.find((image) => image.id === id);
+
+      // KILLS ANY REFERENCE TO TEMPORARY IMAGE URL
+      if (targetImage) {
+        URL.revokeObjectURL(targetImage.previewURL ?? "");
+      }
+
+      const filteredImages = prev.filter((img) => img.id !== targetImage?.id);
+
+      // RETURN ALL IMAGES WITH THEIR NEW ORDER
+      return filteredImages.map((img, i) => ({
+        ...img,
+        order: formattedOrder(i),
+      }));
+    });
+  }
+
+  function removeAllLocalFiles() {
+    setFilesUpload((prev) => {
+      const localFiles = prev.filter((file) => file.status === "idle");
+
+      localFiles.forEach((file) => {
+        URL.revokeObjectURL(file.previewURL ?? "");
+      });
+
+      const remainingFiles = prev.filter((file) => file.status !== "idle");
+
+      return remainingFiles.map((img, i) => ({
+        ...img,
+        order: formattedOrder(i),
+      }));
+    });
+  }
+
+  function removeAllFiles() {
+    removeAllLocalFiles();
+    removeAllCloudFiles();
   }
 
   // ---------------------------------------------------- VALIDATIONS ------------------------------------------ //
@@ -140,7 +182,7 @@ export default function useFileUpload() {
   // ---------------------------------------------------- CLOUD ACTIONS ------------------------------------------ //
 
   // SENDS A IMAGE TO CLOUD STORAGE WITH UPLOAD PROGRESS
-  async function uploadSingleImage(file: File) {
+  async function uploadSingleImage(file: File): Promise<string | null> {
     try {
       const presignedUrlResponse = await fetch("/api/s3/upload/", {
         method: "POST",
@@ -161,7 +203,7 @@ export default function useFileUpload() {
             img.file === file ? { ...img, uploadProgress: 0, error: true } : img
           )
         );
-        return;
+        return null;
       }
 
       const { presignedUrl, key } = await presignedUrlResponse.json();
@@ -212,6 +254,8 @@ export default function useFileUpload() {
         xhr.setRequestHeader("Content-Type", file.type);
         xhr.send(file);
       });
+
+      return key;
     } catch (e) {
       toast.error("Erro ao enviar imagem");
       setFilesUpload((prev) =>
@@ -221,10 +265,17 @@ export default function useFileUpload() {
             : img
         )
       );
+
+      return null;
     }
   }
 
-  async function handleCloudUpload(images: FileUpload[]) {
+  async function handleCloudUpload(
+    images: FileUpload[]
+  ): Promise<{ key: string; order: number }[]> {
+    const uploadedFiles: { key: string; order: number }[] = [];
+
+    // Define como "uploading" apenas o que for "idle"
     setFilesUpload((prev) =>
       prev.map((img) =>
         img.status === "idle"
@@ -234,19 +285,43 @@ export default function useFileUpload() {
     );
 
     for (const img of images) {
-      if (img.file) {
+      // Se não tem arquivo, ignora
+      if (!img.file) continue;
+
+      // CENÁRIO 1: Imagem já enviada anteriormente (Sucesso)
+      // Apenas adicionamos ao array final para não perder a referência
+      if (img.status === "success" && img.key) {
+        uploadedFiles.push({ key: img.key, order: img.order });
+        continue;
+      }
+
+      // CENÁRIO 2: Imagem pendente (Idle)
+      // Realiza o upload
+      if (img.status === "idle") {
         try {
-          await uploadSingleImage(img.file);
+          const key = await uploadSingleImage(img.file);
+
+          if (key) {
+            uploadedFiles.push({ key, order: img.order });
+          }
         } catch {
-          return toast.error("Erro ao enviar imagem");
+          toast.error("Erro ao enviar imagem");
+          // Aqui você decide se quer retornar array vazio ou apenas ignorar a falha
+          // return [];
         }
       }
+
+      // Se for "error" ou "uploading" (preso), ela será ignorada no loop atual
     }
 
-    toast.success(`Imagens enviadas com sucesso!`);
-  }
+    // Só exibe sucesso se realmente houve upload de algo novo ou se já existiam imagens
+    if (uploadedFiles.length > 0) {
+      toast.success(`Imagens processadas com sucesso!`);
+    }
 
-  async function removeOneCloudFile(key: string) {
+    return uploadedFiles;
+  }
+  async function removeCloudFile(key: string) {
     try {
       const fileToRemove = filesUpload.find((img) => img.key === key);
 
@@ -283,7 +358,6 @@ export default function useFileUpload() {
 
         return;
       }
-      toast.success("Imagem apagada com sucesso");
 
       setFilesUpload((prev) => prev.filter((img) => img.key !== key));
     } catch {
@@ -302,7 +376,7 @@ export default function useFileUpload() {
 
     for (const key of filesToRemove) {
       if (key) {
-        await removeOneCloudFile(key);
+        await removeCloudFile(key);
       }
     }
   }
@@ -310,19 +384,19 @@ export default function useFileUpload() {
   return {
     isDragging,
     filesUpload,
-    removeOneCloudFile,
-    removeAllCloudFiles,
+    removeCloudFile,
+    removeLocalFile,
+    removeAllFiles,
     setFilesUpload,
     handleDragEnter,
     handleDragLeave,
     handleDragOver,
-    handleDrop,
+    handleFilesDrop,
     handleFilesFromInput,
     validateFilesType,
     hasDuplicateFiles,
-    handleFileUpload,
     handleCloudUpload,
     formattedOrder,
-    mapRemoteFiles,
+    mapRemoteFilesToFileUpload,
   };
 }

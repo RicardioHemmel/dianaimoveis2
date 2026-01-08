@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-//Brazilian State
+//BRAZILIAN STATE
 import { brazilianStates } from "@/lib/constants/states/brazilian-states";
 import {
   FormField,
@@ -25,11 +25,11 @@ import {
 } from "@/components/ui/form";
 import { PatternFormat } from "react-number-format";
 
-interface TabLocationProps {
-  form: UseFormReturn<PropertyInputSchema>;
-}
+// CONTEXT
+import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
-export default function TabLocation({ form }: TabLocationProps) {
+export default function TabLocation() {
+  const { form } = usePropertyFormContext();
   return (
     <TabsContent value="location" className="space-y-4">
       <div className="grid grid-cols-2 gap-4">

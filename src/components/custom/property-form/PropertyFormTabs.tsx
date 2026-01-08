@@ -1,9 +1,5 @@
 "use client";
 
-// REACT | NEXT
-import { UseFormReturn } from "react-hook-form";
-import { Dispatch, SetStateAction } from "react";
-
 // COMPONENTS
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TabBasicInfo from "@/components/custom/property-form/TabBasicInfo";
@@ -23,25 +19,12 @@ import {
   ImageUp,
 } from "lucide-react";
 
-// SCHEMAS
-import {
-  PropertyInputSchema,
-  PropertyDetailsData,
-} from "@/lib/schemas/property/property.schema";
+// CONTEXT
+import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
-interface PropertyFormTabsProps {
-  form: UseFormReturn<PropertyInputSchema>;
-  activeTab: string;
-  setActiveTab: Dispatch<SetStateAction<string>>;
-  propertyDetails?: PropertyDetailsData;
-}
-
-export default function PropertyFormTabs({
-  form,
-  activeTab,
-  setActiveTab,
-  propertyDetails,
-}: PropertyFormTabsProps) {
+export default function PropertyFormTabs() {
+  const { propertyDetails, activeTab, setActiveTab, form } =
+    usePropertyFormContext();
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab}>
       {/* TABS NAVIGATION */}
@@ -73,21 +56,12 @@ export default function PropertyFormTabs({
       </TabsList>
 
       {/* ----------------------------- FORM TABS -------------------------------- */}
-      <TabBasicInfo
-        form={form}
-        propertyTypes={propertyDetails?.types}
-        propertyPurposes={propertyDetails?.purposes}
-        propertyStatus={propertyDetails?.status}
-      />
-      <TabLocation form={form} />
-      <TabDetails form={form} />
-      <TabSpecific
-        form={form}
-        propertyStandings={propertyDetails?.standings}
-        propertyTypologies={propertyDetails?.typologies}
-      />
-      <TabAmenities form={form} amenitiesList={propertyDetails?.amenities} />
-      <TabCreative form={form} />
+      <TabBasicInfo />
+      <TabLocation />
+      <TabDetails />
+      <TabSpecific />
+      <TabAmenities />
+      <TabCreative />
     </Tabs>
   );
 }

@@ -1,10 +1,11 @@
+import { FieldErrors } from "react-hook-form";
 import { z } from "zod";
 
 //-------------------------------------------------- AUXULIAR TYPES ------------------------------------------------------
 const galleryItemSchema = z.object({
   key: z.string(),
   order: z.number(),
-  url: z.string(),
+  url: z.string().optional(),
 });
 
 export type GalleryItemSchema = z.infer<typeof galleryItemSchema>;
@@ -134,3 +135,60 @@ export type PropertyDetailsData = {
   types: PropertyDetail[];
   typologies: PropertyDetail[];
 };
+
+
+//-------------------------------------------------- FRIENDLY LABELS MAPPER ------------------------------------------------------
+
+export const fieldLabels: Record<string, string> = {
+  title: "Título",
+  description: "Descrição",
+  bedroomsQty: "Quartos",
+  suitesQty: "Suítes",
+  bathroomsQty: "Banheiros",
+  parkingSpacesQty: "Vagas de garagem",
+  price: "Preço",
+  area: "Área",
+  condominiumFee: "Condomínio",
+  floorStart: "Andar inicial",
+  floorEnd: "Andar final",
+  videoUrl: "Vídeo",
+  isFurnished: "Mobiliado",
+  isNearSubway: "Próximo ao metrô",
+  isFeatured: "Destaque",
+  isPetFriendly: "Pet friendly",
+  showSquareMeterPrice: "Exibir preço por m²",
+  coverImage: "Imagem de capa",
+  propertyGallery: "Galeria de imagens",
+  propertyFloorPlanGallery: "Planta baixa",
+  address: "Endereço",
+  propertyType: "Tipo do imóvel",
+  propertyPurpose: "Finalidade do imóvel",
+  propertyStanding: "Padrão do imóvel",
+  propertyStatus: "Status do imóvel",
+  propertyTypology: "Tipologia",
+  propertyAmenities: "Comodidades",
+};
+
+// MAPS FIELD ERROS FROM "RHF" INTO PORTUGUESE NAMES
+export function extractFieldLabels(
+  errors: FieldErrors<any>,
+  parentKey = ""
+): string[] {
+  let labels: string[] = [];
+
+  for (const key in errors) {
+    if (!errors.hasOwnProperty(key)) continue;
+    const error = errors[key];
+    const fullKey = parentKey ? `${parentKey}.${key}` : key;
+
+    if (error?.message || error?.type) {
+      // erro de campo simples
+      labels.push(fieldLabels[key] ?? key);
+    } else if (typeof error === "object" && error !== null && !("message" in error)) {
+      // erro aninhado (ex: address)
+      labels.push(...extractFieldLabels(error as FieldErrors<any>, fullKey));
+    }
+  }
+
+  return labels;
+}

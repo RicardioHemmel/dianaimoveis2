@@ -1,12 +1,5 @@
 "use client";
 
-// Next | React
-import { UseFormReturn } from "react-hook-form";
-
-// SCHEMAS
-import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
-import { PropertyDetail } from "@/lib/schemas/property/property.schema";
-
 // COMPONENTS
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -42,19 +35,14 @@ import {
   LucideIcon,
 } from "lucide-react";
 
-interface TabBasicInfoProps {
-  form: UseFormReturn<PropertyInputSchema>;
-  propertyTypes?: PropertyDetail[];
-  propertyPurposes?: PropertyDetail[];
-  propertyStatus?: PropertyDetail[];
-}
+// CONTEXT
+import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
-export default function TabBasicInfo({
-  form,
-  propertyTypes,
-  propertyPurposes,
-  propertyStatus,
-}: TabBasicInfoProps) {
+export default function TabBasicInfo() {
+  const { form, propertyDetails } = usePropertyFormContext();
+  const propertyTypes = propertyDetails?.types;
+  const propertyPurposes = propertyDetails?.purposes;
+  const propertyStatus = propertyDetails?.status;
 
   // List possible icons for property types
   const propertyTypeIcons: Record<string, LucideIcon> = {

@@ -16,17 +16,19 @@ import {
 } from "@/components/ui/input-group";
 
 import { UseFormReturn } from "react-hook-form";
-import { PropertyInputSchema, PropertyDetail } from "@/lib/schemas/property/property.schema";
+import {
+  PropertyInputSchema,
+  PropertyDetail,
+} from "@/lib/schemas/property/property.schema";
 
-interface TabAmenitiesProps {
-  form: UseFormReturn<PropertyInputSchema>;
-  amenitiesList?: PropertyDetail[];
-}
+// CONTEXT
+import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
-export default function TabAmenities({
-  form,
-  amenitiesList,
-}: TabAmenitiesProps) {
+export default function TabAmenities() {
+  const { form, propertyDetails } = usePropertyFormContext();
+
+  const amenitiesList = propertyDetails?.amenities;
+
   // Shows content based on the type
   const { propertyType } = form.watch();
 

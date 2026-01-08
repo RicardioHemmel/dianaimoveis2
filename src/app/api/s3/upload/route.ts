@@ -21,7 +21,7 @@ export async function POST(req: Request) {
 
     // Generate a unique key for the file
     const ext = path.extname(fileName).toLowerCase();
-    const uniqueKey = `properties/images/${uuidv4()}${ext}`;
+    const uniqueKey = `${uuidv4()}${ext}`;
 
 
     // Prepare the S3

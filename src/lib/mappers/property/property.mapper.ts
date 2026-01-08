@@ -86,8 +86,16 @@ export class PropertyMapper {
       isPetFriendly: property.isPetFriendly,
 
       coverImage: property.coverImage,
-      propertyGallery: property.propertyGallery,
-      propertyFloorPlanGallery: property.propertyFloorPlanGallery,
+      propertyGallery:
+        property?.propertyFloorPlanGallery?.map((img) => ({
+          key: img.key,
+          order: img.order,
+        })) ?? [],
+      propertyFloorPlanGallery:
+        property?.propertyFloorPlanGallery?.map((img) => ({
+          key: img.key,
+          order: img.order,
+        })) ?? [],
 
       videoUrl: property.videoUrl,
       status: property.status,
@@ -103,7 +111,7 @@ export class PropertyMapper {
     };
   }
 
-  static toView(property: IPropertyPopulated): PropertyViewSchema {
+  static toViewSchema(property: IPropertyPopulated): PropertyViewSchema {
     return {
       _id: toStringId(property?._id),
       title: property?.title,
@@ -157,7 +165,7 @@ export class PropertyMapper {
     };
   }
 
-  static toInput(property: IPropertyPopulated): PropertyInputSchema {
+  static toInputSchema(property: IPropertyPopulated): PropertyInputSchema {
     return {
       _id: toStringId(property?._id),
       title: property?.title,
@@ -179,7 +187,7 @@ export class PropertyMapper {
       showSquareMeterPrice: property?.showSquareMeterPrice,
       isPetFriendly: property?.isPetFriendly,
 
-      coverImage: resolveImageUrl(property?.coverImage),
+      coverImage: property.coverImage,
       propertyFloorPlanGallery:
         property?.propertyFloorPlanGallery?.map((img) => ({
           key: img.key,

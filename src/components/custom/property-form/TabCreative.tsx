@@ -19,14 +19,13 @@ import {
 
 // ICONS
 import { Youtube, Images, Layers } from "lucide-react";
-import { UseFormReturn } from "react-hook-form";
-import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
 
-interface TabCreativeProps {
-  form: UseFormReturn<PropertyInputSchema>;
-}
+// CONTEXT
+import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
-export default function TabCreative({ form }: TabCreativeProps) {
+export default function TabCreative() {
+  const { form } = usePropertyFormContext();
+
   return (
     <TabsContent value="creative" className="space-y-6">
       {/* GALLERY INPUT */}
@@ -34,13 +33,13 @@ export default function TabCreative({ form }: TabCreativeProps) {
         <h3 className="text-lg font-semibold text-foreground">
           Galeria de Imagens
         </h3>
-        <ImageUploader Icon={Images} fileInputId="galleryInput" form={form} />
+        <ImageUploader Icon={Images} uploaderId="propertyGallery" />
       </div>
 
       {/* FLOOR PLAN GALLERY INPUT */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-foreground">Planta Baixa</h3>
-        <ImageUploader Icon={Layers} fileInputId="floorPlanGalleryInput" form={form} />
+        <ImageUploader Icon={Layers} uploaderId="floorPlanGallery" />
       </div>
 
       {/* Technical Specifications Input */}

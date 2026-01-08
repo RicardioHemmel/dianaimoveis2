@@ -34,11 +34,11 @@ import {
 } from "@/components/ui/input-group";
 import { NumericFormat } from "react-number-format";
 
-interface TabDetailsProps {
-  form: UseFormReturn<PropertyInputSchema>;
-}
+// CONTEXT
+import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
-export default function TabDetails({ form }: TabDetailsProps) {
+export default function TabDetails() {
+  const { form } = usePropertyFormContext();
   return (
     <TabsContent value="details" className="space-y-4">
       <div className="grid grid-cols-3 gap-4">

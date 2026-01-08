@@ -28,19 +28,14 @@ import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
 import { UseFormReturn } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 
-interface TabSpecificProps {
-  form: UseFormReturn<PropertyInputSchema>;
-  propertyStandings?: PropertyDetail[];
-  propertyTypologies?: PropertyDetail[];
-}
+// CONTEXT
+import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
-export default function TabSpecific({
-  form,
-  propertyStandings,
-  propertyTypologies,
-}: TabSpecificProps) {
-
-  const { propertyType } = form.watch();
+export default function TabSpecific() {
+  const { form, propertyDetails } = usePropertyFormContext();
+  const propertyType = form.getValues("propertyType");
+  const propertyStandings = propertyDetails?.standings;
+  const propertyTypologies = propertyDetails?.typologies;
 
   return (
     <TabsContent value="specific" className="space-y-4">

@@ -16,7 +16,8 @@ import { CloudCheck, X } from "lucide-react";
 
 interface ImageCardProps {
   image: FileUpload;
-  removeOneCloudMedia: (key: string) => Promise<void>;
+  removeCloudFile: (key: string) => Promise<void>;
+  removeLocalFile: (id: string) => void;
   i: number;
   formattedOrder: (i: number) => number;
   isHighlighted: boolean;
@@ -25,7 +26,8 @@ interface ImageCardProps {
 
 export default function DraggableImageCard({
   image,
-  removeOneCloudMedia,
+  removeCloudFile,
+  removeLocalFile,
   i,
   formattedOrder,
   isHighlighted,
@@ -54,10 +56,11 @@ export default function DraggableImageCard({
       onDoubleClick={() => onDoubleClick(i)}
     >
       <div className="w-full h-64 relative overflow-hidden animate-[var(--animate-infinity-glow)] rounded-lg">
-        <img
-          src={image.previewURL}
+        <Image
+          src={image.previewURL ?? ""}
           alt={`Preview da imagem ${image.id}`}
           className="object-cover"
+          fill
         />
       </div>
 
@@ -97,7 +100,13 @@ export default function DraggableImageCard({
       <button
         onMouseEnter={() => setCanDrag(false)}
         onMouseLeave={() => setCanDrag(true)}
-        onClick={() => removeOneCloudMedia(image.key!)}
+        onClick={() => {
+          if (image.key) {
+            removeCloudFile(image.key);
+          } else if (image.id) {
+            removeLocalFile(image.id);
+          }
+        }}
         className="absolute top-2 right-2 rounded-full cursor-pointer p-0.5 bg-red-600 hover:bg-red-700"
       >
         <X className="w-5 h-5 text-white" />

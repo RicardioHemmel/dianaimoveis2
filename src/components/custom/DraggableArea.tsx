@@ -23,16 +23,18 @@ import { FileUpload } from "@/lib/schemas/media/file.schema";
 
 interface DraggableAreaProps {
   filesUpload: FileUpload[];
-  removeOneCloudFile: (key: string) => Promise<void>;
-  removeAllCloudFiles: () => void;
+  removeCloudFile: (key: string) => Promise<void>;
+  removeLocalFile: (id: string) => void;
+  removeAllFiles: () => void;
   setFilesUpload: Dispatch<SetStateAction<FileUpload[]>>;
   formattedOrder: (i: number) => number;
 }
 
 export default function DraggableArea({
   filesUpload,
-  removeOneCloudFile,
-  removeAllCloudFiles,
+  removeCloudFile,
+  removeLocalFile,
+  removeAllFiles,
   setFilesUpload,
   formattedOrder,
 }: DraggableAreaProps) {
@@ -107,9 +109,10 @@ export default function DraggableArea({
               </h3>
               <div className="flex gap-3">
                 <Button
+                  type="button"
                   variant={"destructive"}
                   className="rounded-full"
-                  onClick={removeAllCloudFiles}
+                  onClick={removeAllFiles}
                 >
                   Remover imagens
                 </Button>
@@ -119,7 +122,8 @@ export default function DraggableArea({
               {filesUpload.map((image, i) => (
                 <DraggableImageCard
                   image={image}
-                  removeOneCloudMedia={removeOneCloudFile}
+                  removeCloudFile={removeCloudFile}
+                  removeLocalFile={removeLocalFile}
                   i={i}
                   formattedOrder={formattedOrder}
                   key={image.id}

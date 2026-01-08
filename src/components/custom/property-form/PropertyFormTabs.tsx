@@ -23,7 +23,7 @@ import {
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
 export default function PropertyFormTabs() {
-  const { propertyDetails, activeTab, setActiveTab, form } =
+  const { activeTab, setActiveTab } =
     usePropertyFormContext();
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab}>

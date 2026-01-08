@@ -1,7 +1,7 @@
 "use client";
 
 // REACT | NEXT
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { FieldErrors } from "react-hook-form";
 
@@ -30,30 +30,34 @@ import { usePropertyFormContext } from "@/context/PropertyFormContext";
 // ICONS
 import { Pencil, Plus } from "lucide-react";
 
-// DEFINES WHETHER THE FORM IS TO CREATE OR UPDATE
-type PropertyFormProps = {
-  mode: "create" | "edit";
-};
-
-export default function PropertyForm({ mode }: PropertyFormProps) {
+export default function PropertyForm({ mode }: { mode: "create" | "edit" }) {
   // CONTEXT
-  const { form, initialData, status, setStatus } = usePropertyFormContext();
+  const { form, status, setStatus } = usePropertyFormContext();
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const title = form.watch("title");
 
   // PROPERTY FORM CONTEXT
   const { fileUploadHook, nextTab, prevTab, isFirstTab, isLastTab } =
     usePropertyFormContext();
+  const { handleCloudUpload } = fileUploadHook;
 
   async function onSubmit(data: PropertyInputSchema) {
     startTransition(async () => {
-      const uploadedImages = await fileUploadHook.handleCloudUpload(
-        fileUploadHook.filesUpload
+      const finalGallery = await handleCloudUpload();
+      const orderedGallery = [...finalGallery].sort(
+        (a, b) => a.order - b.order
       );
-      form.setValue("propertyGallery", uploadedImages);
+
+      console.log("handleCloudUpload Return: ", finalGallery);
+      console.log("Galeria ordenada para salvar: ", orderedGallery);
+      console.log("Cover image ordernada: ", orderedGallery[0]);
+      console.log("Cover image do Return: ", finalGallery[0]);
 
       const payload = {
         ...data,
+        propertyGallery: orderedGallery,
+        coverImage: orderedGallery[0]?.key || "",
         status: status,
       };
 
@@ -107,7 +111,7 @@ export default function PropertyForm({ mode }: PropertyFormProps) {
                 </Badge>
               </div>
               <h2 className="text-3xl font-bold text-foreground">
-                Cadastrar imóvel
+                {title ? title : "Cadastrar imóvel"}
               </h2>
               <p className="text-muted-foreground">
                 Editando informações do imóvel
@@ -124,9 +128,7 @@ export default function PropertyForm({ mode }: PropertyFormProps) {
                   Modo Edição
                 </Badge>
               </div>
-              <h2 className="text-3xl font-bold text-foreground">
-                {initialData?.title}
-              </h2>
+              <h2 className="text-3xl font-bold text-foreground">{title}</h2>
               <p className="text-muted-foreground">
                 Editando informações do imóvel
               </p>

@@ -1,38 +1,39 @@
 "use client";
 
-// DnD Kit
+// DND KIT
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-// Types
+// TYPES
 import { FileUpload } from "@/lib/schemas/media/file.schema";
 
-// React | Next
+// REACT | NEXT
 import { useState } from "react";
 import Image from "next/image";
 
-// Icons
-import { CloudCheck, X } from "lucide-react";
+// ICONS
+import { CloudCheck, X, Loader } from "lucide-react";
+
+// CONTEXT
+import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
 interface ImageCardProps {
   image: FileUpload;
-  removeCloudFile: (key: string) => Promise<void>;
-  removeLocalFile: (id: string) => void;
   i: number;
-  formattedOrder: (i: number) => number;
   isHighlighted: boolean;
   onDoubleClick: (imageIndex: number) => void;
 }
 
 export default function DraggableImageCard({
   image,
-  removeCloudFile,
-  removeLocalFile,
   i,
-  formattedOrder,
   isHighlighted,
   onDoubleClick,
 }: ImageCardProps) {
+  const { fileUploadHook } = usePropertyFormContext();
+
+  const { removeCloudFile, removeLocalFile, formattedOrder } = fileUploadHook;
+
   const [canDrag, setCanDrag] = useState(true);
 
   const { setNodeRef, attributes, listeners, transform, transition } =
@@ -61,6 +62,7 @@ export default function DraggableImageCard({
           alt={`Preview da imagem ${image.id}`}
           className="object-cover"
           fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
       </div>
 
@@ -98,8 +100,10 @@ export default function DraggableImageCard({
       )}
 
       <button
+        type="button"
         onMouseEnter={() => setCanDrag(false)}
         onMouseLeave={() => setCanDrag(true)}
+        disabled={image.status === "deleting"}
         onClick={() => {
           if (image.key) {
             removeCloudFile(image.key);
@@ -109,7 +113,11 @@ export default function DraggableImageCard({
         }}
         className="absolute top-2 right-2 rounded-full cursor-pointer p-0.5 bg-red-600 hover:bg-red-700"
       >
-        <X className="w-5 h-5 text-white" />
+        {image.status === "deleting" ? (
+          <Loader className="size-5 text-white animate-spin" />
+        ) : (
+          <X className="size-5 text-white" />
+        )}
       </button>
     </div>
   );

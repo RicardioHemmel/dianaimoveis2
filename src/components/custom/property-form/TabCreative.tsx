@@ -39,7 +39,7 @@ export default function TabCreative() {
       {/* FLOOR PLAN GALLERY INPUT */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-foreground">Planta Baixa</h3>
-        <ImageUploader Icon={Layers} uploaderId="floorPlanGallery" />
+        {/* <ImageUploader Icon={Layers} uploaderId="floorPlanGallery" /> */}
       </div>
 
       {/* Technical Specifications Input */}

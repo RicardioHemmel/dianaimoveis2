@@ -42,13 +42,16 @@ export async function getPropertyById(
     .populate("propertyType")
     .lean<IPropertyPopulated>();
 
-  if (!property) {
-    return null;
+  if (!property) return null;
+
+  // Ordena o array da galeria antes de passar pelo Mapper
+  if (property.propertyGallery) {
+    property.propertyGallery.sort((a, b) => a.order - b.order);
   }
 
-  const mappedProperty = PropertyMapper.toInputSchema(property);
-  return mappedProperty;
+  return PropertyMapper.toInputSchema(property);
 }
+
 
 export async function createProperty(
   data: PropertyInputSchema

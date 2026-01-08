@@ -13,23 +13,24 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
-// Types
-import { FileUpload } from "@/lib/schemas/media/file.schema";
-
 // Icons
 import { X } from "lucide-react";
 
 interface FullScreenImageModalProps {
-  filesUpload: FileUpload[];
   doubleClickedImageIndex: number | null;
   onClose: () => void;
 }
 
+// CONTEXT
+import { usePropertyFormContext } from "@/context/PropertyFormContext";
+
 export default function FullScreenImageModal({
-  filesUpload,
   doubleClickedImageIndex,
   onClose,
 }: FullScreenImageModalProps) {
+  const { fileUploadHook } = usePropertyFormContext();
+  const { filesUpload } = fileUploadHook;
+
   const [carouselApi, setCarouselApi] = useState<CarouselApi>(); // Gives carousel its mechanics
 
   useEffect(() => {

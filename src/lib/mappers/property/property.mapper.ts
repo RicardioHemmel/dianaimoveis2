@@ -87,7 +87,7 @@ export class PropertyMapper {
 
       coverImage: property.coverImage,
       propertyGallery:
-        property?.propertyFloorPlanGallery?.map((img) => ({
+        property?.propertyGallery?.map((img) => ({
           key: img.key,
           order: img.order,
         })) ?? [],

@@ -3,13 +3,11 @@ import { LucideIcon } from "lucide-react";
 
 // REACT | NEXT
 import { useEffect } from "react";
-import { UseFormReturn } from "react-hook-form";
 
 // COMPONENTS
 import DraggableArea from "./DraggableArea";
 
-// SCHEMAS
-import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
+// CONTEXT
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
 interface ImageUploaderProps {
@@ -22,30 +20,43 @@ export default function ImageUploader({
   uploaderId,
 }: ImageUploaderProps) {
   // CUSTOM HOOK TO HANDLE FILE UPLOAD EVENTS
-  const { fileUploadHook } = usePropertyFormContext();
+  const { fileUploadHook, form } = usePropertyFormContext();
+  const propertyGallery = form.watch("propertyGallery");
 
   const {
     isDragging,
     filesUpload,
-    removeCloudFile,
-    removeLocalFile,
-    removeAllFiles,
-    setFilesUpload,
     handleDragEnter,
     handleDragLeave,
     handleDragOver,
     handleFilesDrop,
     handleFilesFromInput,
-    formattedOrder,
     mapRemoteFilesToFileUpload,
   } = fileUploadHook;
 
   // IMAGES CLEANUP
   useEffect(() => {
     return () => {
-      filesUpload.forEach((img) => URL.revokeObjectURL(img.previewURL ?? ""));
+      filesUpload.forEach((img) => {
+        if (img.previewURL && !img.previewURL.startsWith("https")) {
+          URL.revokeObjectURL(img.previewURL);
+        }
+      });
     };
   }, []);
+
+  // MAPS IMAGES FROM DB INTO FILESUPLOAD STATE FOR EXHIBITION AND ALLOW USER TO CHANGER POSITION
+  useEffect(() => {
+    if (filesUpload.length === 0) {
+      mapRemoteFilesToFileUpload(propertyGallery);
+    }
+  }, [propertyGallery]);
+
+
+  // LOG
+  useEffect(() => {
+    console.log("From Image Uploader", filesUpload);
+  }, [filesUpload]);
 
   return (
     <>
@@ -78,14 +89,7 @@ export default function ImageUploader({
       </div>
 
       {/* DRAGGABLE AREA WITH ALL IMAGES */}
-      <DraggableArea
-        filesUpload={filesUpload}
-        removeCloudFile={removeCloudFile}
-        removeLocalFile={removeLocalFile}
-        removeAllFiles={removeAllFiles}
-        setFilesUpload={setFilesUpload}
-        formattedOrder={formattedOrder}
-      />
+      <DraggableArea />
     </>
   );
 }

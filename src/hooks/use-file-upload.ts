@@ -1,9 +1,7 @@
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { FileUpload } from "@/lib/schemas/media/file.schema";
-import {
-  GalleryItemSchema,
-} from "@/lib/schemas/property/property.schema";
+import { GalleryItemSchema } from "@/lib/schemas/property/property.schema";
 
 export default function useFileUpload() {
   // FOR ONDRAGENTER AND ONDRAGLEAVE CONTROL
@@ -59,16 +57,16 @@ export default function useFileUpload() {
   }
 
   // MAPS IMAGES TO SHOW ON EDIT PROPERTY MODE
-  function mapRemoteFilesToFileUpload(
-    images: GalleryItemSchema[]
-  ): FileUpload[] {
-    return images.map((image, i) => ({
+  function mapRemoteFilesToFileUpload(images: GalleryItemSchema[]) {
+    const fileUploadFromDB = images.map((image, i) => ({
       id: window.crypto.randomUUID(),
       key: image.key,
       previewURL: image.url,
       order: image.order ?? formattedOrder(i),
-      status: "success",
+      status: "success" as const,
     }));
+
+    setFilesUpload(fileUploadFromDB);
   }
 
   async function handleLocalFilesUpload(files: File[]): Promise<void> {
@@ -184,6 +182,7 @@ export default function useFileUpload() {
   // SENDS A IMAGE TO CLOUD STORAGE WITH UPLOAD PROGRESS
   async function uploadSingleImage(file: File): Promise<string | null> {
     try {
+      // TRY TO GET THE PRESIGNED_URL FROM CLOUD
       const presignedUrlResponse = await fetch("/api/s3/upload/", {
         method: "POST",
         headers: {
@@ -196,6 +195,7 @@ export default function useFileUpload() {
         }),
       });
 
+      // SETS ERROR STATE ON THE IMAGE IF COULDNT GET THE PRESIGNED_URL
       if (!presignedUrlResponse.ok) {
         toast.error("Erro ao obter URL de upload");
         setFilesUpload((prev) =>
@@ -206,11 +206,14 @@ export default function useFileUpload() {
         return null;
       }
 
+      // GETS THE PRESIGNED URL AND THE KEY
       const { presignedUrl, key } = await presignedUrlResponse.json();
 
+      // START THE FILE UPLOAD TRACKING PROGRESS
       await new Promise<void>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.upload.onprogress = (event) => {
+          // SETS PROGRESS AS IT GOES
           if (event.lengthComputable) {
             const porcentageCompleted = (event.loaded / event.total) * 100;
             setFilesUpload((prev) =>
@@ -218,6 +221,7 @@ export default function useFileUpload() {
                 img.file === file
                   ? {
                       ...img,
+                      status: "uploading",
                       uploadProgress: Math.round(porcentageCompleted),
                       key: key,
                     }
@@ -226,6 +230,7 @@ export default function useFileUpload() {
             );
           }
         };
+        // IF SUCCESSED SETS IMAGES AS SUCCESS STATE
         xhr.onload = () => {
           if (xhr.status === 200 || xhr.status === 204) {
             setFilesUpload((prev) =>
@@ -258,6 +263,7 @@ export default function useFileUpload() {
       return key;
     } catch (e) {
       toast.error("Erro ao enviar imagem");
+      // ON ERROR SETS IMAGE TO "IDLE" STATE
       setFilesUpload((prev) =>
         prev.map((img) =>
           img.status === "uploading"
@@ -270,34 +276,18 @@ export default function useFileUpload() {
     }
   }
 
-  async function handleCloudUpload(
-    images: FileUpload[]
-  ): Promise<{ key: string; order: number }[]> {
+  async function handleCloudUpload() {
     const uploadedFiles: { key: string; order: number }[] = [];
 
-    // Define como "uploading" apenas o que for "idle"
-    setFilesUpload((prev) =>
-      prev.map((img) =>
-        img.status === "idle"
-          ? { ...img, status: "uploading", uploadProgress: 0, error: false }
-          : img
-      )
-    );
-
-    for (const img of images) {
-      // Se não tem arquivo, ignora
-      if (!img.file) continue;
-
-      // CENÁRIO 1: Imagem já enviada anteriormente (Sucesso)
-      // Apenas adicionamos ao array final para não perder a referência
+    for (const img of filesUpload) {
+      // IF THE IMG WAS ALREADY SAVED ON CLOUD GETS IT'S DATA
       if (img.status === "success" && img.key) {
         uploadedFiles.push({ key: img.key, order: img.order });
         continue;
       }
 
-      // CENÁRIO 2: Imagem pendente (Idle)
-      // Realiza o upload
-      if (img.status === "idle") {
+      // UPLOAD IMAGE
+      if (img.status === "idle" && img.file) {
         try {
           const key = await uploadSingleImage(img.file);
 
@@ -306,21 +296,13 @@ export default function useFileUpload() {
           }
         } catch {
           toast.error("Erro ao enviar imagem");
-          // Aqui você decide se quer retornar array vazio ou apenas ignorar a falha
-          // return [];
         }
       }
-
-      // Se for "error" ou "uploading" (preso), ela será ignorada no loop atual
-    }
-
-    // Só exibe sucesso se realmente houve upload de algo novo ou se já existiam imagens
-    if (uploadedFiles.length > 0) {
-      toast.success(`Imagens processadas com sucesso!`);
     }
 
     return uploadedFiles;
   }
+
   async function removeCloudFile(key: string) {
     try {
       const fileToRemove = filesUpload.find((img) => img.key === key);
@@ -335,7 +317,7 @@ export default function useFileUpload() {
 
       setFilesUpload((prev) =>
         prev.map((img) =>
-          img.key === key ? { ...img, isDeleting: true } : img
+          img.key === key ? { ...img, status: "deleting" } : img
         )
       );
 
@@ -352,7 +334,7 @@ export default function useFileUpload() {
 
         setFilesUpload((prev) =>
           prev.map((img) =>
-            img.key === key ? { ...img, isDeleting: false, error: true } : img
+            img.key === key ? { ...img, status: "success", error: true } : img
           )
         );
 
@@ -364,7 +346,7 @@ export default function useFileUpload() {
       toast.error("Erro ao remover imagem da nuvem");
       setFilesUpload((prev) =>
         prev.map((img) =>
-          img.key === key ? { ...img, isDeleting: false, error: true } : img
+          img.key === key ? { ...img, status: "success", error: true } : img
         )
       );
     }

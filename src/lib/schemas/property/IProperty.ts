@@ -5,7 +5,7 @@ export interface IPopulatedRef {
   name: string;
 }
 
-interface PropertyImages {
+interface propertyGallary {
   key: string;
   order: number;
 }
@@ -40,8 +40,8 @@ export interface IPropertyRaw {
   propertyAmenities: Types.ObjectId[];
 
   coverImage?: string;
-  propertyGallery: PropertyImages[];
-  propertyFloorPlanGallery: PropertyImages[];
+  propertyGallery: propertyGallary[];
+  propertyFloorPlanGallery: propertyGallary[];
   videoUrl?: string;
 
   status: "DRAFT" | "PUBLISHED";

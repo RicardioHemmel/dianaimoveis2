@@ -11,33 +11,26 @@ import {
 } from "@dnd-kit/sortable";
 
 // REACT | NEXT
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 
 // COMPONENTS
 import { Button } from "@/components/ui/button";
 import DraggableImageCard from "@/components/custom/DraggableImageCard";
 import FullScreenImageModal from "@/components/custom/FullScreenModal";
 
-// SCHEMAS
-import { FileUpload } from "@/lib/schemas/media/file.schema";
+// CONTEXT
+import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
-interface DraggableAreaProps {
-  filesUpload: FileUpload[];
-  removeCloudFile: (key: string) => Promise<void>;
-  removeLocalFile: (id: string) => void;
-  removeAllFiles: () => void;
-  setFilesUpload: Dispatch<SetStateAction<FileUpload[]>>;
-  formattedOrder: (i: number) => number;
-}
+export default function DraggableArea() {
+  const { fileUploadHook } = usePropertyFormContext();
 
-export default function DraggableArea({
-  filesUpload,
-  removeCloudFile,
-  removeLocalFile,
-  removeAllFiles,
-  setFilesUpload,
-  formattedOrder,
-}: DraggableAreaProps) {
+  const {
+    filesUpload,
+    removeAllFiles,
+    setFilesUpload,
+    formattedOrder,
+  } = fileUploadHook;
+
   // For highlighting cards during drag n drop
   const [highlightedIds, setHighlightedIds] = useState<string[]>([]);
   const [doubleClickedImageIndex, setDoubleClickedImageIndex] = useState<
@@ -122,10 +115,7 @@ export default function DraggableArea({
               {filesUpload.map((image, i) => (
                 <DraggableImageCard
                   image={image}
-                  removeCloudFile={removeCloudFile}
-                  removeLocalFile={removeLocalFile}
                   i={i}
-                  formattedOrder={formattedOrder}
                   key={image.id}
                   isHighlighted={highlightedIds.includes(image.id)}
                   onDoubleClick={handleDoubleClick}
@@ -138,7 +128,6 @@ export default function DraggableArea({
 
       {isModalOpen && (
         <FullScreenImageModal
-          filesUpload={filesUpload}
           onClose={onClose}
           doubleClickedImageIndex={doubleClickedImageIndex}
         />

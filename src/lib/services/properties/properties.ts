@@ -160,3 +160,9 @@ export async function updatePropertyImage(
     throw new Error("Imóvel não encontrado");
   }
 }
+
+export async function deletePropertyById(id: string) {
+  await connectMongoDB();
+
+  await Property.findByIdAndDelete(id);
+}

@@ -57,7 +57,7 @@ export function PropertyCardHorizontal({
               {property.coverImage ? (
                 <Image alt="Imagem de Capa" src={property.coverImage} fill />
               ) : (
-                <Building2 className="h-16 w-16 text-white/70" />
+                <Building2 className="size-16 text-white/70" />
               )}
             </div>
 

@@ -2,26 +2,26 @@
 
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, Expand } from "lucide-react";
+import { ChevronLeft, ChevronRight, Expand, ImageOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
-// FORMATTER
-import { getStateName } from "@/lib/formatters/ui-formatters/brazilian-state-name";
+// COMPONENTS
+import ThumbnailsCarousel from "@/components/custom/ThumbnailsCarousel";
+import FullScreenPropertyGallery from "@/components/custom/FullScreenPropertyGallery";
 
 interface PropertyHeroProps {
-  title: PropertyViewSchema["title"];
-  address: PropertyViewSchema["address"];
-  propertyStatus: PropertyViewSchema["propertyStatus"];
-  coverImage: PropertyViewSchema["coverImage"];
+  title?: PropertyViewSchema["title"];
+  address?: PropertyViewSchema["address"];
+  propertyStatus?: PropertyViewSchema["propertyStatus"];
   gallery: PropertyViewSchema["propertyGallery"];
-  typology: PropertyViewSchema["propertyTypology"];
+  typology?: PropertyViewSchema["propertyTypology"];
 }
 
 export default function PropertyHero({
   title,
   address,
   propertyStatus,
-  coverImage,
   gallery,
   typology,
 }: PropertyHeroProps) {
@@ -35,19 +35,37 @@ export default function PropertyHero({
     setCurrentImage((prev) => (prev - 1 + gallery.length) % gallery.length);
   };
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const onClose = () => {
+    setIsModalOpen(false);
+  };
+
   return (
-    <section className="relative h-[70vh] min-h-[500px] overflow-hidden">
+    <section className="relative h-[70vh] min-h-[500px] overflow-hidden select-none">
       {/* BACKGROUND IMAGE */}
       <div className="absolute inset-0">
-        <img
-          src={coverImage}
-          alt="Imóvel"
-          className="w-full h-full object-cover transition-all duration-700"
-        />
-        <div className="absolute inset-0 bg-gradient-hero" />
+        {gallery[currentImage]?.url ? (
+          <>
+            <Image
+              alt="Imagem de Capa"
+              src={gallery[currentImage].url}
+              className="object-cover transition-all duration-700"
+              fill
+            />
+            <div className="absolute inset-0 bg-black/50" />
+          </>
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/90">
+            <div className="flex flex-col items-center gap-4 text-white">
+              <ImageOff size={64} className="opacity-70" />
+              <p className="text-lg opacity-80">Nenhuma imagem disponível</p>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Navigation Arrows */}
+      {/* NAVIGATION ARROWS */}
       <Button
         variant="ghost"
         size="icon"
@@ -65,32 +83,31 @@ export default function PropertyHero({
         <ChevronRight className="h-6 w-6" />
       </Button>
 
-      {/* Thumbnails */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-10">
-        {gallery.map((img, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentImage(index)}
-            className={`w-16 h-12 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
-              currentImage === index
-                ? "border-secondary scale-110"
-                : "border-card/50 opacity-70 hover:opacity-100"
-            }`}
-          >
-            <img
-              src={img.url}
-              alt={`Thumbnail ${index + 1}`}
-              className="w-full h-full object-cover"
-            />
-          </button>
-        ))}
+      {/* THUMBNAILS */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex z-20 w-[250px]">
+        <ThumbnailsCarousel
+          gallery={gallery}
+          setCurrentImage={setCurrentImage}
+          currentImage={currentImage}
+        />
       </div>
 
-      {/* Expand Button */}
+      {/* FULL SCREEN MODAL */}
+      {isModalOpen && (
+        <FullScreenPropertyGallery
+          onClose={onClose}
+          gallery={gallery}
+          currentImage={currentImage}
+        />
+      )}
+
+      {/* EXPAND GALLERY BUTTON */}
       <Button
+        type="button"
         variant="ghost"
         size="icon"
         className="absolute top-4 right-4 bg-card/20 backdrop-blur-sm hover:bg-card/40 text-primary-foreground z-10"
+        onClick={() => setIsModalOpen(true)}
       >
         <Expand className="h-5 w-5" />
       </Button>
@@ -105,7 +122,7 @@ export default function PropertyHero({
             {`${title} - ${typology?.name}`}
           </h1>
           <p className="text-primary-foreground/80 text-lg">
-          {`${address?.street} - ${address?.neighborhood}, ${address?.city} - ${address?.stateUf}`}
+            {`${address?.street} - ${address?.neighborhood}, ${address?.city} - ${address?.stateUf}`}
           </p>
         </div>
       </div>

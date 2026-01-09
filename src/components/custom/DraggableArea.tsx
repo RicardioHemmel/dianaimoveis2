@@ -11,7 +11,7 @@ import {
 } from "@dnd-kit/sortable";
 
 // REACT | NEXT
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 // COMPONENTS
 import { Button } from "@/components/ui/button";

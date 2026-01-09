@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { FileUpload } from "@/lib/schemas/media/file.schema";
 import { GalleryItemSchema } from "@/lib/schemas/property/property.schema";
@@ -7,8 +7,35 @@ export default function useFileUpload() {
   // FOR ONDRAGENTER AND ONDRAGLEAVE CONTROL
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [filesUpload, setFilesUpload] = useState<FileUpload[]>([]);
-
   const countRef = useRef(0); // TO PREVENT FLICKERING WHEN DRAGGING OVER CHILD ELEMENTS
+
+  const prevFilesRef = useRef<FileUpload[]>([]);
+
+  // MEMORY MANAGEMENT (BLOBS)
+  useEffect(() => {
+    const prev = prevFilesRef.current; // KEEPS DATA BETWEEN RENDERS
+
+    // CLEANUP OF REMOVED ITEMS
+    prev.forEach((prevImg) => {
+      const stillExists = filesUpload.some((img) => img.id === prevImg.id);
+      if (!stillExists && prevImg.previewURL?.startsWith("blob")) {
+        URL.revokeObjectURL(prevImg.previewURL);
+      }
+    });
+
+    prevFilesRef.current = filesUpload;
+  }, [filesUpload]);
+
+  // TOTAL CLEANING WHEN UNMOUNTING THE HOOK (WHEN LEAVING THE FORM)
+  useEffect(() => {
+    return () => {
+      prevFilesRef.current.forEach((img) => {
+        if (img.previewURL?.startsWith("blob")) {
+          URL.revokeObjectURL(img.previewURL);
+        }
+      });
+    };
+  }, []);
 
   // ---------------------------------------------------- DRAG N DROP  ------------------------------------------ //
 
@@ -274,10 +301,10 @@ export default function useFileUpload() {
   }
 
   // ------------- UPLOADS TO CLOUD ALL "IDLE" IMAGES ---------------
-  async function handleCloudUpload() {
+  async function handleCloudUpload(currentFiles: FileUpload[]) {
     const uploadedFiles: { key: string; order: number }[] = [];
 
-    for (const img of filesUpload) {
+    for (const img of currentFiles) {
       // IF THE IMG WAS ALREADY SAVED ON CLOUD GETS IT'S DATA
       if (img.status === "success" && img.key) {
         uploadedFiles.push({ key: img.key, order: img.order });
@@ -298,6 +325,7 @@ export default function useFileUpload() {
       }
     }
 
+    console.log("uploaded files: ", uploadedFiles);
     return uploadedFiles;
   }
 

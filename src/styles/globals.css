@@ -7,67 +7,67 @@
 @theme inline {
   --font-primary: var(--font-primary);
   --font-secondary: var(--font-secondary);
-/* =========================
+  /* =========================
    PUBLIC / MARKETING PAGES
    ========================= */
 
-/* Text */
---color-text-primary: #ffffff;
---color-text-secondary: hsla(0, 0%, 100%, 0.8);
+  /* Text */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: hsla(0, 0%, 100%, 0.8);
 
-/* Tags */
---color-tag-text: #ebbd36;
---color-tag-bg: #f7f4e6;
+  --color-text-paragraph:  #626d84;
+  --color-text-title: #142952;
 
-/* Surfaces */
---color-surface-base: #f9fafb;
---color-surface-muted: #f5f7f8;
+  /* Tags */
+  --color-tag-text: #ebbd36;
+  --color-tag-bg: #f7f4e6;
 
-/* Hero */
---color-hero-bg: #142952;
---color-hero-from: hsl(220, 60%, 20%);
---color-hero-via: hsl(219, 52%, 39%);
---color-hero-to: hsl(220, 66%, 18%);
+  /* Surfaces */
+  --color-surface-base: #f9fafb;
+  --color-surface-muted: #f5f7f8;
 
-/* Actions */
---color-action-primary: #f1c644;
---color-action-primary-hover: #e0b639;
+  /* Hero */
+  --color-hero-bg: #142952;
+  --color-hero-from: hsl(220, 60%, 20%);
+  --color-hero-via: hsl(219, 52%, 39%);
+  --color-hero-to: hsl(220, 66%, 18%);
 
+  /* Actions */
+  --color-action-primary: #f1c644;
+  --color-action-primary-hover: #e0b639;
 
-/* =========================
+  /* =========================
    DASHBOARD / APP
    ========================= */
 
-/* Brand / Primary */
---color-admin-primary: #018493;
+  /* Brand / Primary */
+  --color-admin-primary: #018493;
 
-/* Navigation */
---color-nav-text: #447c9c;
---color-nav-text-hover: #79c6d7;
---color-nav-bg-active: #185e7a;
---color-nav-bg-active-hover: #0b79a5;
+  /* Navigation */
+  --color-nav-text: #447c9c;
+  --color-nav-text-hover: #79c6d7;
+  --color-nav-bg-active: #185e7a;
+  --color-nav-bg-active-hover: #0b79a5;
 
-/* Dark surfaces */
---color-surface-dark: #0f2936;
---color-surface-dark-hover: #0a222e;
+  /* Dark surfaces */
+  --color-surface-dark: #0f2936;
+  --color-surface-dark-hover: #0a222e;
 
-
-/* =========================
+  /* =========================
    GRADIENTS
    ========================= */
 
---gradient-primary: linear-gradient(
-  135deg,
-  hsl(198 76% 23%) 0%,
-  hsl(186 100% 29%) 100%
-);
+  --gradient-primary: linear-gradient(
+    135deg,
+    hsl(198 76% 23%) 0%,
+    hsl(186 100% 29%) 100%
+  );
 
---gradient-primary-hover: linear-gradient(
-  135deg,
-  hsl(198 76% 13%) 0%,
-  hsl(186 100% 29%) 100%
-);
-
+  --gradient-primary-hover: linear-gradient(
+    135deg,
+    hsl(198 76% 13%) 0%,
+    hsl(186 100% 29%) 100%
+  );
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);

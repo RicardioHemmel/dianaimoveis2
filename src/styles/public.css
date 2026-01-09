@@ -11,3 +11,7 @@ a,
 li {
   font-family: var(--font-secondary);
 }
+
+span {
+  font-family: var(--font-secondary);
+}

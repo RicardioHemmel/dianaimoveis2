@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, ReactNode, useState } from "react";
+import {
+  createContext,
+  useContext,
+  ReactNode,
+  useState,
+  useEffect,
+} from "react";
 import {
   PropertyDetailsData,
   PropertyInputSchema,
@@ -53,6 +59,16 @@ export function PropertyFormProvider({
 }: ProviderProps) {
   // FILES UPLOAD
   const fileUploadHook = useFileUpload();
+
+  // MAPS IMAGES FROM DB INTO FILESUPLOAD STATE FOR EXHIBITION AND ALLOW USER TO CHANGER POSITION
+  useEffect(() => {
+    if (
+      initialData?.propertyGallery &&
+      initialData.propertyGallery.length > 0
+    ) {
+      fileUploadHook.mapRemoteFilesToFileUpload(initialData.propertyGallery);
+    }
+  }, [initialData]);
 
   // PROPERTY FORM
   const { form } = usePropertyForm(propertyDetails?.types ?? [], initialData);

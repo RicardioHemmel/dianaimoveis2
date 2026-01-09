@@ -1,8 +1,8 @@
-// Next / React
+// NEXT | REACT
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
-// ShadcnUI
+// COMPONTENTS
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
@@ -13,24 +13,23 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
-// Icons
+// ICONS
 import { X } from "lucide-react";
 
+// SCHEMA
+import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
+
 interface FullScreenImageModalProps {
-  doubleClickedImageIndex: number | null;
   onClose: () => void;
+  gallery: PropertyViewSchema["propertyGallery"];
+  currentImage: number;
 }
 
-// CONTEXT
-import { usePropertyFormContext } from "@/context/PropertyFormContext";
-
-export default function FullScreenImageModal({
-  doubleClickedImageIndex,
+export default function FullScreenPropertyGallery({
   onClose,
+  gallery,
+  currentImage,
 }: FullScreenImageModalProps) {
-  const { fileUploadHook } = usePropertyFormContext();
-  const { filesUpload } = fileUploadHook;
-
   const [carouselApi, setCarouselApi] = useState<CarouselApi>(); // Gives carousel its mechanics
 
   useEffect(() => {
@@ -67,34 +66,27 @@ export default function FullScreenImageModal({
     <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center">
       <Carousel
         setApi={setCarouselApi}
-        opts={{ loop: true, startIndex: doubleClickedImageIndex ?? 0 }}
+        opts={{ loop: true, startIndex: currentImage }}
         className="w-[96vw] h-[92vh] flex justify-center"
       >
         <CarouselContent>
-          {filesUpload.length > 0 &&
-            filesUpload.map((img) => (
-              <CarouselItem key={img.id} className="h-screen flex items-center">
+          {gallery.length > 0 &&
+            gallery.map((img) => (
+              <CarouselItem
+                key={img.key}
+                className="h-screen flex items-center"
+              >
                 <Card className="flex justify-center w-full">
                   <CardContent className="flex justify-center">
-                    {img.previewURL && (
-                      <>
-                        <div
-                          key={img.id}
-                          className="relative w-[70vw] h-[70vh]"
-                        >
-                          <Image
-                            alt={`Imagem ${img.id}`}
-                            src={img.previewURL}
-                            fill={true}
-                            className="object-contain"
-                          />
-                        </div>
-                        <div className="absolute top-4 rounded-4xl py-2 px-4 w-full flex justify-center">
-                          <h2 className="text-white text-lg">
-                            {img.file?.name ?? img.key}
-                          </h2>
-                        </div>
-                      </>
+                    {img.url && (
+                      <div className="relative w-[70vw] h-[70vh]">
+                        <Image
+                          alt={`Imagem ${img.key}`}
+                          src={img.url}
+                          fill={true}
+                          className="object-contain"
+                        />
+                      </div>
                     )}
                   </CardContent>
                 </Card>

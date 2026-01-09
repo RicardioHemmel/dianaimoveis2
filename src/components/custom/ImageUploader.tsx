@@ -38,15 +38,7 @@ export default function ImageUploader({
     handleDragOver,
     handleFilesDrop,
     handleFilesFromInput,
-    mapRemoteFilesToFileUpload,
   } = fileUploadHook;
-
-  // MAPS IMAGES FROM DB INTO FILESUPLOAD STATE FOR EXHIBITION AND ALLOW USER TO CHANGER POSITION
-  useEffect(() => {
-    if (filesUpload.length === 0) {
-      mapRemoteFilesToFileUpload(propertyGallery);
-    }
-  }, [propertyGallery]);
 
   //---------------- IMAGES CLEANUP --------------------
   //KEEP IN MEMORY IMAGE FILES BETWEEN RENDERS

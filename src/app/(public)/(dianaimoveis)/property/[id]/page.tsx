@@ -34,12 +34,20 @@ export default async function SinglePropertyPage({
       <PropertyHero
         title={property.title}
         address={property?.address}
-        coverImage={property?.coverImage}
         gallery={property?.propertyGallery}
         propertyStatus={property?.propertyStatus}
         typology={property.propertyTypology}
       />
-      <PropertyOverview />
+      <PropertyOverview
+        bedroomsQty={property?.bedroomsQty}
+        bathroomsQty={property?.bathroomsQty}
+        parkingSpacesQty={property?.parkingSpacesQty}
+        propertyType={property?.propertyType}
+        propertyTypology={property?.propertyTypology}
+        price={property?.price}
+        area={property?.area}
+        neighborhood={property?.address?.neighborhood}
+      />
       <PropertyDescription />
       <PropertyAmenities />
       <PropertyFloorPlans />

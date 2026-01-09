@@ -1,7 +1,7 @@
 "use client";
 
 // REACT | NEXT
-import { useTransition } from "react";
+import { useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { FieldErrors } from "react-hook-form";
 
@@ -31,27 +31,40 @@ import { usePropertyFormContext } from "@/context/PropertyFormContext";
 import { Pencil, Plus } from "lucide-react";
 
 export default function PropertyForm({ mode }: { mode: "create" | "edit" }) {
-  const { form, status, setStatus } = usePropertyFormContext();
+  const {
+    form,
+    status,
+    setStatus,
+    fileUploadHook,
+    nextTab,
+    prevTab,
+    isFirstTab,
+    isLastTab,
+    initialData,
+  } = usePropertyFormContext(); // CONTEXT
+
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const title = form.watch("title");
 
-  // PROPERTY FORM CONTEXT
-  const { fileUploadHook, nextTab, prevTab, isFirstTab, isLastTab } =
-    usePropertyFormContext();
-  const { handleCloudUpload } = fileUploadHook;
+  const { handleCloudUpload, mapRemoteFilesToFileUpload, filesUpload } =
+    fileUploadHook;
 
   async function onSubmit(data: PropertyInputSchema) {
+    if (
+      mode === "edit" &&
+      filesUpload.length === 0 &&
+      data.propertyGallery?.length > 0
+    ) {
+      toast.error("Aguarde o carregamento das imagens...");
+      return;
+    }
     startTransition(async () => {
-      const finalGallery = await handleCloudUpload();
-      const orderedGallery = [...finalGallery].sort(
-        (a, b) => a.order - b.order
-      );
-
+      const finalGallery = await handleCloudUpload(filesUpload);
       const payload = {
         ...data,
-        propertyGallery: orderedGallery,
-        coverImage: orderedGallery[0]?.key || "",
+        propertyGallery: finalGallery,
+        coverImage: finalGallery[0]?.key || "",
         status: status,
       };
 
@@ -65,7 +78,6 @@ export default function PropertyForm({ mode }: { mode: "create" | "edit" }) {
           return;
         }
 
-        form.reset(result.data);
         toast.success("Imóvel atualizado com sucesso");
       } else {
         result = await createPropertyAction(payload);

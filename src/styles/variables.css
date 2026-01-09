@@ -2,7 +2,11 @@
   /* DIANA IMÓVEIS VARIABLES */
   --text-primary: #ffffff;
   --text-secondary: hsla(0, 0%, 100%, 0.8);
-  
+  --text-paragraph: #626d84;
+  --text-title: #142952;
+
+    --text-paragraph: #626d84;
+  --text-title: #142952;
   --text-tag: #ebbd36;
   --bg-tag: #f7f4e6;
 

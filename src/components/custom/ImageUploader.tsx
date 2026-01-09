@@ -2,13 +2,15 @@
 import { LucideIcon } from "lucide-react";
 
 // REACT | NEXT
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { useWatch } from "react-hook-form";
 
 // COMPONENTS
 import DraggableArea from "./DraggableArea";
 
 // CONTEXT
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
+import { FileUpload } from "@/lib/schemas/media/file.schema";
 
 interface ImageUploaderProps {
   Icon: LucideIcon;
@@ -21,7 +23,12 @@ export default function ImageUploader({
 }: ImageUploaderProps) {
   // CUSTOM HOOK TO HANDLE FILE UPLOAD EVENTS
   const { fileUploadHook, form } = usePropertyFormContext();
-  const propertyGallery = form.watch("propertyGallery");
+
+  // ISOLATES SIGNATURE TO PREVENT RE-RENDER
+  const propertyGallery = useWatch({
+    control: form.control,
+    name: "propertyGallery",
+  });
 
   const {
     isDragging,
@@ -34,17 +41,6 @@ export default function ImageUploader({
     mapRemoteFilesToFileUpload,
   } = fileUploadHook;
 
-  // IMAGES CLEANUP
-  useEffect(() => {
-    return () => {
-      filesUpload.forEach((img) => {
-        if (img.previewURL && !img.previewURL.startsWith("https")) {
-          URL.revokeObjectURL(img.previewURL);
-        }
-      });
-    };
-  }, []);
-
   // MAPS IMAGES FROM DB INTO FILESUPLOAD STATE FOR EXHIBITION AND ALLOW USER TO CHANGER POSITION
   useEffect(() => {
     if (filesUpload.length === 0) {
@@ -52,10 +48,27 @@ export default function ImageUploader({
     }
   }, [propertyGallery]);
 
+  //---------------- IMAGES CLEANUP --------------------
+  //KEEP IN MEMORY IMAGE FILES BETWEEN RENDERS
+  const prevFilesRef = useRef<FileUpload[]>([]);
 
-  // LOG
+  // WHEN FILES ARE ADDED, REMOVED OR CHANGED POSITIONS
   useEffect(() => {
-    console.log("From Image Uploader", filesUpload);
+    // PREV FILES STATE
+    const prev = prevFilesRef.current;
+
+    // CHECKS IF THE PREV FILE IS STILL ON THE UI. IF IT'S NOT, REMOVE IT FROM MEMORY
+    prev.forEach((prevImg) => {
+      const stillExists = filesUpload.some(
+        (img) => img.previewURL === prevImg.previewURL
+      );
+
+      if (!stillExists && prevImg.previewURL?.startsWith("blob")) {
+        URL.revokeObjectURL(prevImg.previewURL);
+      }
+    });
+
+    prevFilesRef.current = filesUpload;
   }, [filesUpload]);
 
   return (

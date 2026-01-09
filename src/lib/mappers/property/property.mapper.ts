@@ -48,7 +48,7 @@ const mapAddressToPersistence = (address?: IPropertyRaw["address"]) =>
     street: address.street,
     neighborhood: address.neighborhood,
     city: address.city,
-    state: address.state,
+    stateUf: address.stateUf,
     zipCode: address.zipCode,
   };
 
@@ -57,7 +57,7 @@ const mapAddressToSchema = (address?: IPropertyPopulated["address"]) =>
     street: address.street,
     neighborhood: address.neighborhood,
     city: address.city,
-    state: address.state,
+    stateUf: address.stateUf,
     zipCode: address.zipCode,
   };
 

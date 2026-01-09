@@ -1,110 +1,110 @@
 export const brazilianStates = [
   {
     uf: "AC",
-    nome: "Acre",
+    name: "Acre",
   },
   {
     uf: "AL",
-    nome: "Alagoas",
+    name: "Alagoas",
   },
   {
     uf: "AP",
-    nome: "Amapá",
+    name: "Amapá",
   },
   {
     uf: "AM",
-    nome: "Amazonas",
+    name: "Amazonas",
   },
   {
     uf: "BA",
-    nome: "Bahia",
+    name: "Bahia",
   },
   {
     uf: "CE",
-    nome: "Ceará",
+    name: "Ceará",
   },
   {
     uf: "DF",
-    nome: "Distrito Federal",
+    name: "Distrito Federal",
   },
   {
     uf: "ES",
-    nome: "Espírito Santo",
+    name: "Espírito Santo",
   },
   {
     uf: "GO",
-    nome: "Goiás",
+    name: "Goiás",
   },
   {
     uf: "MA",
-    nome: "Maranhão",
+    name: "Maranhão",
   },
   {
     uf: "MT",
-    nome: "Mato Grosso",
+    name: "Mato Grosso",
   },
   {
     uf: "MS",
-    nome: "Mato Grosso do Sul",
+    name: "Mato Grosso do Sul",
   },
   {
     uf: "MG",
-    nome: "Minas Gerais",
+    name: "Minas Gerais",
   },
   {
     uf: "PA",
-    nome: "Pará",
+    name: "Pará",
   },
   {
     uf: "PB",
-    nome: "Paraíba",
+    name: "Paraíba",
   },
   {
     uf: "PR",
-    nome: "Paraná",
+    name: "Paraná",
   },
   {
     uf: "PE",
-    nome: "Pernambuco",
+    name: "Pernambuco",
   },
   {
     uf: "PI",
-    nome: "Piauí",
+    name: "Piauí",
   },
   {
     uf: "RJ",
-    nome: "Rio de Janeiro",
+    name: "Rio de Janeiro",
   },
   {
     uf: "RN",
-    nome: "Rio Grande do Norte",
+    name: "Rio Grande do Norte",
   },
   {
     uf: "RS",
-    nome: "Rio Grande do Sul",
+    name: "Rio Grande do Sul",
   },
   {
     uf: "RO",
-    nome: "Rondônia",
+    name: "Rondônia",
   },
   {
     uf: "RR",
-    nome: "Roraima",
+    name: "Roraima",
   },
   {
     uf: "SC",
-    nome: "Santa Catarina",
+    name: "Santa Catarina",
   },
   {
     uf: "SP",
-    nome: "São Paulo",
+    name: "São Paulo",
   },
   {
     uf: "SE",
-    nome: "Sergipe",
+    name: "Sergipe",
   },
   {
     uf: "TO",
-    nome: "Tocantins",
+    name: "Tocantins",
   },
 ];

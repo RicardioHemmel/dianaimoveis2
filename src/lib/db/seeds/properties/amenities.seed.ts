@@ -1,10 +1,10 @@
 import PropertyAmenities from "@/lib/db/models/property/property-details/amenities.model";
 import { PROPERTY_AMENITIES } from "@/lib/constants/properties/property-amenities";
-import { toTitleCase } from "@/lib/formatters/capitalize.formatter";
+import { Capitalize } from "@/lib/formatters/capitalize";
 
 export async function amenitiesSeed() {
   const amenities = PROPERTY_AMENITIES.map((rawName) => {
-    const name = toTitleCase(rawName);
+    const name = Capitalize(rawName);
     return name;
   });
 

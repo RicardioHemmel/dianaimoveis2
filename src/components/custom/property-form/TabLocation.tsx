@@ -1,9 +1,6 @@
 "use client";
 
-import { UseFormReturn } from "react-hook-form";
-import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
-
-// Shadcnui
+// COMPONENTS
 import { Input } from "@/components/ui/input";
 import { TabsContent } from "@/components/ui/tabs";
 import {
@@ -94,15 +91,11 @@ export default function TabLocation() {
 
         <FormField
           control={form.control}
-          name="address.state"
+          name="address.stateUf"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Estado</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                value={field.value}
-              >
+              <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger variant="gray" className="mt-1.5 w-full">
                     <SelectValue placeholder="Selecione um estado" />
@@ -110,8 +103,8 @@ export default function TabLocation() {
                 </FormControl>
                 <SelectContent>
                   {brazilianStates?.map((state) => (
-                    <SelectItem key={state.uf} value={state.nome}>
-                      {state.nome}
+                    <SelectItem key={state.uf} value={state.uf}>
+                      {state.name}
                     </SelectItem>
                   ))}
                 </SelectContent>

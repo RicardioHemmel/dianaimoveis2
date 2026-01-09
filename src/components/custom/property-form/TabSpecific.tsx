@@ -98,11 +98,7 @@ export default function TabSpecific() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Porte</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value ?? undefined}
-                    value={field.value ?? undefined}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger variant="gray" className="mt-1.5 w-full">
                         <SelectValue placeholder="Selecione um porte" />
@@ -128,11 +124,7 @@ export default function TabSpecific() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Tipologia</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value ?? undefined}
-                    value={field.value ?? undefined}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger variant="gray" className="mt-1.5 w-full">
                         <SelectValue placeholder="Selecione uma tipologia" />

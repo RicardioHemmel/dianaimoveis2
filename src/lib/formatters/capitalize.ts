@@ -1,4 +1,4 @@
-export function toTitleCase(str: string) {
+export function Capitalize(str: string) {
   return str
     .toLocaleLowerCase("pt-BR")
     .replace(

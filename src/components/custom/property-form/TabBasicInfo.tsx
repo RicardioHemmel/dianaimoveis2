@@ -199,8 +199,7 @@ export default function TabBasicInfo() {
                 <FormLabel>Finalidade</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value ?? undefined}
-                  value={field.value ?? undefined}
+                  value={field.value}
                 >
                   <FormControl>
                     <SelectTrigger variant="gray" className="mt-1.5 w-full">
@@ -229,8 +228,7 @@ export default function TabBasicInfo() {
                 <FormLabel>Status</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value ?? undefined}
-                  value={field.value ?? undefined}
+                  value={field.value}
                 >
                   <FormControl>
                     <SelectTrigger variant="gray" className="mt-1.5 w-full">

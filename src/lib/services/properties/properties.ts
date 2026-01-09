@@ -34,7 +34,30 @@ export async function getProperties(): Promise<PropertyViewSchema[]> {
   return mappedProperties;
 }
 
-export async function getPropertyById(
+export async function getPropertyByIdToView(
+  id: string
+): Promise<PropertyViewSchema | null> {
+  await connectMongoDB();
+
+  const property = await Property.findById(id)
+    .populate("propertyType")
+    .populate("propertyPurpose")
+    .populate("propertyStanding")
+    .populate("propertyStatus")
+    .populate("propertyTypology")
+    .lean<IPropertyPopulated>();
+
+  if (!property) return null;
+
+  // Ordena o array da galeria antes de passar pelo Mapper
+  if (property.propertyGallery) {
+    property.propertyGallery.sort((a, b) => a.order - b.order);
+  }
+
+  return PropertyMapper.toViewSchema(property);
+}
+
+export async function getPropertyByIdToInput(
   id: string
 ): Promise<PropertyInputSchema | null> {
   await connectMongoDB();
@@ -120,7 +143,7 @@ export async function updateProperty(id: string, data: PropertyInputSchema) {
 export async function updatePropertyImage(
   id: string,
   images: GalleryItemSchema[],
-  coverImage: string,
+  coverImage: string
 ) {
   await connectMongoDB();
 
@@ -136,5 +159,4 @@ export async function updatePropertyImage(
   if (!updatedProperty) {
     throw new Error("Imóvel não encontrado");
   }
-
 }

@@ -31,7 +31,6 @@ import { usePropertyFormContext } from "@/context/PropertyFormContext";
 import { Pencil, Plus } from "lucide-react";
 
 export default function PropertyForm({ mode }: { mode: "create" | "edit" }) {
-  // CONTEXT
   const { form, status, setStatus } = usePropertyFormContext();
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -48,11 +47,6 @@ export default function PropertyForm({ mode }: { mode: "create" | "edit" }) {
       const orderedGallery = [...finalGallery].sort(
         (a, b) => a.order - b.order
       );
-
-      console.log("handleCloudUpload Return: ", finalGallery);
-      console.log("Galeria ordenada para salvar: ", orderedGallery);
-      console.log("Cover image ordernada: ", orderedGallery[0]);
-      console.log("Cover image do Return: ", finalGallery[0]);
 
       const payload = {
         ...data,

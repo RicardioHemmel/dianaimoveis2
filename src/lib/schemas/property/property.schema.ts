@@ -2,6 +2,8 @@ import { FieldErrors } from "react-hook-form";
 import { z } from "zod";
 
 //-------------------------------------------------- AUXULIAR TYPES ------------------------------------------------------
+
+//--------- PROPERTY GALLERY
 export const galleryItemSchema = z.object({
   key: z.string(),
   order: z.number(),
@@ -10,6 +12,7 @@ export const galleryItemSchema = z.object({
 
 export type GalleryItemSchema = z.infer<typeof galleryItemSchema>;
 
+//--------- PROPERTY DETAILS (TYPE, TYPOLOGY, STANDING...)
 const propertyDetail = z.object({
   _id: z.string(),
   name: z.string(),
@@ -61,7 +64,7 @@ const propertyBaseSchema = {
       street: z.string().optional(),
       neighborhood: z.string().optional(),
       city: z.string().optional(),
-      state: z.string().optional(),
+      stateUf: z.string().optional(),
       zipCode: z.string().optional(),
     })
     .optional(),
@@ -103,10 +106,10 @@ export const DefaultValuesPropertyForm: PropertyInputSchema = {
   description: "",
   price: undefined as unknown as number,
   propertyType: undefined,
-  propertyPurpose: undefined,
-  propertyStanding: undefined,
-  propertyStatus: undefined,
-  propertyTypology: undefined,
+  propertyPurpose: "",
+  propertyStanding: "",
+  propertyStatus: "",
+  propertyTypology: "",
   propertyAmenities: [],
   isFeatured: false,
   isFurnished: false,
@@ -121,7 +124,7 @@ export const DefaultValuesPropertyForm: PropertyInputSchema = {
     street: "",
     city: "",
     neighborhood: "",
-    state: "",
+    stateUf: "",
     zipCode: "",
   },
 };
@@ -135,7 +138,6 @@ export type PropertyDetailsData = {
   types: PropertyDetail[];
   typologies: PropertyDetail[];
 };
-
 
 //-------------------------------------------------- FRIENDLY LABELS MAPPER ------------------------------------------------------
 
@@ -184,7 +186,11 @@ export function extractFieldLabels(
     if (error?.message || error?.type) {
       // erro de campo simples
       labels.push(fieldLabels[key] ?? key);
-    } else if (typeof error === "object" && error !== null && !("message" in error)) {
+    } else if (
+      typeof error === "object" &&
+      error !== null &&
+      !("message" in error)
+    ) {
       // erro aninhado (ex: address)
       labels.push(...extractFieldLabels(error as FieldErrors<any>, fullKey));
     }

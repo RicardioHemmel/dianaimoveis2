@@ -50,7 +50,7 @@ export interface IPropertyRaw {
     street?: string;
     neighborhood?: string;
     city?: string;
-    state?: string;
+    stateUf?: string;
     zipCode?: string;
   };
 }

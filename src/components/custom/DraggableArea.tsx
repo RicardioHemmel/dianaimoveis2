@@ -11,7 +11,7 @@ import {
 } from "@dnd-kit/sortable";
 
 // REACT | NEXT
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // COMPONENTS
 import { Button } from "@/components/ui/button";
@@ -27,7 +27,6 @@ import { GalleryItemSchema } from "@/lib/schemas/property/property.schema";
 
 export default function DraggableArea() {
   const { fileUploadHook, form } = usePropertyFormContext();
-
   const { filesUpload, removeAllFiles, setFilesUpload, formattedOrder } =
     fileUploadHook;
 
@@ -103,8 +102,6 @@ export default function DraggableArea() {
 
       // SINCRONIZES FORM WITH THE NEW GALLERY
       form.setValue("propertyGallery", cleanGallery);
-
-      console.log("form state: ", form.getValues("propertyGallery"));
     } catch (e) {
       throw Error(`Falha ao apagar imagens: ${e}`);
     }

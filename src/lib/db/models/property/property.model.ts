@@ -67,7 +67,7 @@ const propertySchema = new Schema(
       street: String,
       neighborhood: String,
       city: String,
-      state: String,
+      stateUf: String,
       zipCode: String,
       _id: false,
     },

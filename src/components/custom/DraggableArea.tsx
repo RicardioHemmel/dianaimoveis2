@@ -21,15 +21,15 @@ import FullScreenImageModal from "@/components/custom/FullScreenModal";
 // CONTEXT
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
-export default function DraggableArea() {
-  const { fileUploadHook } = usePropertyFormContext();
+// SERVER ACTION
+import { updatePropertyImageAction } from "@/lib/server-actions/properties/update-property-image.action";
+import { GalleryItemSchema } from "@/lib/schemas/property/property.schema";
 
-  const {
-    filesUpload,
-    removeAllFiles,
-    setFilesUpload,
-    formattedOrder,
-  } = fileUploadHook;
+export default function DraggableArea() {
+  const { fileUploadHook, form } = usePropertyFormContext();
+
+  const { filesUpload, removeAllFiles, setFilesUpload, formattedOrder } =
+    fileUploadHook;
 
   // For highlighting cards during drag n drop
   const [highlightedIds, setHighlightedIds] = useState<string[]>([]);
@@ -84,17 +84,43 @@ export default function DraggableArea() {
       }));
     });
   }
+
+  async function removeAllCloudFilesAndUpdateProperty(e: React.MouseEvent) {
+    // PREVENTS DRAG N DROP TO INTERRUPT
+    e.stopPropagation();
+    e.preventDefault();
+
+    try {
+      // REMOVES ALL IMAGES
+      await removeAllFiles();
+
+      // GETS NECESSARY DATA TO UPDATE PROPERTY
+      const propertyId = form.getValues("_id")!;
+      const cleanGallery: GalleryItemSchema[] = [];
+
+      // SAVES NEW GALLERY
+      await updatePropertyImageAction(propertyId, cleanGallery, "");
+
+      // SINCRONIZES FORM WITH THE NEW GALLERY
+      form.setValue("propertyGallery", cleanGallery);
+
+      console.log("form state: ", form.getValues("propertyGallery"));
+    } catch (e) {
+      throw Error(`Falha ao apagar imagens: ${e}`);
+    }
+  }
+
   return (
     <>
-      {/* Drag n Drop Grid */}
+      {/* DRAG N DROP GRID */}
       {filesUpload.length > 0 && (
         <DndContext
-          collisionDetection={closestCenter} // Collision detection algorithm
-          onDragEnd={handleDragEnd} // Event fired when drag ends
+          collisionDetection={closestCenter} // COLLISION DETECTION ALGORITHM
+          onDragEnd={handleDragEnd} // EVENT FIRED WHEN DRAG ENDS
         >
           <SortableContext
-            items={filesUpload.map((img) => img.id)} // IDs of the draggable items
-            strategy={rectSortingStrategy} // Grid-based sorting strategy
+            items={filesUpload.map((img) => img.id)} // IDS OF THE DRAGGABLE ITEMS
+            strategy={rectSortingStrategy} // GRID-BASED SORTING STRATEGY
           >
             <div className="flex justify-between">
               <h3 className="text-lg font-semibold mb-3 animate-[var(--animate-right-shake)]">
@@ -105,7 +131,7 @@ export default function DraggableArea() {
                   type="button"
                   variant={"destructive"}
                   className="rounded-full"
-                  onClick={removeAllFiles}
+                  onClick={removeAllCloudFilesAndUpdateProperty}
                 >
                   Remover imagens
                 </Button>
@@ -113,6 +139,7 @@ export default function DraggableArea() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 p-4 rounded-2xl bg-neutral-100">
               {filesUpload.map((image, i) => (
+                // CARD IMAGE
                 <DraggableImageCard
                   image={image}
                   i={i}

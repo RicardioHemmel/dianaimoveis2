@@ -47,6 +47,35 @@ export default function useFileUpload() {
     if (files.length) handleLocalFilesUpload(files);
   }
 
+  // ---------------------------------------------------- VALIDATIONS ------------------------------------------ //
+
+  function validateFilesType(files: File[], acceptedTypes: string[]): boolean {
+    return files.some((file) =>
+      acceptedTypes.some((type) => !file.type.startsWith(type))
+    );
+  }
+
+  function validateFilesSize(files: File[]) {
+    const maxSizeInBytes = 8 * 1024 * 1024; // 8MB
+    return files.some((file) => file.size > maxSizeInBytes);
+  }
+
+  function hasDuplicateFiles(
+    newFiles: File[],
+    oldFiles: FileUpload[]
+  ): boolean {
+    return newFiles.some((newFile) =>
+      oldFiles.some(
+        (oldFile) =>
+          oldFile.file &&
+          newFile.name === oldFile.file.name &&
+          newFile.size === oldFile.file.size
+      )
+    );
+  }
+
+  // ---------------------------------------------------- LOCAL ACTIONS -------------------------------------------------- //
+
   // CALLS THE UPLOAD HANDLER WHEN FILES ARE SELECTED FROM THE INPUT
   function handleFilesFromInput(e: React.ChangeEvent<HTMLInputElement>): void {
     const files = Array.from(e.target.files || []);
@@ -145,41 +174,9 @@ export default function useFileUpload() {
     });
   }
 
-  function removeAllFiles() {
-    removeAllLocalFiles();
-    removeAllCloudFiles();
-  }
+  // ---------------------------------------------------- CLOUD ACTIONS -------------------------------------------------- //
 
-  // ---------------------------------------------------- VALIDATIONS ------------------------------------------ //
-
-  function validateFilesType(files: File[], acceptedTypes: string[]): boolean {
-    return files.some((file) =>
-      acceptedTypes.some((type) => !file.type.startsWith(type))
-    );
-  }
-
-  function validateFilesSize(files: File[]) {
-    const maxSizeInBytes = 8 * 1024 * 1024; // 8MB
-    return files.some((file) => file.size > maxSizeInBytes);
-  }
-
-  function hasDuplicateFiles(
-    newFiles: File[],
-    oldFiles: FileUpload[]
-  ): boolean {
-    return newFiles.some((newFile) =>
-      oldFiles.some(
-        (oldFile) =>
-          oldFile.file &&
-          newFile.name === oldFile.file.name &&
-          newFile.size === oldFile.file.size
-      )
-    );
-  }
-
-  // ---------------------------------------------------- CLOUD ACTIONS ------------------------------------------ //
-
-  // SENDS A IMAGE TO CLOUD STORAGE WITH UPLOAD PROGRESS
+  //--------- SENDS ONE IMAGE TO CLOUD WITH UPLOAD PROGRESS ---------
   async function uploadSingleImage(file: File): Promise<string | null> {
     try {
       // TRY TO GET THE PRESIGNED_URL FROM CLOUD
@@ -276,6 +273,7 @@ export default function useFileUpload() {
     }
   }
 
+  // ------------- UPLOADS TO CLOUD ALL "IDLE" IMAGES ---------------
   async function handleCloudUpload() {
     const uploadedFiles: { key: string; order: number }[] = [];
 
@@ -303,6 +301,7 @@ export default function useFileUpload() {
     return uploadedFiles;
   }
 
+  //---------------- REMOVE ONE CLOUD FILE AND UPDATES FORM ----------------------
   async function removeCloudFile(key: string) {
     try {
       const fileToRemove = filesUpload.find((img) => img.key === key);
@@ -341,7 +340,15 @@ export default function useFileUpload() {
         return;
       }
 
-      setFilesUpload((prev) => prev.filter((img) => img.key !== key));
+      // SETS THE NEW ORDER TO THE IMAGES
+      setFilesUpload((prev) =>
+        prev
+          .filter((img) => img.key !== key)
+          .map((img, i) => ({
+            ...img,
+            order: formattedOrder(i),
+          }))
+      );
     } catch {
       toast.error("Erro ao remover imagem da nuvem");
       setFilesUpload((prev) =>
@@ -352,7 +359,13 @@ export default function useFileUpload() {
     }
   }
 
-  // REMOVES ALL IMAGES FROM MEMORY AND KILLS THEIR OBJECT URLS
+  //------- REMOVE LOCAL AND CLOUD IMAGES --------
+  function removeAllFiles() {
+    removeAllLocalFiles();
+    removeAllCloudFiles();
+  }
+
+  //------- REMOVES ALL IMAGES FROM MEMORY AND KILLS THEIR OBJECT URLS --------
   async function removeAllCloudFiles() {
     const filesToRemove = filesUpload.map((file) => file?.key);
 

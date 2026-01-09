@@ -2,7 +2,7 @@ import { FieldErrors } from "react-hook-form";
 import { z } from "zod";
 
 //-------------------------------------------------- AUXULIAR TYPES ------------------------------------------------------
-const galleryItemSchema = z.object({
+export const galleryItemSchema = z.object({
   key: z.string(),
   order: z.number(),
   url: z.string().optional(),

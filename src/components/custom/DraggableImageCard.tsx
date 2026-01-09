@@ -9,13 +9,15 @@ import { FileUpload } from "@/lib/schemas/media/file.schema";
 
 // REACT | NEXT
 import { useState } from "react";
-import Image from "next/image";
 
 // ICONS
 import { CloudCheck, X, Loader } from "lucide-react";
 
 // CONTEXT
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
+
+// SERVER ACTION
+import { updatePropertyImageAction } from "@/lib/server-actions/properties/update-property-image.action";
 
 interface ImageCardProps {
   image: FileUpload;
@@ -30,10 +32,9 @@ export default function DraggableImageCard({
   isHighlighted,
   onDoubleClick,
 }: ImageCardProps) {
-  const { fileUploadHook } = usePropertyFormContext();
-
-  const { removeCloudFile, removeLocalFile, formattedOrder } = fileUploadHook;
-
+  const { fileUploadHook, form } = usePropertyFormContext();
+  const { removeCloudFile, removeLocalFile, formattedOrder, filesUpload } =
+    fileUploadHook;
   const [canDrag, setCanDrag] = useState(true);
 
   const { setNodeRef, attributes, listeners, transform, transition } =
@@ -47,6 +48,44 @@ export default function DraggableImageCard({
     transition,
   };
 
+  // PREVENTS USER TO REMOVE IMAGE AND NOT SAVE PROPERTY
+  async function removeCloudFileAndUpdateProperty(
+    e: React.MouseEvent,
+    key: string
+  ) {
+    // PREVENTS DRAG N DROP TO INTERRUPT
+    e.stopPropagation();
+    e.preventDefault();
+
+    if (!key) return;
+
+    try {
+      // REMOVES IMAGE FROM CLOUD
+      await removeCloudFile(key);
+
+      // GETS NECESSARY DATA TO UPDATE PROPERTY
+      const propertyId = form.getValues("_id")!;
+      const currentImagesOrdered = filesUpload
+        .filter((img) => img.key !== key)
+        .map((img, i) => ({
+          key: img.key as string,
+          order: formattedOrder(i),
+        }));
+
+      // SAVES NEW GALLERY
+      await updatePropertyImageAction(
+        propertyId,
+        currentImagesOrdered,
+        currentImagesOrdered[0]?.key ?? ""
+      );
+
+      // SINCRONIZES FORM WITH THE NEW GALLERY
+      form.setValue("propertyGallery", currentImagesOrdered);
+    } catch (e) {
+      throw Error(`Falha ao apagar imagem: ${e}`);
+    }
+  }
+
   return (
     <div
       ref={setNodeRef}
@@ -57,12 +96,10 @@ export default function DraggableImageCard({
       onDoubleClick={() => onDoubleClick(i)}
     >
       <div className="w-full h-64 relative overflow-hidden animate-[var(--animate-infinity-glow)] rounded-lg">
-        <Image
+        <img
           src={image.previewURL ?? ""}
           alt={`Preview da imagem ${image.id}`}
-          className="object-cover"
-          fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="w-full h-full object-cover"
         />
       </div>
 
@@ -104,9 +141,9 @@ export default function DraggableImageCard({
         onMouseEnter={() => setCanDrag(false)}
         onMouseLeave={() => setCanDrag(true)}
         disabled={image.status === "deleting"}
-        onClick={() => {
+        onClick={(e) => {
           if (image.key) {
-            removeCloudFile(image.key);
+            removeCloudFileAndUpdateProperty(e, image.key);
           } else if (image.id) {
             removeLocalFile(image.id);
           }

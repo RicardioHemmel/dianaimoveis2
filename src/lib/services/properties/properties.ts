@@ -5,6 +5,7 @@ import Property from "@/lib/db/models/property/property.model";
 import { PropertyMapper } from "@/lib/mappers/property/property.mapper";
 import { IPropertyPopulated } from "@/lib/schemas/property/IProperty";
 import {
+  GalleryItemSchema,
   PropertyInputSchema,
   PropertyViewSchema,
 } from "@/lib/schemas/property/property.schema";
@@ -51,7 +52,6 @@ export async function getPropertyById(
 
   return PropertyMapper.toInputSchema(property);
 }
-
 
 export async function createProperty(
   data: PropertyInputSchema
@@ -115,4 +115,26 @@ export async function updateProperty(id: string, data: PropertyInputSchema) {
   }
 
   return { property: PropertyMapper.toInputSchema(updatedProperty) };
+}
+
+export async function updatePropertyImage(
+  id: string,
+  images: GalleryItemSchema[],
+  coverImage: string,
+) {
+  await connectMongoDB();
+
+  const updatedProperty = await Property.findByIdAndUpdate(id, {
+    $set: {
+      propertyGallery: images,
+      coverImage: coverImage,
+    },
+  })
+    .populate("propertyType")
+    .lean<IPropertyPopulated>();
+
+  if (!updatedProperty) {
+    throw new Error("Imóvel não encontrado");
+  }
+
 }

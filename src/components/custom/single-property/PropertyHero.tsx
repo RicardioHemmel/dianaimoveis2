@@ -11,50 +11,48 @@ import ThumbnailsCarousel from "@/components/custom/ThumbnailsCarousel";
 import FullScreenPropertyGallery from "@/components/custom/FullScreenPropertyGallery";
 import { deliveryDateToDeliveryStatus } from "@/lib/formatters/ui-formatters/property-delivery-date";
 
-interface PropertyHeroProps {
-  title?: PropertyViewSchema["title"];
-  deliveryDate?: PropertyViewSchema["deliveryDate"];
-  address?: PropertyViewSchema["address"];
-  gallery: PropertyViewSchema["propertyGallery"];
-  typology?: PropertyViewSchema["propertyTypology"];
-}
-
 export default function PropertyHero({
-  title,
-  deliveryDate,
-  address,
-  gallery,
-  typology,
-}: PropertyHeroProps) {
+  property,
+}: {
+  property: PropertyViewSchema;
+}) {
+  // SPREAD PROPERTY
+  const { title, deliveryDate, address, propertyGallery, propertyTypology } =
+    property;
+
+    // FIRST IMAGE FROM GALLERY
   const [currentImage, setCurrentImage] = useState(0);
 
   const nextImage = () => {
-    setCurrentImage((prev) => (prev + 1) % gallery.length);
+    setCurrentImage((prev) => (prev + 1) % propertyGallery.length);
   };
 
   const prevImage = () => {
-    setCurrentImage((prev) => (prev - 1 + gallery.length) % gallery.length);
+    setCurrentImage(
+      (prev) => (prev - 1 + propertyGallery.length) % propertyGallery.length
+    );
   };
 
+  // FULLSCREEN STATE
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const onClose = () => {
+  const onModalClose = () => {
     setIsModalOpen(false);
   };
 
   return (
     <section className="relative h-[70vh] min-h-[500px] overflow-hidden select-none">
       {/* BACKGROUND IMAGE */}
-      <div className="absolute inset-0">
-        {gallery[currentImage]?.url ? (
+      <div className="absolute inset-0 ">
+        {propertyGallery[currentImage]?.url ? (
           <>
             <Image
               alt="Imagem de Capa"
-              src={gallery[currentImage].url}
+              src={propertyGallery[currentImage].url}
               className="object-cover transition-all duration-700"
               fill
             />
-            <div className="absolute inset-0 bg-black/50" />
+            <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent" />
           </>
         ) : (
           <div className="absolute inset-0 flex items-center justify-center bg-black/90">
@@ -87,7 +85,7 @@ export default function PropertyHero({
       {/* THUMBNAILS */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex z-20 w-[250px]">
         <ThumbnailsCarousel
-          gallery={gallery}
+          gallery={propertyGallery}
           setCurrentImage={setCurrentImage}
           currentImage={currentImage}
         />
@@ -96,8 +94,8 @@ export default function PropertyHero({
       {/* FULL SCREEN MODAL */}
       {isModalOpen && (
         <FullScreenPropertyGallery
-          onClose={onClose}
-          gallery={gallery}
+          onModalClose={onModalClose}
+          gallery={propertyGallery}
           currentImage={currentImage}
         />
       )}
@@ -115,14 +113,16 @@ export default function PropertyHero({
 
       {/* Property Info Overlay */}
       <div className="absolute bottom-0 left-0 right-0 p-8 z-10">
-        <div className="container mx-auto">
+        <div className="container mx-auto ">
           {deliveryDate && (
             <div className="inline-block bg-action-primary text-secondary-foreground px-4 py-1 rounded-full text-sm font-medium mb-3">
-              <h2 className="text-lg">{deliveryDateToDeliveryStatus(deliveryDate)}</h2>
+              <h2 className="text-lg">
+                {deliveryDateToDeliveryStatus(deliveryDate)}
+              </h2>
             </div>
           )}
-          <h1 className="font-display text-4xl md:text-5xl text-primary-foreground mb-2">
-            {`${title} - ${typology?.name}`}
+          <h1 className="font-display text-4xl md:text-4xl text-primary-foreground mb-2 ">
+            {`${title} - ${propertyTypology?.name}`}
           </h1>
           <p className="text-primary-foreground/80 text-lg">
             {`${address?.street} - ${address?.neighborhood}, ${address?.city} - ${address?.stateUf}`}

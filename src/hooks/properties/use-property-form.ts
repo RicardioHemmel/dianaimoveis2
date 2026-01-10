@@ -12,24 +12,27 @@ import {
 
 // MESSAGE BOX
 import { toast } from "sonner";
+import { useMemo } from "react";
 
 export default function usePropertyForm(
   propertyTypes: PropertyDetail[],
   initialData?: PropertyInputSchema
 ) {
-  const defaultPropertyType = propertyTypes.find(
-    (type) => type.name === "Apartamento"
+  // MEMORIZES DATA TO PREVENT RERENDER BRING BACK DATA THAT WERE ALREADY DELETED FROM THE FORM
+  const memoizedDefaultValues = useMemo(
+    () => ({
+      ...DefaultValuesPropertyForm,
+      propertyType: propertyTypes.find((t) => t.name === "Apartamento"),
+      ...initialData,
+    }),
+    []
   );
 
   // FORM MANAGER
   const form = useForm<PropertyInputSchema>({
     resolver: zodResolver(propertyInputSchema),
     mode: "onSubmit",
-    defaultValues: {
-      ...DefaultValuesPropertyForm,
-      propertyType: defaultPropertyType,
-      ...initialData,
-    },
+    defaultValues: memoizedDefaultValues,
   });
 
   return {

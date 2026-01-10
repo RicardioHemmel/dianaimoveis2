@@ -54,11 +54,11 @@ const mapAddressToPersistence = (address?: IPropertyRaw["address"]) =>
 
 const mapAddressToSchema = (address?: IPropertyPopulated["address"]) =>
   address && {
-    street: address.street,
-    neighborhood: address.neighborhood,
-    city: address.city,
-    stateUf: address.stateUf,
-    zipCode: address.zipCode,
+    street: address.street ?? undefined,
+    neighborhood: address.neighborhood ?? undefined,
+    city: address.city ?? undefined,
+    stateUf: address.stateUf ?? undefined,
+    zipCode: address.zipCode ?? undefined,
   };
 
 //---------------------------------------------------- MAPPER -------------------------------------------------
@@ -70,16 +70,16 @@ export class PropertyMapper {
       description: property.description,
 
       price: property.price,
-      bedroomsQty: property.bedroomsQty,
-      suitesQty: property.suitesQty,
-      bathroomsQty: property.bathroomsQty,
-      parkingSpacesQty: property.parkingSpacesQty,
-      area: property.area,
+      bedroomsQty: property.bedroomsQty ?? null,
+      suitesQty: property.suitesQty ?? null,
+      bathroomsQty: property.bathroomsQty ?? null,
+      parkingSpacesQty: property.parkingSpacesQty ?? null,
+      area: property.area ?? null,
       deliveryDate: property.deliveryDate,
 
-      condominiumFee: property.condominiumFee,
-      floorStart: property.floorStart,
-      floorEnd: property.floorEnd,
+      condominiumFee: property.condominiumFee ?? null,
+      floorStart: property.floorStart ?? null,
+      floorEnd: property.floorEnd ?? null,
 
       isFurnished: property.isFurnished,
       isNearSubway: property.isNearSubway,
@@ -116,19 +116,19 @@ export class PropertyMapper {
     return {
       _id: toStringId(property?._id),
       title: property?.title,
-      description: property?.description,
+      description: property?.description ?? "",
 
       price: property?.price ?? 0,
-      bedroomsQty: property?.bedroomsQty,
-      suitesQty: property?.suitesQty,
-      bathroomsQty: property?.bathroomsQty,
-      parkingSpacesQty: property?.parkingSpacesQty,
-      area: property?.area,
-      deliveryDate: property.deliveryDate,
+      bedroomsQty: property?.bedroomsQty ?? undefined,
+      suitesQty: property?.suitesQty ?? undefined,
+      bathroomsQty: property?.bathroomsQty ?? undefined,
+      parkingSpacesQty: property?.parkingSpacesQty ?? undefined,
+      area: property?.area ?? undefined,
+      deliveryDate: property.deliveryDate ?? "",
 
-      condominiumFee: property?.condominiumFee,
-      floorStart: property?.floorStart,
-      floorEnd: property?.floorEnd,
+      condominiumFee: property?.condominiumFee ?? undefined,
+      floorStart: property?.floorStart ?? undefined,
+      floorEnd: property?.floorEnd ?? undefined,
 
       isFurnished: property?.isFurnished,
       isNearSubway: property?.isNearSubway,
@@ -136,7 +136,7 @@ export class PropertyMapper {
       showSquareMeterPrice: property?.showSquareMeterPrice,
       isPetFriendly: property?.isPetFriendly,
 
-      coverImage: resolveImageUrl(property?.coverImage),
+      coverImage: resolveImageUrl(property?.coverImage ?? ""),
       propertyFloorPlanGallery:
         property?.propertyFloorPlanGallery?.map((img) => ({
           key: img.key,
@@ -149,7 +149,8 @@ export class PropertyMapper {
           order: img.order,
           url: resolveImageUrl(img.key),
         })) ?? [],
-      videoUrl: property?.videoUrl,
+      videoUrl: property?.videoUrl ?? "",
+
       status: property?.status,
 
       address: mapAddressToSchema(property?.address),
@@ -171,19 +172,19 @@ export class PropertyMapper {
     return {
       _id: toStringId(property?._id),
       title: property?.title,
-      description: property?.description,
+      description: property?.description ?? "",
 
       price: property?.price ?? 0,
-      bedroomsQty: property?.bedroomsQty,
-      suitesQty: property?.suitesQty,
-      bathroomsQty: property?.bathroomsQty,
-      parkingSpacesQty: property?.parkingSpacesQty,
-      area: property?.area,
-      deliveryDate: property.deliveryDate,
+      bedroomsQty: property?.bedroomsQty ?? undefined,
+      suitesQty: property?.suitesQty ?? undefined,
+      bathroomsQty: property?.bathroomsQty ?? undefined,
+      parkingSpacesQty: property?.parkingSpacesQty ?? undefined,
+      area: property?.area ?? undefined,
+      deliveryDate: property.deliveryDate ?? "",
 
-      condominiumFee: property?.condominiumFee,
-      floorStart: property?.floorStart,
-      floorEnd: property?.floorEnd,
+      condominiumFee: property?.condominiumFee ?? undefined,
+      floorStart: property?.floorStart ?? undefined,
+      floorEnd: property?.floorEnd ?? undefined,
 
       isFurnished: property?.isFurnished,
       isNearSubway: property?.isNearSubway,
@@ -191,7 +192,7 @@ export class PropertyMapper {
       showSquareMeterPrice: property?.showSquareMeterPrice,
       isPetFriendly: property?.isPetFriendly,
 
-      coverImage: property.coverImage,
+      coverImage: property.coverImage ?? "",
       propertyFloorPlanGallery:
         property?.propertyFloorPlanGallery?.map((img) => ({
           key: img.key,
@@ -204,7 +205,7 @@ export class PropertyMapper {
           order: img.order,
           url: resolveImageUrl(img.key),
         })) ?? [],
-      videoUrl: property?.videoUrl,
+      videoUrl: property?.videoUrl ?? "",
       status: property?.status,
 
       address: mapAddressToSchema(property?.address),

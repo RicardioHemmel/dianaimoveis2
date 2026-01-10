@@ -14,18 +14,18 @@ interface propertyGallary {
 export interface IPropertyRaw {
   _id?: Types.ObjectId;
   title: string;
-  description?: string;
+  description?: string | null;
 
-  price?: number;
-  bedroomsQty?: number;
-  suitesQty?: number;
-  bathroomsQty?: number;
-  parkingSpacesQty?: number;
-  area?: number;
-  deliveryDate?: string;
-  condominiumFee?: number;
-  floorStart?: number;
-  floorEnd?: number;
+  price: number;
+  bedroomsQty?: number | null;
+  suitesQty?: number | null;
+  bathroomsQty?: number | null;
+  parkingSpacesQty?: number | null;
+  area?: number | null;
+  deliveryDate?: string | null;
+  condominiumFee?: number | null;
+  floorStart?: number | null;
+  floorEnd?: number | null;
 
   isFurnished?: boolean;
   isNearSubway?: boolean;
@@ -34,24 +34,24 @@ export interface IPropertyRaw {
   isPetFriendly?: boolean;
 
   propertyType: Types.ObjectId;
-  propertyPurpose?: Types.ObjectId;
-  propertyStanding?: Types.ObjectId;
-  propertyTypology?: Types.ObjectId;
+  propertyPurpose?: Types.ObjectId | null;
+  propertyStanding?: Types.ObjectId | null;
+  propertyTypology?: Types.ObjectId | null;
   propertyAmenities: Types.ObjectId[];
 
-  coverImage?: string;
+  coverImage?: string | null;
   propertyGallery: propertyGallary[];
   propertyFloorPlanGallery: propertyGallary[];
-  videoUrl?: string;
+  videoUrl?: string | null;
 
   status: "DRAFT" | "PUBLISHED";
 
   address?: {
-    street?: string;
-    neighborhood?: string;
-    city?: string;
-    stateUf?: string;
-    zipCode?: string;
+    street?: string | null;
+    neighborhood?: string | null;
+    city?: string | null;
+    stateUf?: string | null;
+    zipCode?: string | null;
   };
 }
 

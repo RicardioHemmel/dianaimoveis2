@@ -20,13 +20,13 @@ import { X } from "lucide-react";
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 
 interface FullScreenImageModalProps {
-  onClose: () => void;
+  onModalClose: () => void;
   gallery: PropertyViewSchema["propertyGallery"];
   currentImage: number;
 }
 
 export default function FullScreenPropertyGallery({
-  onClose,
+  onModalClose,
   gallery,
   currentImage,
 }: FullScreenImageModalProps) {
@@ -41,7 +41,7 @@ export default function FullScreenPropertyGallery({
       } else if (event.key === "ArrowRight") {
         carouselApi.scrollNext();
       } else if (event.key === "Escape") {
-        onClose();
+        onModalClose();
       }
     };
 
@@ -102,7 +102,7 @@ export default function FullScreenPropertyGallery({
       {/* Close Button */}
       <button
         type="button"
-        onClick={onClose}
+        onClick={onModalClose}
         className="absolute top-4 right-8 z-50 hover:opacity-75 cursor-pointer"
       >
         <X className="size-8 text-white" />

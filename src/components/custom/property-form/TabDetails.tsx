@@ -42,40 +42,6 @@ export default function TabDetails() {
   return (
     <TabsContent value="details" className="space-y-4">
       <div className="grid grid-cols-3 gap-4">
-        <FormField
-          control={form.control}
-          name="area"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel htmlFor={field.name}>Área</FormLabel>
-              <FormControl>
-                <div className="relative mt-1.5">
-                  <InputGroup>
-                    <NumericFormat
-                      id={field.name}
-                      name={field.name}
-                      value={field.value}
-                      customInput={InputGroupInput}
-                      thousandSeparator="."
-                      decimalSeparator=","
-                      fixedDecimalScale
-                      allowNegative={false}
-                      placeholder="0"
-                      onValueChange={(values) => {
-                        field.onChange(values.floatValue);
-                      }}
-                    />
-                    <InputGroupAddon>
-                      <Ruler className="h-4 w-4" />
-                    </InputGroupAddon>
-                  </InputGroup>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         <>
           <FormField
             control={form.control}
@@ -170,6 +136,40 @@ export default function TabDetails() {
                       />
                       <InputGroupAddon>
                         <Car className="h-4 w-4" />
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="area"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel htmlFor={field.name}>Área - (m²)</FormLabel>
+                <FormControl>
+                  <div className="relative mt-1.5">
+                    <InputGroup>
+                      <NumericFormat
+                        id={field.name}
+                        name={field.name}
+                        value={field.value}
+                        customInput={InputGroupInput}
+                        thousandSeparator="."
+                        decimalSeparator=","
+                        fixedDecimalScale
+                        allowNegative={false}
+                        placeholder="0"
+                        onValueChange={(values) => {
+                          field.onChange(values.floatValue);
+                        }}
+                      />
+                      <InputGroupAddon>
+                        <Ruler className="h-4 w-4" />
                       </InputGroupAddon>
                     </InputGroup>
                   </div>

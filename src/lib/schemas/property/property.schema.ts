@@ -41,8 +41,7 @@ const propertyBaseSchema = {
   price: z.number("O preço é obrigatório").nonnegative(),
   area: z.number().optional(),
   deliveryDate: z
-    .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, "Data inválida")
+    .union([z.string().regex(/^\d{4}-\d{2}-\d{2}$/), z.literal("")])
     .optional(),
 
   condominiumFee: z.number().optional(),

@@ -1,9 +1,10 @@
 "use client";
 
 // REACT | NEXT
-import { useEffect, useTransition } from "react";
+import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { FieldErrors } from "react-hook-form";
+import Link from "next/link";
 
 // COMPONENTS
 import { Form } from "@/components/ui/form";
@@ -28,7 +29,7 @@ import { toast } from "sonner";
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
 // ICONS
-import { Pencil, Plus } from "lucide-react";
+import { Eye, Pencil, Plus } from "lucide-react";
 
 export default function PropertyForm({ mode }: { mode: "create" | "edit" }) {
   const {
@@ -40,15 +41,14 @@ export default function PropertyForm({ mode }: { mode: "create" | "edit" }) {
     prevTab,
     isFirstTab,
     isLastTab,
-    initialData,
   } = usePropertyFormContext(); // CONTEXT
 
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const title = form.watch("title");
+  const propertyId = form.watch("_id");
 
-  const { handleCloudUpload, filesUpload } =
-    fileUploadHook;
+  const { handleCloudUpload, filesUpload } = fileUploadHook;
 
   async function onSubmit(data: PropertyInputSchema) {
     if (
@@ -100,6 +100,9 @@ export default function PropertyForm({ mode }: { mode: "create" | "edit" }) {
     }
   };
 
+  // BUTTON TEXTS
+  const actionText = mode === "edit" ? "Salvar" : "Cadastrar";
+  const loadingText = mode === "edit" ? "Salvando..." : "Cadastrando...";
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
       {/* HEADER */}
@@ -144,11 +147,30 @@ export default function PropertyForm({ mode }: { mode: "create" | "edit" }) {
 
         {/* NAVIGATION TABS */}
         <div className="flex gap-3">
-          <Button variant="outline" onClick={prevTab} disabled={isFirstTab}>
+          {propertyId && (
+            <Button type="button" asChild variant="outline">
+              <Link href={`/property/${propertyId}`} target="_blank">
+                <Eye className="size-4"/>
+                Ver imóvel
+              </Link>
+            </Button>
+          )}
+
+          <Button
+            type="button"
+            variant="outline"
+            onClick={prevTab}
+            disabled={isFirstTab}
+          >
             Anterior
           </Button>
 
-          <Button variant="outline" onClick={nextTab} disabled={isLastTab}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={nextTab}
+            disabled={isLastTab}
+          >
             Próximo
           </Button>
         </div>
@@ -178,7 +200,7 @@ export default function PropertyForm({ mode }: { mode: "create" | "edit" }) {
                 disabled={isPending}
                 onClick={() => setStatus("PUBLISHED")}
               >
-                {mode === "edit" ? "Salvar imóvel" : "Cadastrar imóvel"}
+                {isPending ? loadingText : `${actionText} imóvel`}
               </Button>
             </div>
           </Card>

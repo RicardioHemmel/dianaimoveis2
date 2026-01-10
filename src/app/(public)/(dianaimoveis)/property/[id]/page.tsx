@@ -29,24 +29,39 @@ export default async function SinglePropertyPage({
     notFound();
   }
 
+  const {
+    title,
+    address,
+    propertyGallery,
+    propertyTypology,
+    bedroomsQty,
+    bathroomsQty,
+    parkingSpacesQty,
+    propertyType,
+    propertyAmenities,
+    price,
+    area,
+    deliveryDate,
+  } = property;
+
   return (
     <>
       <PropertyHero
-        title={property.title}
-        address={property?.address}
-        gallery={property?.propertyGallery}
-        propertyStatus={property?.propertyStatus}
-        typology={property.propertyTypology}
+        title={title}
+        address={address}
+        gallery={propertyGallery}
+        typology={propertyTypology}
+        deliveryDate={deliveryDate}
       />
       <PropertyOverview
-        bedroomsQty={property?.bedroomsQty}
-        bathroomsQty={property?.bathroomsQty}
-        parkingSpacesQty={property?.parkingSpacesQty}
-        propertyType={property?.propertyType}
-        propertyTypology={property?.propertyTypology}
-        price={property?.price}
-        area={property?.area}
-        neighborhood={property?.address?.neighborhood}
+        bedroomsQty={bedroomsQty}
+        bathroomsQty={bathroomsQty}
+        parkingSpacesQty={parkingSpacesQty}
+        propertyType={propertyType}
+        propertyTypology={propertyTypology}
+        price={price}
+        area={area}
+        neighborhood={address?.neighborhood}
       />
       <PropertyDescription />
       <PropertyAmenities />

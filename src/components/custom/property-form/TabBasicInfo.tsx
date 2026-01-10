@@ -33,6 +33,7 @@ import {
   MapPin,
   DollarSign,
   LucideIcon,
+  X,
 } from "lucide-react";
 
 // CONTEXT
@@ -223,15 +224,28 @@ export default function TabBasicInfo() {
               <FormItem>
                 <FormLabel>Data de Entrega</FormLabel>
                 <FormControl>
-                  <Input
-                    min="1900-01-01"
-                    max="3000-12-31"
-                    type="date"
-                    {...field}
-                    value={field.value}
-                    className="mt-1.5"
-                  />
+                  <div className="relative">
+                    <Input
+                      min="1900-01-01"
+                      max="3000-12-31"
+                      type="date"
+                      {...field}
+                      value={field.value || ""}
+                      className="mt-1.5"
+                    />
+
+                    {field.value && (
+                      <button
+                        type="button"
+                        onClick={() => field.onChange("")}
+                        className="absolute right-10 top-1/2 -translate-y-1/2 mt-0.5 text-gray-400 hover:text-gray-600 cursor-pointer"
+                      >
+                        <X className="size-5" />
+                      </button>
+                    )}
+                  </div>
                 </FormControl>
+
                 <FormMessage />
               </FormItem>
             )}

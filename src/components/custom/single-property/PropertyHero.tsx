@@ -9,19 +9,20 @@ import Image from "next/image";
 // COMPONENTS
 import ThumbnailsCarousel from "@/components/custom/ThumbnailsCarousel";
 import FullScreenPropertyGallery from "@/components/custom/FullScreenPropertyGallery";
+import { deliveryDateToDeliveryStatus } from "@/lib/formatters/ui-formatters/property-delivery-date";
 
 interface PropertyHeroProps {
   title?: PropertyViewSchema["title"];
+  deliveryDate?: PropertyViewSchema["deliveryDate"];
   address?: PropertyViewSchema["address"];
-  propertyStatus?: PropertyViewSchema["propertyStatus"];
   gallery: PropertyViewSchema["propertyGallery"];
   typology?: PropertyViewSchema["propertyTypology"];
 }
 
 export default function PropertyHero({
   title,
+  deliveryDate,
   address,
-  propertyStatus,
   gallery,
   typology,
 }: PropertyHeroProps) {
@@ -115,9 +116,11 @@ export default function PropertyHero({
       {/* Property Info Overlay */}
       <div className="absolute bottom-0 left-0 right-0 p-8 z-10">
         <div className="container mx-auto">
-          <div className="inline-block bg-action-primary text-secondary-foreground px-4 py-1 rounded-full text-sm font-medium mb-3">
-            <h2>{propertyStatus?.name}</h2>
-          </div>
+          {deliveryDate && (
+            <div className="inline-block bg-action-primary text-secondary-foreground px-4 py-1 rounded-full text-sm font-medium mb-3">
+              <h2 className="text-lg">{deliveryDateToDeliveryStatus(deliveryDate)}</h2>
+            </div>
+          )}
           <h1 className="font-display text-4xl md:text-5xl text-primary-foreground mb-2">
             {`${title} - ${typology?.name}`}
           </h1>

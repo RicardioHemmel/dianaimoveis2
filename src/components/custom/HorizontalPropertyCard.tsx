@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import Image from "next/image";
+
 // ICONS
 import {
   Building2,
@@ -20,12 +21,19 @@ import {
   Trash2,
   Car,
   Eye,
+  Star,
 } from "lucide-react";
 
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 
 import { deletePropertyByIdAction } from "@/lib/server-actions/properties/delete-property.action";
 import { redirect } from "next/navigation";
+
+import {
+  deliveryDateToDeliveryStatus,
+  DeliveryStatus,
+} from "@/lib/formatters/ui-formatters/property-delivery-date";
+import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
 
 interface PropertyCardHorizontalProps {
   property: PropertyViewSchema;
@@ -34,27 +42,40 @@ interface PropertyCardHorizontalProps {
 export function PropertyCardHorizontal({
   property,
 }: PropertyCardHorizontalProps) {
-  const statusColors = {
-    available: "bg-success text-success-foreground",
-    sold: "bg-muted text-muted-foreground",
-    pending: "bg-warning text-warning-foreground",
+  const {
+    deliveryDate,
+    title,
+    propertyTypology,
+    bedroomsQty,
+    bathroomsQty,
+    parkingSpacesQty,
+    isFeatured,
+  } = property;
+
+  const statusColors: Record<DeliveryStatus, string> = {
+    Lançamento: "bg-neutral-800 text-white",
+    Pronto: "bg-emerald-600 text-white",
+    "Sem data": "bg-white text-black",
   };
 
-  const statusLabels = {
-    available: "Disponível",
-    sold: "Vendido",
-    pending: "Pendente",
-  };
+  //----------------- PROPERTY STATUS BADGE ------------------------//
+  // FORMATS THE PROPERTY STATUS
+  const deliveryStatus = deliveryDateToDeliveryStatus(deliveryDate);
 
-  const formattedPrice = new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  }).format(property.price);
+  // DEFINES THE STATUS BADGE STYLE
+  const badgeStyle = statusColors[deliveryStatus];
 
+  // PROPERTY EDIT LINK
   const propertyEditLink = `properties/${property._id}/edit`;
 
+  //----------------- PROPERTY TITLE  ------------------------//
+
+  const propertyTitle = propertyTypology?.name
+    ? `${title} - ${propertyTypology?.name}`
+    : title;
+
   return (
-    <Card className="overflow-hidden hover:shadow-premium transition-all duration-300 bg-white group p-0">
+    <Card className="overflow-hidden shadow-xl transition-all duration-300 bg-white group p-0">
       <div className="flex flex-col md:flex-row min-h-[176px]">
         {/* IMAGE SECTION */}
         <div className="relative w-full md:w-64 h-48 md:h-auto bg-muted overflow-hidden shrink-0">
@@ -67,56 +88,85 @@ export function PropertyCardHorizontal({
               )}
             </div>
 
-            <Badge className={`absolute top-3 left-3`}>
-              {"aaaaaaaa"}
+            <Badge className={`absolute top-3 left-3 ${badgeStyle}`}>
+              {deliveryStatus}
             </Badge>
           </Link>
         </div>
 
-        {/* Content Section */}
+        {/* CONTENT SECTION */}
         <div className="flex-1 p-6">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-xl text-foreground mb-2">
-                {property.title}
+              <h3 className="font-semibold text-2xl text-foreground mb-2">
+                {propertyTitle}
               </h3>
 
-              {property.address?.street && property.address?.city && (
-                <div className="flex items-center gap-1 text-muted-foreground text-sm mb-4">
-                  <MapPin className="h-4 w-4 shrink-0" />
-                  <span className="truncate">{`${property.address.street}, ${property.address.city}`}</span>
-                </div>
-              )}
-
-              <div className="flex flex-wrap items-center gap-6 mb-4">
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Bed className="h-5 w-5" />
-                  <span className="text-sm font-medium">
-                    {property.bedroomsQty} quartos
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Bath className="h-5 w-5" />
-                  <span className="text-sm font-medium">
-                    {property.bathroomsQty} banheiros
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Car className="h-5 w-5" />
-                  <span className="text-sm font-medium">
-                    {property.parkingSpacesQty} vagas
-                  </span>
-                </div>
+              {/*LOCATION */}
+              <div className="flex items-center gap-1 text-muted-foreground text-sm mb-4">
+                {property?.address?.street !== "" ? (
+                  <>
+                    <MapPin className="h-4 w-4 shrink-0 text-black" />
+                    <span className="truncate text-black">
+                      {`${property?.address?.street}, ${property?.address?.city}`}
+                    </span>
+                  </>
+                ) : (
+                  <p>Sem Endereço</p>
+                )}
               </div>
 
+              {/* SPECIFICATIONS */}
+              <div className="flex flex-wrap items-center gap-6 mb-4">
+                {bedroomsQty && (
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Bed className="h-5 w-5" />
+                    <span className="text-sm font-medium">
+                      {bedroomsQty} quartos
+                    </span>
+                  </div>
+                )}
+
+                {bathroomsQty && (
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Bath className="h-5 w-5" />
+                    <span className="text-sm font-medium">
+                      {bathroomsQty} banheiros
+                    </span>
+                  </div>
+                )}
+
+                {parkingSpacesQty && (
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Car className="h-5 w-5" />
+                    <span className="text-sm font-medium">
+                      {parkingSpacesQty} vagas
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* PRICE */}
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <p className="text-3xl font-bold text-[var(--bg-selected)]">
-                  {formattedPrice}
+                  {formattedPrice(property?.price)}
                 </p>
 
+                {/* ACTIONS */}
                 <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="h-9 w-9 p-0 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-500 transition-colors"
+                  >
+                    <Star
+                      className={
+                        isFeatured ? "fill-amber-300 stroke-0 size-5" : ""
+                      }
+                    />
+                  </Button>
+
                   <Button asChild variant="outline">
                     <Link href={propertyEditLink}>Editar</Link>
                   </Button>
@@ -138,7 +188,7 @@ export function PropertyCardHorizontal({
                           Ver
                         </Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem className="bg-red-200">
                         <form
                           action={async () => {
                             "use server";

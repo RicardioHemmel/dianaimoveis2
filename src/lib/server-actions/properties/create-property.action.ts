@@ -5,7 +5,7 @@ import {
   propertyInputSchema,
 } from "@/lib/schemas/property/property.schema";
 import ServerActionResponse from "@/lib/types/server-action-response";
-import { createProperty } from "@/lib/services/properties/properties";
+import { createProperty } from "@/lib/services/properties/properties.service";
 
 interface CreatePropertyActionResponse extends ServerActionResponse {
   data?: {

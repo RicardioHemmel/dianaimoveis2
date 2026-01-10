@@ -51,22 +51,26 @@ export function PropertyCardHorizontal({
     currency: "BRL",
   }).format(property.price);
 
+  const propertyEditLink = `properties/${property._id}/edit`;
+
   return (
     <Card className="overflow-hidden hover:shadow-premium transition-all duration-300 bg-white group p-0">
       <div className="flex flex-col md:flex-row min-h-[176px]">
         {/* IMAGE SECTION */}
         <div className="relative w-full md:w-64 h-48 md:h-auto bg-muted overflow-hidden shrink-0">
-          <div className="w-full h-full flex items-center justify-center bg-[image:var(--gradient-primary)]">
-            {property.coverImage ? (
-              <Image alt="Imagem de Capa" src={property.coverImage} fill />
-            ) : (
-              <Building2 className="size-16 text-white/70" />
-            )}
-          </div>
+          <Link href={propertyEditLink}>
+            <div className="w-full h-full flex items-center justify-center bg-[image:var(--gradient-primary)]">
+              {property.coverImage ? (
+                <Image alt="Imagem de Capa" src={property.coverImage} fill />
+              ) : (
+                <Building2 className="size-16 text-white/70" />
+              )}
+            </div>
 
-          <Badge className={`absolute top-3 left-3`}>
-            {property.propertyStatus?.name}
-          </Badge>
+            <Badge className={`absolute top-3 left-3`}>
+              {"aaaaaaaa"}
+            </Badge>
+          </Link>
         </div>
 
         {/* Content Section */}
@@ -114,7 +118,7 @@ export function PropertyCardHorizontal({
 
                 <div className="flex items-center gap-2">
                   <Button asChild variant="outline">
-                    <Link href={`properties/${property._id}/edit`}>Editar</Link>
+                    <Link href={propertyEditLink}>Editar</Link>
                   </Button>
 
                   <DropdownMenu>
@@ -129,7 +133,7 @@ export function PropertyCardHorizontal({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem asChild>
-                        <Link href={`property/${property._id}`}>
+                        <Link href={`property/${property._id}`} target="_blank">
                           <Eye className="h-4 w-4 mr-2" />
                           Ver
                         </Link>

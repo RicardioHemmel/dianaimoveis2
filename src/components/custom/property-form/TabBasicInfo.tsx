@@ -42,7 +42,6 @@ export default function TabBasicInfo() {
   const { form, propertyDetails } = usePropertyFormContext();
   const propertyTypes = propertyDetails?.types;
   const propertyPurposes = propertyDetails?.purposes;
-  const propertyStatus = propertyDetails?.status;
 
   // List possible icons for property types
   const propertyTypeIcons: Record<string, LucideIcon> = {
@@ -152,7 +151,7 @@ export default function TabBasicInfo() {
         />
 
         {/* Grid for Price, Purpose, Status */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-start">
           {/* Price */}
           <FormField
             control={form.control}
@@ -197,10 +196,7 @@ export default function TabBasicInfo() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Finalidade</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                >
+                <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger variant="gray" className="mt-1.5 w-full">
                       <SelectValue placeholder="Selecione uma finalidade" />
@@ -219,30 +215,23 @@ export default function TabBasicInfo() {
             )}
           />
 
-          {/* STATUS */}
+          {/* DELIVERY DATE */}
           <FormField
             control={form.control}
-            name="propertyStatus"
+            name="deliveryDate"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Status</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger variant="gray" className="mt-1.5 w-full">
-                      <SelectValue placeholder="Selecione um status" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {propertyStatus?.map((status) => (
-                      <SelectItem key={status._id} value={status._id}>
-                        {status.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <FormLabel>Data de Entrega</FormLabel>
+                <FormControl>
+                  <Input
+                    min="1900-01-01"
+                    max="3000-12-31"
+                    type="date"
+                    {...field}
+                    value={field.value}
+                    className="mt-1.5"
+                  />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}

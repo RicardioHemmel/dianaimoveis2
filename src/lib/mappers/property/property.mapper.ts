@@ -75,6 +75,8 @@ export class PropertyMapper {
       bathroomsQty: property.bathroomsQty,
       parkingSpacesQty: property.parkingSpacesQty,
       area: property.area,
+      deliveryDate: property.deliveryDate,
+
       condominiumFee: property.condominiumFee,
       floorStart: property.floorStart,
       floorEnd: property.floorEnd,
@@ -105,7 +107,6 @@ export class PropertyMapper {
       propertyType: new Types.ObjectId(property.propertyType?._id),
       propertyPurpose: toObjectId(property.propertyPurpose),
       propertyStanding: toObjectId(property.propertyStanding),
-      propertyStatus: toObjectId(property.propertyStatus),
       propertyTypology: toObjectId(property.propertyTypology),
       propertyAmenities: toObjectIdArray(property.propertyAmenities),
     };
@@ -123,6 +124,8 @@ export class PropertyMapper {
       bathroomsQty: property?.bathroomsQty,
       parkingSpacesQty: property?.parkingSpacesQty,
       area: property?.area,
+      deliveryDate: property.deliveryDate,
+
       condominiumFee: property?.condominiumFee,
       floorStart: property?.floorStart,
       floorEnd: property?.floorEnd,
@@ -157,7 +160,6 @@ export class PropertyMapper {
       },
       propertyPurpose: mapPopulatedRefToView(property?.propertyPurpose),
       propertyStanding: mapPopulatedRefToView(property?.propertyStanding),
-      propertyStatus: mapPopulatedRefToView(property?.propertyStatus),
       propertyTypology: mapPopulatedRefToView(property?.propertyTypology),
       propertyAmenities: mapPopulatedRefArrayToView(
         property?.propertyAmenities
@@ -177,6 +179,8 @@ export class PropertyMapper {
       bathroomsQty: property?.bathroomsQty,
       parkingSpacesQty: property?.parkingSpacesQty,
       area: property?.area,
+      deliveryDate: property.deliveryDate,
+
       condominiumFee: property?.condominiumFee,
       floorStart: property?.floorStart,
       floorEnd: property?.floorEnd,
@@ -211,7 +215,6 @@ export class PropertyMapper {
       },
       propertyPurpose: property.propertyPurpose?._id.toString(),
       propertyStanding: property.propertyStanding?._id.toString(),
-      propertyStatus: property.propertyStatus?._id.toString(),
       propertyTypology: property.propertyTypology?._id.toString(),
       propertyAmenities: property.propertyAmenities.map((amenity) =>
         amenity._id.toString()

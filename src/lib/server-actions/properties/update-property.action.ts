@@ -4,7 +4,7 @@ import {
   propertyInputSchema,
   PropertyInputSchema,
 } from "@/lib/schemas/property/property.schema";
-import { updateProperty } from "@/lib/services/properties/properties";
+import { updateProperty } from "@/lib/services/properties/properties.service";
 
 export async function updatePropertyAction(
   id: string,

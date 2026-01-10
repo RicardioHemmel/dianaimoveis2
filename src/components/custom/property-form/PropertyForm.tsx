@@ -47,7 +47,7 @@ export default function PropertyForm({ mode }: { mode: "create" | "edit" }) {
   const router = useRouter();
   const title = form.watch("title");
 
-  const { handleCloudUpload, mapRemoteFilesToFileUpload, filesUpload } =
+  const { handleCloudUpload, filesUpload } =
     fileUploadHook;
 
   async function onSubmit(data: PropertyInputSchema) {

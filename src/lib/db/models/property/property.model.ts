@@ -20,9 +20,11 @@ const propertySchema = new Schema(
     bathroomsQty: Number,
     parkingSpacesQty: Number,
     area: Number,
+    deliveryDate: String,
     condominiumFee: Number,
     floorStart: Number,
     floorEnd: Number,
+
 
     isFurnished: Boolean,
     isNearSubway: Boolean,
@@ -42,7 +44,6 @@ const propertySchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "PropertyStanding",
     },
-    propertyStatus: { type: Schema.Types.ObjectId, ref: "PropertyStatus" },
     propertyTypology: {
       type: Schema.Types.ObjectId,
       ref: "PropertyTypology",

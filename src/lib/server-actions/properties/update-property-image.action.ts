@@ -4,7 +4,7 @@ import {
   galleryItemSchema,
   GalleryItemSchema,
 } from "@/lib/schemas/property/property.schema";
-import { updatePropertyImage } from "@/lib/services/properties/properties";
+import { updatePropertyImage } from "@/lib/services/properties/properties.service";
 
 export async function updatePropertyImageAction(
   id: string,

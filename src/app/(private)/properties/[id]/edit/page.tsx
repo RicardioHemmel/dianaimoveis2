@@ -2,7 +2,7 @@ import PropertyFormWrapper from "@/components/custom/property-form/PropertyFormW
 import {
   getAllPropertyDetails,
   getPropertyByIdToInput,
-} from "@/lib/services/properties/properties";
+} from "@/lib/services/properties/properties.service";
 import { notFound } from "next/navigation";
 
 export default async function EditPropertyPage({

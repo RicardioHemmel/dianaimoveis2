@@ -325,7 +325,6 @@ export default function useFileUpload() {
       }
     }
 
-    console.log("uploaded files: ", uploadedFiles);
     return uploadedFiles;
   }
 

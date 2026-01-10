@@ -40,6 +40,10 @@ const propertyBaseSchema = {
   parkingSpacesQty: z.number().optional(),
   price: z.number("O preço é obrigatório").nonnegative(),
   area: z.number().optional(),
+  deliveryDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Data inválida")
+    .optional(),
 
   condominiumFee: z.number().optional(),
   floorStart: z.number().optional(),
@@ -77,7 +81,6 @@ export const propertyViewSchema = z.object({
   propertyType: propertyDetail.optional(),
   propertyPurpose: propertyDetail.optional(),
   propertyStanding: propertyDetail.optional(),
-  propertyStatus: propertyDetail.optional(),
   propertyTypology: propertyDetail.optional(),
   propertyAmenities: z.array(propertyDetail).optional(),
 });
@@ -92,7 +95,6 @@ export const propertyInputSchema = z.object({
   propertyType: propertyDetail.optional(),
   propertyPurpose: z.string().optional(),
   propertyStanding: z.string().optional(),
-  propertyStatus: z.string().optional(),
   propertyTypology: z.string().optional(),
   propertyAmenities: z.array(z.string()),
 });
@@ -106,9 +108,9 @@ export const DefaultValuesPropertyForm: PropertyInputSchema = {
   description: "",
   price: undefined as unknown as number,
   propertyType: undefined,
+  deliveryDate: "",
   propertyPurpose: "",
   propertyStanding: "",
-  propertyStatus: "",
   propertyTypology: "",
   propertyAmenities: [],
   isFeatured: false,
@@ -134,7 +136,6 @@ export type PropertyDetailsData = {
   amenities: PropertyDetail[];
   purposes: PropertyDetail[];
   standings: PropertyDetail[];
-  status: PropertyDetail[];
   types: PropertyDetail[];
   typologies: PropertyDetail[];
 };
@@ -166,7 +167,6 @@ export const fieldLabels: Record<string, string> = {
   propertyType: "Tipo do imóvel",
   propertyPurpose: "Finalidade do imóvel",
   propertyStanding: "Padrão do imóvel",
-  propertyStatus: "Status do imóvel",
   propertyTypology: "Tipologia",
   propertyAmenities: "Comodidades",
 };

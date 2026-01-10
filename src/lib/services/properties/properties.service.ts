@@ -9,12 +9,11 @@ import {
   PropertyInputSchema,
   PropertyViewSchema,
 } from "@/lib/schemas/property/property.schema";
-import { getAmenities } from "@/lib/services/properties/property-details/property-amenities";
-import { getPurposes } from "@/lib/services/properties/property-details/property-purposes";
-import { getStandings } from "@/lib/services/properties/property-details/property-standings";
-import { getStatus } from "@/lib/services/properties/property-details/property-status";
-import { getTypes } from "@/lib/services/properties/property-details/property-types";
-import { getTypologies } from "@/lib/services/properties/property-details/property-typologies";
+import { getAmenities } from "@/lib/services/properties/property-details/property-amenities.service";
+import { getPurposes } from "@/lib/services/properties/property-details/property-purposes.service";
+import { getStandings } from "@/lib/services/properties/property-details/property-standings.service";
+import { getTypes } from "@/lib/services/properties/property-details/property-types.service";
+import { getTypologies } from "@/lib/services/properties/property-details/property-typologies.service";
 
 export async function getProperties(): Promise<PropertyViewSchema[]> {
   await connectMongoDB();
@@ -23,7 +22,6 @@ export async function getProperties(): Promise<PropertyViewSchema[]> {
     .populate("propertyType")
     .populate("propertyPurpose")
     .populate("propertyStanding")
-    .populate("propertyStatus")
     .populate("propertyTypology")
     .lean<IPropertyPopulated[]>();
 
@@ -43,7 +41,6 @@ export async function getPropertyByIdToView(
     .populate("propertyType")
     .populate("propertyPurpose")
     .populate("propertyStanding")
-    .populate("propertyStatus")
     .populate("propertyTypology")
     .lean<IPropertyPopulated>();
 
@@ -102,7 +99,6 @@ export async function getAllPropertyDetails() {
   const amenities = await getAmenities();
   const purposes = await getPurposes();
   const standings = await getStandings();
-  const status = await getStatus();
   const types = await getTypes();
   const typologies = await getTypologies();
 
@@ -110,7 +106,6 @@ export async function getAllPropertyDetails() {
     amenities,
     purposes,
     standings,
-    status,
     types,
     typologies,
   };

@@ -10,7 +10,7 @@ import PropertyContact from "@/components/custom/single-property/PropertyContact
 import PropertySimilar from "@/components/custom/single-property/PropertySimilar";
 
 // SERVICE
-import { getPropertyByIdToView } from "@/lib/services/properties/properties";
+import { getPropertyByIdToView } from "@/lib/services/properties/properties.service";
 
 // NEXT
 import { notFound } from "next/navigation";

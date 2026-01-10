@@ -22,6 +22,7 @@ export interface IPropertyRaw {
   bathroomsQty?: number;
   parkingSpacesQty?: number;
   area?: number;
+  deliveryDate?: string;
   condominiumFee?: number;
   floorStart?: number;
   floorEnd?: number;
@@ -35,7 +36,6 @@ export interface IPropertyRaw {
   propertyType: Types.ObjectId;
   propertyPurpose?: Types.ObjectId;
   propertyStanding?: Types.ObjectId;
-  propertyStatus?: Types.ObjectId;
   propertyTypology?: Types.ObjectId;
   propertyAmenities: Types.ObjectId[];
 

@@ -1,6 +1,6 @@
 "use server";
 
-import { deletePropertyById } from "@/lib/services/properties/properties";
+import { deletePropertyById } from "@/lib/services/properties/properties.service";
 import { z } from "zod";
 
 export async function deletePropertyByIdAction(id: string) {

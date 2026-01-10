@@ -1,5 +1,3 @@
-"use client";
-
 // ICONS
 import {
   Building2,
@@ -18,14 +16,17 @@ import {
 // SCHEMA
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import {
-  deliveryDateToDeliveryStatus,
-  deliveryDateToShotDate,
-} from "@/lib/formatters/ui-formatters/property-delivery-date";
+// FORMATERS
+import { deliveryDateToShotDate } from "@/lib/formatters/ui-formatters/property-delivery-date";
+import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
 
-export default function PropertyOverview({
+import Link from "next/link";
+import { headers } from "next/headers";
+import { Button } from "@/components/ui/button";
+import { whatsAppRedirectBaseLink } from "@/lib/constants/links/whatsapp-redirect";
+import { ShareButton } from "@/components/custom/ShareButton";
+
+export default async function PropertyOverview({
   property,
 }: {
   property: PropertyViewSchema;
@@ -42,36 +43,40 @@ export default function PropertyOverview({
     address,
     deliveryDate,
     showSquareMeterPrice,
+    title,
   } = property;
 
-  // NAVIGATOR METHOD FOR SHARING
-  const handleShare = async () => {
-    const shareData = {
-      title: "Very Bosque da Saúde - Imóvel",
-      text: "Confira este imóvel incrível!",
-      url: window.location.href,
-    };
+  // GET THE CURRENT URL FROM THE SERVER
+  const headersList = await headers();
+  const domain = headersList.get("host") || "";
+  const protocol = headersList.get("x-forwarded-proto") || "https";
+  const pageUrl = `${protocol}://${domain}`;
 
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-      } catch (err) {}
-    } else {
-      await navigator.clipboard.writeText(window.location.href);
-      toast.success("Link copiado!");
-    }
-  };
+  // MOUNT THE MESSAGES
+  const customTitle = `${title} - Diana Imóveis`;
+  const whatsappMessageForScheduling = `Gostaria de agendar uma visita no: *${customTitle}*\n\n${pageUrl}`;
+  const whatsappMessageForMoreInfo = `Gostaria de mais informações sobre o imóvel: *${customTitle}*\n\n${pageUrl}`;
 
+  // GENERATES WHATSAPP LINKS
+  const whatsAppUrlForScheduling = `${whatsAppRedirectBaseLink}&text=${encodeURIComponent(whatsappMessageForScheduling)}`;
+  const whatsAppUrlForMoreInfo = `${whatsAppRedirectBaseLink}&text=${encodeURIComponent(whatsappMessageForMoreInfo)}`;
+
+  // DISPLAYS ON AREA LABEL
   const squareMeterPrice =
-    showSquareMeterPrice && area ? price / area : undefined;
+    showSquareMeterPrice && area
+      ? formattedPrice(Math.round(price / area))
+      : "Área não definida";
 
   // PROPERTY MAPPED ITEMS LIST
   const propertyDetails = [
     { icon: BedDouble, label: `${bedroomsQty} quartos` },
     { icon: Bath, label: `${bathroomsQty} banheiros` },
     { icon: Car, label: `${parkingSpacesQty} vagas` },
-    { icon: Maximize, label: `${area} m²` },
   ];
+
+  const mappedPropertyDetails = propertyDetails.filter(
+    (detail) => detail.label
+  );
 
   return (
     <section className="py-12 bg-surface-base">
@@ -80,7 +85,7 @@ export default function PropertyOverview({
           {/* MAIN INFO CARD */}
           <div className="lg:col-span-2 bg-white rounded-xl">
             <div className="glass-card p-8">
-              <div className="flex flex-wrap gap-6 mb-8">
+              <div className="flex flex-wrap gap-6 my-3 items-start">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-xl bg-action-primary/10 flex items-center justify-center">
                     <Building2 className="h-6 w-6 text-action-primary" />
@@ -117,6 +122,9 @@ export default function PropertyOverview({
                     <div>
                       <p className="text-muted-foreground text-sm">Área</p>
                       <p className="font-semibold text-foreground">{`${area} m²`}</p>
+                      {showSquareMeterPrice && (
+                        <p className="font-light text-sm pl-2">{`R$ ${squareMeterPrice} /m²`}</p>
+                      )}
                     </div>
                   </div>
                 )}
@@ -145,7 +153,7 @@ export default function PropertyOverview({
                     Detalhes do Imóvel
                   </h3>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    {propertyDetails.map((detail, index) => (
+                    {mappedPropertyDetails.map((detail, index) => (
                       <div key={index} className="flex items-start gap-3">
                         <detail.icon className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
                         <div>
@@ -167,32 +175,35 @@ export default function PropertyOverview({
               <p className="text-muted-foreground text-sm mb-1">
                 Valor do Imóvel
               </p>
-              <h3 className="text-3xl font-display font-bold text-primary mb-1">
+              <h3 className="text-3xl font-display font-bold text-primary mb-6">
                 A partir de{" "}
-                <span className="text-gradient-gold">R$ 614.900</span>
+                <span className="text-gradient-gold">{`R$ ${formattedPrice(price)}`}</span>
               </h3>
-              <p className="text-muted-foreground text-sm mb-6">
-                ou parcelas a partir de R$ 3.500/mês
-              </p>
 
               <div className="space-y-3">
-                <Button variant="gold" size="lg" className="w-full">
-                  Agendar Visita
+                <Button
+                  variant="gold"
+                  size="lg"
+                  className="w-full font-normal text-base py-6"
+                  asChild
+                >
+                  <Link href={whatsAppUrlForScheduling} target="_blank">
+                    Agendar Visita
+                  </Link>
                 </Button>
-                <Button variant="ghost" size="lg" className="w-full">
-                  Falar com Corretor
+                <Button
+                  variant={"hero"}
+                  size="lg"
+                  className="w-full font-normal text-base py-6"
+                  asChild
+                >
+                  <Link href={whatsAppUrlForMoreInfo} target="_blank">
+                    Falar com Corretor
+                  </Link>
                 </Button>
 
-                {/* Share button */}
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="w-full"
-                  onClick={handleShare}
-                >
-                  <Share2 className="h-4 w-4 mr-2" />
-                  Compartilhar
-                </Button>
+                {/* SHARE BUTTON */}
+                <ShareButton title={title} />
               </div>
 
               <p className="text-center text-muted-foreground text-xs mt-4">

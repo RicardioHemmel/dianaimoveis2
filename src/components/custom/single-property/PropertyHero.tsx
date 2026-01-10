@@ -6,10 +6,12 @@ import { ChevronLeft, ChevronRight, Expand, ImageOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
+// FORMATER
+import { deliveryDateToDeliveryStatus } from "@/lib/formatters/ui-formatters/property-delivery-date";
+
 // COMPONENTS
 import ThumbnailsCarousel from "@/components/custom/ThumbnailsCarousel";
 import FullScreenPropertyGallery from "@/components/custom/FullScreenPropertyGallery";
-import { deliveryDateToDeliveryStatus } from "@/lib/formatters/ui-formatters/property-delivery-date";
 
 export default function PropertyHero({
   property,
@@ -20,7 +22,7 @@ export default function PropertyHero({
   const { title, deliveryDate, address, propertyGallery, propertyTypology } =
     property;
 
-    // FIRST IMAGE FROM GALLERY
+  // FIRST IMAGE FROM GALLERY
   const [currentImage, setCurrentImage] = useState(0);
 
   const nextImage = () => {

@@ -188,7 +188,7 @@ export function PropertyCardHorizontal({
                           Ver
                         </Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem className="bg-red-200">
+                      <DropdownMenuItem>
                         <form
                           action={async () => {
                             "use server";

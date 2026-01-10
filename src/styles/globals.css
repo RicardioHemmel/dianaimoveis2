@@ -15,7 +15,7 @@
   --color-text-primary: #ffffff;
   --color-text-secondary: hsla(0, 0%, 100%, 0.8);
 
-  --color-text-paragraph:  #626d84;
+  --color-text-paragraph: #626d84;
   --color-text-title: #142952;
 
   /* Tags */
@@ -28,13 +28,14 @@
 
   /* Hero */
   --color-hero-bg: #142952;
+  --color-hero-bg-hover: #0a1936;
   --color-hero-from: hsl(220, 60%, 20%);
   --color-hero-via: hsl(219, 52%, 39%);
   --color-hero-to: hsl(220, 66%, 18%);
 
   /* Actions */
   --color-action-primary: #f1c644;
-  --color-action-primary-hover: #e0b639;
+  --color-action-primary-hover: #cca42c;
 
   /* =========================
    DASHBOARD / APP

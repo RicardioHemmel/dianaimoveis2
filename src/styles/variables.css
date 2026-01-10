@@ -5,7 +5,7 @@
   --text-paragraph: #626d84;
   --text-title: #142952;
 
-    --text-paragraph: #626d84;
+  --text-paragraph: #626d84;
   --text-title: #142952;
   --text-tag: #ebbd36;
   --bg-tag: #f7f4e6;
@@ -18,9 +18,11 @@
   --gradient-hero-to: hsl(220, 66%, 18%);
 
   --bg-hero: #142952;
+  --bg-hero-hover: #0a1936;
+
 
   --action-primary: #f1c644;
-  --action-primary-hover: #e0b639;
+  --action-primary-hover: #cca42c;
 
   /* DASHBOARD VARIABLES */
   --soft-primary-custom: #018493;

@@ -42,6 +42,7 @@ export async function getPropertyByIdToView(
     .populate("propertyPurpose")
     .populate("propertyStanding")
     .populate("propertyTypology")
+    .populate("propertyAmenities")
     .lean<IPropertyPopulated>();
 
   if (!property) return null;
@@ -50,7 +51,7 @@ export async function getPropertyByIdToView(
   if (property.propertyGallery) {
     property.propertyGallery.sort((a, b) => a.order - b.order);
   }
-
+  
   return PropertyMapper.toViewSchema(property);
 }
 

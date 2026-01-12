@@ -1,35 +1,21 @@
-export default function PropertyDescription() {
+import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
+
+export default function PropertyDescription({
+  property,
+}: {
+  property: PropertyViewSchema;
+}) {
+  const { description } = property;
+
   return (
     <section className="py-16 bg-background">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
-          <h2 className="section-title text-center mb-8">Descrição</h2>
+          <h2 className="text-center mb-8 text-4xl font-bold">Descrição</h2>
 
           <div className="glass-card p-8 md:p-12">
             <p className="text-muted-foreground leading-relaxed text-lg mb-6">
-              Um lugar privilegiado, com espaços diferenciados, em uma das
-              regiões mais desejadas da cidade. O{" "}
-              <span className="text-foreground font-medium">
-                Very Faria Lima
-              </span>{" "}
-              é um empreendimento pensado para quem valoriza qualidade de vida,
-              praticidade e sofisticação.
-            </p>
-
-            <p className="text-muted-foreground leading-relaxed text-lg mb-6">
-              Com localização estratégica na Vila Olímpia, você terá acesso
-              fácil às principais vias da cidade, além de estar cercado por
-              opções de gastronomia, cultura e entretenimento. O projeto
-              arquitetônico contemporâneo foi desenvolvido para maximizar a
-              entrada de luz natural e proporcionar vistas privilegiadas da
-              cidade.
-            </p>
-
-            <p className="text-muted-foreground leading-relaxed text-lg">
-              O empreendimento conta com uma infraestrutura completa de lazer e
-              serviços, incluindo concierge, delivery room, coworking e muito
-              mais. Tudo pensado para facilitar sua rotina e proporcionar
-              momentos de relaxamento sem sair de casa.
+              {description}
             </p>
 
             <div className="mt-8 pt-8 border-t border-border">

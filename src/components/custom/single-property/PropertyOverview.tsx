@@ -4,13 +4,13 @@ import {
   MapPin,
   Maximize,
   Calendar,
-  Share2,
   Bath,
   BedDouble,
   Building,
   Car,
   Sofa,
   Train,
+  PawPrint,
 } from "lucide-react";
 
 // SCHEMA
@@ -19,6 +19,7 @@ import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 // FORMATERS
 import { deliveryDateToShotDate } from "@/lib/formatters/ui-formatters/property-delivery-date";
 import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
+import { pluralize } from "@/lib/formatters/ui-formatters/pluralize";
 
 import Link from "next/link";
 import { headers } from "next/headers";
@@ -33,11 +34,15 @@ export default async function PropertyOverview({
 }) {
   // SPREAD PROPERTY
   const {
-    propertyTypology,
-    propertyType,
+    isFurnished,
+    isNearSubway,
+    isPetFriendly,
+    floorStart,
+    floorEnd,
     area,
     bathroomsQty,
     bedroomsQty,
+    suitesQty,
     parkingSpacesQty,
     price,
     address,
@@ -69,13 +74,61 @@ export default async function PropertyOverview({
 
   // PROPERTY MAPPED ITEMS LIST
   const propertyDetails = [
-    { icon: BedDouble, label: `${bedroomsQty} quartos` },
-    { icon: Bath, label: `${bathroomsQty} banheiros` },
-    { icon: Car, label: `${parkingSpacesQty} vagas` },
+    {
+      icon: BedDouble,
+      label: `${bedroomsQty} ${pluralize("quarto", "quartos", bedroomsQty)}`,
+      value: bedroomsQty,
+      subLabel: `${suitesQty} ${pluralize("suíte", "suítes", suitesQty)}`,
+    },
+    {
+      icon: Bath,
+      label: `${bathroomsQty} ${pluralize("banheiro", "banheiros", bathroomsQty)}`,
+      value: bedroomsQty,
+    },
+    {
+      icon: Car,
+      label: `${parkingSpacesQty} ${pluralize("vaga", "vagas", parkingSpacesQty)}`,
+      value: parkingSpacesQty,
+    },
+    {
+      icon: Maximize,
+      label: `${area} m²`,
+      value: parkingSpacesQty,
+      subLabel: `${squareMeterPrice} m²`,
+    },
+    {
+      icon: Building,
+      label: `${floorStart}º a ${floorEnd} andar`,
+      value: parkingSpacesQty,
+    },
+    {
+      icon: PawPrint,
+      label: `${isPetFriendly ? "Aceita pets" : "Não aceita pets"}`,
+      value: parkingSpacesQty,
+    },
+    {
+      icon: Train,
+      label: `${isNearSubway ? "Próx. do metrô" : "Sem metrô próx."}`,
+      value: parkingSpacesQty,
+    },
+    {
+      icon: Sofa,
+      label: `${isFurnished ? "Mobiliado" : "Não mobiliado"}`,
+      value: parkingSpacesQty,
+    },
   ];
 
+  //   { icon: BedDouble, label: "2 quartos" },
+  // { icon: Maximize, label: "58 m²", subLabel: "R$ 10.601/m²" },
+  // { icon: Train, label: "Sem metrô próx." },
+  // { icon: Car, label: "1 vaga" },
+  // { icon: Bath, label: "1 banheiro" },
+  // { icon: Building, label: "4º a 7º andar" },
+  // { icon: Sofa, label: "Sem mobília" },
+
+  // ONLY DETAILS WITH VALUES
   const mappedPropertyDetails = propertyDetails.filter(
-    (detail) => detail.label
+    (detail) => detail.value !== undefined
   );
 
   return (
@@ -154,12 +207,17 @@ export default async function PropertyOverview({
                   </h3>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     {mappedPropertyDetails.map((detail, index) => (
-                      <div key={index} className="flex items-start gap-3">
+                      <div key={index} className="flex items-start gap-3 mb-3">
                         <detail.icon className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
                         <div>
                           <p className="text-sm font-medium text-foreground">
                             {detail.label}
                           </p>
+                          {detail.subLabel && (
+                            <p className="text-sm font-medium text-foreground">
+                              {`(${detail.subLabel})`}
+                            </p>
+                          )}
                         </div>
                       </div>
                     ))}

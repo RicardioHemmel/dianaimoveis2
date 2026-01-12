@@ -81,7 +81,7 @@ export const propertyViewSchema = z.object({
   propertyPurpose: propertyDetail.optional(),
   propertyStanding: propertyDetail.optional(),
   propertyTypology: propertyDetail.optional(),
-  propertyAmenities: z.array(propertyDetail).optional(),
+  propertyAmenities: z.array(propertyDetail),
 });
 
 export type PropertyViewSchema = z.infer<typeof propertyViewSchema>;

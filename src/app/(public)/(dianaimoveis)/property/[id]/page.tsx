@@ -31,12 +31,16 @@ export default async function SinglePropertyPage({
 
   return (
     <>
+    {/* REVISAR PADRONIZAÇÃO DE SERVER COMPONENTES ONDE CABÍVEL */}
       <PropertyHero property={property} />
       <PropertyOverview property={property} />
-      <PropertyDescription />
-      <PropertyAmenities />
-      <PropertyFloorPlans />
-      <PropertyGallery />
+      <PropertyDescription property={property} />
+      {property.propertyAmenities?.length > 0 && (
+        <PropertyAmenities propertyAmenities={property.propertyAmenities} />
+      )}
+      {property.propertyFloorPlanGallery?.length > 0 && <PropertyFloorPlans />}
+
+      <PropertyGallery gallery={property.propertyGallery}/>
       <PropertyLocation />
       <PropertyContact />
       <PropertySimilar />

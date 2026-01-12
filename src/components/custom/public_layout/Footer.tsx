@@ -13,14 +13,14 @@ import Link from "next/link";
 export function Footer() {
   const currentYear = new Date().getFullYear();
   return (
-    <footer className="relative bg-bg-hero text-primary-foreground overflow-hidden">
+    <footer className="relative bg-hero-bg text-primary-foreground overflow-hidden">
       {/* MAIN FOOTER CONTENT */}
       <div className="relative container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-10 mb-12">
           {/* BRAND */}
           <div className="text-center md:text-left">
             <h4 className="font-semibold mb-6 flex items-center gap-2 justify-center md:justify-start">
-              <span className="w-8 h-0.5 bg-tag" />
+              <span className="w-8 h-0.5 bg-action-primary" />
               Diana Imóveis
             </h4>
             <p className="text-primary-foreground/70 text-sm leading-relaxed mb-6 pr-4">
@@ -33,7 +33,6 @@ export function Footer() {
                 { icon: Instagram, href: "#" },
                 { icon: Facebook, href: "#" },
                 { icon: Linkedin, href: "#" },
-                { icon: Youtube, href: "#" },
               ].map((social, index) => (
                 <a
                   key={index}
@@ -48,7 +47,7 @@ export function Footer() {
           {/* Quick Links */}
           <div className="text-center md:text-left">
             <h4 className="font-semibold mb-6 flex items-center gap-2 justify-center md:justify-start">
-              <span className="w-8 h-0.5 bg-tag" />
+              <span className="w-8 h-0.5 bg-action-primary" />
               Links Rápidos
             </h4>
             <ul className="space-y-3 text-primary-foreground/70 text-sm">
@@ -73,7 +72,7 @@ export function Footer() {
           {/* Contact */}
           <div className="text-center md:text-left">
             <h4 className="font-semibold mb-6 flex items-center gap-2 justify-center md:justify-start">
-              <span className="w-8 h-0.5 bg-tag" />
+              <span className="w-8 h-0.5 bg-action-primary" />
               Contato
             </h4>
             <ul className="space-y-4 text-primary-foreground/70 text-sm">
@@ -105,7 +104,7 @@ export function Footer() {
           {/* Hours & Certifications */}
           <div className="text-center md:text-left">
             <h4 className="font-semibold mb-6 flex items-center gap-2 justify-center md:justify-start">
-              <span className="w-8 h-0.5 bg-tag" />
+              <span className="w-8 h-0.5 bg-action-primary" />
               Horário de Atendimento
             </h4>
             <ul className="space-y-2 text-primary-foreground/70 text-sm mb-6">
@@ -137,8 +136,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-primary-foreground/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-primary-foreground/50 text-sm text-center md:text-left">
-            © {currentYear} Diana Imóveis. Todos os direitos
-            reservados.
+            © {currentYear} Diana Imóveis. Todos os direitos reservados.
           </p>
           <div className="flex items-center gap-6 text-sm text-primary-foreground/50">
             <a href="#" className="hover:text-secondary transition-colors">
@@ -150,13 +148,13 @@ export function Footer() {
           </div>
           <p className="text-primary-foreground/50 text-sm flex items-center gap-1 justify-center md:justify-start">
             Desenvolvido por{" "}
-            <a
-              href="https://facilitasites.online"
+            <Link
+              href="https://facilitasites.com.br"
               target="_blank"
               className="font-bold"
             >
               Facilita Sites
-            </a>
+            </Link>
           </p>
         </div>
       </div>

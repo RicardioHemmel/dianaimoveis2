@@ -20,20 +20,34 @@ import { X } from "lucide-react";
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 
 interface FullScreenImageModalProps {
-  onModalClose: () => void;
+  closeModal: () => void;
   gallery: PropertyViewSchema["propertyGallery"];
   currentImage: number;
 }
 
 export default function FullScreenPropertyGallery({
-  onModalClose,
+  closeModal,
   gallery,
   currentImage,
 }: FullScreenImageModalProps) {
-  const [carouselApi, setCarouselApi] = useState<CarouselApi>(); // Gives carousel its mechanics
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>(); // GIVES CAROUSEL ITS MECHANICS
+  const [fullScreenImageIndex, setFullScreenImageIndex] = useState(0);
+
+  // STARTS FULL SCREEN IMAGE INDEX WITH THE CURRENT ON THE PARENT COMPONENT
+  useEffect(() => {
+    setFullScreenImageIndex(currentImage);
+  }, [currentImage]);
 
   useEffect(() => {
     if (!carouselApi) return;
+
+    // WHEN INTERECTING WITH NEXT AND PREV ARROWS UPDATES THE IMAGE INDEX
+    const onSelect = () => {
+      setFullScreenImageIndex(carouselApi.selectedScrollSnap());
+    };
+
+    // REGISTERS THE EVENT
+    carouselApi.on("select", onSelect);
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "ArrowLeft") {
@@ -41,26 +55,26 @@ export default function FullScreenPropertyGallery({
       } else if (event.key === "ArrowRight") {
         carouselApi.scrollNext();
       } else if (event.key === "Escape") {
-        onModalClose();
+        closeModal();
       }
     };
 
     document.addEventListener("keydown", handleKeyDown);
 
-    // Removes listener when component is unmounted
+    // REMOVES LISTENER WHEN COMPONENT IS UNMOUNTED
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [carouselApi]);
 
-  // Blocks scrolling
+  // BLOCKS SCROLLING
   useEffect(() => {
     document.body.style.overflow = "hidden";
 
     return () => {
       document.body.style.overflow = "";
     };
-  }, []);
+  }, [carouselApi]);
 
   return (
     <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center">
@@ -94,19 +108,24 @@ export default function FullScreenPropertyGallery({
             ))}
         </CarouselContent>
 
-        {/* navigation buttons inside carousel */}
+        {/* NAVIGATION BUTTONS INSIDE CAROUSEL */}
         <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2" />
         <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2" />
       </Carousel>
 
-      {/* Close Button */}
+      {/* CLOSE BUTTON */}
       <button
         type="button"
-        onClick={onModalClose}
+        onClick={closeModal}
         className="absolute top-4 right-8 z-50 hover:opacity-75 cursor-pointer"
       >
         <X className="size-8 text-white" />
       </button>
+
+      {/* IMAGE INDEX LABEL */}
+      <p className="absolute top-10 left-1/2 -translate-x-1/2 z-10 text-white text-sm md:text-base bg-black/40 px-3 py-1 rounded-full backdrop-blur-sm">
+        {fullScreenImageIndex + 1}/{gallery.length}
+      </p>
     </div>
   );
 }

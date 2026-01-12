@@ -232,6 +232,7 @@ export default function TabBasicInfo() {
                       {...field}
                       value={field.value || ""}
                       className="mt-1.5"
+                      variant={"gray"}
                     />
 
                     {field.value && (

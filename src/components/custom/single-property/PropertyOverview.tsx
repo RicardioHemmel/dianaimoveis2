@@ -118,13 +118,6 @@ export default async function PropertyOverview({
     },
   ];
 
-  //   { icon: BedDouble, label: "2 quartos" },
-  // { icon: Maximize, label: "58 m²", subLabel: "R$ 10.601/m²" },
-  // { icon: Train, label: "Sem metrô próx." },
-  // { icon: Car, label: "1 vaga" },
-  // { icon: Bath, label: "1 banheiro" },
-  // { icon: Building, label: "4º a 7º andar" },
-  // { icon: Sofa, label: "Sem mobília" },
 
   // ONLY DETAILS WITH VALUES
   const mappedPropertyDetails = propertyDetails.filter(
@@ -233,9 +226,9 @@ export default async function PropertyOverview({
               <p className="text-muted-foreground text-sm mb-1">
                 Valor do Imóvel
               </p>
-              <h3 className="text-3xl font-display font-bold text-primary mb-6">
+              <h3 className="text-3xl font-display font-bold text-text-title mb-6">
                 A partir de{" "}
-                <span className="text-gradient-gold">{`R$ ${formattedPrice(price)}`}</span>
+                <span className="text-action-primary">{`${formattedPrice(price)}`}</span>
               </h3>
 
               <div className="space-y-3">

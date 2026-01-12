@@ -30,8 +30,8 @@ export default async function SinglePropertyPage({
   }
 
   return (
-    <>
-    {/* REVISAR PADRONIZAÇÃO DE SERVER COMPONENTES ONDE CABÍVEL */}
+    <div className="bg-surface-base">
+      {/* REVISAR PADRONIZAÇÃO DE SERVER COMPONENTES ONDE CABÍVEL */}
       <PropertyHero property={property} />
       <PropertyOverview property={property} />
       <PropertyDescription property={property} />
@@ -40,10 +40,11 @@ export default async function SinglePropertyPage({
       )}
       {property.propertyFloorPlanGallery?.length > 0 && <PropertyFloorPlans />}
 
-      <PropertyGallery gallery={property.propertyGallery}/>
-      <PropertyLocation />
+      <PropertyGallery gallery={property.propertyGallery} />
+
+      <PropertyLocation address={property.address} />
       <PropertyContact />
       <PropertySimilar />
-    </>
+    </div>
   );
 }

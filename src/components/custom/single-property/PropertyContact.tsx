@@ -22,15 +22,15 @@ export default function PropertyContact() {
   };
 
   return (
-    <section className="py-16 bg-background">
+    <section className="py-16">
       <div className="container mx-auto px-4">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="section-title">Gostou do Imóvel?</h2>
-            <p className="section-subtitle">Fale com nossos especialistas</p>
+            <h2 className="title-section">Gostou do Imóvel?</h2>
+            <p className="subtitle-section">Fale com nossos especialistas</p>
           </div>
 
-          <div className="glass-card p-8 md:p-12">
+          <div className="white-card p-8 md:p-12">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="relative">
                 <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
@@ -40,7 +40,8 @@ export default function PropertyContact() {
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
-                  className="pl-12 h-12 bg-background"
+                  className="pl-12 h-12"
+                  variant={"gray"}
                   required
                 />
               </div>
@@ -55,7 +56,8 @@ export default function PropertyContact() {
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
-                    className="pl-12 h-12 bg-background"
+                    className="pl-12 h-12"
+                    variant={"gray"}
                     required
                   />
                 </div>
@@ -68,7 +70,8 @@ export default function PropertyContact() {
                     onChange={(e) =>
                       setFormData({ ...formData, phone: e.target.value })
                     }
-                    className="pl-12 h-12 bg-background"
+                    className="pl-12 h-12"
+                    variant={"gray"}
                     required
                   />
                 </div>
@@ -82,7 +85,8 @@ export default function PropertyContact() {
                   onChange={(e) =>
                     setFormData({ ...formData, message: e.target.value })
                   }
-                  className="pl-12 min-h-[120px] bg-background resize-none"
+                  className="pl-12 min-h-[120px] resize-none"
+                  variant={"gray"}
                 />
               </div>
 

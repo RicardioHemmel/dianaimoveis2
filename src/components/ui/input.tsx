@@ -8,7 +8,7 @@ const inputVariants = cva(
     variants: {
       variant: {
         default: "",
-        gray: "bg-gray-100",
+        gray: "bg-gray-50",
       },
       defaultVariants: {
         variant: "default",
@@ -18,7 +18,8 @@ const inputVariants = cva(
 );
 
 export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement>,
+  extends
+    React.InputHTMLAttributes<HTMLInputElement>,
     VariantProps<typeof inputVariants> {}
 
 function Input({ className, type, variant, ...props }: InputProps) {

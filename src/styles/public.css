@@ -15,3 +15,39 @@ li {
 span {
   font-family: var(--font-secondary);
 }
+
+.title-section {
+  color: var(--color-text-title);
+  text-align: center;
+  font-size: var(--text-4xl);
+  line-height: var(--tw-leading, var(--text-4xl--line-height));
+  --tw-font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-bold);
+}
+
+.subtitle-section {
+  color: var(--muted-foreground);
+  font-size: var(--text-lg);
+  line-height: var(--tw-leading, var(--text-lg--line-height));
+  margin-top: calc(var(--spacing) * 2);
+}
+
+.white-card {
+  background-color: white;
+  --tw-backdrop-blur: blur(var(--blur-md));
+  -webkit-backdrop-filter: var(--tw-backdrop-blur,)
+    var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,)
+    var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,)
+    var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,)
+    var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+  backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,)
+    var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,)
+    var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,)
+    var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,)
+    var(--tw-backdrop-sepia,);
+  border-style: var(--tw-border-style);
+  border-width: 1px;
+  border-color: color-mix(in oklab, var(--border) 50%, transparent);
+  border-radius: calc(var(--radius) /* 0.25rem = 4px */ + 4px);
+  box-shadow: var(--shadow-lg);
+}

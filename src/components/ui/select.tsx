@@ -30,7 +30,7 @@ const selectTriggerVariants = cva(
     variants: {
       variant: {
         default: "",
-        gray: "bg-gray-100",
+        gray: "bg-gray-50",
       },
       defaultVariants: {
         variant: "default",
@@ -157,10 +157,7 @@ function SelectScrollUpButton({
   return (
     <SelectPrimitive.ScrollUpButton
       data-slot="select-scroll-up-button"
-      className={cn(
-        "flex items-center justify-center py-1",
-        className
-      )}
+      className={cn("flex items-center justify-center py-1", className)}
       {...props}
     >
       <ChevronUpIcon className="size-4" />

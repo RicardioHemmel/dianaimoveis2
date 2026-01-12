@@ -12,6 +12,7 @@ import { deliveryDateToDeliveryStatus } from "@/lib/formatters/ui-formatters/pro
 // COMPONENTS
 import ThumbnailsCarousel from "@/components/custom/ThumbnailsCarousel";
 import FullScreenPropertyGallery from "@/components/custom/FullScreenPropertyGallery";
+import { useFullScreenGallery } from "@/hooks/properties/use-full-screen-gallery";
 
 export default function PropertyHero({
   property,
@@ -22,25 +23,16 @@ export default function PropertyHero({
   const { title, deliveryDate, address, propertyGallery, propertyTypology } =
     property;
 
-  // FIRST IMAGE FROM GALLERY
-  const [currentImage, setCurrentImage] = useState(0);
-
-  const nextImage = () => {
-    setCurrentImage((prev) => (prev + 1) % propertyGallery.length);
-  };
-
-  const prevImage = () => {
-    setCurrentImage(
-      (prev) => (prev - 1 + propertyGallery.length) % propertyGallery.length
-    );
-  };
-
-  // FULLSCREEN STATE
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const onModalClose = () => {
-    setIsModalOpen(false);
-  };
+  // FULL SCREEN HOOK
+  const {
+    isModalOpen,
+    currentImage,
+    setCurrentImage,
+    nextImage,
+    prevImage,
+    closeModal,
+    setIsModalOpen,
+  } = useFullScreenGallery(propertyGallery);
 
   return (
     <section className="relative h-[70vh] min-h-[500px] overflow-hidden select-none">
@@ -96,7 +88,7 @@ export default function PropertyHero({
       {/* FULL SCREEN MODAL */}
       {isModalOpen && (
         <FullScreenPropertyGallery
-          onModalClose={onModalClose}
+          closeModal={closeModal}
           gallery={propertyGallery}
           currentImage={currentImage}
         />

@@ -1,11 +1,11 @@
-import { S3 } from "@/lib/clients/s3Client";
-import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { NextResponse } from "next/server";
+import { StorageService } from "@/lib/services/storage/storage.service";
 
+// DELETE ONE IMAGE FROM ONE PROPERTY
 export async function DELETE(req: Request) {
   try {
-    const body = req.json();
-    const { key } = await body;
+    const body = await req.json();
+    const { key } = body;
 
     if (!key) {
       return NextResponse.json(
@@ -14,19 +14,14 @@ export async function DELETE(req: Request) {
       );
     }
 
-    const command = new DeleteObjectCommand({
-      Bucket: process.env.R2_BUCKET_NAME!,
-      Key: key,
-    });
-
-    await S3.send(command);
+    await StorageService.deleteFile(key);
 
     return NextResponse.json(
       { message: "Arquivo excluído com sucesso" },
       { status: 200 }
     );
-
   } catch (error) {
+    console.error("Erro na rota de delete:", error);
     return NextResponse.json(
       { error: "Falha ao excluir o arquivo" },
       { status: 500 }

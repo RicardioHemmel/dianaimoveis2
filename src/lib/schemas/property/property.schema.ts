@@ -3,14 +3,22 @@ import { z } from "zod";
 
 //-------------------------------------------------- AUXULIAR TYPES ------------------------------------------------------
 
-//--------- PROPERTY GALLERY
-export const galleryItemSchema = z.object({
+//--------- PROPERTY GALLERY TO VIEW
+export const galleryViewItemSchema = z.object({
   key: z.string(),
   order: z.number(),
-  url: z.string().optional(),
+  url: z.string(),
 });
 
-export type GalleryItemSchema = z.infer<typeof galleryItemSchema>;
+export type GalleryViewItemSchema = z.infer<typeof galleryViewItemSchema>;
+
+//--------- PROPERTY GALLERY TO INPUT
+export const galleryInputItemSchema = z.object({
+  key: z.string(),
+  order: z.number(),
+});
+
+export type GalleryInputItemSchema = z.infer<typeof galleryInputItemSchema>;
 
 //--------- PROPERTY DETAILS (TYPE, TYPOLOGY, STANDING...)
 const propertyDetail = z.object({
@@ -58,10 +66,6 @@ const propertyBaseSchema = {
 
   status: z.enum(["DRAFT", "PUBLISHED"]),
 
-  coverImage: z.string().optional(),
-  propertyGallery: z.array(galleryItemSchema),
-  propertyFloorPlanGallery: z.array(galleryItemSchema),
-
   address: z
     .object({
       street: z.string().optional(),
@@ -77,6 +81,9 @@ const propertyBaseSchema = {
 export const propertyViewSchema = z.object({
   ...propertyBaseSchema,
 
+  propertyGallery: z.array(galleryViewItemSchema),
+  propertyFloorPlanGallery: z.array(galleryViewItemSchema),
+
   propertyType: propertyDetail.optional(),
   propertyPurpose: propertyDetail.optional(),
   propertyStanding: propertyDetail.optional(),
@@ -90,6 +97,9 @@ export type PropertyViewSchema = z.infer<typeof propertyViewSchema>;
 
 export const propertyInputSchema = z.object({
   ...propertyBaseSchema,
+
+  propertyGallery: z.array(galleryInputItemSchema),
+  propertyFloorPlanGallery: z.array(galleryInputItemSchema),
 
   propertyType: propertyDetail.optional(),
   propertyPurpose: z.string().optional(),
@@ -159,7 +169,6 @@ export const fieldLabels: Record<string, string> = {
   isFeatured: "Destaque",
   isPetFriendly: "Pet friendly",
   showSquareMeterPrice: "Exibir preço por m²",
-  coverImage: "Imagem de capa",
   propertyGallery: "Galeria de imagens",
   propertyFloorPlanGallery: "Planta baixa",
   address: "Endereço",

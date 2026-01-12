@@ -64,7 +64,6 @@ export default function PropertyForm({ mode }: { mode: "create" | "edit" }) {
       const payload = {
         ...data,
         propertyGallery: finalGallery,
-        coverImage: finalGallery[0]?.key || "",
         status: status,
       };
 
@@ -150,7 +149,7 @@ export default function PropertyForm({ mode }: { mode: "create" | "edit" }) {
           {propertyId && (
             <Button type="button" asChild variant="outline">
               <Link href={`/property/${propertyId}`} target="_blank">
-                <Eye className="size-4"/>
+                <Eye className="size-4" />
                 Ver imóvel
               </Link>
             </Button>

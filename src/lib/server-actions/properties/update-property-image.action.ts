@@ -1,17 +1,16 @@
 "use server";
 
 import {
-  galleryItemSchema,
-  GalleryItemSchema,
+  galleryInputItemSchema,
+  GalleryInputItemSchema,
 } from "@/lib/schemas/property/property.schema";
 import { updatePropertyImage } from "@/lib/services/properties/properties.service";
 
 export async function updatePropertyImageAction(
   id: string,
-  images: GalleryItemSchema[],
-  coverImage: string
+  images: GalleryInputItemSchema[]
 ) {
-  const parsed = galleryItemSchema.array().safeParse(images);
+  const parsed = galleryInputItemSchema.array().safeParse(images);
 
   if (!parsed.success) {
     return {
@@ -21,7 +20,7 @@ export async function updatePropertyImageAction(
   }
 
   try {
-    await updatePropertyImage(id, parsed.data, coverImage);
+    await updatePropertyImage(id, parsed.data);
 
     return { success: true };
   } catch (err) {

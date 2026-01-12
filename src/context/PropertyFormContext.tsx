@@ -14,6 +14,8 @@ import {
 import { UseFormReturn } from "react-hook-form";
 import useFileUpload from "@/hooks/use-file-upload";
 import usePropertyForm from "@/hooks/properties/use-property-form";
+import { updatePropertyImageAction } from "@/lib/server-actions/properties/update-property-image.action";
+import { toast } from "sonner";
 
 // TABS LIST FOR NAVIGATION
 const TABS = [
@@ -34,6 +36,8 @@ interface PropertyFormContextType {
   setStatus: (status: "DRAFT" | "PUBLISHED") => void;
   fileUploadHook: ReturnType<typeof useFileUpload>;
   propertyDetails?: PropertyDetailsData;
+  handleClearGallery: () => Promise<void>;
+  handleRemoveSingleImage: (key: string) => Promise<void>;
 
   //NAVIGATION
   activeTab: string;
@@ -60,6 +64,10 @@ export function PropertyFormProvider({
   // FILES UPLOAD
   const fileUploadHook = useFileUpload();
 
+  // PROPERTY FORM
+  const { form } = usePropertyForm(propertyDetails?.types ?? [], initialData);
+  const [status, setStatus] = useState<"DRAFT" | "PUBLISHED">("DRAFT"); // SET BY TWO BUTTONS ON "PROPERTY FORM"
+
   // MAPS IMAGES FROM DB INTO FILESUPLOAD STATE FOR EXHIBITION AND ALLOW USER TO CHANGER POSITION
   useEffect(() => {
     if (
@@ -70,9 +78,60 @@ export function PropertyFormProvider({
     }
   }, [initialData]);
 
-  // PROPERTY FORM
-  const { form } = usePropertyForm(propertyDetails?.types ?? [], initialData);
-  const [status, setStatus] = useState<"DRAFT" | "PUBLISHED">("DRAFT");
+  // PROPERTY ID TO UPDATE PROPERTY WITH GALLERY FUNCTIONS
+  const propertyId = form.watch("_id");
+
+  // --- CONTEXT FUNCTION TO CLEAN GALLERY AND UPDATE PROPERTY ---
+  async function handleClearGallery(): Promise<void> {
+    try {
+      // REMOVE LOCAL AND CLOUD FILES
+      fileUploadHook.removeAllFiles();
+
+      // IF PROPERTY EXISTS, UPDATES IT
+      if (propertyId) {
+        await updatePropertyImageAction(propertyId, []);
+      }
+
+      // SYNC THE FORM LOCALLY
+      form.setValue("propertyGallery", []);
+
+      toast.success("Galeria removida com sucesso");
+    } catch (error) {
+      console.error("Erro ao limpar galeria:", error);
+      toast.error("Ocorreu um erro ao tentar remover as imagens.");
+    }
+  }
+
+  // --- CONTEXT FUNCTION TO DELETE ONE IMAGE AND UPDATE PROPERTY ---
+  async function handleRemoveSingleImage(key: string): Promise<void> {
+    if (!key) return;
+
+    try {
+      // REMOVE CLOUD FILE
+      await fileUploadHook.removeCloudFile(key);
+
+      // CALCULATES THE NEW GALLERY ORDER
+      const updatedGallery = fileUploadHook.filesUpload
+        .filter((img) => img.key !== key)
+        .map((img, i) => ({
+          key: img.key as string,
+          order: fileUploadHook.formattedOrder(i),
+        }));
+
+      // UPDATES PROPERTY
+      if (propertyId) {
+        await updatePropertyImageAction(propertyId, updatedGallery);
+      }
+
+      // SYNC FORM WITH THE NEW GALLERY
+      form.setValue("propertyGallery", updatedGallery);
+
+      toast.success("Imagem removida");
+    } catch (error) {
+      console.error("Falha ao remover imagem:", error);
+      toast.error("Erro ao sincronizar exclusão com o servidor");
+    }
+  }
 
   // TABS NAVIGATION MANAGEMENT
   const [activeTab, setActiveTab] = useState(TABS[0]);
@@ -88,6 +147,8 @@ export function PropertyFormProvider({
   const value = {
     form,
     initialData,
+    handleClearGallery,
+    handleRemoveSingleImage,
     status,
     setStatus,
     fileUploadHook,

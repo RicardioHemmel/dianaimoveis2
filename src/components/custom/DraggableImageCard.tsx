@@ -16,9 +16,6 @@ import { CloudCheck, X, Loader } from "lucide-react";
 // CONTEXT
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
-// SERVER ACTION
-import { updatePropertyImageAction } from "@/lib/server-actions/properties/update-property-image.action";
-
 interface ImageCardProps {
   image: FileUpload;
   i: number;
@@ -32,9 +29,8 @@ export default function DraggableImageCard({
   isHighlighted,
   onDoubleClick,
 }: ImageCardProps) {
-  const { fileUploadHook, form } = usePropertyFormContext();
-  const { removeCloudFile, removeLocalFile, formattedOrder, filesUpload } =
-    fileUploadHook;
+  const { fileUploadHook, handleRemoveSingleImage } = usePropertyFormContext();
+  const { removeLocalFile, formattedOrder } = fileUploadHook;
   const [canDrag, setCanDrag] = useState(true);
 
   const { setNodeRef, attributes, listeners, transform, transition } =
@@ -47,44 +43,6 @@ export default function DraggableImageCard({
     transform: CSS.Transform.toString(transform),
     transition,
   };
-
-  // PREVENTS USER TO REMOVE IMAGE AND NOT SAVE PROPERTY
-  async function removeCloudFileAndUpdateProperty(
-    e: React.MouseEvent,
-    key: string
-  ) {
-    // PREVENTS DRAG N DROP TO INTERRUPT
-    e.stopPropagation();
-    e.preventDefault();
-
-    if (!key) return;
-
-    try {
-      // REMOVES IMAGE FROM CLOUD
-      await removeCloudFile(key);
-
-      // GETS NECESSARY DATA TO UPDATE PROPERTY
-      const propertyId = form.getValues("_id")!;
-      const currentImagesOrdered = filesUpload
-        .filter((img) => img.key !== key)
-        .map((img, i) => ({
-          key: img.key as string,
-          order: formattedOrder(i),
-        }));
-
-      // SAVES NEW GALLERY
-      await updatePropertyImageAction(
-        propertyId,
-        currentImagesOrdered,
-        currentImagesOrdered[0]?.key ?? ""
-      );
-
-      // SINCRONIZES FORM WITH THE NEW GALLERY
-      form.setValue("propertyGallery", currentImagesOrdered);
-    } catch (e) {
-      throw Error(`Falha ao apagar imagem: ${e}`);
-    }
-  }
 
   return (
     <div
@@ -143,7 +101,7 @@ export default function DraggableImageCard({
         disabled={image.status === "deleting"}
         onClick={(e) => {
           if (image.key) {
-            removeCloudFileAndUpdateProperty(e, image.key);
+            handleRemoveSingleImage(image.key);
           } else if (image.id) {
             removeLocalFile(image.id);
           }

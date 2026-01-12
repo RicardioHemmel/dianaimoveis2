@@ -26,7 +26,7 @@ import {
 
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 
-import { deletePropertyByIdAction } from "@/lib/server-actions/properties/delete-property.action";
+import { deletePropertyAction } from "@/lib/server-actions/properties/delete-property.action";
 import { redirect } from "next/navigation";
 
 import {
@@ -34,6 +34,7 @@ import {
   DeliveryStatus,
 } from "@/lib/formatters/ui-formatters/property-delivery-date";
 import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
+import { showCoverImage } from "@/lib/media/showCoverImage";
 
 interface PropertyCardHorizontalProps {
   property: PropertyViewSchema;
@@ -81,8 +82,12 @@ export function PropertyCardHorizontal({
         <div className="relative w-full md:w-64 h-48 md:h-auto bg-muted overflow-hidden shrink-0">
           <Link href={propertyEditLink}>
             <div className="w-full h-full flex items-center justify-center bg-[image:var(--gradient-primary)]">
-              {property.coverImage ? (
-                <Image alt="Imagem de Capa" src={property.coverImage} fill />
+              {property.propertyGallery.length > 0 ? (
+                <Image
+                  alt="Imagem de Capa"
+                  src={showCoverImage(property.propertyGallery)}
+                  fill
+                />
               ) : (
                 <Building2 className="size-16 text-white/70" />
               )}
@@ -192,7 +197,7 @@ export function PropertyCardHorizontal({
                         <form
                           action={async () => {
                             "use server";
-                            deletePropertyByIdAction(property._id!);
+                            deletePropertyAction(property._id!);
                             redirect("/property-list");
                           }}
                         >

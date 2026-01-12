@@ -87,7 +87,6 @@ export class PropertyMapper {
       showSquareMeterPrice: property.showSquareMeterPrice,
       isPetFriendly: property.isPetFriendly,
 
-      coverImage: property.coverImage,
       propertyGallery:
         property?.propertyGallery?.map((img) => ({
           key: img.key,
@@ -136,7 +135,6 @@ export class PropertyMapper {
       showSquareMeterPrice: property?.showSquareMeterPrice,
       isPetFriendly: property?.isPetFriendly,
 
-      coverImage: resolveImageUrl(property?.coverImage ?? ""),
       propertyFloorPlanGallery:
         property?.propertyFloorPlanGallery?.map((img) => ({
           key: img.key,
@@ -192,7 +190,6 @@ export class PropertyMapper {
       showSquareMeterPrice: property?.showSquareMeterPrice,
       isPetFriendly: property?.isPetFriendly,
 
-      coverImage: property.coverImage ?? "",
       propertyFloorPlanGallery:
         property?.propertyFloorPlanGallery?.map((img) => ({
           key: img.key,

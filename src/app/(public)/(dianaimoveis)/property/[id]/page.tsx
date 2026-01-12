@@ -10,7 +10,7 @@ import PropertyContact from "@/components/custom/single-property/PropertyContact
 import PropertySimilar from "@/components/custom/single-property/PropertySimilar";
 
 // SERVICE
-import { getPropertyByIdToView } from "@/lib/services/properties/properties.service";
+import { getPropertyToView } from "@/lib/services/properties/properties-query.service";
 
 // NEXT
 import { notFound } from "next/navigation";
@@ -23,7 +23,7 @@ export default async function SinglePropertyPage({
   const resolvedParams = await params;
   const propertyId = resolvedParams.id;
 
-  const property = await getPropertyByIdToView(propertyId);
+  const property = await getPropertyToView(propertyId);
 
   if (!property) {
     notFound();

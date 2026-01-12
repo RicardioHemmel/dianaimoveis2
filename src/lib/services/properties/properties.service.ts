@@ -5,75 +5,16 @@ import Property from "@/lib/db/models/property/property.model";
 import { PropertyMapper } from "@/lib/mappers/property/property.mapper";
 import { IPropertyPopulated } from "@/lib/schemas/property/IProperty";
 import {
-  GalleryItemSchema,
+  GalleryInputItemSchema,
   PropertyInputSchema,
-  PropertyViewSchema,
 } from "@/lib/schemas/property/property.schema";
-import { getAmenities } from "@/lib/services/properties/property-details/property-amenities.service";
-import { getPurposes } from "@/lib/services/properties/property-details/property-purposes.service";
-import { getStandings } from "@/lib/services/properties/property-details/property-standings.service";
-import { getTypes } from "@/lib/services/properties/property-details/property-types.service";
-import { getTypologies } from "@/lib/services/properties/property-details/property-typologies.service";
 
-export async function getProperties(): Promise<PropertyViewSchema[]> {
-  await connectMongoDB();
+// AUXILIARY SERVICES
+import { StorageService } from "@/lib/services/storage/storage.service"; // <--- Importamos o novo service
 
-  const properties = await Property.find()
-    .populate("propertyType")
-    .populate("propertyPurpose")
-    .populate("propertyStanding")
-    .populate("propertyTypology")
-    .lean<IPropertyPopulated[]>();
+// MUTATIONS
 
-  const mappedProperties = properties.map((property) =>
-    PropertyMapper.toViewSchema(property)
-  );
-
-  return mappedProperties;
-}
-
-export async function getPropertyByIdToView(
-  id: string
-): Promise<PropertyViewSchema | null> {
-  await connectMongoDB();
-
-  const property = await Property.findById(id)
-    .populate("propertyType")
-    .populate("propertyPurpose")
-    .populate("propertyStanding")
-    .populate("propertyTypology")
-    .populate("propertyAmenities")
-    .lean<IPropertyPopulated>();
-
-  if (!property) return null;
-
-  // Ordena o array da galeria antes de passar pelo Mapper
-  if (property.propertyGallery) {
-    property.propertyGallery.sort((a, b) => a.order - b.order);
-  }
-  
-  return PropertyMapper.toViewSchema(property);
-}
-
-export async function getPropertyByIdToInput(
-  id: string
-): Promise<PropertyInputSchema | null> {
-  await connectMongoDB();
-
-  const property = await Property.findById(id)
-    .populate("propertyType")
-    .lean<IPropertyPopulated>();
-
-  if (!property) return null;
-
-  // Ordena o array da galeria antes de passar pelo Mapper
-  if (property.propertyGallery) {
-    property.propertyGallery.sort((a, b) => a.order - b.order);
-  }
-
-  return PropertyMapper.toInputSchema(property);
-}
-
+//-------------------------------- CREATES ONE PROPERTY ----------------------- //
 export async function createProperty(
   data: PropertyInputSchema
 ): Promise<{ id: string }> {
@@ -81,9 +22,10 @@ export async function createProperty(
 
   const mappedProperty = PropertyMapper.toPersistence(data);
 
-  const existingProperty = await Property.findOne({
+  // DUPLICITY CHECK
+  const existingProperty = await Property.exists({
     title: mappedProperty.title,
-  }).lean();
+  });
 
   if (existingProperty) {
     throw new Error("PROPERTY_TITLE_ALREADY_EXISTS");
@@ -94,32 +36,10 @@ export async function createProperty(
   return { id: createdProperty._id.toString() };
 }
 
-export async function getAllPropertyDetails() {
-  await connectMongoDB();
-
-  const amenities = await getAmenities();
-  const purposes = await getPurposes();
-  const standings = await getStandings();
-  const types = await getTypes();
-  const typologies = await getTypologies();
-
-  return {
-    amenities,
-    purposes,
-    standings,
-    types,
-    typologies,
-  };
-}
+//--------------------------- UPDATES ONE PROPERTY  ----------------------- //
 
 export async function updateProperty(id: string, data: PropertyInputSchema) {
   await connectMongoDB();
-
-  const existingProperty = await Property.findById(id).lean();
-
-  if (!existingProperty) {
-    throw new Error("Imóvel não encontrado");
-  }
 
   const mappedProperty = PropertyMapper.toPersistence(data);
 
@@ -130,35 +50,62 @@ export async function updateProperty(id: string, data: PropertyInputSchema) {
     .lean<IPropertyPopulated>();
 
   if (!updatedProperty) {
-    throw new Error("Erro ao atualizar o imóvel");
+    throw new Error("Erro ao atualizar o imóvel: Imóvel não encontrado");
   }
 
   return { property: PropertyMapper.toInputSchema(updatedProperty) };
 }
 
+//--------------------------- UPDATES PROPERTY ----------------------- //
+
 export async function updatePropertyImage(
   id: string,
-  images: GalleryItemSchema[],
-  coverImage: string
+  images: GalleryInputItemSchema[]
 ) {
   await connectMongoDB();
 
-  const updatedProperty = await Property.findByIdAndUpdate(id, {
-    $set: {
-      propertyGallery: images,
-      coverImage: coverImage,
-    },
-  })
-    .populate("propertyType")
-    .lean<IPropertyPopulated>();
+  const result = await Property.updateOne(
+    { _id: id },
+    { $set: { propertyGallery: images } }
+  );
 
-  if (!updatedProperty) {
+  if (result.matchedCount === 0) {
     throw new Error("Imóvel não encontrado");
   }
 }
 
-export async function deletePropertyById(id: string) {
+//--------------------------- DELETES ONE PROPERTY  ----------------------- //
+
+export async function deleteProperty(id: string) {
   await connectMongoDB();
 
+  // SEARCH FOR PROPERTY TO GET THE IMAGES KEY TO DELETE FROM CLOUD
+  const property = await Property.findById(id).lean<IPropertyPopulated>();
+
+  if (!property) {
+    throw new Error("Falha ao deletar imóvel");
+  }
+
+  // GETS ALL PROPERTY IMAGES
+  const keysToDelete: string[] = [];
+
+  if (property.propertyGallery && property.propertyGallery.length > 0) {
+    property.propertyGallery.forEach((img) => {
+      if (img.key) keysToDelete.push(img.key);
+    });
+  }
+
   await Property.findByIdAndDelete(id);
+
+  // DELETE FROM CLOUD ALL PROPERTY IMAGES
+  if (keysToDelete.length > 0) {
+    try {
+      await StorageService.deleteManyFiles(keysToDelete);
+    } catch (error) {
+      console.error(
+        `[CRITICAL] Falha ao deletar imagens do imóvel ${id} no storage. Keys órfãs: ${keysToDelete.join(", ")}`,
+        error
+      );
+    }
+  }
 }

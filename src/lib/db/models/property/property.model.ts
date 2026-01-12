@@ -25,7 +25,6 @@ const propertySchema = new Schema(
     floorStart: Number,
     floorEnd: Number,
 
-
     isFurnished: Boolean,
     isNearSubway: Boolean,
     isFeatured: Boolean,
@@ -52,7 +51,6 @@ const propertySchema = new Schema(
       { type: Schema.Types.ObjectId, ref: "PropertyAmenities" },
     ],
 
-    coverImage: String,
     propertyGallery: [galleryItemSchema],
     propertyFloorPlanGallery: [galleryItemSchema],
 

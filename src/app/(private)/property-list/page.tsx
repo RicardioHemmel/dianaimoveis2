@@ -1,5 +1,5 @@
 import { PropertyCardHorizontal } from "@/components/custom/HorizontalPropertyCard";
-import { getProperties } from "@/lib/services/properties/properties.service";
+import { getProperties } from "@/lib/services/properties/properties-query.service";
 
 export default async function PropertiesListPage() {
   const properties = await getProperties();

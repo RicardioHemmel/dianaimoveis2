@@ -39,7 +39,6 @@ export interface IPropertyRaw {
   propertyTypology?: Types.ObjectId | null;
   propertyAmenities: Types.ObjectId[];
 
-  coverImage?: string | null;
   propertyGallery: propertyGallary[];
   propertyFloorPlanGallery: propertyGallary[];
   videoUrl?: string | null;

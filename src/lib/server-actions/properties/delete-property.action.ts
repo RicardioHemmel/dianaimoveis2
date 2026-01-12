@@ -1,9 +1,9 @@
 "use server";
 
-import { deletePropertyById } from "@/lib/services/properties/properties.service";
+import { deleteProperty } from "@/lib/services/properties/properties.service";
 import { z } from "zod";
 
-export async function deletePropertyByIdAction(id: string) {
+export async function deletePropertyAction(id: string) {
   const parsed = z.string().safeParse(id);
 
   if (!parsed.success) {
@@ -14,7 +14,7 @@ export async function deletePropertyByIdAction(id: string) {
   }
 
   try {
-    await deletePropertyById(id);
+    await deleteProperty(id);
 
     return { success: true };
   } catch (err) {

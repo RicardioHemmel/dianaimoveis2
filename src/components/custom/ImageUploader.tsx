@@ -22,46 +22,16 @@ export default function ImageUploader({
   uploaderId,
 }: ImageUploaderProps) {
   // CUSTOM HOOK TO HANDLE FILE UPLOAD EVENTS
-  const { fileUploadHook, form } = usePropertyFormContext();
-
-  // ISOLATES SIGNATURE TO PREVENT RE-RENDER
-  const propertyGallery = useWatch({
-    control: form.control,
-    name: "propertyGallery",
-  });
+  const { fileUploadHook } = usePropertyFormContext();
 
   const {
     isDragging,
-    filesUpload,
     handleDragEnter,
     handleDragLeave,
     handleDragOver,
     handleFilesDrop,
     handleFilesFromInput,
   } = fileUploadHook;
-
-  //---------------- IMAGES CLEANUP --------------------
-  //KEEP IN MEMORY IMAGE FILES BETWEEN RENDERS
-  const prevFilesRef = useRef<FileUpload[]>([]);
-
-  // WHEN FILES ARE ADDED, REMOVED OR CHANGED POSITIONS
-  useEffect(() => {
-    // PREV FILES STATE
-    const prev = prevFilesRef.current;
-
-    // CHECKS IF THE PREV FILE IS STILL ON THE UI. IF IT'S NOT, REMOVE IT FROM MEMORY
-    prev.forEach((prevImg) => {
-      const stillExists = filesUpload.some(
-        (img) => img.previewURL === prevImg.previewURL
-      );
-
-      if (!stillExists && prevImg.previewURL?.startsWith("blob")) {
-        URL.revokeObjectURL(prevImg.previewURL);
-      }
-    });
-
-    prevFilesRef.current = filesUpload;
-  }, [filesUpload]);
 
   return (
     <>

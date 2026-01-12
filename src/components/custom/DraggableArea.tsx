@@ -21,14 +21,9 @@ import FullScreenImageModal from "@/components/custom/FullScreenModal";
 // CONTEXT
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
-// SERVER ACTION
-import { updatePropertyImageAction } from "@/lib/server-actions/properties/update-property-image.action";
-import { GalleryItemSchema } from "@/lib/schemas/property/property.schema";
-
 export default function DraggableArea() {
-  const { fileUploadHook, form } = usePropertyFormContext();
-  const { filesUpload, removeAllFiles, setFilesUpload, formattedOrder } =
-    fileUploadHook;
+  const { fileUploadHook, handleClearGallery } = usePropertyFormContext();
+  const { filesUpload, setFilesUpload, formattedOrder } = fileUploadHook;
 
   // For highlighting cards during drag n drop
   const [highlightedIds, setHighlightedIds] = useState<string[]>([]);
@@ -84,29 +79,6 @@ export default function DraggableArea() {
     });
   }
 
-  async function removeAllCloudFilesAndUpdateProperty(e: React.MouseEvent) {
-    // PREVENTS DRAG N DROP TO INTERRUPT
-    e.stopPropagation();
-    e.preventDefault();
-
-    try {
-      // REMOVES ALL IMAGES
-      await removeAllFiles();
-
-      // GETS NECESSARY DATA TO UPDATE PROPERTY
-      const propertyId = form.getValues("_id")!;
-      const cleanGallery: GalleryItemSchema[] = [];
-
-      // SAVES NEW GALLERY
-      await updatePropertyImageAction(propertyId, cleanGallery, "");
-
-      // SINCRONIZES FORM WITH THE NEW GALLERY
-      form.setValue("propertyGallery", cleanGallery);
-    } catch (e) {
-      throw Error(`Falha ao apagar imagens: ${e}`);
-    }
-  }
-
   return (
     <>
       {/* DRAG N DROP GRID */}
@@ -128,7 +100,7 @@ export default function DraggableArea() {
                   type="button"
                   variant={"destructive"}
                   className="rounded-full"
-                  onClick={removeAllCloudFilesAndUpdateProperty}
+                  onClick={handleClearGallery}
                 >
                   Remover imagens
                 </Button>

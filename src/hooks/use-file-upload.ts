@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { FileUpload } from "@/lib/schemas/media/file.schema";
-import { GalleryItemSchema } from "@/lib/schemas/property/property.schema";
+import { GalleryInputItemSchema } from "@/lib/schemas/property/property.schema";
+import { resolveImageUrl } from "@/lib/media/resolveImageUrl";
 
 export default function useFileUpload() {
   // FOR ONDRAGENTER AND ONDRAGLEAVE CONTROL
@@ -113,11 +114,11 @@ export default function useFileUpload() {
   }
 
   // MAPS IMAGES TO SHOW ON EDIT PROPERTY MODE
-  function mapRemoteFilesToFileUpload(images: GalleryItemSchema[]) {
+  function mapRemoteFilesToFileUpload(images: GalleryInputItemSchema[]) {
     const fileUploadFromDB = images.map((image, i) => ({
       id: window.crypto.randomUUID(),
       key: image.key,
-      previewURL: image.url,
+      previewURL: resolveImageUrl(image.key),
       order: image.order ?? formattedOrder(i),
       status: "success" as const,
     }));
@@ -307,11 +308,14 @@ export default function useFileUpload() {
     for (const img of currentFiles) {
       // IF THE IMG WAS ALREADY SAVED ON CLOUD GETS IT'S DATA
       if (img.status === "success" && img.key) {
-        uploadedFiles.push({ key: img.key, order: img.order });
+        uploadedFiles.push({
+          key: img.key,
+          order: img.order,
+        });
         continue;
       }
 
-      // UPLOAD IMAGE
+      // UPLOADS IMAGE
       if (img.status === "idle" && img.file) {
         try {
           const key = await uploadSingleImage(img.file);
@@ -394,15 +398,21 @@ export default function useFileUpload() {
 
   //------- REMOVES ALL IMAGES FROM MEMORY AND KILLS THEIR OBJECT URLS --------
   async function removeAllCloudFiles() {
-    const filesToRemove = filesUpload.map((file) => file?.key);
+    const keys = filesUpload.map((f) => f.key).filter(Boolean);
+    if (keys.length === 0) return;
 
-    for (const key of filesToRemove) {
-      if (key) {
-        await removeCloudFile(key);
-      }
+    try {
+      const res = await fetch("/api/s3/bulk-delete/", {
+        method: "DELETE",
+        body: JSON.stringify({ keys }),
+      });
+
+      if (!res.ok) throw new Error();
+      setFilesUpload([]);
+    } catch {
+      toast.error("Erro ao limpar galeria");
     }
   }
-
   return {
     isDragging,
     filesUpload,

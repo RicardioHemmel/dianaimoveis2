@@ -1,7 +1,8 @@
 import mongoose, { Schema, Model } from "mongoose";
 import { IPropertyRaw } from "@/lib/schemas/property/IProperty";
 
-const galleryItemSchema = new Schema(
+// GALLERY WITH ORDER FOR DISPLAY AND CLOUD KEY
+const GalleryItemSchema = new Schema(
   {
     key: { type: String, required: true },
     order: { type: Number, required: true },
@@ -9,21 +10,37 @@ const galleryItemSchema = new Schema(
   { _id: false }
 );
 
+// GUARANTEES INTEGRITY FOR PROPERTY DETAILS OF TYPE NUMBER
+const RangeSchema = new Schema(
+  {
+    min: { type: Number, required: true },
+    max: { type: Number, required: true },
+  },
+  { _id: false }
+);
+
+// MAX VALUE CAN'T BE LESS THEN MIN
+RangeSchema.path("max").validate(function (value) {
+  return this.min <= value;
+}, "Min não pode ser maior que Max");
+
 const propertySchema = new Schema(
   {
     title: { type: String, unique: true },
     description: String,
-
     price: Number,
-    bedroomsQty: Number,
-    suitesQty: Number,
-    bathroomsQty: Number,
-    parkingSpacesQty: Number,
-    area: Number,
+
+    bedrooms: RangeSchema,
+    suites: RangeSchema,
+    bathrooms: RangeSchema,
+    parkingSpaces: RangeSchema,
+    area: RangeSchema,
+
     deliveryDate: String,
     condominiumFee: Number,
     floorStart: Number,
     floorEnd: Number,
+    constructionCompany: String,
 
     isFurnished: Boolean,
     isNearSubway: Boolean,
@@ -51,8 +68,8 @@ const propertySchema = new Schema(
       { type: Schema.Types.ObjectId, ref: "PropertyAmenities" },
     ],
 
-    propertyGallery: [galleryItemSchema],
-    propertyFloorPlanGallery: [galleryItemSchema],
+    propertyGallery: [GalleryItemSchema],
+    propertyFloorPlanGallery: [GalleryItemSchema],
 
     videoUrl: String,
 

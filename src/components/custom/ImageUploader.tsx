@@ -10,7 +10,6 @@ import DraggableArea from "./DraggableArea";
 
 // CONTEXT
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
-import { FileUpload } from "@/lib/schemas/media/file.schema";
 
 interface ImageUploaderProps {
   Icon: LucideIcon;

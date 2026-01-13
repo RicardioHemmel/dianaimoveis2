@@ -19,7 +19,7 @@ import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 // FORMATERS
 import { deliveryDateToShotDate } from "@/lib/formatters/ui-formatters/property-delivery-date";
 import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
-import { pluralize } from "@/lib/formatters/ui-formatters/pluralize";
+import { detailRange } from "@/lib/formatters/ui-formatters/property-ranges";
 
 import Link from "next/link";
 import { headers } from "next/headers";
@@ -39,11 +39,12 @@ export default async function PropertyOverview({
     isPetFriendly,
     floorStart,
     floorEnd,
+    constructionCompany,
     area,
-    bathroomsQty,
-    bedroomsQty,
-    suitesQty,
-    parkingSpacesQty,
+    bathrooms,
+    bedrooms,
+    suites,
+    parkingSpaces,
     price,
     address,
     deliveryDate,
@@ -66,63 +67,41 @@ export default async function PropertyOverview({
   const whatsAppUrlForScheduling = `${whatsAppRedirectBaseLink}&text=${encodeURIComponent(whatsappMessageForScheduling)}`;
   const whatsAppUrlForMoreInfo = `${whatsAppRedirectBaseLink}&text=${encodeURIComponent(whatsappMessageForMoreInfo)}`;
 
-  // DISPLAYS ON AREA LABEL
-  const squareMeterPrice =
-    showSquareMeterPrice && area
-      ? formattedPrice(Math.round(price / area))
-      : "Área não definida";
-
   // PROPERTY MAPPED ITEMS LIST
   const propertyDetails = [
     {
       icon: BedDouble,
-      label: `${bedroomsQty} ${pluralize("quarto", "quartos", bedroomsQty)}`,
-      value: bedroomsQty,
-      subLabel: `${suitesQty} ${pluralize("suíte", "suítes", suitesQty)}`,
+      label: detailRange("quartos", bedrooms?.min, bedrooms?.max),
     },
     {
       icon: Bath,
-      label: `${bathroomsQty} ${pluralize("banheiro", "banheiros", bathroomsQty)}`,
-      value: bedroomsQty,
+      label: detailRange("banheiros", bathrooms?.min, bathrooms?.max),
     },
     {
       icon: Car,
-      label: `${parkingSpacesQty} ${pluralize("vaga", "vagas", parkingSpacesQty)}`,
-      value: parkingSpacesQty,
+      label: detailRange("vagas", parkingSpaces?.min, parkingSpaces?.max),
     },
     {
       icon: Maximize,
-      label: `${area} m²`,
-      value: parkingSpacesQty,
-      subLabel: `${squareMeterPrice} m²`,
+      label: detailRange("área", area?.min, area?.max),
     },
     {
       icon: Building,
       label: `${floorStart}º a ${floorEnd} andar`,
-      value: parkingSpacesQty,
     },
     {
       icon: PawPrint,
       label: `${isPetFriendly ? "Aceita pets" : "Não aceita pets"}`,
-      value: parkingSpacesQty,
     },
     {
       icon: Train,
       label: `${isNearSubway ? "Próx. do metrô" : "Sem metrô próx."}`,
-      value: parkingSpacesQty,
     },
     {
       icon: Sofa,
       label: `${isFurnished ? "Mobiliado" : "Não mobiliado"}`,
-      value: parkingSpacesQty,
     },
   ];
-
-
-  // ONLY DETAILS WITH VALUES
-  const mappedPropertyDetails = propertyDetails.filter(
-    (detail) => detail.value !== undefined
-  );
 
   return (
     <section className="py-12 bg-surface-base">
@@ -139,7 +118,7 @@ export default async function PropertyOverview({
                   <div>
                     <p className="text-muted-foreground text-sm">Construtora</p>
                     <p className="font-semibold text-foreground">
-                      Very Incorporadora
+                      {constructionCompany}
                     </p>
                   </div>
                 </div>
@@ -167,10 +146,9 @@ export default async function PropertyOverview({
                     </div>
                     <div>
                       <p className="text-muted-foreground text-sm">Área</p>
-                      <p className="font-semibold text-foreground">{`${area} m²`}</p>
-                      {showSquareMeterPrice && (
-                        <p className="font-light text-sm pl-2">{`R$ ${squareMeterPrice} /m²`}</p>
-                      )}
+                      <p className="font-semibold text-foreground">
+                        {detailRange("area", area?.min, area?.max)}
+                      </p>
                     </div>
                   </div>
                 )}
@@ -199,18 +177,13 @@ export default async function PropertyOverview({
                     Detalhes do Imóvel
                   </h3>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    {mappedPropertyDetails.map((detail, index) => (
+                    {propertyDetails.map((detail, index) => (
                       <div key={index} className="flex items-start gap-3 mb-3">
                         <detail.icon className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
                         <div>
                           <p className="text-sm font-medium text-foreground">
                             {detail.label}
                           </p>
-                          {detail.subLabel && (
-                            <p className="text-sm font-medium text-foreground">
-                              {`(${detail.subLabel})`}
-                            </p>
-                          )}
                         </div>
                       </div>
                     ))}

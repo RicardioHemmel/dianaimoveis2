@@ -35,6 +35,7 @@ import {
 } from "@/lib/formatters/ui-formatters/property-delivery-date";
 import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
 import { showCoverImage } from "@/lib/media/showCoverImage";
+import { detailRange } from "@/lib/formatters/ui-formatters/property-ranges";
 
 interface PropertyCardHorizontalProps {
   property: PropertyViewSchema;
@@ -47,9 +48,9 @@ export function PropertyCardHorizontal({
     deliveryDate,
     title,
     propertyTypology,
-    bedroomsQty,
-    bathroomsQty,
-    parkingSpacesQty,
+    bedrooms,
+    bathrooms,
+    parkingSpaces,
     isFeatured,
   } = property;
 
@@ -123,29 +124,33 @@ export function PropertyCardHorizontal({
 
               {/* SPECIFICATIONS */}
               <div className="flex flex-wrap items-center gap-6 mb-4">
-                {bedroomsQty && (
+                {bedrooms && (
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Bed className="h-5 w-5" />
                     <span className="text-sm font-medium">
-                      {bedroomsQty} quartos
+                      {detailRange("quartos", bedrooms.min, bedrooms.max)}
                     </span>
                   </div>
                 )}
 
-                {bathroomsQty && (
+                {bathrooms && (
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Bath className="h-5 w-5" />
                     <span className="text-sm font-medium">
-                      {bathroomsQty} banheiros
+                      {detailRange("banheiros", bathrooms.min, bathrooms.max)}
                     </span>
                   </div>
                 )}
 
-                {parkingSpacesQty && (
+                {parkingSpaces && (
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Car className="h-5 w-5" />
                     <span className="text-sm font-medium">
-                      {parkingSpacesQty} vagas
+                      {detailRange(
+                        "vagas",
+                        parkingSpaces.min,
+                        parkingSpaces.max
+                      )}
                     </span>
                   </div>
                 )}

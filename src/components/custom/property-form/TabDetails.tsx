@@ -10,6 +10,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  InputGroup,
+  InputGroupInput,
+  InputGroupAddon,
+} from "@/components/ui/input-group";
+import { NumericFormat } from "react-number-format";
 
 // ICONS
 import {
@@ -25,15 +31,6 @@ import {
   HandCoins,
 } from "lucide-react";
 
-import { UseFormReturn } from "react-hook-form";
-import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
-import {
-  InputGroup,
-  InputGroupInput,
-  InputGroupAddon,
-} from "@/components/ui/input-group";
-import { NumericFormat } from "react-number-format";
-
 // CONTEXT
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
@@ -42,213 +39,211 @@ export default function TabDetails() {
   return (
     <TabsContent value="details" className="space-y-4">
       <div className="grid grid-cols-3 gap-4">
-        <>
-          <FormField
-            control={form.control}
-            name="bedroomsQty"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor={field.name}>Quartos</FormLabel>
-                <FormControl>
-                  <div className="relative mt-1.5">
-                    <InputGroup>
-                      <NumericFormat
-                        id={field.name}
-                        name={field.name}
-                        value={field.value}
-                        customInput={InputGroupInput}
-                        thousandSeparator="."
-                        decimalSeparator=","
-                        fixedDecimalScale
-                        allowNegative={false}
-                        placeholder="0"
-                        onValueChange={(values) => {
-                          field.onChange(values.floatValue);
-                        }}
-                      />
-                      <InputGroupAddon>
-                        <Bed className="h-4 w-4" />
-                      </InputGroupAddon>
-                    </InputGroup>
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <FormField
+          control={form.control}
+          name="bedroomsQty"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor={field.name}>Quartos</FormLabel>
+              <FormControl>
+                <div className="relative mt-1.5">
+                  <InputGroup>
+                    <NumericFormat
+                      id={field.name}
+                      name={field.name}
+                      value={field.value}
+                      customInput={InputGroupInput}
+                      thousandSeparator="."
+                      decimalSeparator=","
+                      fixedDecimalScale
+                      allowNegative={false}
+                      placeholder="0"
+                      onValueChange={(values) => {
+                        field.onChange(values.floatValue);
+                      }}
+                    />
+                    <InputGroupAddon>
+                      <Bed className="h-4 w-4" />
+                    </InputGroupAddon>
+                  </InputGroup>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <FormField
-            control={form.control}
-            name="bathroomsQty"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor={field.name}>Banheiros</FormLabel>
-                <FormControl>
-                  <div className="relative mt-1.5">
-                    <InputGroup>
-                      <NumericFormat
-                        id={field.name}
-                        name={field.name}
-                        value={field.value}
-                        customInput={InputGroupInput}
-                        thousandSeparator="."
-                        decimalSeparator=","
-                        fixedDecimalScale
-                        allowNegative={false}
-                        placeholder="0"
-                        onValueChange={(values) => {
-                          field.onChange(values.floatValue);
-                        }}
-                      />
-                      <InputGroupAddon>
-                        <Bath className="h-4 w-4" />
-                      </InputGroupAddon>
-                    </InputGroup>
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <FormField
+          control={form.control}
+          name="bathroomsQty"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor={field.name}>Banheiros</FormLabel>
+              <FormControl>
+                <div className="relative mt-1.5">
+                  <InputGroup>
+                    <NumericFormat
+                      id={field.name}
+                      name={field.name}
+                      value={field.value}
+                      customInput={InputGroupInput}
+                      thousandSeparator="."
+                      decimalSeparator=","
+                      fixedDecimalScale
+                      allowNegative={false}
+                      placeholder="0"
+                      onValueChange={(values) => {
+                        field.onChange(values.floatValue);
+                      }}
+                    />
+                    <InputGroupAddon>
+                      <Bath className="h-4 w-4" />
+                    </InputGroupAddon>
+                  </InputGroup>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <FormField
-            control={form.control}
-            name="parkingSpacesQty"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor={field.name}>Vagas</FormLabel>
-                <FormControl>
-                  <div className="relative mt-1.5">
-                    <InputGroup>
-                      <NumericFormat
-                        id={field.name}
-                        name={field.name}
-                        value={field.value}
-                        customInput={InputGroupInput}
-                        thousandSeparator="."
-                        decimalSeparator=","
-                        fixedDecimalScale
-                        allowNegative={false}
-                        placeholder="0"
-                        onValueChange={(values) => {
-                          field.onChange(values.floatValue);
-                        }}
-                      />
-                      <InputGroupAddon>
-                        <Car className="h-4 w-4" />
-                      </InputGroupAddon>
-                    </InputGroup>
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <FormField
+          control={form.control}
+          name="parkingSpacesQty"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor={field.name}>Vagas</FormLabel>
+              <FormControl>
+                <div className="relative mt-1.5">
+                  <InputGroup>
+                    <NumericFormat
+                      id={field.name}
+                      name={field.name}
+                      value={field.value}
+                      customInput={InputGroupInput}
+                      thousandSeparator="."
+                      decimalSeparator=","
+                      fixedDecimalScale
+                      allowNegative={false}
+                      placeholder="0"
+                      onValueChange={(values) => {
+                        field.onChange(values.floatValue);
+                      }}
+                    />
+                    <InputGroupAddon>
+                      <Car className="h-4 w-4" />
+                    </InputGroupAddon>
+                  </InputGroup>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <FormField
-            control={form.control}
-            name="area"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor={field.name}>Área - (m²)</FormLabel>
-                <FormControl>
-                  <div className="relative mt-1.5">
-                    <InputGroup>
-                      <NumericFormat
-                        id={field.name}
-                        name={field.name}
-                        value={field.value}
-                        customInput={InputGroupInput}
-                        thousandSeparator="."
-                        decimalSeparator=","
-                        fixedDecimalScale
-                        allowNegative={false}
-                        placeholder="0"
-                        onValueChange={(values) => {
-                          field.onChange(values.floatValue);
-                        }}
-                      />
-                      <InputGroupAddon>
-                        <Ruler className="h-4 w-4" />
-                      </InputGroupAddon>
-                    </InputGroup>
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <FormField
+          control={form.control}
+          name="area"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor={field.name}>Área - (m²)</FormLabel>
+              <FormControl>
+                <div className="relative mt-1.5">
+                  <InputGroup>
+                    <NumericFormat
+                      id={field.name}
+                      name={field.name}
+                      value={field.value}
+                      customInput={InputGroupInput}
+                      thousandSeparator="."
+                      decimalSeparator=","
+                      fixedDecimalScale
+                      allowNegative={false}
+                      placeholder="0"
+                      onValueChange={(values) => {
+                        field.onChange(values.floatValue);
+                      }}
+                    />
+                    <InputGroupAddon>
+                      <Ruler className="h-4 w-4" />
+                    </InputGroupAddon>
+                  </InputGroup>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <FormField
-            control={form.control}
-            name="suitesQty"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor={field.name}>Suítes</FormLabel>
-                <FormControl>
-                  <div className="relative mt-1.5">
-                    <InputGroup>
-                      <NumericFormat
-                        id={field.name}
-                        name={field.name}
-                        value={field.value}
-                        customInput={InputGroupInput}
-                        thousandSeparator="."
-                        decimalSeparator=","
-                        fixedDecimalScale
-                        allowNegative={false}
-                        placeholder="0"
-                        onValueChange={(values) => {
-                          field.onChange(values.floatValue);
-                        }}
-                      />
-                      <InputGroupAddon>
-                        <BedDouble className="h-4 w-4" />
-                      </InputGroupAddon>
-                    </InputGroup>
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <FormField
+          control={form.control}
+          name="suitesQty"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor={field.name}>Suítes</FormLabel>
+              <FormControl>
+                <div className="relative mt-1.5">
+                  <InputGroup>
+                    <NumericFormat
+                      id={field.name}
+                      name={field.name}
+                      value={field.value}
+                      customInput={InputGroupInput}
+                      thousandSeparator="."
+                      decimalSeparator=","
+                      fixedDecimalScale
+                      allowNegative={false}
+                      placeholder="0"
+                      onValueChange={(values) => {
+                        field.onChange(values.floatValue);
+                      }}
+                    />
+                    <InputGroupAddon>
+                      <BedDouble className="h-4 w-4" />
+                    </InputGroupAddon>
+                  </InputGroup>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <FormField
-            control={form.control}
-            name="condominiumFee"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor={field.name}>Condomínio</FormLabel>
-                <FormControl>
-                  <div className="relative mt-1.5">
-                    <InputGroup>
-                      <NumericFormat
-                        id={field.name}
-                        name={field.name}
-                        value={field.value}
-                        customInput={InputGroupInput}
-                        thousandSeparator="."
-                        decimalSeparator=","
-                        prefix="R$ "
-                        fixedDecimalScale
-                        allowNegative={false}
-                        decimalScale={2}
-                        placeholder="R$ 0,00"
-                        onValueChange={(values) => {
-                          field.onChange(values.floatValue);
-                        }}
-                      />
-                      <InputGroupAddon>
-                        <HandCoins className="h-4 w-4" />
-                      </InputGroupAddon>
-                    </InputGroup>
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </>
+        <FormField
+          control={form.control}
+          name="condominiumFee"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor={field.name}>Condomínio</FormLabel>
+              <FormControl>
+                <div className="relative mt-1.5">
+                  <InputGroup>
+                    <NumericFormat
+                      id={field.name}
+                      name={field.name}
+                      value={field.value}
+                      customInput={InputGroupInput}
+                      thousandSeparator="."
+                      decimalSeparator=","
+                      prefix="R$ "
+                      fixedDecimalScale
+                      allowNegative={false}
+                      decimalScale={2}
+                      placeholder="R$ 0,00"
+                      onValueChange={(values) => {
+                        field.onChange(values.floatValue);
+                      }}
+                    />
+                    <InputGroupAddon>
+                      <HandCoins className="h-4 w-4" />
+                    </InputGroupAddon>
+                  </InputGroup>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </div>
 
       <div className="grid grid-cols-3 gap-4 pt-4">

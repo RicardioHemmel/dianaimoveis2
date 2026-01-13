@@ -21,15 +21,10 @@ import {
 // ICONS
 import { MapPin } from "lucide-react";
 
-// SCHEMAS
-import { PropertyDetail } from "@/lib/schemas/property/property.schema";
-import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
-
-import { UseFormReturn } from "react-hook-form";
-import { NumericFormat } from "react-number-format";
-
 // CONTEXT
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
+
+import { NumericFormat } from "react-number-format";
 
 export default function TabSpecific() {
   const { form, propertyDetails } = usePropertyFormContext();
@@ -40,110 +35,138 @@ export default function TabSpecific() {
   return (
     <TabsContent value="specific" className="space-y-4">
       {propertyType?.name === "Apartamento" && (
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-foreground">
-            Características do Apartamento
-          </h3>
-          <div className="grid grid-cols-2 gap-4">
-            <FormField
-              name={"floorStart"}
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Andar Inicial</FormLabel>
-                  <FormControl>
-                    <NumericFormat
-                      customInput={Input}
-                      placeholder="Ex: 5"
-                      value={field.value}
-                      className="mt-1.5"
-                      variant={"gray"}
-                      onValueChange={(values) => {
-                        field.onChange(values.floatValue);
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              name={"floorEnd"}
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Andar Final</FormLabel>
-                  <FormControl>
-                    <NumericFormat
-                      customInput={Input}
-                      placeholder="Ex: 10"
-                      value={field.value}
-                      className="mt-1.5"
-                      variant={"gray"}
-                      onValueChange={(values) => {
-                        field.onChange(values.floatValue);
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* PROPERTY STANDING */}
-            <FormField
-              control={form.control}
-              name="propertyStanding"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Porte</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+        <>
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-foreground">
+              Informações Gerais
+            </h3>
+            <div className="w-full">
+              <FormField
+                control={form.control}
+                name="constructionCompany"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Construtora</FormLabel>
                     <FormControl>
-                      <SelectTrigger variant="gray" className="mt-1.5 w-full">
-                        <SelectValue placeholder="Selecione um porte" />
-                      </SelectTrigger>
+                      <Input
+                        placeholder="Digite a construtora do empreendimento"
+                        variant="gray"
+                        className="mt-1.5"
+                        {...field}
+                      />
                     </FormControl>
-                    <SelectContent>
-                      {propertyStandings?.map((standing) => (
-                        <SelectItem key={standing._id} value={standing._id}>
-                          {standing.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* PROPERTY TYPOLOGY */}
-            <FormField
-              control={form.control}
-              name="propertyTypology"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Tipologia</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger variant="gray" className="mt-1.5 w-full">
-                        <SelectValue placeholder="Selecione uma tipologia" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {propertyTypologies?.map((typology) => (
-                        <SelectItem key={typology._id} value={typology._id}>
-                          {typology.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
-        </div>
+
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-foreground">
+              Características do Apartamento
+            </h3>
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                name={"floorStart"}
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Andar Inicial</FormLabel>
+                    <FormControl>
+                      <NumericFormat
+                        customInput={Input}
+                        placeholder="Ex: 5"
+                        value={field.value}
+                        className="mt-1.5"
+                        variant={"gray"}
+                        onValueChange={(values) => {
+                          field.onChange(values.floatValue);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                name={"floorEnd"}
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Andar Final</FormLabel>
+                    <FormControl>
+                      <NumericFormat
+                        customInput={Input}
+                        placeholder="Ex: 10"
+                        value={field.value}
+                        className="mt-1.5"
+                        variant={"gray"}
+                        onValueChange={(values) => {
+                          field.onChange(values.floatValue);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* PROPERTY STANDING */}
+              <FormField
+                control={form.control}
+                name="propertyStanding"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Porte</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger variant="gray" className="mt-1.5 w-full">
+                          <SelectValue placeholder="Selecione um porte" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {propertyStandings?.map((standing) => (
+                          <SelectItem key={standing._id} value={standing._id}>
+                            {standing.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* PROPERTY TYPOLOGY */}
+              <FormField
+                control={form.control}
+                name="propertyTypology"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Tipologia</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger variant="gray" className="mt-1.5 w-full">
+                          <SelectValue placeholder="Selecione uma tipologia" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {propertyTypologies?.map((typology) => (
+                          <SelectItem key={typology._id} value={typology._id}>
+                            {typology.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+        </>
       )}
 
       {propertyType?.name === "Terreno" && (

@@ -5,9 +5,14 @@ export interface IPopulatedRef {
   name: string;
 }
 
-interface propertyGallary {
+interface PropertyGallary {
   key: string;
   order: number;
+}
+
+interface DetailRange {
+  min: number | null;
+  max: number | null;
 }
 
 // USED FOR MAPPING DATA TO BACKEND
@@ -17,15 +22,17 @@ export interface IPropertyRaw {
   description?: string | null;
 
   price: number;
-  bedroomsQty?: number | null;
-  suitesQty?: number | null;
-  bathroomsQty?: number | null;
-  parkingSpacesQty?: number | null;
-  area?: number | null;
+  bedrooms?: DetailRange;
+  suites?: DetailRange;
+  bathrooms?: DetailRange;
+  parkingSpaces?: DetailRange;
+  area?: DetailRange;
+
   deliveryDate?: string | null;
   condominiumFee?: number | null;
   floorStart?: number | null;
   floorEnd?: number | null;
+  constructionCompany?: string | null;
 
   isFurnished?: boolean;
   isNearSubway?: boolean;
@@ -39,8 +46,8 @@ export interface IPropertyRaw {
   propertyTypology?: Types.ObjectId | null;
   propertyAmenities: Types.ObjectId[];
 
-  propertyGallery: propertyGallary[];
-  propertyFloorPlanGallery: propertyGallary[];
+  propertyGallery: PropertyGallary[];
+  propertyFloorPlanGallery: PropertyGallary[];
   videoUrl?: string | null;
 
   status: "DRAFT" | "PUBLISHED";

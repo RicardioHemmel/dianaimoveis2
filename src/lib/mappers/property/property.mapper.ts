@@ -80,6 +80,7 @@ export class PropertyMapper {
       condominiumFee: property.condominiumFee ?? null,
       floorStart: property.floorStart ?? null,
       floorEnd: property.floorEnd ?? null,
+      constructionCompany: property.constructionCompany ?? null,
 
       isFurnished: property.isFurnished,
       isNearSubway: property.isNearSubway,
@@ -128,6 +129,7 @@ export class PropertyMapper {
       condominiumFee: property?.condominiumFee ?? undefined,
       floorStart: property?.floorStart ?? undefined,
       floorEnd: property?.floorEnd ?? undefined,
+      constructionCompany: property.constructionCompany ?? "",
 
       isFurnished: property?.isFurnished,
       isNearSubway: property?.isNearSubway,
@@ -183,6 +185,7 @@ export class PropertyMapper {
       condominiumFee: property?.condominiumFee ?? undefined,
       floorStart: property?.floorStart ?? undefined,
       floorEnd: property?.floorEnd ?? undefined,
+      constructionCompany: property.constructionCompany ?? "",
 
       isFurnished: property?.isFurnished,
       isNearSubway: property?.isNearSubway,

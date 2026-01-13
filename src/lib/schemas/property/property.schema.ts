@@ -3,6 +3,35 @@ import { z } from "zod";
 
 //-------------------------------------------------- AUXULIAR TYPES ------------------------------------------------------
 
+export const rangeSchema = z
+  .object({
+    min: z.number().optional(),
+    max: z.number().optional(),
+  })
+  .refine(
+    (v) => {
+      // ou os dois existem, ou nenhum existe
+      const bothDefined = v.min !== undefined && v.max !== undefined;
+      const bothUndefined = v.min === undefined && v.max === undefined;
+      return bothDefined || bothUndefined;
+    },
+    {
+      message: "Informe min e max juntos, não apenas um deles",
+    }
+  )
+  .refine(
+    (v) => {
+      // se ambos existirem, valida a ordem
+      if (v.min === undefined || v.max === undefined) return true;
+      return v.min <= v.max;
+    },
+    {
+      message: "Min não pode ser maior que Max",
+    }
+  );
+
+export type RangeSchema = z.infer<typeof rangeSchema>;
+
 //--------- PROPERTY GALLERY TO VIEW
 export const galleryViewItemSchema = z.object({
   key: z.string(),
@@ -21,12 +50,12 @@ export const galleryInputItemSchema = z.object({
 export type GalleryInputItemSchema = z.infer<typeof galleryInputItemSchema>;
 
 //--------- PROPERTY DETAILS (TYPE, TYPOLOGY, STANDING...)
-const propertyDetail = z.object({
+const propertyDetailSchema = z.object({
   _id: z.string(),
   name: z.string(),
 });
 
-export type PropertyDetail = z.infer<typeof propertyDetail>;
+export type PropertyDetailSchema = z.infer<typeof propertyDetailSchema>;
 
 //-------------------------------------------------- PROPERTY IMAGE UPLOAD ------------------------------------------------------
 
@@ -41,13 +70,13 @@ const propertyBaseSchema = {
   _id: z.string().optional(),
   title: z.string().min(1, "O título é obrigatório"),
   description: z.string().optional(),
-
-  bedroomsQty: z.number().optional(),
-  suitesQty: z.number().optional(),
-  bathroomsQty: z.number().optional(),
-  parkingSpacesQty: z.number().optional(),
   price: z.number("O preço é obrigatório").nonnegative(),
-  area: z.number().optional(),
+
+  bedrooms: rangeSchema.optional(),
+  suites: rangeSchema.optional(),
+  bathrooms: rangeSchema.optional(),
+  parkingSpaces: rangeSchema.optional(),
+  area: rangeSchema.optional(),
   deliveryDate: z
     .union([z.string().regex(/^\d{4}-\d{2}-\d{2}$/), z.literal("")])
     .optional(),
@@ -55,6 +84,7 @@ const propertyBaseSchema = {
   condominiumFee: z.number().optional(),
   floorStart: z.number().optional(),
   floorEnd: z.number().optional(),
+  constructionCompany: z.string().optional(),
 
   videoUrl: z.string().optional(),
 
@@ -84,11 +114,11 @@ export const propertyViewSchema = z.object({
   propertyGallery: z.array(galleryViewItemSchema),
   propertyFloorPlanGallery: z.array(galleryViewItemSchema),
 
-  propertyType: propertyDetail.optional(),
-  propertyPurpose: propertyDetail.optional(),
-  propertyStanding: propertyDetail.optional(),
-  propertyTypology: propertyDetail.optional(),
-  propertyAmenities: z.array(propertyDetail),
+  propertyType: propertyDetailSchema.optional(),
+  propertyPurpose: propertyDetailSchema.optional(),
+  propertyStanding: propertyDetailSchema.optional(),
+  propertyTypology: propertyDetailSchema.optional(),
+  propertyAmenities: z.array(propertyDetailSchema),
 });
 
 export type PropertyViewSchema = z.infer<typeof propertyViewSchema>;
@@ -101,7 +131,7 @@ export const propertyInputSchema = z.object({
   propertyGallery: z.array(galleryInputItemSchema),
   propertyFloorPlanGallery: z.array(galleryInputItemSchema),
 
-  propertyType: propertyDetail.optional(),
+  propertyType: propertyDetailSchema.optional(),
   propertyPurpose: z.string().optional(),
   propertyStanding: z.string().optional(),
   propertyTypology: z.string().optional(),
@@ -122,6 +152,7 @@ export const DefaultValuesPropertyForm: PropertyInputSchema = {
   propertyStanding: "",
   propertyTypology: "",
   propertyAmenities: [],
+  constructionCompany: "",
   isFeatured: false,
   isFurnished: false,
   isNearSubway: false,
@@ -142,11 +173,11 @@ export const DefaultValuesPropertyForm: PropertyInputSchema = {
 
 //-------------------------------------------------- PROPS CONTROLS ------------------------------------------------------
 export type PropertyDetailsData = {
-  amenities: PropertyDetail[];
-  purposes: PropertyDetail[];
-  standings: PropertyDetail[];
-  types: PropertyDetail[];
-  typologies: PropertyDetail[];
+  amenities: PropertyDetailSchema[];
+  purposes: PropertyDetailSchema[];
+  standings: PropertyDetailSchema[];
+  types: PropertyDetailSchema[];
+  typologies: PropertyDetailSchema[];
 };
 
 //-------------------------------------------------- FRIENDLY LABELS MAPPER ------------------------------------------------------

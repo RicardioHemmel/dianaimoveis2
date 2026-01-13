@@ -1,3 +1,5 @@
+import z from "zod";
+
 export interface FileUpload {
   id: string; // Unique identifier for drag n drop
   file?: File; // Original file object
@@ -9,3 +11,9 @@ export interface FileUpload {
   key?: string; // the key returned by the cloud storage
   error?: boolean; // Flag to indicate if there was an error during upload
 }
+
+export const uploadRequestSchema = z.object({
+  fileName: z.string(),
+  contentType: z.string(),
+  size: z.number(),
+});

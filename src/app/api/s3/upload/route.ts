@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { uploadRequestSchema } from "@/lib/schemas/property/property.schema";
+import { uploadRequestSchema } from "@/lib/schemas/media/file.schema";
 import { StorageService } from "@/lib/services/storage/storage.service";
 
 // UPLOADS IMAGES TO CLOUD

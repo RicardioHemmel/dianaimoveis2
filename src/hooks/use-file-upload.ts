@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { FileUpload } from "@/lib/schemas/media/file.schema";
-import { GalleryInputItemSchema } from "@/lib/schemas/property/property.schema";
+import { GalleryItemInputSchema } from "@/lib/schemas/property/property.schema";
 import { resolveImageUrl } from "@/lib/media/resolveImageUrl";
 
 export default function useFileUpload() {
@@ -114,7 +114,7 @@ export default function useFileUpload() {
   }
 
   // MAPS IMAGES TO SHOW ON EDIT PROPERTY MODE
-  function mapRemoteFilesToFileUpload(images: GalleryInputItemSchema[]) {
+  function mapRemoteFilesToFileUpload(images: GalleryItemInputSchema[]) {
     const fileUploadFromDB = images.map((image, i) => ({
       id: window.crypto.randomUUID(),
       key: image.key,

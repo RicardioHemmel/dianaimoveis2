@@ -3,51 +3,53 @@ import { z } from "zod";
 
 //-------------------------------------------------- AUXULIAR TYPES ------------------------------------------------------
 
-export const rangeSchema = z
-  .object({
-    min: z.number().optional(),
-    max: z.number().optional(),
-  })
-  .refine(
-    (v) => {
-      // ou os dois existem, ou nenhum existe
-      const bothDefined = v.min !== undefined && v.max !== undefined;
-      const bothUndefined = v.min === undefined && v.max === undefined;
-      return bothDefined || bothUndefined;
-    },
-    {
-      message: "Informe min e max juntos, não apenas um deles",
-    }
-  )
-  .refine(
-    (v) => {
-      // se ambos existirem, valida a ordem
-      if (v.min === undefined || v.max === undefined) return true;
-      return v.min <= v.max;
-    },
-    {
-      message: "Min não pode ser maior que Max",
-    }
-  );
+// -------- TOGGLE FIELDS
+const toggleFieldSchema = z.object({
+  value: z.boolean(),
+  show: z.boolean(),
+});
 
-export type RangeSchema = z.infer<typeof rangeSchema>;
+export type ToggleFieldSchema = z.infer<typeof toggleFieldSchema>;
+
+// -------- ADDRESS
+const addressSchema = z.object({
+  street: z.string().optional(),
+  neighborhood: z.string().optional(),
+  city: z.string().optional(),
+  stateUf: z.string().optional(),
+  zipCode: z.string().optional(),
+});
+
+export type AddressSchema = z.infer<typeof addressSchema>;
+
+// -------- RANGE FIELDS
+export const rangeFieldSchema = z
+  .object({
+    min: z.number().nonnegative(),
+    max: z.number().nonnegative(),
+  })
+  .refine((v) => v.min <= v.max, {
+    message: "Min não pode ser maior que Max",
+  });
+
+export type RangeSchema = z.infer<typeof rangeFieldSchema>;
 
 //--------- PROPERTY GALLERY TO VIEW
-export const galleryViewItemSchema = z.object({
+export const galleryItemViewSchema = z.object({
   key: z.string(),
   order: z.number(),
   url: z.string(),
 });
 
-export type GalleryViewItemSchema = z.infer<typeof galleryViewItemSchema>;
+export type GalleryItemViewSchema = z.infer<typeof galleryItemViewSchema>;
 
 //--------- PROPERTY GALLERY TO INPUT
-export const galleryInputItemSchema = z.object({
+export const galleryItemInputSchema = z.object({
   key: z.string(),
   order: z.number(),
 });
 
-export type GalleryInputItemSchema = z.infer<typeof galleryInputItemSchema>;
+export type GalleryItemInputSchema = z.infer<typeof galleryItemInputSchema>;
 
 //--------- PROPERTY DETAILS (TYPE, TYPOLOGY, STANDING...)
 const propertyDetailSchema = z.object({
@@ -57,62 +59,52 @@ const propertyDetailSchema = z.object({
 
 export type PropertyDetailSchema = z.infer<typeof propertyDetailSchema>;
 
-//-------------------------------------------------- PROPERTY IMAGE UPLOAD ------------------------------------------------------
-
-export const uploadRequestSchema = z.object({
-  fileName: z.string(),
-  contentType: z.string(),
-  size: z.number(),
-});
-
 //---------------------------------------------------- BASE SCHEMA -----------------------------------------------------------
-const propertyBaseSchema = {
+const propertyBaseSchema = z.object({
   _id: z.string().optional(),
+
   title: z.string().min(1, "O título é obrigatório"),
-  description: z.string().optional(),
   price: z.number("O preço é obrigatório").nonnegative(),
 
-  bedrooms: rangeSchema.optional(),
-  suites: rangeSchema.optional(),
-  bathrooms: rangeSchema.optional(),
-  parkingSpaces: rangeSchema.optional(),
-  area: rangeSchema.optional(),
+  status: z.enum(["DRAFT", "PUBLISHED"]),
+
+  bedrooms: rangeFieldSchema.optional(),
+  suites: rangeFieldSchema.optional(),
+  bathrooms: rangeFieldSchema.optional(),
+  parkingSpaces: rangeFieldSchema.optional(),
+  area: rangeFieldSchema.optional(),
+  floors: rangeFieldSchema.optional(),
+
+  description: z.string().optional(),
+  condominiumFee: z.number().nonnegative().optional(),
+  constructionCompany: z.string().optional(),
+  videoUrl: z.string().optional(),
   deliveryDate: z
     .union([z.string().regex(/^\d{4}-\d{2}-\d{2}$/), z.literal("")])
     .optional(),
 
-  condominiumFee: z.number().optional(),
-  floorStart: z.number().optional(),
-  floorEnd: z.number().optional(),
-  constructionCompany: z.string().optional(),
+  isFurnished: toggleFieldSchema.optional(),
+  isNearSubway: toggleFieldSchema.optional(),
+  isFeatured: toggleFieldSchema.optional(),
+  isPetFriendly: toggleFieldSchema.optional(),
+  showSquareMeterPrice: toggleFieldSchema.optional(),
 
-  videoUrl: z.string().optional(),
+  propertyType: z.string(),
+  propertyPurpose: z.string().optional(),
+  propertyStanding: z.string().optional(),
+  propertyTypology: z.string().optional(),
+  propertyAmenities: z.array(z.string()),
 
-  isFurnished: z.boolean().optional(),
-  isNearSubway: z.boolean().optional(),
-  isFeatured: z.boolean().optional(),
-  isPetFriendly: z.boolean().optional(),
-  showSquareMeterPrice: z.boolean().optional(),
+  gallery: z.array(galleryItemInputSchema),
+  floorPlanGallery: z.array(galleryItemInputSchema),
 
-  status: z.enum(["DRAFT", "PUBLISHED"]),
+  address: addressSchema.optional(),
+});
 
-  address: z
-    .object({
-      street: z.string().optional(),
-      neighborhood: z.string().optional(),
-      city: z.string().optional(),
-      stateUf: z.string().optional(),
-      zipCode: z.string().optional(),
-    })
-    .optional(),
-};
-
-//---------------------------------------------------- VIEW SCHEMA -----------------------------------------------------------
-export const propertyViewSchema = z.object({
-  ...propertyBaseSchema,
-
-  propertyGallery: z.array(galleryViewItemSchema),
-  propertyFloorPlanGallery: z.array(galleryViewItemSchema),
+//-------------------------------------------------- VIEW SCHEMA ---------------------------------------------------
+export const propertyViewSchema = propertyBaseSchema.extend({
+  gallery: z.array(galleryItemViewSchema),
+  floorPlanGallery: z.array(galleryItemViewSchema),
 
   propertyType: propertyDetailSchema.optional(),
   propertyPurpose: propertyDetailSchema.optional(),
@@ -123,44 +115,30 @@ export const propertyViewSchema = z.object({
 
 export type PropertyViewSchema = z.infer<typeof propertyViewSchema>;
 
-//---------------------------------------------------- CREATE FORM SCHEMA -----------------------------------------------------------
+//---------------------------------------------CREATE/EDIT FORM SCHEMA -------------------------------------------------
 
-export const propertyInputSchema = z.object({
-  ...propertyBaseSchema,
-
-  propertyGallery: z.array(galleryInputItemSchema),
-  propertyFloorPlanGallery: z.array(galleryInputItemSchema),
-
-  propertyType: propertyDetailSchema.optional(),
-  propertyPurpose: z.string().optional(),
-  propertyStanding: z.string().optional(),
-  propertyTypology: z.string().optional(),
-  propertyAmenities: z.array(z.string()),
+export const propertyInputSchema = propertyBaseSchema.extend({
+  propertyType: propertyDetailSchema.nullable(),
 });
 
 export type PropertyInputSchema = z.infer<typeof propertyInputSchema>;
 
 //---------------------------------------------------- DEFAULT VALUES TO POPULATE CREATE PROPERTY FORM -----------------------------------------------------------
 export const DefaultValuesPropertyForm: PropertyInputSchema = {
-  _id: undefined,
+  _id: "",
   title: "",
   description: "",
   price: undefined as unknown as number,
-  propertyType: undefined,
+  propertyType: null,
   deliveryDate: "",
   propertyPurpose: "",
   propertyStanding: "",
   propertyTypology: "",
   propertyAmenities: [],
   constructionCompany: "",
-  isFeatured: false,
-  isFurnished: false,
-  isNearSubway: false,
-  showSquareMeterPrice: false,
   status: "DRAFT",
-  propertyGallery: [],
-  propertyFloorPlanGallery: [],
-  isPetFriendly: false,
+  gallery: [],
+  floorPlanGallery: [],
   videoUrl: "",
   address: {
     street: "",
@@ -185,12 +163,12 @@ export type PropertyDetailsData = {
 export const fieldLabels: Record<string, string> = {
   title: "Título",
   description: "Descrição",
-  bedroomsQty: "Quartos",
-  suitesQty: "Suítes",
-  bathroomsQty: "Banheiros",
-  parkingSpacesQty: "Vagas de garagem",
-  price: "Preço",
+  bedrooms: "Quartos",
+  suites: "Suítes",
+  bathrooms: "Banheiros",
+  parkingSpaces: "Vagas de garagem",
   area: "Área",
+  price: "Preço",
   condominiumFee: "Condomínio",
   floorStart: "Andar inicial",
   floorEnd: "Andar final",

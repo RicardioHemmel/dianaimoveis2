@@ -54,7 +54,7 @@ export default function PropertyForm({ mode }: { mode: "create" | "edit" }) {
     if (
       mode === "edit" &&
       filesUpload.length === 0 &&
-      data.propertyGallery?.length > 0
+      data.gallery?.length > 0
     ) {
       toast.error("Aguarde o carregamento das imagens...");
       return;

@@ -1,8 +1,8 @@
 import mongoose, { Schema, Model } from "mongoose";
-import { IPropertyRaw } from "@/lib/schemas/property/IProperty";
+import { IProperty } from "@/lib/schemas/property/IProperty";
 
 // GALLERY WITH ORDER FOR DISPLAY AND CLOUD KEY
-const GalleryItemSchema = new Schema(
+const gallerySchema = new Schema(
   {
     key: { type: String, required: true },
     order: { type: Number, required: true },
@@ -11,7 +11,7 @@ const GalleryItemSchema = new Schema(
 );
 
 // GUARANTEES INTEGRITY FOR PROPERTY DETAILS OF TYPE NUMBER
-const RangeSchema = new Schema(
+const rangeSchema = new Schema(
   {
     min: { type: Number, required: true },
     max: { type: Number, required: true },
@@ -19,39 +19,55 @@ const RangeSchema = new Schema(
   { _id: false }
 );
 
-// MAX VALUE CAN'T BE LESS THEN MIN
-RangeSchema.path("max").validate(function (value) {
-  return this.min <= value;
-}, "Min não pode ser maior que Max");
+// PROPERTY DETAILS WITH VISIBILITY TOGGLE
+const toggleFieldSchema = new Schema(
+  {
+    value: Boolean,
+    show: Boolean,
+  },
+  { _id: false }
+);
 
-const propertySchema = new Schema(
+const addressSchema = new Schema(
+  {
+    street: String,
+    neighborhood: String,
+    city: String,
+    stateUf: String,
+    zipCode: String,
+  },
+  { _id: false }
+);
+
+const propertySchema = new Schema<IProperty>(
   {
     title: { type: String, unique: true },
     description: String,
     price: Number,
 
-    bedrooms: RangeSchema,
-    suites: RangeSchema,
-    bathrooms: RangeSchema,
-    parkingSpaces: RangeSchema,
-    area: RangeSchema,
+    bedrooms: rangeSchema,
+    suites: rangeSchema,
+    bathrooms: rangeSchema,
+    parkingSpaces: rangeSchema,
+    area: rangeSchema,
+    floors: rangeSchema,
 
     deliveryDate: String,
     condominiumFee: Number,
-    floorStart: Number,
-    floorEnd: Number,
     constructionCompany: String,
 
-    isFurnished: Boolean,
-    isNearSubway: Boolean,
-    isFeatured: Boolean,
-    showSquareMeterPrice: Boolean,
-    isPetFriendly: Boolean,
+    isFurnished: toggleFieldSchema,
+    isNearSubway: toggleFieldSchema,
+    isFeatured: toggleFieldSchema,
+    showSquareMeterPrice: toggleFieldSchema,
+    isPetFriendly: toggleFieldSchema,
 
     propertyType: {
       type: Schema.Types.ObjectId,
       ref: "PropertyType",
+      required: true,
     },
+
     propertyPurpose: {
       type: Schema.Types.ObjectId,
       ref: "PropertyPurpose",
@@ -68,8 +84,8 @@ const propertySchema = new Schema(
       { type: Schema.Types.ObjectId, ref: "PropertyAmenities" },
     ],
 
-    propertyGallery: [GalleryItemSchema],
-    propertyFloorPlanGallery: [GalleryItemSchema],
+    gallery: [gallerySchema],
+    floorPlanGallery: [gallerySchema],
 
     videoUrl: String,
 
@@ -79,19 +95,12 @@ const propertySchema = new Schema(
       index: true,
     },
 
-    address: {
-      street: String,
-      neighborhood: String,
-      city: String,
-      stateUf: String,
-      zipCode: String,
-      _id: false,
-    },
+    address: addressSchema,
   },
   { strict: true, timestamps: true }
 );
 
 const PropertyModel =
-  (mongoose.models.Property as Model<IPropertyRaw>) ||
-  mongoose.model<IPropertyRaw>("Property", propertySchema);
+  (mongoose.models.Property as Model<IProperty>) ||
+  mongoose.model<IProperty>("Property", propertySchema);
 export default PropertyModel;

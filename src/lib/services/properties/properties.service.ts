@@ -5,7 +5,7 @@ import Property from "@/lib/db/models/property/property.model";
 import { PropertyMapper } from "@/lib/mappers/property/property.mapper";
 import { IPropertyPopulated } from "@/lib/schemas/property/IProperty";
 import {
-  GalleryInputItemSchema,
+  GalleryItemInputSchema,
   PropertyInputSchema,
 } from "@/lib/schemas/property/property.schema";
 
@@ -60,7 +60,7 @@ export async function updateProperty(id: string, data: PropertyInputSchema) {
 
 export async function updatePropertyImage(
   id: string,
-  images: GalleryInputItemSchema[]
+  images: GalleryItemInputSchema[]
 ) {
   await connectMongoDB();
 

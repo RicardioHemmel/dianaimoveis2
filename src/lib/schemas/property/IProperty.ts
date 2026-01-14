@@ -23,6 +23,11 @@ interface ToggleFieldSchema {
   show: boolean;
 }
 
+export interface IPopulatedRef {
+  _id: Types.ObjectId;
+  name: string;
+}
+
 //-------------------------------------- BASE IPROPERTY --------------------------------
 export interface IProperty {
   _id?: Types.ObjectId;
@@ -72,11 +77,6 @@ export interface IProperty {
 }
 
 //-------------------------------------- POPULATED IPROPERTY --------------------------------
-
-export interface IPopulatedRef {
-  _id: Types.ObjectId;
-  name: string;
-}
 
 // FOR VIEW MAPPER
 export interface IPropertyPopulated extends Omit<

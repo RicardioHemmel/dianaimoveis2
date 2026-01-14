@@ -15,7 +15,6 @@ import { getPurposes } from "@/lib/services/properties/property-details/property
 import { getStandings } from "@/lib/services/properties/property-details/property-standings.service";
 import { getTypes } from "@/lib/services/properties/property-details/property-types.service";
 import { getTypologies } from "@/lib/services/properties/property-details/property-typologies.service";
-import { StorageService } from "@/lib/services/storage/storage.service"; // <--- Importamos o novo service
 
 // --- CONSTANTS ---
 const POPULATE_FIELDS = [
@@ -50,8 +49,8 @@ export async function getPropertyToView(
   if (!property) return null;
 
   // GARANTEES THAT THE GALLERY WILL RETURN WITH THE PREVIOUS DEFINED ORDER
-  if (property.propertyGallery) {
-    property.propertyGallery.sort((a, b) => a.order - b.order);
+  if (property.gallery) {
+    property.gallery.sort((a, b) => a.order - b.order);
   }
 
   return PropertyMapper.toViewSchema(property);
@@ -69,8 +68,8 @@ export async function getPropertyToInput(
 
   if (!property) return null;
 
-  if (property.propertyGallery) {
-    property.propertyGallery.sort((a, b) => a.order - b.order);
+  if (property.gallery) {
+    property.gallery.sort((a, b) => a.order - b.order);
   }
 
   return PropertyMapper.toInputSchema(property);

@@ -236,60 +236,63 @@ export class PropertyMapper {
   }
 
   // ---------------------------------- TO VIEW (DB -> POPULATE PROPERTY FORM ) ------------------------------
-  // static toInputSchema(property: IPropertyPopulated): PropertyInputSchema {
-  //   return {
-  //     _id: toStringId(property?._id),
-  //     title: property?.title,
-  //     description: property?.description ?? "",
+  static toInputSchema(property: IPropertyPopulated): PropertyInputSchema {
+    return {
+      _id: property._id!.toString(),
+      title: property.title,
+      price: property.price,
 
-  //     price: property?.price ?? 0,
-  //     bedroomsQty: property?.bedroomsQty ?? undefined,
-  //     suitesQty: property?.suitesQty ?? undefined,
-  //     bathroomsQty: property?.bathroomsQty ?? undefined,
-  //     parkingSpacesQty: property?.parkingSpacesQty ?? undefined,
-  //     area: property?.area ?? undefined,
-  //     deliveryDate: property.deliveryDate ?? "",
+      status: property.status,
 
-  //     condominiumFee: property?.condominiumFee ?? undefined,
-  //     floorStart: property?.floorStart ?? undefined,
-  //     floorEnd: property?.floorEnd ?? undefined,
-  //     constructionCompany: property.constructionCompany ?? "",
+      bedrooms: this.toDomainRange(property.bedrooms),
+      suites: this.toDomainRange(property.suites),
+      bathrooms: this.toDomainRange(property.bathrooms),
+      parkingSpaces: this.toDomainRange(property.parkingSpaces),
+      area: this.toDomainRange(property.area),
+      floors: this.toDomainRange(property.floors),
 
-  //     isFurnished: property?.isFurnished,
-  //     isNearSubway: property?.isNearSubway,
-  //     isFeatured: property?.isFeatured,
-  //     showSquareMeterPrice: property?.showSquareMeterPrice,
-  //     isPetFriendly: property?.isPetFriendly,
+      condominiumFee: property.condominiumFee ?? undefined,
+      deliveryDate: property.deliveryDate ?? "",
+      constructionCompany: property.constructionCompany ?? "",
+      videoUrl: property.videoUrl ?? "",
+      description: property.description ?? "",
 
-  //     propertyFloorPlanGallery:
-  //       property?.propertyFloorPlanGallery?.map((img) => ({
-  //         key: img.key,
-  //         order: img.order,
-  //         url: resolveImageUrl(img.key),
-  //       })) ?? [],
-  //     propertyGallery:
-  //       property?.propertyGallery?.map((img) => ({
-  //         key: img.key,
-  //         order: img.order,
-  //         url: resolveImageUrl(img.key),
-  //       })) ?? [],
-  //     videoUrl: property?.videoUrl ?? "",
-  //     status: property?.status,
+      isFurnished: this.toDomainToggleField(property.isFurnished),
+      isNearSubway: this.toDomainToggleField(property.isNearSubway),
+      isFeatured: this.toDomainToggleField(property.isFeatured),
+      showSquareMeterPrice: this.toDomainToggleField(
+        property.showSquareMeterPrice
+      ),
+      isPetFriendly: this.toDomainToggleField(property.isPetFriendly),
 
-  //     address: mapAddressToSchema(property?.address),
+      floorPlanGallery:
+        property?.floorPlanGallery?.map((img) => ({
+          key: img.key,
+          order: img.order,
+          url: resolveImageUrl(img.key),
+        })) ?? [],
 
-  //     propertyType: {
-  //       _id: property?.propertyType?._id.toString(),
-  //       name: property?.propertyType?.name,
-  //     },
-  //     propertyPurpose: property.propertyPurpose?._id.toString(),
-  //     propertyStanding: property.propertyStanding?._id.toString(),
-  //     propertyTypology: property.propertyTypology?._id.toString(),
-  //     propertyAmenities: property.propertyAmenities.map((amenity) =>
-  //       amenity._id.toString()
-  //     ),
-  //   };
-  // }
+      gallery:
+        property?.gallery?.map((img) => ({
+          key: img.key,
+          order: img.order,
+          url: resolveImageUrl(img.key),
+        })) ?? [],
+
+      address: this.toDomainAddress(property?.address),
+
+      propertyType: {
+        _id: property?.propertyType?._id.toString(),
+        name: property?.propertyType?.name,
+      },
+      propertyPurpose: property.propertyPurpose?._id.toString(),
+      propertyStanding: property.propertyStanding?._id.toString(),
+      propertyTypology: property.propertyTypology?._id.toString(),
+      propertyAmenities: property.propertyAmenities.map((amenity) =>
+        amenity._id.toString()
+      ),
+    };
+  }
 
   static PropertyDetailToView(PropertyDetail: IPopulatedRef) {
     return {

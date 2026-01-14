@@ -134,26 +134,11 @@ export default function PropertyForm({ mode }: { mode: "create" | "edit" }) {
               <div className="flex items-center gap-3">
                 <Badge
                   variant="outline"
-                  className={`
-      flex items-center gap-2 px-3 py-1 text-xs font-medium transition-all shadow-sm
-      ${
-        status === "DRAFT"
-          ? "bg-amber-50/50 text-amber-700 border-amber-200/60 ring-1 ring-amber-100/50"
-          : "bg-emerald-50/50 text-emerald-700 border-emerald-200/60 ring-1 ring-emerald-100/50"
-      }
-    `}
+                  className={`${status === "DRAFT" ? "bg-amber-500/10 text-amber-600 border-amber-500/30" : ""}  px-3 py-1`}
                 >
-                  {status === "DRAFT" ? (
-                    <Pencil className="h-3.5 w-3.5 opacity-80" />
-                  ) : (
-                    <CheckCircle2 className="h-3.5 w-3.5 opacity-80" />
-                  )}
-                  <span className="tracking-tight">
-                    Modo Edição •{" "}
-                    <span className="font-semibold uppercase tracking-wider text-[10px] opacity-90">
-                      {translateStatus(status)}
-                    </span>
-                  </span>
+                  <Pencil className="h-3 w-3 mr-1.5" />
+
+                  {`Modo Edição - ${translateStatus(status)}`}
                 </Badge>
               </div>
               <h2 className="text-3xl font-bold text-foreground">{title}</h2>

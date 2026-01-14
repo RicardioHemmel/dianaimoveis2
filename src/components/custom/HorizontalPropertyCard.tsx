@@ -77,7 +77,7 @@ export function PropertyCardHorizontal({
     : title;
 
   return (
-    <Card className="overflow-hidden shadow-xl transition-all duration-300 bg-white group p-0">
+    <Card className="overflow-hidden shadow-xl bg-white group p-0">
       <div className="flex flex-col md:flex-row min-h-[176px]">
         {/* IMAGE SECTION */}
         <div className="relative w-full md:w-64 h-48 md:h-auto bg-muted overflow-hidden shrink-0">

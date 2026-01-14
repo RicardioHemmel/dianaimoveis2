@@ -89,8 +89,8 @@ export async function deleteProperty(id: string) {
   // GETS ALL PROPERTY IMAGES
   const keysToDelete: string[] = [];
 
-  if (property.propertyGallery && property.propertyGallery.length > 0) {
-    property.propertyGallery.forEach((img) => {
+  if (property.gallery && property.gallery.length > 0) {
+    property.gallery.forEach((img) => {
       if (img.key) keysToDelete.push(img.key);
     });
   }

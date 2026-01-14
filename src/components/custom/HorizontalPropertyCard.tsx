@@ -83,10 +83,10 @@ export function PropertyCardHorizontal({
         <div className="relative w-full md:w-64 h-48 md:h-auto bg-muted overflow-hidden shrink-0">
           <Link href={propertyEditLink}>
             <div className="w-full h-full flex items-center justify-center bg-[image:var(--gradient-primary)]">
-              {property.propertyGallery.length > 0 ? (
+              {property.gallery.length > 0 ? (
                 <Image
                   alt="Imagem de Capa"
-                  src={showCoverImage(property.propertyGallery)}
+                  src={showCoverImage(property.gallery)}
                   fill
                 />
               ) : (

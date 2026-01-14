@@ -13,8 +13,8 @@ const gallerySchema = new Schema(
 // GUARANTEES INTEGRITY FOR PROPERTY DETAILS OF TYPE NUMBER
 const rangeSchema = new Schema(
   {
-    min: { type: Number, required: true },
-    max: { type: Number, required: true },
+    min: Number,
+    max: Number,
   },
   { _id: false }
 );
@@ -28,6 +28,7 @@ const toggleFieldSchema = new Schema(
   { _id: false }
 );
 
+// PROPERTY ADDRESS
 const addressSchema = new Schema(
   {
     street: String,
@@ -35,6 +36,7 @@ const addressSchema = new Schema(
     city: String,
     stateUf: String,
     zipCode: String,
+    referencePoint: [String],
   },
   { _id: false }
 );
@@ -56,10 +58,9 @@ const propertySchema = new Schema<IProperty>(
     condominiumFee: Number,
     constructionCompany: String,
 
+    isFeatured: { type: Boolean, default: false },
     isFurnished: toggleFieldSchema,
     isNearSubway: toggleFieldSchema,
-    isFeatured: toggleFieldSchema,
-    showSquareMeterPrice: toggleFieldSchema,
     isPetFriendly: toggleFieldSchema,
 
     propertyType: {

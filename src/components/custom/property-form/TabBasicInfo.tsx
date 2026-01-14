@@ -143,6 +143,7 @@ export default function TabBasicInfo() {
                   className="mt-1.5"
                   variant="gray"
                   rows={4}
+                  maxLength={1000}
                   {...field}
                 />
               </FormControl>

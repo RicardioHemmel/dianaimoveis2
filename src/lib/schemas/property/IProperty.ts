@@ -6,8 +6,8 @@ interface GallerySchema {
 }
 
 interface RangeSchema {
-  min: number;
-  max: number;
+  min?: number;
+  max?: number;
 }
 
 interface AddressSchema {
@@ -16,6 +16,7 @@ interface AddressSchema {
   city: string | null;
   stateUf: string | null;
   zipCode: string | null;
+  referencePoint: string[];
 }
 
 interface ToggleFieldSchema {
@@ -55,10 +56,9 @@ export interface IProperty {
   constructionCompany: string | null;
 
   // TOGGLE FIELDS
+  isFeatured: boolean;
   isFurnished: ToggleFieldSchema | null;
   isNearSubway: ToggleFieldSchema | null;
-  isFeatured: ToggleFieldSchema | null;
-  showSquareMeterPrice: ToggleFieldSchema | null;
   isPetFriendly: ToggleFieldSchema | null;
 
   // REFERENCES

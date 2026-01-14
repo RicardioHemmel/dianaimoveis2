@@ -5,6 +5,7 @@ import {
   ToggleFieldSchema,
   GalleryItemInputSchema,
   PropertyViewSchema,
+  PropertyBaseSchema,
 } from "@/lib/schemas/property/property.schema";
 import {
   IProperty,
@@ -83,7 +84,9 @@ export class PropertyMapper {
   }
 
   // ---------------- ADDRESS ----------------
-  private static toPersistenceAddress(address?: AddressSchema | null) {
+  private static toPersistenceAddress(
+    address?: AddressSchema | null
+  ): IProperty["address"] {
     if (!address) return null;
 
     return {
@@ -92,10 +95,13 @@ export class PropertyMapper {
       city: address.city || null,
       stateUf: address.stateUf || null,
       zipCode: address.zipCode || null,
+      referencePoint: address.referencePoint,
     };
   }
 
-  private static toDomainAddress(address?: IProperty["address"]) {
+  private static toDomainAddress(
+    address?: IProperty["address"]
+  ): PropertyBaseSchema["address"] {
     if (!address) return undefined;
     return {
       street: address.street ?? undefined,
@@ -103,6 +109,7 @@ export class PropertyMapper {
       city: address.city ?? undefined,
       stateUf: address.stateUf ?? undefined,
       zipCode: address.zipCode ?? undefined,
+      referencePoint: address.referencePoint,
     };
   }
 
@@ -152,12 +159,9 @@ export class PropertyMapper {
       description: property.description || null,
 
       // TOGGLE FIELDS
+      isFeatured: property.isFeatured,
       isFurnished: this.toPersistenceToggleField(property.isFurnished),
       isNearSubway: this.toPersistenceToggleField(property.isNearSubway),
-      isFeatured: this.toPersistenceToggleField(property.isFeatured),
-      showSquareMeterPrice: this.toPersistenceToggleField(
-        property.showSquareMeterPrice
-      ),
       isPetFriendly: this.toPersistenceToggleField(property.isPetFriendly),
 
       // GALLERY
@@ -198,12 +202,9 @@ export class PropertyMapper {
       videoUrl: property.videoUrl ?? "",
       description: property.description ?? "",
 
+      isFeatured: property.isFeatured,
       isFurnished: this.toDomainToggleField(property.isFurnished),
       isNearSubway: this.toDomainToggleField(property.isNearSubway),
-      isFeatured: this.toDomainToggleField(property.isFeatured),
-      showSquareMeterPrice: this.toDomainToggleField(
-        property.showSquareMeterPrice
-      ),
       isPetFriendly: this.toDomainToggleField(property.isPetFriendly),
 
       floorPlanGallery:
@@ -257,12 +258,9 @@ export class PropertyMapper {
       videoUrl: property.videoUrl ?? "",
       description: property.description ?? "",
 
+      isFeatured: property.isFeatured,
       isFurnished: this.toDomainToggleField(property.isFurnished),
       isNearSubway: this.toDomainToggleField(property.isNearSubway),
-      isFeatured: this.toDomainToggleField(property.isFeatured),
-      showSquareMeterPrice: this.toDomainToggleField(
-        property.showSquareMeterPrice
-      ),
       isPetFriendly: this.toDomainToggleField(property.isPetFriendly),
 
       floorPlanGallery:

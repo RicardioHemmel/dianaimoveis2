@@ -15,7 +15,10 @@ import {
   InputGroupInput,
   InputGroupAddon,
 } from "@/components/ui/input-group";
+import { Switch } from "@/components/ui/switch";
 import { NumericFormat } from "react-number-format";
+import { RangeFilter } from "@/components/custom/RangeFilter";
+import { ToggleInput } from "@/components/custom/ToggleInput";
 
 // ICONS
 import {
@@ -29,6 +32,7 @@ import {
   BedDouble,
   BadgeDollarSign,
   HandCoins,
+  Building,
 } from "lucide-react";
 
 // CONTEXT
@@ -38,306 +42,77 @@ export default function TabDetails() {
   const { form } = usePropertyFormContext();
   return (
     <TabsContent value="details" className="space-y-4">
-      <div className="grid grid-cols-3 gap-4">
-        <FormField
-          control={form.control}
-          name="bedroomsQty"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel htmlFor={field.name}>Quartos</FormLabel>
-              <FormControl>
-                <div className="relative mt-1.5">
-                  <InputGroup>
-                    <NumericFormat
-                      id={field.name}
-                      name={field.name}
-                      value={field.value}
-                      customInput={InputGroupInput}
-                      thousandSeparator="."
-                      decimalSeparator=","
-                      fixedDecimalScale
-                      allowNegative={false}
-                      placeholder="0"
-                      onValueChange={(values) => {
-                        field.onChange(values.floatValue);
-                      }}
-                    />
-                    <InputGroupAddon>
-                      <Bed className="h-4 w-4" />
-                    </InputGroupAddon>
-                  </InputGroup>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+      <div className="grid grid-cols-2 gap-6">
+        {/* AREA */}
+        <RangeFilter form={form} Icon={Ruler} name="area" title="Área (m²)" />
+
+        {/* BEDROOMS */}
+        <RangeFilter form={form} Icon={Bed} name="bedrooms" title="Quartos" />
+
+        {/* BATHROOMS */}
+        <RangeFilter
+          form={form}
+          Icon={Bath}
+          name="bathrooms"
+          title="Banheiros"
         />
 
-        <FormField
-          control={form.control}
-          name="bathroomsQty"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel htmlFor={field.name}>Banheiros</FormLabel>
-              <FormControl>
-                <div className="relative mt-1.5">
-                  <InputGroup>
-                    <NumericFormat
-                      id={field.name}
-                      name={field.name}
-                      value={field.value}
-                      customInput={InputGroupInput}
-                      thousandSeparator="."
-                      decimalSeparator=","
-                      fixedDecimalScale
-                      allowNegative={false}
-                      placeholder="0"
-                      onValueChange={(values) => {
-                        field.onChange(values.floatValue);
-                      }}
-                    />
-                    <InputGroupAddon>
-                      <Bath className="h-4 w-4" />
-                    </InputGroupAddon>
-                  </InputGroup>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+        {/* PARKING SPACES */}
+        <RangeFilter
+          form={form}
+          Icon={Car}
+          name="parkingSpaces"
+          title="Vagas"
         />
 
-        <FormField
-          control={form.control}
-          name="parkingSpacesQty"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel htmlFor={field.name}>Vagas</FormLabel>
-              <FormControl>
-                <div className="relative mt-1.5">
-                  <InputGroup>
-                    <NumericFormat
-                      id={field.name}
-                      name={field.name}
-                      value={field.value}
-                      customInput={InputGroupInput}
-                      thousandSeparator="."
-                      decimalSeparator=","
-                      fixedDecimalScale
-                      allowNegative={false}
-                      placeholder="0"
-                      onValueChange={(values) => {
-                        field.onChange(values.floatValue);
-                      }}
-                    />
-                    <InputGroupAddon>
-                      <Car className="h-4 w-4" />
-                    </InputGroupAddon>
-                  </InputGroup>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+        {/* SUITES */}
+        <RangeFilter
+          form={form}
+          Icon={BedDouble}
+          name="suites"
+          title="Suítes"
         />
 
-        <FormField
-          control={form.control}
-          name="area"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel htmlFor={field.name}>Área - (m²)</FormLabel>
-              <FormControl>
-                <div className="relative mt-1.5">
-                  <InputGroup>
-                    <NumericFormat
-                      id={field.name}
-                      name={field.name}
-                      value={field.value}
-                      customInput={InputGroupInput}
-                      thousandSeparator="."
-                      decimalSeparator=","
-                      fixedDecimalScale
-                      allowNegative={false}
-                      placeholder="0"
-                      onValueChange={(values) => {
-                        field.onChange(values.floatValue);
-                      }}
-                    />
-                    <InputGroupAddon>
-                      <Ruler className="h-4 w-4" />
-                    </InputGroupAddon>
-                  </InputGroup>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="suitesQty"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel htmlFor={field.name}>Suítes</FormLabel>
-              <FormControl>
-                <div className="relative mt-1.5">
-                  <InputGroup>
-                    <NumericFormat
-                      id={field.name}
-                      name={field.name}
-                      value={field.value}
-                      customInput={InputGroupInput}
-                      thousandSeparator="."
-                      decimalSeparator=","
-                      fixedDecimalScale
-                      allowNegative={false}
-                      placeholder="0"
-                      onValueChange={(values) => {
-                        field.onChange(values.floatValue);
-                      }}
-                    />
-                    <InputGroupAddon>
-                      <BedDouble className="h-4 w-4" />
-                    </InputGroupAddon>
-                  </InputGroup>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="condominiumFee"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel htmlFor={field.name}>Condomínio</FormLabel>
-              <FormControl>
-                <div className="relative mt-1.5">
-                  <InputGroup>
-                    <NumericFormat
-                      id={field.name}
-                      name={field.name}
-                      value={field.value}
-                      customInput={InputGroupInput}
-                      thousandSeparator="."
-                      decimalSeparator=","
-                      prefix="R$ "
-                      fixedDecimalScale
-                      allowNegative={false}
-                      decimalScale={2}
-                      placeholder="R$ 0,00"
-                      onValueChange={(values) => {
-                        field.onChange(values.floatValue);
-                      }}
-                    />
-                    <InputGroupAddon>
-                      <HandCoins className="h-4 w-4" />
-                    </InputGroupAddon>
-                  </InputGroup>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+        <RangeFilter
+          form={form}
+          Icon={Building}
+          name="floors"
+          title="Andares"
         />
       </div>
 
-      <div className="grid grid-cols-3 gap-4 pt-4">
-        <FormField
-          control={form.control}
-          name="isFurnished"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 p-3 rounded-lg border-2 border-border hover:border-primary/50 transition-colors bg-gray-50">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  className="mt-1"
-                />
-              </FormControl>
-              <Sofa className="h-5 w-5 text-primary mt-0.5" />
-              <div className="space-y-1 leading-none">
-                <FormLabel className="cursor-pointer text-base">
-                  Imóvel mobiliado
-                </FormLabel>
-                <FormMessage />
-              </div>
-            </FormItem>
-          )}
-        />
+      {/* Opções com Toggle de Visibilidade */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold text-foreground">
+          Opções do Imóvel
+        </h3>
+        <p className="text-sm text-muted-foreground">
+          Marque a opção e ative a chave para exibir no imóvel final
+        </p>
 
-        <FormField
-          control={form.control}
-          name="isPetFriendly"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 p-3 rounded-lg border-2 border-border hover:border-primary/50 transition-colors bg-gray-50">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  className="mt-1"
-                />
-              </FormControl>
-              <PawPrint className="h-5 w-5 text-primary mt-0.5" />
-              <div className="space-y-1 leading-none">
-                <FormLabel className="cursor-pointer text-base">
-                  Aceita Pets
-                </FormLabel>
-                <FormMessage />
-              </div>
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="isNearSubway"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 p-3 rounded-lg border-2 border-border hover:border-primary/50 transition-colors bg-gray-50">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  className="mt-1 "
-                />
-              </FormControl>
-              <Train className="h-5 w-5 text-primary mt-0.5" />
-              <div className="space-y-1 leading-none">
-                <FormLabel className="cursor-pointer text-base">
-                  Perto do Metrô
-                </FormLabel>
-                <FormMessage />
-              </div>
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="showSquareMeterPrice"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 p-3 rounded-lg border-2 border-border hover:border-primary/50 transition-colors bg-gray-50 cursor-pointer">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  className="mt-1"
-                />
-              </FormControl>
-              <BadgeDollarSign className="h-5 w-5 text-primary mt-0.5" />
-              <div className="space-y-1 leading-none">
-                <FormLabel className="cursor-pointer text-base">
-                  Mostrar preço do M²
-                </FormLabel>
-                <FormMessage />
-              </div>
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-1 gap-3">
+          {/* IS FURNISHED */}
+          <ToggleInput
+            name="isFurnished"
+            form={form}
+            label="Imóvel mobiliado"
+            Icon={Sofa}
+          />
+          {/* IS PET FRIENDLY */}
+          <ToggleInput
+            name="isPetFriendly"
+            form={form}
+            label="Aceita Pets"
+            Icon={PawPrint}
+          />
+          {/* IS NEAR SUBWAY */}
+          <ToggleInput
+            name="isNearSubway"
+            form={form}
+            label="Perto do Metrô"
+            Icon={Train}
+          />
+        </div>
       </div>
     </TabsContent>
   );

@@ -18,6 +18,7 @@ const addressSchema = z.object({
   city: z.string().optional(),
   stateUf: z.string().optional(),
   zipCode: z.string().optional(),
+  referencePoint: z.array(z.string()),
 });
 
 export type AddressSchema = z.infer<typeof addressSchema>;
@@ -25,13 +26,34 @@ export type AddressSchema = z.infer<typeof addressSchema>;
 // -------- RANGE FIELDS
 export const rangeFieldSchema = z
   .object({
-    min: z.number().nonnegative(),
-    max: z.number().nonnegative(),
+    min: z.number().nonnegative().optional(),
+    max: z.number().nonnegative().optional(),
   })
-  .refine((v) => v.min <= v.max, {
-    message: "Min não pode ser maior que Max",
-  });
-
+  // VALIDATE IF BOTH EXIST OR NEITHER
+  .refine(
+    (data) => {
+      const hasMin = data.min !== undefined;
+      const hasMax = data.max !== undefined;
+      return hasMin === hasMax;
+    },
+    {
+      message: "Você deve preencher ambos os valores ou nenhum.",
+      path: ["min"],
+    }
+  )
+  // VALIDATE IF MIN IS GREATER THEN MAX
+  .refine(
+    (data) => {
+      if (data.min !== undefined && data.max !== undefined) {
+        return data.min <= data.max;
+      }
+      return true;
+    },
+    {
+      message: "O valor mínimo não pode ser maior que o máximo",
+      path: ["min"],
+    }
+  );
 export type RangeSchema = z.infer<typeof rangeFieldSchema>;
 
 //--------- PROPERTY GALLERY TO VIEW
@@ -83,11 +105,10 @@ const propertyBaseSchema = z.object({
     .union([z.string().regex(/^\d{4}-\d{2}-\d{2}$/), z.literal("")])
     .optional(),
 
+  isFeatured: z.boolean(),
   isFurnished: toggleFieldSchema.optional(),
   isNearSubway: toggleFieldSchema.optional(),
-  isFeatured: toggleFieldSchema.optional(),
   isPetFriendly: toggleFieldSchema.optional(),
-  showSquareMeterPrice: toggleFieldSchema.optional(),
 
   propertyType: z.string(),
   propertyPurpose: z.string().optional(),
@@ -100,6 +121,8 @@ const propertyBaseSchema = z.object({
 
   address: addressSchema.optional(),
 });
+
+export type PropertyBaseSchema = z.infer<typeof propertyBaseSchema>;
 
 //-------------------------------------------------- VIEW SCHEMA ---------------------------------------------------
 export const propertyViewSchema = propertyBaseSchema.extend({
@@ -146,7 +169,9 @@ export const DefaultValuesPropertyForm: PropertyInputSchema = {
     neighborhood: "",
     stateUf: "",
     zipCode: "",
+    referencePoint: [],
   },
+  isFeatured: false,
 };
 
 //-------------------------------------------------- PROPS CONTROLS ------------------------------------------------------
@@ -162,16 +187,9 @@ export type PropertyDetailsData = {
 
 export const fieldLabels: Record<string, string> = {
   title: "Título",
-  description: "Descrição",
-  bedrooms: "Quartos",
-  suites: "Suítes",
-  bathrooms: "Banheiros",
-  parkingSpaces: "Vagas de garagem",
-  area: "Área",
   price: "Preço",
-  condominiumFee: "Condomínio",
-  floorStart: "Andar inicial",
-  floorEnd: "Andar final",
+  min: "Detalhes do Imóvel",
+  max: "Detalhes do Imóvel",
   videoUrl: "Vídeo",
   isFurnished: "Mobiliado",
   isNearSubway: "Próximo ao metrô",

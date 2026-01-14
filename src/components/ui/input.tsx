@@ -10,9 +10,9 @@ const inputVariants = cva(
         default: "",
         gray: "bg-gray-50",
       },
-      defaultVariants: {
-        variant: "default",
-      },
+    },
+    defaultVariants: {
+      variant: "default",
     },
   }
 );
@@ -22,15 +22,20 @@ export interface InputProps
     React.InputHTMLAttributes<HTMLInputElement>,
     VariantProps<typeof inputVariants> {}
 
-function Input({ className, type, variant, ...props }: InputProps) {
-  return (
-    <input
-      type={type}
-      data-slot="input"
-      className={cn(inputVariants({ variant }), className)}
-      {...props}
-    />
-  );
-}
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, type, variant, ...props }, ref) => {
+    return (
+      <input
+        type={type}
+        data-slot="input"
+        className={cn(inputVariants({ variant }), className)}
+        ref={ref}
+        {...props}
+      />
+    );
+  }
+);
+
+Input.displayName = "Input";
 
 export { Input };

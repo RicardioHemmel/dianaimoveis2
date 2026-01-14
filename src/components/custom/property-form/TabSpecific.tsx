@@ -19,12 +19,17 @@ import {
 } from "@/components/ui/form";
 
 // ICONS
-import { MapPin } from "lucide-react";
+import { HandCoins, MapPin } from "lucide-react";
 
 // CONTEXT
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
 import { NumericFormat } from "react-number-format";
+import {
+  InputGroup,
+  InputGroupInput,
+  InputGroupAddon,
+} from "@/components/ui/input-group";
 
 export default function TabSpecific() {
   const { form, propertyDetails } = usePropertyFormContext();
@@ -40,26 +45,60 @@ export default function TabSpecific() {
             <h3 className="text-lg font-semibold text-foreground">
               Informações Gerais
             </h3>
-            <div className="w-full">
-              <FormField
-                control={form.control}
-                name="constructionCompany"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Construtora</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Digite a construtora do empreendimento"
-                        variant="gray"
-                        className="mt-1.5"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+
+            <FormField
+              control={form.control}
+              name="condominiumFee"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor={field.name}>Condomínio</FormLabel>
+                  <FormControl>
+                    <div className="relative mt-1.5">
+                      <InputGroup>
+                        <NumericFormat
+                          id={field.name}
+                          name={field.name}
+                          value={field.value}
+                          customInput={InputGroupInput}
+                          thousandSeparator="."
+                          decimalSeparator=","
+                          prefix="R$ "
+                          fixedDecimalScale
+                          allowNegative={false}
+                          decimalScale={2}
+                          placeholder="R$ 0,00"
+                          onValueChange={(values) => {
+                            field.onChange(values.floatValue);
+                          }}
+                        />
+                        <InputGroupAddon>
+                          <HandCoins className="h-4 w-4" />
+                        </InputGroupAddon>
+                      </InputGroup>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="constructionCompany"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Construtora</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Digite a construtora do empreendimento"
+                      variant="gray"
+                      className="mt-1.5"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
 
           <div className="space-y-4">
@@ -67,52 +106,6 @@ export default function TabSpecific() {
               Características do Apartamento
             </h3>
             <div className="grid grid-cols-2 gap-4">
-              <FormField
-                name={"floorStart"}
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Andar Inicial</FormLabel>
-                    <FormControl>
-                      <NumericFormat
-                        customInput={Input}
-                        placeholder="Ex: 5"
-                        value={field.value}
-                        className="mt-1.5"
-                        variant={"gray"}
-                        onValueChange={(values) => {
-                          field.onChange(values.floatValue);
-                        }}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                name={"floorEnd"}
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Andar Final</FormLabel>
-                    <FormControl>
-                      <NumericFormat
-                        customInput={Input}
-                        placeholder="Ex: 10"
-                        value={field.value}
-                        className="mt-1.5"
-                        variant={"gray"}
-                        onValueChange={(values) => {
-                          field.onChange(values.floatValue);
-                        }}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
               {/* PROPERTY STANDING */}
               <FormField
                 control={form.control}

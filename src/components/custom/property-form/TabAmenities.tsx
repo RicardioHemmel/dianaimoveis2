@@ -1,25 +1,19 @@
 "use client";
 
-//Next | React
+//NEXT | REACT
 import { useMemo, useState } from "react";
 
-// Shadcnui
+// COMPONENTS
 import { Button } from "@/components/ui/button";
 import { TabsContent } from "@/components/ui/tabs";
-
-// lucide-react
-import { Sparkles, SearchIcon, X } from "lucide-react";
 import {
   InputGroup,
   InputGroupInput,
   InputGroupAddon,
 } from "@/components/ui/input-group";
 
-import { UseFormReturn } from "react-hook-form";
-import {
-  PropertyInputSchema,
-  PropertyDetail,
-} from "@/lib/schemas/property/property.schema";
+// ICONS
+import { Sparkles, SearchIcon, X } from "lucide-react";
 
 // CONTEXT
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
@@ -29,25 +23,25 @@ export default function TabAmenities() {
 
   const amenitiesList = propertyDetails?.amenities;
 
-  // Shows content based on the type
+  // SHOWS CONTENT BASED ON THE TYPE
   const { propertyType } = form.watch();
 
-  // Filter for the amenities search bar
+  // FILTER FOR THE AMENITIES SEARCH BAR
   const [amenitiesFilter, setAmenitiesFilter] = useState<string>("");
 
-  // Amenities that were found by the filter
+  // AMENITIES THAT WERE FOUND BY THE FILTER
   const filteredAmenities = useMemo(() => {
     return amenitiesList?.filter((amenity) =>
       amenity.name.toLowerCase().includes(amenitiesFilter.toLowerCase())
     );
   }, [amenitiesList, amenitiesFilter]);
 
-  // Used for setting all amenities as selected
+  // USED FOR SETTING ALL AMENITIES AS SELECTED
   const allAmenitiesIds = amenitiesList?.map((a) => a._id) ?? [];
 
-  // Add or Remove amenities
+  // ADD OR REMOVE AMENITIES
   const toggleAmenity = (amenity: string) => {
-    // Amenities registered on the RHF
+    // AMENITIES REGISTERED ON THE RHF
     const currentAmenities = form.getValues("propertyAmenities");
 
     if (!currentAmenities) return;
@@ -118,7 +112,7 @@ export default function TabAmenities() {
                 onClick={() => toggleAmenity(amenity._id)}
                 className={`p-3 rounded-lg border-2 text-sm font-medium transition-all cursor-pointer ${
                   form.getValues("propertyAmenities")?.includes(amenity._id)
-                    ? "border-[var(--bg-selected)] bg-[var(--bg-selected)] text-primary-foreground"
+                    ? "border-nav-bg-active bg-nav-bg-active text-primary-foreground"
                     : " hover:bg-neutral-200 text-foreground"
                 }`}
               >

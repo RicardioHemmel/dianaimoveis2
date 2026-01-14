@@ -7,15 +7,14 @@ import {
   propertyInputSchema,
   PropertyInputSchema,
   DefaultValuesPropertyForm,
-  PropertyDetail,
+  PropertyDetailSchema,
 } from "@/lib/schemas/property/property.schema";
 
 // MESSAGE BOX
-import { toast } from "sonner";
 import { useMemo } from "react";
 
 export default function usePropertyForm(
-  propertyTypes: PropertyDetail[],
+  propertyTypes: PropertyDetailSchema[],
   initialData?: PropertyInputSchema
 ) {
   // MEMORIZES DATA TO PREVENT RERENDER BRING BACK DATA THAT WERE ALREADY DELETED FROM THE FORM
@@ -25,7 +24,7 @@ export default function usePropertyForm(
       propertyType: propertyTypes.find((t) => t.name === "Apartamento"),
       ...initialData,
     }),
-    []
+    [initialData]
   );
 
   // FORM MANAGER

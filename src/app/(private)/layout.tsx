@@ -6,7 +6,6 @@ import { Toaster } from "@/components/ui/sonner";
 import { auth } from "@/auth";
 import AccessDenied from "@/components/custom/AccessDenied";
 
-
 export const metadata: Metadata = {
   title: "Painel Administrativo",
 };
@@ -19,16 +18,11 @@ export default async function PrivateLayout({
   const session = await auth();
 
   if (session?.user.role !== "admin" && session?.user.role !== "super_admin") {
-    return (
-    <AccessDenied/>
-    );
-
+    return <AccessDenied />;
   } else {
     return (
       <SidebarProvider defaultOpen={true}>
-        <section
-          className={`min-h-screen flex w-full bg-background`}
-        >
+        <section className={`min-h-screen flex w-full bg-background`}>
           <AppSidebar />
           <div className="flex-1 flex flex-col bg-gray-50">
             {/* Top Header */}
@@ -44,13 +38,11 @@ export default async function PrivateLayout({
               </div>
             </header>
 
-            {/* Main Content */}
+            {/* MAIN CONTENT */}
             <main className="flex-1 p-6 overflow-auto">{children}</main>
           </div>
         </section>
       </SidebarProvider>
     );
   }
-
-
 }

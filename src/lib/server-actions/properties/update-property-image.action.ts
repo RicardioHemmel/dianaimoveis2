@@ -1,7 +1,7 @@
 "use server";
 
 import {
-  GalleryItemInputSchema,
+  galleryItemInputSchema,
   GalleryItemInputSchema,
 } from "@/lib/schemas/property/property.schema";
 import { updatePropertyImage } from "@/lib/services/properties/properties.service";
@@ -10,7 +10,7 @@ export async function updatePropertyImageAction(
   id: string,
   images: GalleryItemInputSchema[]
 ) {
-  const parsed = GalleryItemInputSchema.array().safeParse(images);
+  const parsed = galleryItemInputSchema.array().safeParse(images);
 
   if (!parsed.success) {
     return {

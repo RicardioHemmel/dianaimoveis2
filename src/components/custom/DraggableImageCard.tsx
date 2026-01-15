@@ -29,8 +29,9 @@ export default function DraggableImageCard({
   isHighlighted,
   onDoubleClick,
 }: ImageCardProps) {
-  const { fileUploadHook, handleRemoveSingleImage } = usePropertyFormContext();
-  const { removeLocalFile, formattedOrder } = fileUploadHook;
+  const { galleryUploadHook, handleRemoveSingleImage } =
+    usePropertyFormContext();
+  const { removeLocalFile, formattedOrder } = galleryUploadHook;
   const [canDrag, setCanDrag] = useState(true);
 
   const { setNodeRef, attributes, listeners, transform, transition } =

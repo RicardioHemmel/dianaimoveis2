@@ -4,6 +4,7 @@ import {
   RangeSchema,
   ToggleFieldSchema,
   GalleryItemInputSchema,
+  FloorPlanGalleryItemInputSchema,
   PropertyViewSchema,
   PropertyBaseSchema,
 } from "@/lib/schemas/property/property.schema";
@@ -11,6 +12,10 @@ import {
   IProperty,
   IPropertyPopulated,
   IPopulatedRef,
+  IRangeSchema,
+  IToggleFieldSchema,
+  IGallerySchema,
+  IFloorPlanGallerySchema,
 } from "@/lib/schemas/property/IProperty";
 import { Types } from "mongoose";
 import { resolveImageUrl } from "@/lib/media/resolveImageUrl"; // GENERATES URL FROM ENV FILE
@@ -26,13 +31,13 @@ export class PropertyMapper {
   // ---------------- RANGE FIELDS ----------------
   private static toPersistenceRange(
     range: RangeSchema | undefined
-  ): RangeSchema | null {
+  ): IRangeSchema | null {
     if (!range) return null;
     return { min: range.min, max: range.max };
   }
 
   private static toDomainRange(
-    range: RangeSchema | null
+    range: IRangeSchema | null
   ): RangeSchema | undefined {
     if (!range) return undefined;
     return {
@@ -44,7 +49,7 @@ export class PropertyMapper {
   // ---------------- TOGGLE FIELDS ----------------
   private static toPersistenceToggleField(
     toggleField: ToggleFieldSchema | undefined
-  ): ToggleFieldSchema | null {
+  ): IToggleFieldSchema | null {
     if (!toggleField) return null;
 
     return {
@@ -54,7 +59,7 @@ export class PropertyMapper {
   }
 
   private static toDomainToggleField(
-    toggleField: ToggleFieldSchema | null
+    toggleField: IToggleFieldSchema | null
   ): ToggleFieldSchema | undefined {
     if (!toggleField) return undefined;
     return {
@@ -64,13 +69,24 @@ export class PropertyMapper {
   }
 
   // ---------------- GALLERY  ----------------
-  private static toPersistenceImages(
+  private static toPersistenceGallery(
     gallery: GalleryItemInputSchema[]
-  ): GalleryItemInputSchema[] {
+  ): IGallerySchema[] {
     if (!gallery.length) return [];
     return gallery.map((image) => ({
       key: image.key,
       order: image.order,
+    }));
+  }
+
+  private static toPersistenceFloorPlanGallery(
+    gallery: FloorPlanGalleryItemInputSchema[]
+  ): IFloorPlanGallerySchema[] {
+    if (!gallery.length) return [];
+    return gallery.map((image) => ({
+      key: image.key,
+      order: image.order,
+      label: image.label,
     }));
   }
 
@@ -165,8 +181,10 @@ export class PropertyMapper {
       isPetFriendly: this.toPersistenceToggleField(property.isPetFriendly),
 
       // GALLERY
-      gallery: this.toPersistenceImages(property.gallery),
-      floorPlanGallery: this.toPersistenceImages(property.floorPlanGallery),
+      gallery: this.toPersistenceGallery(property.gallery),
+      floorPlanGallery: this.toPersistenceFloorPlanGallery(
+        property.floorPlanGallery
+      ),
 
       //ADDRESS
       address: this.toPersistenceAddress(property?.address),
@@ -263,18 +281,19 @@ export class PropertyMapper {
       isNearSubway: this.toDomainToggleField(property.isNearSubway),
       isPetFriendly: this.toDomainToggleField(property.isPetFriendly),
 
-      floorPlanGallery:
-        property?.floorPlanGallery?.map((img) => ({
-          key: img.key,
-          order: img.order,
-          url: resolveImageUrl(img.key),
-        })) ?? [],
-
       gallery:
         property?.gallery?.map((img) => ({
           key: img.key,
           order: img.order,
           url: resolveImageUrl(img.key),
+        })) ?? [],
+
+      floorPlanGallery:
+        property?.floorPlanGallery?.map((img) => ({
+          key: img.key,
+          order: img.order,
+          url: resolveImageUrl(img.key),
+          label: img.label,
         })) ?? [],
 
       address: this.toDomainAddress(property?.address),

@@ -23,7 +23,8 @@ import { Youtube, Images, Layers } from "lucide-react";
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
 export default function TabCreative() {
-  const { form } = usePropertyFormContext();
+  const { form, galleryUploadHook, floorPlanGalleryUploadHook } =
+    usePropertyFormContext();
 
   return (
     <TabsContent value="creative" className="space-y-6">
@@ -32,13 +33,21 @@ export default function TabCreative() {
         <h3 className="text-lg font-semibold text-foreground">
           Galeria de Imagens
         </h3>
-        <ImageUploader Icon={Images} uploaderId="propertyGallery" />
+        <ImageUploader
+          Icon={Images}
+          uploaderId="gallery"
+          fileUploadHook={galleryUploadHook}
+        />
       </div>
 
       {/* FLOOR PLAN GALLERY INPUT */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-foreground">Planta Baixa</h3>
-        <ImageUploader Icon={Layers} uploaderId="floorPlanGallery" />
+        <ImageUploader
+          Icon={Layers}
+          uploaderId="floorPlanGallery"
+          fileUploadHook={floorPlanGalleryUploadHook}
+        />
       </div>
 
       <div className="space-y-4">

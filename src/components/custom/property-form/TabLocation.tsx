@@ -157,7 +157,7 @@ export default function TabLocation() {
           name={"address.referencePoint"}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Pontos de Referência</FormLabel>
+              <FormLabel>Adicione Pontos de Referência</FormLabel>
               <FormControl>
                 <div className="flex gap-2 mb-3">
                   <InputGroup>
@@ -192,7 +192,8 @@ export default function TabLocation() {
                     />
                     <Button
                       type="button"
-                      variant="outline"
+                      variant={"outline"}
+                      className={`${canAdd && "animate-infinity-glow"}`}
                       disabled={!canAdd}
                       onClick={() => {
                         const value = referenceInputRef.current?.value?.trim();
@@ -230,10 +231,10 @@ export default function TabLocation() {
           <ul>
             {referencePoints.map((rp, i) => (
               <div
-                className="flex items-center mt-3 border-2 border-black/10 rounded-2xl p-3 bg-gray-100 relative"
+                className="flex items-center mt-3 border-2 border-black/10 rounded-2xl p-3 bg-admin-primary/10 relative"
                 key={i}
               >
-                <MapPin className="size-4 me-3" />
+                <MapPin className="size-4 me-3 text-admin-primary" />
                 <li>{rp}</li>
                 <button
                   type="button"

@@ -10,6 +10,16 @@ const gallerySchema = new Schema(
   { _id: false }
 );
 
+// SIMULAR TO THE GALLERY BUT WITH LABEL FOR DISPLAY
+const floorPlanGallerySchema = new Schema(
+  {
+    key: { type: String, required: true },
+    order: { type: Number, required: true },
+    label: { type: String, required: true },
+  },
+  { _id: false }
+);
+
 // GUARANTEES INTEGRITY FOR PROPERTY DETAILS OF TYPE NUMBER
 const rangeSchema = new Schema(
   {
@@ -86,7 +96,7 @@ const propertySchema = new Schema<IProperty>(
     ],
 
     gallery: [gallerySchema],
-    floorPlanGallery: [gallerySchema],
+    floorPlanGallery: [floorPlanGallerySchema],
 
     videoUrl: String,
 

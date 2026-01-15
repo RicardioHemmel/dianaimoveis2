@@ -20,8 +20,7 @@ export default function PropertyHero({
   property: PropertyViewSchema;
 }) {
   // SPREAD PROPERTY
-  const { title, deliveryDate, address, propertyGallery, propertyTypology } =
-    property;
+  const { title, deliveryDate, address, gallery, propertyTypology } = property;
 
   // FULL SCREEN HOOK
   const {
@@ -32,17 +31,17 @@ export default function PropertyHero({
     prevImage,
     closeModal,
     setIsModalOpen,
-  } = useFullScreenGallery(propertyGallery);
+  } = useFullScreenGallery(gallery);
 
   return (
     <section className="relative h-[70vh] min-h-[500px] overflow-hidden select-none">
       {/* BACKGROUND IMAGE */}
       <div className="absolute inset-0 ">
-        {propertyGallery[currentImage]?.url ? (
+        {gallery[currentImage]?.url ? (
           <>
             <Image
               alt="Imagem de Capa"
-              src={propertyGallery[currentImage].url}
+              src={gallery[currentImage].url}
               className="object-cover transition-all duration-700"
               fill
             />
@@ -79,7 +78,7 @@ export default function PropertyHero({
       {/* THUMBNAILS */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex z-20 w-[250px]">
         <ThumbnailsCarousel
-          gallery={propertyGallery}
+          gallery={gallery}
           setCurrentImage={setCurrentImage}
           currentImage={currentImage}
         />
@@ -89,7 +88,7 @@ export default function PropertyHero({
       {isModalOpen && (
         <FullScreenPropertyGallery
           closeModal={closeModal}
-          gallery={propertyGallery}
+          gallery={gallery}
           currentImage={currentImage}
         />
       )}

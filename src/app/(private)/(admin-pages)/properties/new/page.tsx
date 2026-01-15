@@ -2,9 +2,10 @@ import PropertyFormWrapper from "@/components/custom/property-form/PropertyFormW
 import { getAllPropertyDetails } from "@/lib/services/properties/properties-query.service";
 
 export default async function NewPropertyPage() {
+  // TO POPULATE SELECTS
   const propertyDetails = await getAllPropertyDetails();
 
   return (
-    <PropertyFormWrapper mode="create" propertyDetails={propertyDetails} />
+    <PropertyFormWrapper formMode="create" propertyDetails={propertyDetails} />
   );
 }

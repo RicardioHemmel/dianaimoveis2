@@ -66,7 +66,7 @@ export async function updatePropertyImage(
 
   const result = await Property.updateOne(
     { _id: id },
-    { $set: { propertyGallery: images } }
+    { $set: { gallery: images } }
   );
 
   if (result.matchedCount === 0) {

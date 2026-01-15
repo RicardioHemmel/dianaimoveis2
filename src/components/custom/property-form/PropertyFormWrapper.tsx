@@ -6,19 +6,23 @@ import {
 } from "@/lib/schemas/property/property.schema";
 
 type PropertyFormWrapperProps = {
-  mode: "create" | "edit";
-  initialData?: PropertyInputSchema;
+  formMode: "create" | "edit";
   propertyDetails: PropertyDetailsData;
+  initialData?: PropertyInputSchema;
 };
 
 export default function PropertyFormWrapper({
-  mode,
+  formMode,
   initialData,
   propertyDetails,
 }: PropertyFormWrapperProps) {
   return (
-    <PropertyFormProvider propertyDetails={propertyDetails} initialData={initialData}>
-      <PropertyForm mode={mode}/>
+    <PropertyFormProvider
+      propertyDetails={propertyDetails}
+      initialData={initialData}
+      formMode={formMode}
+    >
+      <PropertyForm />
     </PropertyFormProvider>
   );
 }

@@ -21,7 +21,7 @@ import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 
 interface FullScreenImageModalProps {
   closeModal: () => void;
-  gallery: PropertyViewSchema["propertyGallery"];
+  gallery: PropertyViewSchema["gallery"];
   currentImage: number;
 }
 

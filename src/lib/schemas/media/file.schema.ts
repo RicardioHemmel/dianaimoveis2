@@ -7,11 +7,12 @@ export interface FileUpload {
   order: number; // Order in the gallery
   uploadProgress?: number; // Upload progress percentage (0-100)
   status: "idle" | "uploading" | "deleting" | "success" | "error"; // Upload status
-  source?: "propertyGallery" | "floorPlanGallery"; // Source of the image
-  key?: string; // the key returned by the cloud storage
+  key?: string; //Tthe key returned by the cloud storage
+  label?: string; // Lable for floor plan gallery display
   error?: boolean; // Flag to indicate if there was an error during upload
 }
 
+// SCHEMA FOR CLOUD UPLOAD
 export const uploadRequestSchema = z.object({
   fileName: z.string(),
   contentType: z.string(),

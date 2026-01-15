@@ -1,22 +1,7 @@
 "use client";
 
 // COMPONENTS
-import { Checkbox } from "@/components/ui/checkbox";
 import { TabsContent } from "@/components/ui/tabs";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  InputGroup,
-  InputGroupInput,
-  InputGroupAddon,
-} from "@/components/ui/input-group";
-import { Switch } from "@/components/ui/switch";
-import { NumericFormat } from "react-number-format";
 import { RangeFilter } from "@/components/custom/RangeFilter";
 import { ToggleInput } from "@/components/custom/ToggleInput";
 
@@ -44,10 +29,22 @@ export default function TabDetails() {
     <TabsContent value="details" className="space-y-4">
       <div className="grid grid-cols-2 gap-6">
         {/* AREA */}
-        <RangeFilter form={form} Icon={Ruler} name="area" title="Área (m²)" />
+        <RangeFilter
+          form={form}
+          Icon={Ruler}
+          name="area"
+          title="Área (m²)"
+          color="blue"
+        />
 
         {/* BEDROOMS */}
-        <RangeFilter form={form} Icon={Bed} name="bedrooms" title="Quartos" />
+        <RangeFilter
+          form={form}
+          Icon={Bed}
+          name="bedrooms"
+          title="Quartos"
+          color="purple"
+        />
 
         {/* BATHROOMS */}
         <RangeFilter
@@ -55,6 +52,7 @@ export default function TabDetails() {
           Icon={Bath}
           name="bathrooms"
           title="Banheiros"
+          color="cyan"
         />
 
         {/* PARKING SPACES */}
@@ -63,6 +61,7 @@ export default function TabDetails() {
           Icon={Car}
           name="parkingSpaces"
           title="Vagas"
+          color="amber"
         />
 
         {/* SUITES */}
@@ -71,6 +70,7 @@ export default function TabDetails() {
           Icon={BedDouble}
           name="suites"
           title="Suítes"
+          color="emerald"
         />
 
         <RangeFilter
@@ -78,6 +78,7 @@ export default function TabDetails() {
           Icon={Building}
           name="floors"
           title="Andares"
+          color="neutral"
         />
       </div>
 

@@ -1,16 +1,20 @@
 import { Types } from "mongoose";
 
-interface GallerySchema {
+export interface IGallerySchema {
   key: string;
   order: number;
 }
 
-interface RangeSchema {
+export interface IFloorPlanGallerySchema extends IGallerySchema {
+  label: string;
+}
+
+export interface IRangeSchema {
   min?: number;
   max?: number;
 }
 
-interface AddressSchema {
+export interface IAddressSchema {
   street: string | null;
   neighborhood: string | null;
   city: string | null;
@@ -19,7 +23,7 @@ interface AddressSchema {
   referencePoint: string[];
 }
 
-interface ToggleFieldSchema {
+export interface IToggleFieldSchema {
   value: boolean;
   show: boolean;
 }
@@ -41,12 +45,12 @@ export interface IProperty {
   status: "DRAFT" | "PUBLISHED";
 
   // RANGE FIELDS
-  bedrooms: RangeSchema | null;
-  suites: RangeSchema | null;
-  bathrooms: RangeSchema | null;
-  parkingSpaces: RangeSchema | null;
-  area: RangeSchema | null;
-  floors: RangeSchema | null;
+  bedrooms: IRangeSchema | null;
+  suites: IRangeSchema | null;
+  bathrooms: IRangeSchema | null;
+  parkingSpaces: IRangeSchema | null;
+  area: IRangeSchema | null;
+  floors: IRangeSchema | null;
 
   // OTHER FIELDS
   description: string | null;
@@ -57,9 +61,9 @@ export interface IProperty {
 
   // TOGGLE FIELDS
   isFeatured: boolean;
-  isFurnished: ToggleFieldSchema | null;
-  isNearSubway: ToggleFieldSchema | null;
-  isPetFriendly: ToggleFieldSchema | null;
+  isFurnished: IToggleFieldSchema | null;
+  isNearSubway: IToggleFieldSchema | null;
+  isPetFriendly: IToggleFieldSchema | null;
 
   // REFERENCES
   propertyType: Types.ObjectId;
@@ -69,11 +73,11 @@ export interface IProperty {
   propertyAmenities: Types.ObjectId[];
 
   // GALLERY
-  gallery: GallerySchema[];
-  floorPlanGallery: GallerySchema[];
+  gallery: IGallerySchema[];
+  floorPlanGallery: IFloorPlanGallerySchema[];
 
   // ADDRESS
-  address: AddressSchema | null;
+  address: IAddressSchema | null;
 }
 
 //-------------------------------------- POPULATED IPROPERTY --------------------------------

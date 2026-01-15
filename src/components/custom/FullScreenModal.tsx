@@ -28,8 +28,8 @@ export default function FullScreenImageModal({
   doubleClickedImageIndex,
   onClose,
 }: FullScreenImageModalProps) {
-  const { fileUploadHook } = usePropertyFormContext();
-  const { filesUpload } = fileUploadHook;
+  const { galleryUploadHook } = usePropertyFormContext();
+  const { filesUpload } = galleryUploadHook;
 
   const [carouselApi, setCarouselApi] = useState<CarouselApi>(); // Gives carousel its mechanics
 

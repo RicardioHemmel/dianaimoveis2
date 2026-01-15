@@ -33,6 +33,7 @@ export function RangeInput({ form, name, label }: RangeInputProps) {
                 customInput={Input}
                 allowNegative={false}
                 placeholder="0"
+                className="bg-white text-center"
                 onValueChange={(values) => {
                   field.onChange(values.floatValue);
                 }}

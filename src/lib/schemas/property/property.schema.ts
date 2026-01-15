@@ -56,22 +56,41 @@ export const rangeFieldSchema = z
   );
 export type RangeSchema = z.infer<typeof rangeFieldSchema>;
 
-//--------- PROPERTY GALLERY TO VIEW
-export const galleryItemViewSchema = z.object({
+// ------------------------------------- GALLERY AND FLOOR PLAN GALLERY ------------------------------
+const galleryCommonFields = z.object({
   key: z.string(),
   order: z.number(),
+});
+
+const galleryLabel = z.object({
+  label: z.string().min(1, "Digite um título para a Planta Baixa"),
+});
+
+//--------- PROPERTY GALLERY TO VIEW
+export const galleryItemViewSchema = galleryCommonFields.extend({
   url: z.string(),
 });
 
+//--------- PROPERTY GALLERY TO INPUT (DOESN'T SAVE URL)
+export const galleryItemInputSchema = galleryItemViewSchema.omit({ url: true });
+
+//--------- PROPERTY FLOOR PLAN GALLERY TO VIEW
+export const floorPlanGalleryItemViewSchema =
+  galleryItemViewSchema.merge(galleryLabel);
+
+//--------- PROPERTY FLOOR PLAN GALLERY TO INPUT
+export const floorPlanGalleryItemInputSchema =
+  galleryItemInputSchema.merge(galleryLabel);
+
+//--------- GALLERY TYPES
 export type GalleryItemViewSchema = z.infer<typeof galleryItemViewSchema>;
-
-//--------- PROPERTY GALLERY TO INPUT
-export const galleryItemInputSchema = z.object({
-  key: z.string(),
-  order: z.number(),
-});
-
 export type GalleryItemInputSchema = z.infer<typeof galleryItemInputSchema>;
+export type FloorPlanGalleryItemViewSchema = z.infer<
+  typeof floorPlanGalleryItemViewSchema
+>;
+export type FloorPlanGalleryItemInputSchema = z.infer<
+  typeof floorPlanGalleryItemInputSchema
+>;
 
 //--------- PROPERTY DETAILS (TYPE, TYPOLOGY, STANDING...)
 const propertyDetailSchema = z.object({
@@ -117,7 +136,7 @@ const propertyBaseSchema = z.object({
   propertyAmenities: z.array(z.string()),
 
   gallery: z.array(galleryItemInputSchema),
-  floorPlanGallery: z.array(galleryItemInputSchema),
+  floorPlanGallery: z.array(floorPlanGalleryItemInputSchema),
 
   address: addressSchema.optional(),
 });
@@ -182,54 +201,3 @@ export type PropertyDetailsData = {
   types: PropertyDetailSchema[];
   typologies: PropertyDetailSchema[];
 };
-
-//-------------------------------------------------- FRIENDLY LABELS MAPPER ------------------------------------------------------
-
-export const fieldLabels: Record<string, string> = {
-  title: "Título",
-  price: "Preço",
-  min: "Detalhes do Imóvel",
-  max: "Detalhes do Imóvel",
-  videoUrl: "Vídeo",
-  isFurnished: "Mobiliado",
-  isNearSubway: "Próximo ao metrô",
-  isFeatured: "Destaque",
-  isPetFriendly: "Pet friendly",
-  showSquareMeterPrice: "Exibir preço por m²",
-  propertyGallery: "Galeria de imagens",
-  propertyFloorPlanGallery: "Planta baixa",
-  address: "Endereço",
-  propertyType: "Tipo do imóvel",
-  propertyPurpose: "Finalidade do imóvel",
-  propertyStanding: "Padrão do imóvel",
-  propertyTypology: "Tipologia",
-  propertyAmenities: "Comodidades",
-};
-
-// MAPS FIELD ERROS FROM "RHF" INTO PORTUGUESE NAMES
-export function extractFieldLabels(
-  errors: FieldErrors<any>,
-  parentKey = ""
-): string[] {
-  let labels: string[] = [];
-
-  for (const key in errors) {
-    if (!errors.hasOwnProperty(key)) continue;
-    const error = errors[key];
-    const fullKey = parentKey ? `${parentKey}.${key}` : key;
-
-    if (error?.message || error?.type) {
-      // erro de campo simples
-      labels.push(fieldLabels[key] ?? key);
-    } else if (
-      typeof error === "object" &&
-      error !== null &&
-      !("message" in error)
-    ) {
-      // erro aninhado (ex: address)
-      labels.push(...extractFieldLabels(error as FieldErrors<any>, fullKey));
-    }
-  }
-
-  return labels;
-}

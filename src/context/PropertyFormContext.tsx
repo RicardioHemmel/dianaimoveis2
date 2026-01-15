@@ -1,5 +1,6 @@
 "use client";
 
+// REACT | NEXT
 import {
   createContext,
   useContext,
@@ -7,15 +8,21 @@ import {
   useState,
   useEffect,
 } from "react";
+import { UseFormReturn } from "react-hook-form";
+import { toast } from "sonner";
+
+// SCHEMAS
 import {
   PropertyDetailsData,
   PropertyInputSchema,
 } from "@/lib/schemas/property/property.schema";
-import { UseFormReturn } from "react-hook-form";
+
+// HOOKS
 import useFileUpload from "@/hooks/use-file-upload";
 import usePropertyForm from "@/hooks/properties/use-property-form";
+
+// SERVER ACTION
 import { updatePropertyImageAction } from "@/lib/server-actions/properties/update-property-image.action";
-import { toast } from "sonner";
 
 // TABS LIST FOR NAVIGATION
 const TABS = [
@@ -31,10 +38,12 @@ const TABS = [
 interface PropertyFormContextType {
   // DATA
   form: UseFormReturn<PropertyInputSchema>;
+  formMode: "create" | "edit";
   initialData?: PropertyInputSchema;
   status: "DRAFT" | "PUBLISHED";
   setStatus: (status: "DRAFT" | "PUBLISHED") => void;
-  fileUploadHook: ReturnType<typeof useFileUpload>;
+  galleryUploadHook: ReturnType<typeof useFileUpload>;
+  floorPlanGalleryUploadHook: ReturnType<typeof useFileUpload>;
   propertyDetails?: PropertyDetailsData;
   handleClearGallery: () => Promise<void>;
   handleRemoveSingleImage: (key: string) => Promise<void>;
@@ -54,15 +63,18 @@ interface ProviderProps {
   children: ReactNode;
   propertyDetails?: PropertyDetailsData;
   initialData?: PropertyInputSchema;
+  formMode: "create" | "edit";
 }
 
 export function PropertyFormProvider({
   children,
   propertyDetails,
   initialData,
+  formMode,
 }: ProviderProps) {
   // FILES UPLOAD
-  const fileUploadHook = useFileUpload();
+  const galleryUploadHook = useFileUpload();
+  const floorPlanGalleryUploadHook = useFileUpload();
 
   // PROPERTY FORM
   const { form } = usePropertyForm(propertyDetails?.types ?? [], initialData);
@@ -70,11 +82,17 @@ export function PropertyFormProvider({
 
   // MAPS IMAGES FROM DB INTO FILESUPLOAD STATE FOR EXHIBITION AND ALLOW USER TO CHANGER POSITION
   useEffect(() => {
+    if (initialData?.gallery && initialData.gallery.length > 0) {
+      galleryUploadHook.mapRemoteFilesToFileUpload(initialData.gallery);
+    }
+
     if (
-      initialData?.propertyGallery &&
-      initialData.propertyGallery.length > 0
+      initialData?.floorPlanGallery &&
+      initialData.floorPlanGallery.length > 0
     ) {
-      fileUploadHook.mapRemoteFilesToFileUpload(initialData.propertyGallery);
+      floorPlanGalleryUploadHook.mapRemoteFilesToFileUpload(
+        initialData.floorPlanGallery
+      );
     }
   }, [initialData]);
 
@@ -85,7 +103,7 @@ export function PropertyFormProvider({
   async function handleClearGallery(): Promise<void> {
     try {
       // REMOVE LOCAL AND CLOUD FILES
-      fileUploadHook.removeAllFiles();
+      galleryUploadHook.removeAllFiles();
 
       // IF PROPERTY EXISTS, UPDATES IT
       if (propertyId) {
@@ -93,9 +111,7 @@ export function PropertyFormProvider({
       }
 
       // SYNC THE FORM LOCALLY
-      form.setValue("propertyGallery", []);
-
-      toast.success("Galeria removida com sucesso");
+      form.setValue("gallery", []);
     } catch (error) {
       console.error("Erro ao limpar galeria:", error);
       toast.error("Ocorreu um erro ao tentar remover as imagens.");
@@ -108,14 +124,14 @@ export function PropertyFormProvider({
 
     try {
       // REMOVE CLOUD FILE
-      await fileUploadHook.removeCloudFile(key);
+      await galleryUploadHook.removeCloudFile(key);
 
       // CALCULATES THE NEW GALLERY ORDER
-      const updatedGallery = fileUploadHook.filesUpload
+      const updatedGallery = galleryUploadHook.filesUpload
         .filter((img) => img.key !== key)
         .map((img, i) => ({
           key: img.key as string,
-          order: fileUploadHook.formattedOrder(i),
+          order: galleryUploadHook.formattedOrder(i),
         }));
 
       // UPDATES PROPERTY
@@ -124,7 +140,7 @@ export function PropertyFormProvider({
       }
 
       // SYNC FORM WITH THE NEW GALLERY
-      form.setValue("propertyGallery", updatedGallery);
+      form.setValue("gallery", updatedGallery);
 
       toast.success("Imagem removida");
     } catch (error) {
@@ -146,13 +162,15 @@ export function PropertyFormProvider({
   // BRING EVERYTHING TOGETHER IN ONE OBJECT
   const value = {
     form,
+    formMode,
     initialData,
+    propertyDetails,
     handleClearGallery,
     handleRemoveSingleImage,
     status,
     setStatus,
-    fileUploadHook,
-    propertyDetails,
+    galleryUploadHook,
+    floorPlanGalleryUploadHook,
     activeTab,
     setActiveTab,
     nextTab,

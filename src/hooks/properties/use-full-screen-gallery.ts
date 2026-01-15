@@ -1,9 +1,7 @@
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 import { useState } from "react";
 
-export function useFullScreenGallery(
-  gallery: PropertyViewSchema["propertyGallery"]
-) {
+export function useFullScreenGallery(gallery: PropertyViewSchema["gallery"]) {
   // FIRST IMAGE FROM GALLERY
   const [currentImage, setCurrentImage] = useState(0);
 

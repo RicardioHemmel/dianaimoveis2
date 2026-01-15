@@ -22,8 +22,8 @@ import FullScreenImageModal from "@/components/custom/FullScreenModal";
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
 export default function DraggableArea() {
-  const { fileUploadHook, handleClearGallery } = usePropertyFormContext();
-  const { filesUpload, setFilesUpload, formattedOrder } = fileUploadHook;
+  const { galleryUploadHook, handleClearGallery } = usePropertyFormContext();
+  const { filesUpload, setFilesUpload, formattedOrder } = galleryUploadHook;
 
   // For highlighting cards during drag n drop
   const [highlightedIds, setHighlightedIds] = useState<string[]>([]);

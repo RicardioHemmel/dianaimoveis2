@@ -1,7 +1,7 @@
 "use client";
 
 // REACT | NEXT
-import { useTransition } from "react";
+import { useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { FieldErrors } from "react-hook-form";
 import Link from "next/link";
@@ -14,10 +14,10 @@ import PropertyFormTabs from "@/components/custom/property-form/PropertyFormTabs
 import { Badge } from "@/components/ui/badge";
 
 // SCHEMA
-import {
-  PropertyInputSchema,
-  extractFieldLabels,
-} from "@/lib/schemas/property/property.schema";
+import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
+
+// ZOD ERROR MESSAGES TREATMENT TO PT-BR
+import { extractFieldLabels } from "@/lib/errors/property-form-error-mapper";
 
 // SERVER ACTION
 import { createPropertyAction } from "@/lib/server-actions/properties/create-property.action";
@@ -29,33 +29,43 @@ import { toast } from "sonner";
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
 // ICONS
-import { CheckCircle2, Eye, Pencil, Plus } from "lucide-react";
+import { Eye, Pencil, Plus } from "lucide-react";
 
-// FORMATTER
-import { translateStatus } from "@/lib/formatters/ui-formatters/status-translation";
+// UI CONFIG
+import { formModeConfig } from "@/components/custom/property-form/form-ui-config";
 
-export default function PropertyForm({ mode }: { mode: "create" | "edit" }) {
+export default function PropertyForm() {
+  useEffect(() => console.log("RENDER"), []);
+  useEffect(() => {
+    return () => {
+      console.log("UNMOUNT");
+    };
+  }, []);
+
   const {
     form,
     status,
     setStatus,
-    fileUploadHook,
+    galleryUploadHook,
     nextTab,
     prevTab,
     isFirstTab,
     isLastTab,
+    formMode,
   } = usePropertyFormContext(); // CONTEXT
+
+  const mode = formModeConfig[formMode];
 
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const title = form.watch("title");
   const propertyId = form.watch("_id");
 
-  const { handleCloudUpload, filesUpload } = fileUploadHook;
+  const { handleCloudUpload, filesUpload } = galleryUploadHook;
 
   async function onSubmit(data: PropertyInputSchema) {
     if (
-      mode === "edit" &&
+      formMode === "edit" &&
       filesUpload.length === 0 &&
       data.gallery?.length > 0
     ) {
@@ -66,7 +76,7 @@ export default function PropertyForm({ mode }: { mode: "create" | "edit" }) {
       const finalGallery = await handleCloudUpload(filesUpload);
       const payload = {
         ...data,
-        propertyGallery: finalGallery,
+        gallery: finalGallery,
         status: status,
       };
 
@@ -103,63 +113,45 @@ export default function PropertyForm({ mode }: { mode: "create" | "edit" }) {
   };
 
   // BUTTON TEXTS
-  const actionText = mode === "edit" ? "Salvar" : "Cadastrar";
-  const loadingText = mode === "edit" ? "Salvando..." : "Cadastrando...";
+  const actionText = formMode === "edit" ? "Salvar" : "Cadastrar";
+  const loadingText = formMode === "edit" ? "Salvando..." : "Cadastrando...";
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
       {/* HEADER */}
       <div className="flex justify-between items-center">
         <div className="px-4">
-          {mode === "create" ? (
-            <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <Badge
-                  variant="outline"
-                  className="bg-emerald-500/10 text-emerald-600 border-emerald-500/30 px-3 py-1"
-                >
-                  <Plus className="h-3 w-3 mr-1.5" />
-                  Modo Criação
-                </Badge>
-              </div>
-              <h2 className="text-3xl font-bold text-foreground">
-                {title ? title : "Cadastrar imóvel"}
-              </h2>
-              <p className="text-muted-foreground">
-                Editando informações do imóvel
-              </p>
+          <div className="space-y-2">
+            <div className="flex items-center gap-3">
+              <Badge
+                variant="outline"
+                className={`${mode.badgeClass} px-3 py-1`}
+              >
+                <mode.Icon className="h-3 w-3 mr-1.5" />
+                {mode.badgeText}
+              </Badge>
             </div>
-          ) : (
-            <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <Badge
-                  variant="outline"
-                  className={`${status === "DRAFT" ? "bg-amber-500/10 text-amber-600 border-amber-500/30" : ""}  px-3 py-1`}
-                >
-                  <Pencil className="h-3 w-3 mr-1.5" />
-
-                  {`Modo Edição - ${translateStatus(status)}`}
-                </Badge>
-              </div>
-              <h2 className="text-3xl font-bold text-foreground">{title}</h2>
-              <p className="text-muted-foreground">
-                Editando informações do imóvel
-              </p>
-            </div>
-          )}
+            <h2 className="text-3xl font-bold text-foreground">
+              {title || mode.defaultTitle}
+            </h2>
+            <p className="text-muted-foreground">
+              Editando informações do imóvel
+            </p>
+          </div>
         </div>
 
-        {/* NAVIGATION TABS */}
+        {/* SEE PROPERTY ON PREVIEW PAGE */}
         <div className="flex gap-3">
           {propertyId && (
             <Button type="button" asChild variant="outline">
-              <Link href={`/property/${propertyId}`} target="_blank">
+              <Link href={`/preview/${propertyId}`} target="_blank">
                 <Eye className="size-4" />
                 Ver imóvel
               </Link>
             </Button>
           )}
 
+          {/* NAVIGATION TABS */}
           <Button
             type="button"
             variant="outline"

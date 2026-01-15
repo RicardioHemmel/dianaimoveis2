@@ -1,27 +1,26 @@
 // ICONS
 import { LucideIcon } from "lucide-react";
 
-// REACT | NEXT
-import { useEffect, useRef } from "react";
-import { useWatch } from "react-hook-form";
-
 // COMPONENTS
 import DraggableArea from "./DraggableArea";
 
 // CONTEXT
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
+import useFileUpload from "@/hooks/use-file-upload";
 
 interface ImageUploaderProps {
   Icon: LucideIcon;
   uploaderId: string;
+  fileUploadHook: ReturnType<typeof useFileUpload>;
 }
 
 export default function ImageUploader({
   Icon,
   uploaderId,
+  fileUploadHook,
 }: ImageUploaderProps) {
   // CUSTOM HOOK TO HANDLE FILE UPLOAD EVENTS
-  const { fileUploadHook } = usePropertyFormContext();
+  const { galleryUploadHook } = usePropertyFormContext();
 
   const {
     isDragging,

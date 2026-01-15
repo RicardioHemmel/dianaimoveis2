@@ -8,9 +8,7 @@ export default async function DashboardPage() {
         <h1 className="text-3xl font-bold mb-2">
           Bem-vinda de volta, {session?.user.name}!
         </h1>
-        <p className="text-white/80">
-          Aqui está alguns dados para você Bizoiar
-        </p>
+        <p className="text-white/80">Lorem Ipsum</p>
       </div>
     </div>
   );

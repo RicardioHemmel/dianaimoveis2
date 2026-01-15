@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { FileUpload } from "@/lib/schemas/media/file.schema";
-import { GalleryItemInputSchema } from "@/lib/schemas/property/property.schema";
+import {
+  GalleryItemInputSchema,
+  FloorPlanGalleryItemInputSchema,
+} from "@/lib/schemas/property/property.schema";
 import { resolveImageUrl } from "@/lib/media/resolveImageUrl";
 
 export default function useFileUpload() {
@@ -113,17 +116,20 @@ export default function useFileUpload() {
     e.target.value = "";
   }
 
-  // MAPS IMAGES TO SHOW ON EDIT PROPERTY MODE
-  function mapRemoteFilesToFileUpload(images: GalleryItemInputSchema[]) {
-    const fileUploadFromDB = images.map((image, i) => ({
+  //-------------------------------- POPULATES PROPERTY FORM WITH CLOUD IMAGES --------------------
+  function mapRemoteFilesToFileUpload(
+    images: GalleryItemInputSchema[] | FloorPlanGalleryItemInputSchema[]
+  ): void {
+    const galleryFileFromDB = images.map((image, i) => ({
       id: window.crypto.randomUUID(),
       key: image.key,
       previewURL: resolveImageUrl(image.key),
       order: image.order ?? formattedOrder(i),
       status: "success" as const,
+      label: "label" in image ? image.label : undefined,
     }));
 
-    setFilesUpload(fileUploadFromDB);
+    setFilesUpload(galleryFileFromDB);
   }
 
   async function handleLocalFilesUpload(files: File[]): Promise<void> {

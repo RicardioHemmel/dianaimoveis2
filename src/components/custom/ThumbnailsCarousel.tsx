@@ -8,7 +8,7 @@ import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 import { useState, useEffect } from "react";
 
 interface ThumbnailsCarouselProps {
-  gallery: PropertyViewSchema["propertyGallery"];
+  gallery: PropertyViewSchema["gallery"];
   currentImage: number;
   setCurrentImage: (index: number) => void;
 }

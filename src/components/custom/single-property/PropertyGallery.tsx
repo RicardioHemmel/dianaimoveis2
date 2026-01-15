@@ -8,7 +8,7 @@ import { useFullScreenGallery } from "@/hooks/properties/use-full-screen-gallery
 export default function PropertyGallery({
   gallery,
 }: {
-  gallery: PropertyViewSchema["propertyGallery"];
+  gallery: PropertyViewSchema["gallery"];
 }) {
   //  FULL SCREEN HOOK
   const { isModalOpen, currentImage, closeModal, openImage } =

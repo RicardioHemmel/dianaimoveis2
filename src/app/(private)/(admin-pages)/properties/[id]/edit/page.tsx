@@ -10,9 +10,11 @@ export default async function EditPropertyPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  // GETS PROPERTY ID ON URL
   const resolvedParams = await params;
   const propertyId = resolvedParams.id;
 
+  // RECOVERS SPECIFIC DATA FROM PROPERTY
   const property = await getPropertyToInput(propertyId);
   const propertyDetails = await getAllPropertyDetails();
 
@@ -22,7 +24,7 @@ export default async function EditPropertyPage({
 
   return (
     <PropertyFormWrapper
-      mode="edit"
+      formMode="edit"
       propertyDetails={propertyDetails}
       initialData={property}
     />

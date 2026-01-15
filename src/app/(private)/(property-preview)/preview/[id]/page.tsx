@@ -7,7 +7,7 @@ import { getPropertyToView } from "@/lib/services/properties/properties-query.se
 // NEXT
 import { notFound } from "next/navigation";
 
-export default async function SinglePropertyPage({
+export default async function PropertyPreviewPage({
   params,
 }: {
   params: Promise<{ id: string }>;

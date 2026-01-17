@@ -34,36 +34,33 @@ import {
   DollarSign,
   LucideIcon,
   X,
+  CircleSlash2,
 } from "lucide-react";
+
+// SCHEMA
+import { PropertyTypesListSchema } from "@/lib/constants/properties/property-types";
 
 // CONTEXT
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
-import { useEffect } from "react";
 
 export default function TabBasicInfo() {
   const { form, propertyDetails } = usePropertyFormContext();
   const propertyTypes = propertyDetails?.types;
   const propertyPurposes = propertyDetails?.purposes;
 
-  // List possible icons for property types
-  const propertyTypeIcons: Record<string, LucideIcon> = {
+  // PROPERTY TYPES ICONS
+  const propertyTypeIcons: Record<PropertyTypesListSchema, LucideIcon> = {
     Apartamento: Building2,
     Casa: Home,
     Comercial: Store,
     Terreno: MapPin,
-  } as const;
+  };
 
   const mappedPropertyTypes = propertyTypes?.map((type) => ({
     ...type,
-    icon: propertyTypeIcons[type.name] ?? Building2,
+    icon:
+      propertyTypeIcons[type.name as PropertyTypesListSchema] ?? CircleSlash2,
   }));
-
-  useEffect(() => console.log("RENDER BASIC INFO"), []);
-  useEffect(() => {
-    return () => {
-      console.log("UNMOUNT BASIC INFO");
-    };
-  }, []);
 
   return (
     <TabsContent value="basic" className="space-y-6">

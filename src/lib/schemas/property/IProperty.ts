@@ -21,6 +21,8 @@ export interface IAddressSchema {
   stateUf: string | null;
   zipCode: string | null;
   referencePoint: string[];
+  lat: number | null;
+  lng: number | null;
 }
 
 export interface IToggleFieldSchema {
@@ -61,15 +63,15 @@ export interface IProperty {
 
   // TOGGLE FIELDS
   isFeatured: boolean;
-  isFurnished: IToggleFieldSchema | null;
-  isNearSubway: IToggleFieldSchema | null;
-  isPetFriendly: IToggleFieldSchema | null;
+  isFurnished: IToggleFieldSchema;
+  isNearSubway: IToggleFieldSchema;
+  isPetFriendly: IToggleFieldSchema;
 
   // REFERENCES
   propertyType: Types.ObjectId;
   propertyPurpose: Types.ObjectId | null;
   propertyStanding: Types.ObjectId | null;
-  propertyTypology: Types.ObjectId | null;
+  propertyTypologies: Types.ObjectId[];
   propertyAmenities: Types.ObjectId[];
 
   // GALLERY
@@ -89,13 +91,13 @@ export interface IPropertyPopulated extends Omit<
   | "propertyPurpose"
   | "propertyStanding"
   | "propertyStatus"
-  | "propertyTypology"
+  | "propertyTypologies"
   | "propertyAmenities"
 > {
   propertyType: IPopulatedRef;
   propertyPurpose?: IPopulatedRef;
   propertyStanding?: IPopulatedRef;
   propertyStatus?: IPopulatedRef;
-  propertyTypology?: IPopulatedRef;
+  propertyTypologies: IPopulatedRef[];
   propertyAmenities: IPopulatedRef[];
 }

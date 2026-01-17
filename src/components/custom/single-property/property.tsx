@@ -9,12 +9,14 @@ import PropertyLocation from "@/components/custom/single-property/PropertyLocati
 import PropertyContact from "@/components/custom/single-property/PropertyContact";
 import PropertySimilar from "@/components/custom/single-property/PropertySimilar";
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
+import PropertyTypologies from "@/components/custom/single-property/PropertyTypologies";
 
 export function Property({ property }: { property: PropertyViewSchema }) {
   return (
     <div className="bg-surface-base">
       <PropertyHero property={property} />
       <PropertyOverview property={property} />
+      <PropertyTypologies />
       <PropertyDescription property={property} />
       {property.propertyAmenities?.length > 0 && (
         <PropertyAmenities propertyAmenities={property.propertyAmenities} />

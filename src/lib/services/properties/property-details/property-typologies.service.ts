@@ -1,12 +1,12 @@
 import connectMongoDB from "@/lib/db/mongodbConnection";
-import PropertyTypology from "@/lib/db/models/property/property-details/typologies.model";
+import PropertyTypologies from "@/lib/db/models/property/property-details/typologies.model";
 import { PropertyMapper } from "@/lib/mappers/property/property.mapper";
-import { PropertyDetail } from "@/lib/schemas/property/property.schema";
+import { PropertyDetailSchema } from "@/lib/schemas/property/property.schema";
 
-export async function getTypologies(): Promise<PropertyDetail[]> {
+export async function getTypologies(): Promise<PropertyDetailSchema[]> {
   await connectMongoDB();
 
-  const typologies = await PropertyTypology.find({}, { name: 1 }).sort({
+  const typologies = await PropertyTypologies.find({}, { name: 1 }).sort({
     name: 1,
   });
 
@@ -14,5 +14,7 @@ export async function getTypologies(): Promise<PropertyDetail[]> {
     return [];
   }
 
-  return typologies.map((typology) => PropertyMapper.PropertyDetailToView(typology));
+  return typologies.map((typology) =>
+    PropertyMapper.PropertyDetailToView(typology)
+  );
 }

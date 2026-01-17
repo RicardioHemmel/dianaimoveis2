@@ -35,13 +35,6 @@ import { Eye } from "lucide-react";
 import { formModeConfig } from "@/components/custom/property-form/form-ui-config";
 
 export default function PropertyForm() {
-  useEffect(() => console.log("RENDER PROPERTY FORM"), []);
-  useEffect(() => {
-    return () => {
-      console.log("UNMOUNT PROPERTY FORM");
-    };
-  }, []);
-
   const {
     form,
     status,
@@ -54,6 +47,8 @@ export default function PropertyForm() {
     isLastTab,
     formMode,
   } = usePropertyFormContext(); // CONTEXT
+
+  console.log(form.getValues());
 
   const mode = formModeConfig[formMode];
 

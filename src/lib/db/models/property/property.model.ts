@@ -47,6 +47,8 @@ const addressSchema = new Schema(
     stateUf: String,
     zipCode: String,
     referencePoint: [String],
+    lat: Number,
+    lng: Number,
   },
   { _id: false }
 );
@@ -87,10 +89,12 @@ const propertySchema = new Schema<IProperty>(
       type: Schema.Types.ObjectId,
       ref: "PropertyStanding",
     },
-    propertyTypology: {
-      type: Schema.Types.ObjectId,
-      ref: "PropertyTypology",
-    },
+    propertyTypologies: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "PropertyTypologies",
+      },
+    ],
     propertyAmenities: [
       { type: Schema.Types.ObjectId, ref: "PropertyAmenities" },
     ],

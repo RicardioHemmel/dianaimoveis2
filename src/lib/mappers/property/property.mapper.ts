@@ -48,10 +48,8 @@ export class PropertyMapper {
 
   // ---------------- TOGGLE FIELDS ----------------
   private static toPersistenceToggleField(
-    toggleField: ToggleFieldSchema | undefined
-  ): IToggleFieldSchema | null {
-    if (!toggleField) return null;
-
+    toggleField: ToggleFieldSchema
+  ): IToggleFieldSchema {
     return {
       value: toggleField.value,
       show: toggleField.show,
@@ -59,9 +57,8 @@ export class PropertyMapper {
   }
 
   private static toDomainToggleField(
-    toggleField: IToggleFieldSchema | null
-  ): ToggleFieldSchema | undefined {
-    if (!toggleField) return undefined;
+    toggleField: IToggleFieldSchema
+  ): ToggleFieldSchema {
     return {
       value: toggleField.value,
       show: toggleField.show,
@@ -112,6 +109,8 @@ export class PropertyMapper {
       stateUf: address.stateUf || null,
       zipCode: address.zipCode || null,
       referencePoint: address.referencePoint,
+      lat: address.lat || null,
+      lng: address.lng || null,
     };
   }
 
@@ -126,6 +125,8 @@ export class PropertyMapper {
       stateUf: address.stateUf ?? undefined,
       zipCode: address.zipCode ?? undefined,
       referencePoint: address.referencePoint,
+      lat: address.lat ?? undefined,
+      lng: address.lng ?? undefined,
     };
   }
 
@@ -193,7 +194,7 @@ export class PropertyMapper {
       propertyType: new Types.ObjectId(property.propertyType._id), // REQUIRED
       propertyPurpose: this.toObjectId(property.propertyPurpose), // OPTIONAL
       propertyStanding: this.toObjectId(property.propertyStanding), // OPTIONAL
-      propertyTypology: this.toObjectId(property.propertyTypology), // OPTIONAL
+      propertyTypologies: this.toObjectIdArray(property.propertyTypologies), // OPTIONAL
       propertyAmenities: this.toObjectIdArray(property.propertyAmenities), // OPTIONAL
     };
   }
@@ -229,6 +230,7 @@ export class PropertyMapper {
         property?.floorPlanGallery?.map((img) => ({
           key: img.key,
           order: img.order,
+          label: img.label,
           url: resolveImageUrl(img.key),
         })) ?? [],
 
@@ -247,7 +249,9 @@ export class PropertyMapper {
       },
       propertyPurpose: this.mapPopulatedRefToView(property?.propertyPurpose),
       propertyStanding: this.mapPopulatedRefToView(property?.propertyStanding),
-      propertyTypology: this.mapPopulatedRefToView(property?.propertyTypology),
+      propertyTypologies: this.mapPopulatedRefArrayToView(
+        property?.propertyTypologies
+      ),
       propertyAmenities: this.mapPopulatedRefArrayToView(
         property?.propertyAmenities
       ),
@@ -304,7 +308,9 @@ export class PropertyMapper {
       },
       propertyPurpose: property.propertyPurpose?._id.toString(),
       propertyStanding: property.propertyStanding?._id.toString(),
-      propertyTypology: property.propertyTypology?._id.toString(),
+      propertyTypologies: property.propertyTypologies.map((typology) =>
+        typology._id.toString()
+      ),
       propertyAmenities: property.propertyAmenities.map((amenity) =>
         amenity._id.toString()
       ),

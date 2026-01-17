@@ -60,8 +60,6 @@ export default function DraggableImageCard({
     updateImageLabel(image.id, e.currentTarget.value);
   }
 
-  console.log("Renderizou de novo karai");
-
   return (
     <div
       ref={setNodeRef}
@@ -72,7 +70,7 @@ export default function DraggableImageCard({
       onDoubleClick={() => onDoubleClick(i)}
     >
       {/* IMAGE CARD */}
-      <div className="w-full h-64 relative overflow-hidden animate-[var(--animate-infinity-glow)] rounded-lg">
+      <div className="w-full h-64 relative overflow-hidden rounded-lg">
         <img
           src={image.previewURL ?? ""}
           alt={`Preview da imagem ${image.id}`}
@@ -96,7 +94,7 @@ export default function DraggableImageCard({
                 }
               }}
               placeholder="Descrição da Planta"
-              className="bg-white w-3/5 text-center"
+              className="bg-white w-3/5 text-center border-3 border-slate-500"
             />
           </div>
         )}

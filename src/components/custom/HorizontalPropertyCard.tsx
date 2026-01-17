@@ -47,7 +47,7 @@ export function PropertyCardHorizontal({
   const {
     deliveryDate,
     title,
-    propertyTypology,
+    propertyTypologies,
     bedrooms,
     bathrooms,
     parkingSpaces,
@@ -71,10 +71,6 @@ export function PropertyCardHorizontal({
   const propertyEditLink = `properties/${property._id}/edit`;
 
   //----------------- PROPERTY TITLE  ------------------------//
-
-  const propertyTitle = propertyTypology?.name
-    ? `${title} - ${propertyTypology?.name}`
-    : title;
 
   return (
     <Card className="overflow-hidden shadow-xl bg-white group p-0">
@@ -105,7 +101,7 @@ export function PropertyCardHorizontal({
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
               <h3 className="font-semibold text-2xl text-foreground mb-2">
-                {propertyTitle}
+                {title}
               </h3>
 
               {/*LOCATION */}

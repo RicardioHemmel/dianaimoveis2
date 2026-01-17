@@ -1,4 +1,6 @@
 export const PROPERTY_TYPOLOGIES = [
+  "Tipo",
+  "Loft",
   "Studio",
   "Garden",
   "Duplex",
@@ -6,4 +8,7 @@ export const PROPERTY_TYPOLOGIES = [
   "Cobertura",
   "Kitnet",
   "Penthouse",
-];
+] as const;
+
+// CREATES A TYPED SCHEMA OF THE LIST
+export type PropertyTypologiesListSchema = (typeof PROPERTY_TYPOLOGIES)[number];

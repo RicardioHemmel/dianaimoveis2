@@ -23,6 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { PatternFormat } from "react-number-format";
+// import { GoogleMap } from "@/components/custom/GoogleMap";
 
 //BRAZILIAN STATE
 import { brazilianStates } from "@/lib/constants/states/brazilian-states";
@@ -38,13 +39,6 @@ export default function TabLocation() {
   const referencePoints = form.watch("address.referencePoint");
   const referenceInputRef = useRef<HTMLInputElement | null>(null);
   const [canAdd, setCanAdd] = useState(false);
-
-  useEffect(() => console.log("RENDER LOCATION"), []);
-  useEffect(() => {
-    return () => {
-      console.log("UNMOUNT LOCATION");
-    };
-  }, []);
 
   return (
     <TabsContent value="location" className="space-y-4">
@@ -266,6 +260,10 @@ export default function TabLocation() {
             ))}
           </ul>
         )}
+
+        <div className="h-full min-h-[400px] overflow-hidden shadow-xl rounded-2xl mt-10">
+          {/* <GoogleMap /> */}
+        </div>
       </div>
     </TabsContent>
   );

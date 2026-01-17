@@ -21,7 +21,7 @@ const POPULATE_FIELDS = [
   "propertyType",
   "propertyPurpose",
   "propertyStanding",
-  "propertyTypology",
+  "propertyTypologies",
   "propertyAmenities",
 ];
 
@@ -51,6 +51,11 @@ export async function getPropertyToView(
   // GARANTEES THAT THE GALLERY WILL RETURN WITH THE PREVIOUS DEFINED ORDER
   if (property.gallery) {
     property.gallery.sort((a, b) => a.order - b.order);
+  }
+
+  // GARANTEES THAT THE GALLERY WILL RETURN WITH THE PREVIOUS DEFINED ORDER
+  if (property.floorPlanGallery) {
+    property.floorPlanGallery.sort((a, b) => a.order - b.order);
   }
 
   return PropertyMapper.toViewSchema(property);

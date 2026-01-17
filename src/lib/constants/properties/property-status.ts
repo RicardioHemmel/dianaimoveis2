@@ -7,4 +7,4 @@ export const STATUS = [
   "Lançamento",
   "Breve Lançamento",
   "Futuro Lançamento",
-];
+] as const;

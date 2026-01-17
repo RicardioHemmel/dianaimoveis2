@@ -17,7 +17,6 @@ export default function PropertyDescription({
             <p className="text-muted-foreground leading-relaxed text-lg mb-6">
               {description}
             </p>
-
             <hr />
           </div>
         </div>

@@ -40,15 +40,15 @@ export default function TabAmenities() {
   const allAmenitiesIds = amenitiesList?.map((a) => a._id) ?? [];
 
   // ADD OR REMOVE AMENITIES
-  const toggleAmenity = (amenity: string) => {
+  const toggleAmenity = (amenityId: string) => {
     // AMENITIES REGISTERED ON THE RHF
     const currentAmenities = form.getValues("propertyAmenities");
 
     if (!currentAmenities) return;
 
-    const updatedAmenities = currentAmenities?.includes(amenity)
-      ? currentAmenities.filter((a) => a !== amenity)
-      : [...currentAmenities, amenity];
+    const updatedAmenities = currentAmenities?.includes(amenityId)
+      ? currentAmenities.filter((a) => a !== amenityId)
+      : [...currentAmenities, amenityId];
 
     form.setValue("propertyAmenities", updatedAmenities);
   };

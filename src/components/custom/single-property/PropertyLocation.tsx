@@ -1,5 +1,6 @@
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 import { MapPin, Navigation, Clock, Car } from "lucide-react";
+// import { GoogleMap } from "@/components/custom/GoogleMap";
 
 export default function PropertyLocation({
   address,
@@ -12,6 +13,7 @@ export default function PropertyLocation({
   const stateUf = address?.stateUf;
   const city = address?.city;
   const zipCode = address?.zipCode;
+  const referencePoints = address?.referencePoint;
 
   return (
     <section className="py-16 bg-surface-muted">
@@ -26,6 +28,7 @@ export default function PropertyLocation({
         <div className="grid lg:grid-cols-5 gap-8">
           {/* INFO CARDS */}
           <div className="lg:col-span-2 space-y-4 ">
+            {/* FULL ADDRESS */}
             <div className="white-card p-6">
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-xl bg-action-primary/10 flex items-center justify-center shrink-0">
@@ -46,6 +49,7 @@ export default function PropertyLocation({
               </div>
             </div>
 
+            {/* REFERENCE POINTS LIST */}
             <div className="white-card p-6">
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-xl bg-action-primary/10 flex items-center justify-center shrink-0">
@@ -56,36 +60,25 @@ export default function PropertyLocation({
                     Pontos de Referência
                   </h3>
                   <ul className="text-muted-foreground text-sm space-y-1">
-                    <li>• Shopping Vila Olímpia - 5 min</li>
-                    <li>• Av. Faria Lima - 3 min</li>
-                    <li>• Parque do Povo - 8 min</li>
-                    <li>• Estação Faria Lima - 10 min</li>
+                    {referencePoints &&
+                      referencePoints?.length > 0 &&
+                      referencePoints?.map((rp, i) => (
+                        <li key={i} className="list-disc ml-5">
+                          {rp}
+                        </li>
+                      ))}
                   </ul>
                 </div>
               </div>
             </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="white-card p-5 text-center">
-                <Clock className="h-6 w-6 text-action-primary mx-auto mb-2" />
-                <p className="font-display text-2xl font-bold text-primary">
-                  5
-                </p>
-                <p className="text-muted-foreground text-xs">min do metrô</p>
-              </div>
-              <div className="white-card p-5 text-center">
-                <Car className="h-6 w-6 text-action-primary mx-auto mb-2" />
-                <p className="font-display text-2xl font-bold text-primary">
-                  10
-                </p>
-                <p className="text-muted-foreground text-xs">min da Marginal</p>
-              </div>
-            </div>
           </div>
 
-          {/* Map Placeholder */}
+          {/* MAP PLACEHOLDER */}
           <div className="lg:col-span-3">
-            <div className="h-full min-h-[400px] overflow-hidden shadow-xl rounded-2xl">
+            {/* <div className="h-full min-h-[400px] overflow-hidden shadow-xl rounded-2xl">
+              <GoogleMap />
+            </div> */}
+            {/* <div className="h-full min-h-[400px] overflow-hidden shadow-xl rounded-2xl">
               <div className="w-full h-full bg-gray-100 flex items-center justify-center">
                 <div className="text-center">
                   <MapPin className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
@@ -95,7 +88,7 @@ export default function PropertyLocation({
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

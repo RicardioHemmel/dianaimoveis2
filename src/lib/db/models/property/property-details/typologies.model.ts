@@ -1,7 +1,7 @@
 import { IPopulatedRef } from "@/lib/schemas/property/IProperty";
 import mongoose, { Model, Schema } from "mongoose";
 
-const typologySchema = new Schema(
+const typologiesSchema = new Schema(
   {
     name: { type: String, required: true },
   },
@@ -11,7 +11,7 @@ const typologySchema = new Schema(
   }
 );
 
-const TypologyModel =
-  (mongoose.models.PropertyTypology as Model<IPopulatedRef>) ||
-  mongoose.model<IPopulatedRef>("PropertyTypology", typologySchema);
-export default TypologyModel;
+const TypologiesModel =
+  (mongoose.models.PropertyTypologies as Model<IPopulatedRef>) ||
+  mongoose.model<IPopulatedRef>("PropertyTypologies", typologiesSchema);
+export default TypologiesModel;

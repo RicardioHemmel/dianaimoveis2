@@ -19,7 +19,7 @@ export const fieldLabels: Record<string, string> = {
   propertyType: "Tipo do imóvel",
   propertyPurpose: "Finalidade do imóvel",
   propertyStanding: "Padrão do imóvel",
-  propertyTypology: "Tipologia",
+  propertyTypologies: "Tipologia",
   propertyAmenities: "Comodidades",
 };
 

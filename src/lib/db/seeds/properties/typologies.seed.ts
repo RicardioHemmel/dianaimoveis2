@@ -16,5 +16,5 @@ export async function typologiesSeed() {
     );
   }
 
-  console.log("Typology seed finalizada.");
+  console.log("Typologies seed finalizada.");
 }

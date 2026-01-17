@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
-import { Img } from "@react-email/components";
-
+import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
+import Image from "next/image";
 interface PropertyFloorPlansProps {
-  floorPlanGallery: PropertyInputSchema["floorPlanGallery"];
+  floorPlanGallery: PropertyViewSchema["floorPlanGallery"];
 }
 
 export default function PropertyFloorPlans({
@@ -23,7 +22,7 @@ export default function PropertyFloorPlans({
         </div>
 
         <div className="max-w-4xl mx-auto">
-          {/* Plan Selector */}
+          {/* FLOOR PLAN SELECTOR */}
           <div className="flex flex-wrap justify-center gap-3 mb-8">
             {floorPlanGallery.map((img, index) => (
               <Button
@@ -36,13 +35,15 @@ export default function PropertyFloorPlans({
             ))}
           </div>
 
-          {/* Plan Display */}
-          <div className="glass-card p-8 overflow-hidden">
+          {/* FLOOR PLAN DISPLAY */}
+          <div className="white-card p-8 overflow-hidden">
             <div className="relative aspect-square max-w-md mx-auto">
-              <img
-                src={floorPlanGallery[activePlan].label}
-                alt={floorPlanGallery[activePlan].label}
+              <Image
+                src={floorPlanGallery[activePlan].url}
+                alt={floorPlanGallery[activePlan].key}
                 className="w-full h-full object-contain transition-all duration-500"
+                width={600}
+                height={600}
               />
             </div>
             <p className="text-center text-muted-foreground mt-6">

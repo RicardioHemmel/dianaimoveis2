@@ -18,6 +18,8 @@ const addressSchema = z.object({
   stateUf: z.string().optional(),
   zipCode: z.string().optional(),
   referencePoint: z.array(z.string()),
+  lat: z.number().optional(),
+  lng: z.number().optional(),
 });
 
 export type AddressSchema = z.infer<typeof addressSchema>;
@@ -131,7 +133,7 @@ const propertyBaseSchema = z.object({
   propertyType: z.string(),
   propertyPurpose: z.string().optional(),
   propertyStanding: z.string().optional(),
-  propertyTypology: z.string().optional(),
+  propertyTypologies: z.array(z.string()),
   propertyAmenities: z.array(z.string()),
 
   gallery: z.array(galleryItemInputSchema),
@@ -150,7 +152,7 @@ export const propertyViewSchema = propertyBaseSchema.extend({
   propertyType: propertyDetailSchema.optional(),
   propertyPurpose: propertyDetailSchema.optional(),
   propertyStanding: propertyDetailSchema.optional(),
-  propertyTypology: propertyDetailSchema.optional(),
+  propertyTypologies: z.array(propertyDetailSchema),
   propertyAmenities: z.array(propertyDetailSchema),
 });
 
@@ -174,7 +176,7 @@ export const DefaultValuesPropertyForm: PropertyInputSchema = {
   deliveryDate: "",
   propertyPurpose: "",
   propertyStanding: "",
-  propertyTypology: "",
+  propertyTypologies: [],
   propertyAmenities: [],
   constructionCompany: "",
   status: "DRAFT",

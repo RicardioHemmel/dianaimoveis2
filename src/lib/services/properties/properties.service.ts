@@ -5,6 +5,7 @@ import Property from "@/lib/db/models/property/property.model";
 import { PropertyMapper } from "@/lib/mappers/property/property.mapper";
 import { IPropertyPopulated } from "@/lib/schemas/property/IProperty";
 import {
+  FloorPlanGalleryItemInputSchema,
   GalleryItemInputSchema,
   PropertyInputSchema,
 } from "@/lib/schemas/property/property.schema";
@@ -60,13 +61,16 @@ export async function updateProperty(id: string, data: PropertyInputSchema) {
 
 export async function updatePropertyImage(
   id: string,
-  images: GalleryItemInputSchema[]
+  source: "gallery" | "floorPlanGallery",
+  images: GalleryItemInputSchema[] | FloorPlanGalleryItemInputSchema[]
 ) {
   await connectMongoDB();
 
+  const field = source === "gallery" ? "gallery" : "floorPlanGallery";
+
   const result = await Property.updateOne(
     { _id: id },
-    { $set: { gallery: images } }
+    { $set: { [field]: images } }
   );
 
   if (result.matchedCount === 0) {

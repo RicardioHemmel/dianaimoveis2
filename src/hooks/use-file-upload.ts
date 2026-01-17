@@ -4,20 +4,23 @@ import { FileUpload } from "@/lib/schemas/media/file.schema";
 import {
   GalleryItemInputSchema,
   FloorPlanGalleryItemInputSchema,
+  PropertyInputSchema,
 } from "@/lib/schemas/property/property.schema";
 import { resolveImageUrl } from "@/lib/media/resolveImageUrl";
+import { updatePropertyImageAction } from "@/lib/server-actions/properties/update-property-image.action";
+import { UseFormReturn } from "react-hook-form";
 
-export default function useFileUpload() {
+export default function useFileUpload(source: "gallery" | "floorPlanGallery") {
   // FOR ONDRAGENTER AND ONDRAGLEAVE CONTROL
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [filesUpload, setFilesUpload] = useState<FileUpload[]>([]);
   const countRef = useRef(0); // TO PREVENT FLICKERING WHEN DRAGGING OVER CHILD ELEMENTS
 
-  const prevFilesRef = useRef<FileUpload[]>([]);
-
   // MEMORY MANAGEMENT (BLOBS)
+  const prevFilesRef = useRef<FileUpload[]>([]); // PERSIST FILES BETWEEN RE-RENDERS TO HAVE REFERENCE TO EXCLUDE THEM
+
   useEffect(() => {
-    const prev = prevFilesRef.current; // KEEPS DATA BETWEEN RENDERS
+    const prev = prevFilesRef.current;
 
     // CLEANUP OF REMOVED ITEMS
     prev.forEach((prevImg) => {
@@ -120,7 +123,7 @@ export default function useFileUpload() {
   function mapRemoteFilesToFileUpload(
     images: GalleryItemInputSchema[] | FloorPlanGalleryItemInputSchema[]
   ): void {
-    const galleryFileFromDB = images.map((image, i) => ({
+    const filesFromDB = images.map((image, i) => ({
       id: window.crypto.randomUUID(),
       key: image.key,
       previewURL: resolveImageUrl(image.key),
@@ -129,7 +132,7 @@ export default function useFileUpload() {
       label: "label" in image ? image.label : undefined,
     }));
 
-    setFilesUpload(galleryFileFromDB);
+    setFilesUpload(filesFromDB);
   }
 
   async function handleLocalFilesUpload(files: File[]): Promise<void> {
@@ -164,6 +167,7 @@ export default function useFileUpload() {
         order: filesUpload.length + formattedOrder(i), // POSITION ON ARRAY
         uploadProgress: 0, // UPLOAD PROGRESS FOR USER FEEDBACK
         status: "idle",
+        label: "",
       };
     });
 
@@ -309,7 +313,7 @@ export default function useFileUpload() {
 
   // ------------- UPLOADS TO CLOUD ALL "IDLE" IMAGES ---------------
   async function handleCloudUpload(currentFiles: FileUpload[]) {
-    const uploadedFiles: { key: string; order: number }[] = [];
+    const uploadedFiles: { key: string; order: number; label?: string }[] = [];
 
     for (const img of currentFiles) {
       // IF THE IMG WAS ALREADY SAVED ON CLOUD GETS IT'S DATA
@@ -317,6 +321,7 @@ export default function useFileUpload() {
         uploadedFiles.push({
           key: img.key,
           order: img.order,
+          label: img.label,
         });
         continue;
       }
@@ -327,7 +332,7 @@ export default function useFileUpload() {
           const key = await uploadSingleImage(img.file);
 
           if (key) {
-            uploadedFiles.push({ key, order: img.order });
+            uploadedFiles.push({ key, order: img.order, label: img.label });
           }
         } catch {
           toast.error("Erro ao enviar imagem");
@@ -335,7 +340,22 @@ export default function useFileUpload() {
       }
     }
 
-    return uploadedFiles;
+    if (source === "gallery") {
+      const gallery = uploadedFiles.map((file) => ({
+        key: file.key,
+        order: file.order,
+      }));
+
+      return gallery;
+    } else {
+      const floorPlanGallery = uploadedFiles.map((file) => ({
+        key: file.key,
+        order: file.order,
+        label: file.label ?? "",
+      }));
+
+      return floorPlanGallery;
+    }
   }
 
   //---------------- REMOVE ONE CLOUD FILE AND UPDATES FORM ----------------------
@@ -396,6 +416,63 @@ export default function useFileUpload() {
     }
   }
 
+  // ---  DELETE ONE IMAGE AND UPDATE PROPERTY ---
+  async function removeImageAndUpdateProperty(
+    key: string,
+    form: UseFormReturn<PropertyInputSchema>,
+    propertyId?: string
+  ): Promise<void> {
+    if (!key) return;
+
+    try {
+      // REMOVE CLOUD FILE
+      await removeCloudFile(key);
+
+      // CALCULATES THE NEW GALLERY ORDER
+      const updatedImages = filesUpload
+        .filter((img) => img.key && img.key !== key)
+        .map((img, i) => ({
+          key: img.key as string,
+          order: formattedOrder(i),
+        }));
+
+      // UPDATES PROPERTY
+      if (propertyId) {
+        await updatePropertyImageAction(propertyId, source, updatedImages);
+      }
+
+      // SYNC FORM WITH THE NEW GALLERY
+      form.setValue(source, updatedImages);
+
+      toast.success("Imagem removida");
+    } catch (error) {
+      console.error("Falha ao remover imagem:", error);
+      toast.error("Erro ao sincronizar exclusão com o servidor");
+    }
+  }
+
+  // REMOVE ALL IMAGES AND UPDATE PROPERTY
+  async function removeAllImagesAndUpdateProperty(
+    form: UseFormReturn<PropertyInputSchema>,
+    propertyId?: string
+  ): Promise<void> {
+    try {
+      // REMOVE LOCAL AND CLOUD FILES
+      removeAllFiles();
+
+      // IF PROPERTY EXISTS, UPDATES IT
+      if (propertyId) {
+        await updatePropertyImageAction(propertyId, source, []);
+      }
+
+      // SYNC THE FORM LOCALLY
+      form.setValue(source, []);
+    } catch (error) {
+      console.error("Erro ao limpar galeria:", error);
+      toast.error("Ocorreu um erro ao tentar remover as imagens.");
+    }
+  }
+
   //------- REMOVE LOCAL AND CLOUD IMAGES --------
   function removeAllFiles() {
     removeAllLocalFiles();
@@ -419,6 +496,13 @@ export default function useFileUpload() {
       toast.error("Erro ao limpar galeria");
     }
   }
+
+  function updateImageLabel(id: string, label: string) {
+    setFilesUpload((prev) =>
+      prev.map((img) => (img.id === id ? { ...img, label } : img))
+    );
+  }
+
   return {
     isDragging,
     filesUpload,
@@ -436,5 +520,8 @@ export default function useFileUpload() {
     handleCloudUpload,
     formattedOrder,
     mapRemoteFilesToFileUpload,
+    removeImageAndUpdateProperty,
+    removeAllImagesAndUpdateProperty,
+    updateImageLabel,
   };
 }

@@ -45,8 +45,6 @@ interface PropertyFormContextType {
   galleryUploadHook: ReturnType<typeof useFileUpload>;
   floorPlanGalleryUploadHook: ReturnType<typeof useFileUpload>;
   propertyDetails?: PropertyDetailsData;
-  handleClearGallery: () => Promise<void>;
-  handleRemoveSingleImage: (key: string) => Promise<void>;
 
   //NAVIGATION
   activeTab: string;
@@ -73,8 +71,8 @@ export function PropertyFormProvider({
   formMode,
 }: ProviderProps) {
   // FILES UPLOAD
-  const galleryUploadHook = useFileUpload();
-  const floorPlanGalleryUploadHook = useFileUpload();
+  const galleryUploadHook = useFileUpload("gallery");
+  const floorPlanGalleryUploadHook = useFileUpload("floorPlanGallery");
 
   // PROPERTY FORM
   const { form } = usePropertyForm(propertyDetails?.types ?? [], initialData);
@@ -96,59 +94,6 @@ export function PropertyFormProvider({
     }
   }, [initialData]);
 
-  // PROPERTY ID TO UPDATE PROPERTY WITH GALLERY FUNCTIONS
-  const propertyId = form.watch("_id");
-
-  // --- CONTEXT FUNCTION TO CLEAN GALLERY AND UPDATE PROPERTY ---
-  async function handleClearGallery(): Promise<void> {
-    try {
-      // REMOVE LOCAL AND CLOUD FILES
-      galleryUploadHook.removeAllFiles();
-
-      // IF PROPERTY EXISTS, UPDATES IT
-      if (propertyId) {
-        await updatePropertyImageAction(propertyId, []);
-      }
-
-      // SYNC THE FORM LOCALLY
-      form.setValue("gallery", []);
-    } catch (error) {
-      console.error("Erro ao limpar galeria:", error);
-      toast.error("Ocorreu um erro ao tentar remover as imagens.");
-    }
-  }
-
-  // --- CONTEXT FUNCTION TO DELETE ONE IMAGE AND UPDATE PROPERTY ---
-  async function handleRemoveSingleImage(key: string): Promise<void> {
-    if (!key) return;
-
-    try {
-      // REMOVE CLOUD FILE
-      await galleryUploadHook.removeCloudFile(key);
-
-      // CALCULATES THE NEW GALLERY ORDER
-      const updatedGallery = galleryUploadHook.filesUpload
-        .filter((img) => img.key !== key)
-        .map((img, i) => ({
-          key: img.key as string,
-          order: galleryUploadHook.formattedOrder(i),
-        }));
-
-      // UPDATES PROPERTY
-      if (propertyId) {
-        await updatePropertyImageAction(propertyId, updatedGallery);
-      }
-
-      // SYNC FORM WITH THE NEW GALLERY
-      form.setValue("gallery", updatedGallery);
-
-      toast.success("Imagem removida");
-    } catch (error) {
-      console.error("Falha ao remover imagem:", error);
-      toast.error("Erro ao sincronizar exclusão com o servidor");
-    }
-  }
-
   // TABS NAVIGATION MANAGEMENT
   const [activeTab, setActiveTab] = useState(TABS[0]);
   const currentIndex = TABS.indexOf(activeTab);
@@ -165,8 +110,6 @@ export function PropertyFormProvider({
     formMode,
     initialData,
     propertyDetails,
-    handleClearGallery,
-    handleRemoveSingleImage,
     status,
     setStatus,
     galleryUploadHook,

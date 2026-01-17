@@ -20,10 +20,18 @@ import FullScreenImageModal from "@/components/custom/FullScreenModal";
 
 // CONTEXT
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
+import { useFileUploadContext } from "@/context/FileUploadContext";
 
 export default function DraggableArea() {
-  const { galleryUploadHook, handleClearGallery } = usePropertyFormContext();
-  const { filesUpload, setFilesUpload, formattedOrder } = galleryUploadHook;
+  const { fileUploadHook } = useFileUploadContext();
+  const {
+    filesUpload,
+    setFilesUpload,
+    formattedOrder,
+    removeAllImagesAndUpdateProperty,
+  } = fileUploadHook;
+  const { form } = usePropertyFormContext();
+  const propertyId = form.watch("_id");
 
   // For highlighting cards during drag n drop
   const [highlightedIds, setHighlightedIds] = useState<string[]>([]);
@@ -100,7 +108,9 @@ export default function DraggableArea() {
                   type="button"
                   variant={"destructive"}
                   className="rounded-full"
-                  onClick={handleClearGallery}
+                  onClick={() =>
+                    removeAllImagesAndUpdateProperty(form, propertyId)
+                  }
                 >
                   Remover imagens
                 </Button>

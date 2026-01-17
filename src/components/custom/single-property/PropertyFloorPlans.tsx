@@ -1,36 +1,37 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import floorPlan from "@/assets/floor-plan.jpg";
+import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
+import { Img } from "@react-email/components";
 
-const plans = [
-  { id: 1, name: "Studio - 24m²", image: "" },
-  { id: 2, name: "1 Dorm - 38m²", image: "" },
-  { id: 3, name: "2 Dorms - 74m²", image: "" },
-];
+interface PropertyFloorPlansProps {
+  floorPlanGallery: PropertyInputSchema["floorPlanGallery"];
+}
 
-export default function PropertyFloorPlans() {
+export default function PropertyFloorPlans({
+  floorPlanGallery,
+}: PropertyFloorPlansProps) {
   const [activePlan, setActivePlan] = useState(0);
 
   return (
     <section className="py-16 bg-muted/30">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="section-title">Plantas</h2>
-          <p className="section-subtitle">Conheça os layouts disponíveis</p>
+          <h2 className="title-section">Plantas</h2>
+          <p className="subtitle-section">Conheça os layouts disponíveis</p>
         </div>
 
         <div className="max-w-4xl mx-auto">
           {/* Plan Selector */}
           <div className="flex flex-wrap justify-center gap-3 mb-8">
-            {plans.map((plan, index) => (
+            {floorPlanGallery.map((img, index) => (
               <Button
-                key={plan.id}
+                key={img.key}
                 variant={activePlan === index ? "gold" : "outline"}
                 onClick={() => setActivePlan(index)}
               >
-                {plan.name}
+                {img.label}
               </Button>
             ))}
           </div>
@@ -39,13 +40,13 @@ export default function PropertyFloorPlans() {
           <div className="glass-card p-8 overflow-hidden">
             <div className="relative aspect-square max-w-md mx-auto">
               <img
-                src={"https://dianaimoveis.com/wp-content/uploads/2024/08/20240902160736271-1.jpg.webp"}
-                alt={plans[activePlan].name}
+                src={floorPlanGallery[activePlan].label}
+                alt={floorPlanGallery[activePlan].label}
                 className="w-full h-full object-contain transition-all duration-500"
               />
             </div>
             <p className="text-center text-muted-foreground mt-6">
-              {plans[activePlan].name}
+              {floorPlanGallery[activePlan].label}
             </p>
           </div>
         </div>

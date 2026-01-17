@@ -19,7 +19,9 @@ export function Property({ property }: { property: PropertyViewSchema }) {
       {property.propertyAmenities?.length > 0 && (
         <PropertyAmenities propertyAmenities={property.propertyAmenities} />
       )}
-      {property.floorPlanGallery?.length > 0 && <PropertyFloorPlans />}
+      {property.floorPlanGallery?.length > 0 && (
+        <PropertyFloorPlans floorPlanGallery={property.floorPlanGallery} />
+      )}
       <PropertyGallery gallery={property.gallery} />
       <PropertyLocation address={property.address} />
       <PropertyContact />

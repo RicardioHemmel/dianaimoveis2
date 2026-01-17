@@ -11,7 +11,7 @@ type ColorVariant =
   | "amber"
   | "cyan"
   | "emerald"
-  | "neutral";
+  | "indigo";
 
 interface RangeFilterProps {
   form: UseFormReturn<PropertyInputSchema>;
@@ -30,44 +30,36 @@ export function RangeFilter({
 }: RangeFilterProps) {
   const colorVariants = {
     blue: {
-      container: "from-blue-50 to-blue-100",
       badge: "bg-blue-300/50",
       icon: "text-blue-700",
     },
     green: {
-      container: "from-green-50 to-green-100",
       badge: "bg-green-300/50",
       icon: "text-green-700",
     },
     red: {
-      container: "from-red-50 to-red-100",
       badge: "bg-red-300/50",
       icon: "text-red-700",
     },
     purple: {
-      container: "from-purple-50 to-purple-100",
       badge: "bg-purple-300/50",
       icon: "text-purple-700",
     },
     amber: {
-      container: "from-amber-50 to-amber-100",
       badge: "bg-amber-300/50",
       icon: "text-amber-700",
     },
     cyan: {
-      container: "from-cyan-50 to-cyan-100",
       badge: "bg-cyan-300/50",
       icon: "text-cyan-700",
     },
     emerald: {
-      container: "from-emerald-50 to-emerald-100",
       badge: "bg-emerald-300/50",
       icon: "text-emerald-700",
     },
-    neutral: {
-      container: "from-neutral-50 to-neutral-100",
-      badge: "bg-neutral-300/50",
-      icon: "text-neutral-700",
+    indigo: {
+      badge: "bg-indigo-300/50",
+      icon: "text-indigo-700",
     },
   } as const;
 
@@ -75,7 +67,7 @@ export function RangeFilter({
 
   return (
     <div
-      className={`flex justify-center py-4 rounded-lg bg-linear-to-r ${styles.container} border-2 border-gray-200`}
+      className={`flex justify-center py-4 rounded-lg bg-linear-to-r bg-gray-50 border-2 border-gray-200`}
     >
       <div className="w-5/6">
         <div className="flex items-center gap-2 mb-5">
@@ -89,7 +81,7 @@ export function RangeFilter({
           <RangeInput
             form={form}
             name={`${name}.min` as FieldPath<PropertyInputSchema>}
-            label="Mínimo"
+            label="De"
           />
           <span className="bg-gray-50 p-2 rounded-full mt-6">
             <ArrowRight className="size-4" />
@@ -97,7 +89,7 @@ export function RangeFilter({
           <RangeInput
             form={form}
             name={`${name}.max` as FieldPath<PropertyInputSchema>}
-            label="Máximo"
+            label="Até"
           />
         </div>
       </div>

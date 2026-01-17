@@ -38,6 +38,7 @@ import {
 
 // CONTEXT
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
+import { useEffect } from "react";
 
 export default function TabBasicInfo() {
   const { form, propertyDetails } = usePropertyFormContext();
@@ -56,6 +57,13 @@ export default function TabBasicInfo() {
     ...type,
     icon: propertyTypeIcons[type.name] ?? Building2,
   }));
+
+  useEffect(() => console.log("RENDER BASIC INFO"), []);
+  useEffect(() => {
+    return () => {
+      console.log("UNMOUNT BASIC INFO");
+    };
+  }, []);
 
   return (
     <TabsContent value="basic" className="space-y-6">

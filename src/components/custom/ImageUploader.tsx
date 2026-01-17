@@ -1,26 +1,19 @@
-// ICONS
+// ICON TYPE
 import { LucideIcon } from "lucide-react";
 
 // COMPONENTS
 import DraggableArea from "./DraggableArea";
 
 // CONTEXT
-import { usePropertyFormContext } from "@/context/PropertyFormContext";
-import useFileUpload from "@/hooks/use-file-upload";
+import { useFileUploadContext } from "@/context/FileUploadContext";
 
 interface ImageUploaderProps {
   Icon: LucideIcon;
-  uploaderId: string;
-  fileUploadHook: ReturnType<typeof useFileUpload>;
 }
 
-export default function ImageUploader({
-  Icon,
-  uploaderId,
-  fileUploadHook,
-}: ImageUploaderProps) {
+export function ImageUploader({ Icon }: ImageUploaderProps) {
   // CUSTOM HOOK TO HANDLE FILE UPLOAD EVENTS
-  const { galleryUploadHook } = usePropertyFormContext();
+  const { fileUploadHook, uploaderId } = useFileUploadContext();
 
   const {
     isDragging,

@@ -22,14 +22,14 @@ interface FullScreenImageModalProps {
 }
 
 // CONTEXT
-import { usePropertyFormContext } from "@/context/PropertyFormContext";
+import { useFileUploadContext } from "@/context/FileUploadContext";
 
 export default function FullScreenImageModal({
   doubleClickedImageIndex,
   onClose,
 }: FullScreenImageModalProps) {
-  const { galleryUploadHook } = usePropertyFormContext();
-  const { filesUpload } = galleryUploadHook;
+  const { fileUploadHook } = useFileUploadContext();
+  const { filesUpload } = fileUploadHook;
 
   const [carouselApi, setCarouselApi] = useState<CarouselApi>(); // Gives carousel its mechanics
 

@@ -1,4 +1,3 @@
-import { FieldErrors } from "react-hook-form";
 import { z } from "zod";
 
 //-------------------------------------------------- AUXULIAR TYPES ------------------------------------------------------
@@ -125,9 +124,9 @@ const propertyBaseSchema = z.object({
     .optional(),
 
   isFeatured: z.boolean(),
-  isFurnished: toggleFieldSchema.optional(),
-  isNearSubway: toggleFieldSchema.optional(),
-  isPetFriendly: toggleFieldSchema.optional(),
+  isFurnished: toggleFieldSchema,
+  isNearSubway: toggleFieldSchema,
+  isPetFriendly: toggleFieldSchema,
 
   propertyType: z.string(),
   propertyPurpose: z.string().optional(),
@@ -146,7 +145,7 @@ export type PropertyBaseSchema = z.infer<typeof propertyBaseSchema>;
 //-------------------------------------------------- VIEW SCHEMA ---------------------------------------------------
 export const propertyViewSchema = propertyBaseSchema.extend({
   gallery: z.array(galleryItemViewSchema),
-  floorPlanGallery: z.array(galleryItemViewSchema),
+  floorPlanGallery: z.array(floorPlanGalleryItemViewSchema),
 
   propertyType: propertyDetailSchema.optional(),
   propertyPurpose: propertyDetailSchema.optional(),
@@ -191,6 +190,18 @@ export const DefaultValuesPropertyForm: PropertyInputSchema = {
     referencePoint: [],
   },
   isFeatured: false,
+  isFurnished: {
+    show: true,
+    value: false,
+  },
+  isNearSubway: {
+    show: true,
+    value: false,
+  },
+  isPetFriendly: {
+    show: true,
+    value: false,
+  },
 };
 
 //-------------------------------------------------- PROPS CONTROLS ------------------------------------------------------

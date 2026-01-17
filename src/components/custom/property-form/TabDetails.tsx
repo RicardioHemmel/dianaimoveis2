@@ -78,7 +78,7 @@ export default function TabDetails() {
           Icon={Building}
           name="floors"
           title="Andares"
-          color="neutral"
+          color="indigo"
         />
       </div>
 

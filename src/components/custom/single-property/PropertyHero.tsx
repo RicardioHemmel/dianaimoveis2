@@ -20,7 +20,7 @@ export default function PropertyHero({
   property: PropertyViewSchema;
 }) {
   // SPREAD PROPERTY
-  const { title, deliveryDate, address, gallery, propertyTypology } = property;
+  const { title, deliveryDate, address, gallery } = property;
 
   // FULL SCREEN HOOK
   const {
@@ -115,7 +115,7 @@ export default function PropertyHero({
             </div>
           )}
           <h1 className="font-display text-4xl md:text-4xl text-primary-foreground mb-2 ">
-            {`${title} - ${propertyTypology?.name}`}
+            {title}
           </h1>
           <p className="text-primary-foreground/80 text-lg">
             {`${address?.street} - ${address?.neighborhood}, ${address?.city} - ${address?.stateUf}`}

@@ -2,7 +2,7 @@
 
 // COMPONENTS
 import { TabsContent } from "@/components/ui/tabs";
-import ImageUploader from "../ImageUploader";
+import { ImageUploaderWrapper } from "@/components/custom/ImageUploaderWrapper";
 import {
   FormField,
   FormItem,
@@ -33,7 +33,7 @@ export default function TabCreative() {
         <h3 className="text-lg font-semibold text-foreground">
           Galeria de Imagens
         </h3>
-        <ImageUploader
+        <ImageUploaderWrapper
           Icon={Images}
           uploaderId="gallery"
           fileUploadHook={galleryUploadHook}
@@ -43,7 +43,7 @@ export default function TabCreative() {
       {/* FLOOR PLAN GALLERY INPUT */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-foreground">Planta Baixa</h3>
-        <ImageUploader
+        <ImageUploaderWrapper
           Icon={Layers}
           uploaderId="floorPlanGallery"
           fileUploadHook={floorPlanGalleryUploadHook}

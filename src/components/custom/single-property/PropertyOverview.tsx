@@ -1,17 +1,5 @@
 // ICONS
-import {
-  Building2,
-  MapPin,
-  Maximize,
-  Calendar,
-  Bath,
-  BedDouble,
-  Building,
-  Car,
-  Sofa,
-  Train,
-  PawPrint,
-} from "lucide-react";
+import { Building2, MapPin, Maximize, Calendar } from "lucide-react";
 
 // SCHEMA
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
@@ -19,7 +7,11 @@ import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 // FORMATERS
 import { deliveryDateToShotDate } from "@/lib/formatters/ui-formatters/property-delivery-date";
 import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
-import { detailRange } from "@/lib/formatters/ui-formatters/property-ranges";
+import {
+  buildPropertyRanges,
+  formatRangeField,
+} from "@/lib/formatters/ui-formatters/property-ranges";
+import { buildToggleFieldLabels } from "@/lib/formatters/ui-formatters/property-toggle-fields";
 
 import Link from "next/link";
 import { headers } from "next/headers";
@@ -37,8 +29,7 @@ export default async function PropertyOverview({
     isFurnished,
     isNearSubway,
     isPetFriendly,
-    floorStart,
-    floorEnd,
+    floors,
     constructionCompany,
     area,
     bathrooms,
@@ -48,7 +39,6 @@ export default async function PropertyOverview({
     price,
     address,
     deliveryDate,
-    showSquareMeterPrice,
     title,
   } = property;
 
@@ -68,40 +58,22 @@ export default async function PropertyOverview({
   const whatsAppUrlForMoreInfo = `${whatsAppRedirectBaseLink}&text=${encodeURIComponent(whatsappMessageForMoreInfo)}`;
 
   // PROPERTY MAPPED ITEMS LIST
-  const propertyDetails = [
-    {
-      icon: BedDouble,
-      label: detailRange("quartos", bedrooms?.min, bedrooms?.max),
-    },
-    {
-      icon: Bath,
-      label: detailRange("banheiros", bathrooms?.min, bathrooms?.max),
-    },
-    {
-      icon: Car,
-      label: detailRange("vagas", parkingSpaces?.min, parkingSpaces?.max),
-    },
-    {
-      icon: Maximize,
-      label: detailRange("área", area?.min, area?.max),
-    },
-    {
-      icon: Building,
-      label: `${floorStart}º a ${floorEnd} andar`,
-    },
-    {
-      icon: PawPrint,
-      label: `${isPetFriendly ? "Aceita pets" : "Não aceita pets"}`,
-    },
-    {
-      icon: Train,
-      label: `${isNearSubway ? "Próx. do metrô" : "Sem metrô próx."}`,
-    },
-    {
-      icon: Sofa,
-      label: `${isFurnished ? "Mobiliado" : "Não mobiliado"}`,
-    },
-  ];
+  const rangeDetails = buildPropertyRanges({
+    bedrooms,
+    suites,
+    bathrooms,
+    parkingSpaces,
+    area,
+    floors,
+  });
+
+  const toggleDetails = buildToggleFieldLabels({
+    isFurnished,
+    isNearSubway,
+    isPetFriendly,
+  });
+
+  const propertyDetails = [...rangeDetails, ...toggleDetails];
 
   return (
     <section className="py-12 bg-surface-base">
@@ -139,7 +111,7 @@ export default async function PropertyOverview({
                 )}
 
                 {/* AREA M² LABEL */}
-                {area && (
+                {area?.min && (
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-xl bg-action-primary/10 flex items-center justify-center">
                       <Maximize className="h-6 w-6 text-action-primary" />
@@ -147,7 +119,7 @@ export default async function PropertyOverview({
                     <div>
                       <p className="text-muted-foreground text-sm">Área</p>
                       <p className="font-semibold text-foreground">
-                        {detailRange("area", area?.min, area?.max)}
+                        {formatRangeField("area", area?.min, area?.max)}
                       </p>
                     </div>
                   </div>

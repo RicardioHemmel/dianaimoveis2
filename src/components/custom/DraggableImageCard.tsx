@@ -15,6 +15,10 @@ import { CloudCheck, X, Loader } from "lucide-react";
 
 // CONTEXT
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
+import { useFileUploadContext } from "@/context/FileUploadContext";
+
+import { Input } from "@/components/ui/input";
+import { Img } from "@react-email/components";
 
 interface ImageCardProps {
   image: FileUpload;
@@ -29,9 +33,16 @@ export default function DraggableImageCard({
   isHighlighted,
   onDoubleClick,
 }: ImageCardProps) {
-  const { galleryUploadHook, handleRemoveSingleImage } =
-    usePropertyFormContext();
-  const { removeLocalFile, formattedOrder } = galleryUploadHook;
+  const { fileUploadHook, uploaderId } = useFileUploadContext();
+
+  const { form } = usePropertyFormContext();
+  const propertyId = form.watch("_id");
+  const {
+    removeLocalFile,
+    formattedOrder,
+    removeImageAndUpdateProperty,
+    updateImageLabel,
+  } = fileUploadHook;
   const [canDrag, setCanDrag] = useState(true);
 
   const { setNodeRef, attributes, listeners, transform, transition } =
@@ -45,23 +56,53 @@ export default function DraggableImageCard({
     transition,
   };
 
+  function handleFloorPlanLabel(e: React.ChangeEvent<HTMLInputElement>) {
+    updateImageLabel(image.id, e.currentTarget.value);
+  }
+
+  console.log("Renderizou de novo karai");
+
   return (
     <div
       ref={setNodeRef}
       style={style}
       {...attributes}
       {...listeners}
-      className={`flex justify-center relative active:cursor-grabbing ${i === 0 ? "sm:col-span-2" : ""}`}
+      className={`flex justify-center relative active:cursor-grabbing ${i === 0 && uploaderId === "gallery" ? "sm:col-span-2" : ""}`}
       onDoubleClick={() => onDoubleClick(i)}
     >
+      {/* IMAGE CARD */}
       <div className="w-full h-64 relative overflow-hidden animate-[var(--animate-infinity-glow)] rounded-lg">
         <img
           src={image.previewURL ?? ""}
           alt={`Preview da imagem ${image.id}`}
           className="w-full h-full object-cover"
         />
+        {/* LABEL INPUT FOR FLOOR PLAN GALLERY */}
+        {uploaderId === "floorPlanGallery" && (
+          <div
+            onMouseEnter={() => setCanDrag(false)}
+            onMouseLeave={() => setCanDrag(true)}
+            onDoubleClick={(e) => e.stopPropagation()}
+            className="flex items-center w-full justify-center absolute bottom-2  min-h-3 "
+          >
+            <Input
+              value={image.label}
+              onChange={handleFloorPlanLabel}
+              onKeyDown={(e) => {
+                // IF THE KEY IS SPACE, IT PREVENTS THE DND-KIT FROM INTERCEPTING IT
+                if (e.key === " ") {
+                  e.stopPropagation();
+                }
+              }}
+              placeholder="Descrição da Planta"
+              className="bg-white w-3/5 text-center"
+            />
+          </div>
+        )}
       </div>
 
+      {/* UPLOADING PROGRESS BAR */}
       {image.status === "uploading" && (
         <div className="absolute inset-0 flex items-center justify-center flex-col pointer-events-none bg-black/60 rounded-lg">
           <p className="text-white font-bold">{image.uploadProgress}%</p>
@@ -74,6 +115,7 @@ export default function DraggableImageCard({
         </div>
       )}
 
+      {/* IMAGE ORDER ON GRID*/}
       <p
         className={`text-center select-none font-bold absolute top-2 left-2 bg-black rounded-full w-7 text-lg text-white
             ${isHighlighted && "animate-[var(--animate-scale-up)]"} `}
@@ -81,7 +123,8 @@ export default function DraggableImageCard({
         {formattedOrder(i)}
       </p>
 
-      {i === 0 && (
+      {/* COVER IMAGE BADGE*/}
+      {i === 0 && uploaderId === "gallery" && (
         <div className="absolute inset-0 flex items-center justify-center">
           <p className="text-white font-bold bg-black/80 rounded-3xl px-5 py-1">
             Imagem de Capa
@@ -89,12 +132,14 @@ export default function DraggableImageCard({
         </div>
       )}
 
+      {/* CLOUD ICON WHEN FILE ON CLOUD */}
       {image.status === "success" && (
         <div className="absolute top-2 right-10 bg-neutral-100 rounded-full p-1">
           <CloudCheck className="text-[#1dd363] size-4" />
         </div>
       )}
 
+      {/* REMOVE IMAGE BUTTON */}
       <button
         type="button"
         onMouseEnter={() => setCanDrag(false)}
@@ -102,7 +147,7 @@ export default function DraggableImageCard({
         disabled={image.status === "deleting"}
         onClick={(e) => {
           if (image.key) {
-            handleRemoveSingleImage(image.key);
+            removeImageAndUpdateProperty(image.key, form, propertyId);
           } else if (image.id) {
             removeLocalFile(image.id);
           }

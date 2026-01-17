@@ -1,6 +1,7 @@
 "use server";
 
 import {
+  FloorPlanGalleryItemInputSchema,
   galleryItemInputSchema,
   GalleryItemInputSchema,
 } from "@/lib/schemas/property/property.schema";
@@ -8,7 +9,8 @@ import { updatePropertyImage } from "@/lib/services/properties/properties.servic
 
 export async function updatePropertyImageAction(
   id: string,
-  images: GalleryItemInputSchema[]
+  source: "gallery" | "floorPlanGallery",
+  images: GalleryItemInputSchema[] | FloorPlanGalleryItemInputSchema[]
 ) {
   const parsed = galleryItemInputSchema.array().safeParse(images);
 
@@ -20,7 +22,7 @@ export async function updatePropertyImageAction(
   }
 
   try {
-    await updatePropertyImage(id, parsed.data);
+    await updatePropertyImage(id, source, parsed.data);
 
     return { success: true };
   } catch (err) {

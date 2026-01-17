@@ -29,16 +29,16 @@ import { toast } from "sonner";
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
 // ICONS
-import { Eye, Pencil, Plus } from "lucide-react";
+import { Eye } from "lucide-react";
 
 // UI CONFIG
 import { formModeConfig } from "@/components/custom/property-form/form-ui-config";
 
 export default function PropertyForm() {
-  useEffect(() => console.log("RENDER"), []);
+  useEffect(() => console.log("RENDER PROPERTY FORM"), []);
   useEffect(() => {
     return () => {
-      console.log("UNMOUNT");
+      console.log("UNMOUNT PROPERTY FORM");
     };
   }, []);
 
@@ -47,6 +47,7 @@ export default function PropertyForm() {
     status,
     setStatus,
     galleryUploadHook,
+    floorPlanGalleryUploadHook,
     nextTab,
     prevTab,
     isFirstTab,
@@ -61,22 +62,37 @@ export default function PropertyForm() {
   const title = form.watch("title");
   const propertyId = form.watch("_id");
 
-  const { handleCloudUpload, filesUpload } = galleryUploadHook;
-
   async function onSubmit(data: PropertyInputSchema) {
     if (
       formMode === "edit" &&
-      filesUpload.length === 0 &&
+      galleryUploadHook.filesUpload.length === 0 &&
+      data.gallery?.length > 0
+    ) {
+      toast.error("Aguarde o carregamento das imagens...");
+      return;
+    }
+
+    if (
+      formMode === "edit" &&
+      floorPlanGalleryUploadHook.filesUpload.length === 0 &&
       data.gallery?.length > 0
     ) {
       toast.error("Aguarde o carregamento das imagens...");
       return;
     }
     startTransition(async () => {
-      const finalGallery = await handleCloudUpload(filesUpload);
+      const finalGallery = (await galleryUploadHook.handleCloudUpload(
+        galleryUploadHook.filesUpload
+      )) as { key: string; order: number }[];
+
+      const finalFloorPlanGallery =
+        (await floorPlanGalleryUploadHook.handleCloudUpload(
+          floorPlanGalleryUploadHook.filesUpload
+        )) as { key: string; order: number; label: string }[];
       const payload = {
         ...data,
         gallery: finalGallery,
+        floorPlanGallery: finalFloorPlanGallery,
         status: status,
       };
 
@@ -140,7 +156,7 @@ export default function PropertyForm() {
           </div>
         </div>
 
-        {/* SEE PROPERTY ON PREVIEW PAGE */}
+        {/* GO SEE PROPERTY ON PREVIEW PAGE */}
         <div className="flex gap-3">
           {propertyId && (
             <Button type="button" asChild variant="outline">

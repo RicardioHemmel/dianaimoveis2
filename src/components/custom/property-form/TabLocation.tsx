@@ -1,7 +1,7 @@
 "use client";
 
 // REACT | NEXT
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 // COMPONENTS
 import { Input } from "@/components/ui/input";
@@ -38,6 +38,13 @@ export default function TabLocation() {
   const referencePoints = form.watch("address.referencePoint");
   const referenceInputRef = useRef<HTMLInputElement | null>(null);
   const [canAdd, setCanAdd] = useState(false);
+
+  useEffect(() => console.log("RENDER LOCATION"), []);
+  useEffect(() => {
+    return () => {
+      console.log("UNMOUNT LOCATION");
+    };
+  }, []);
 
   return (
     <TabsContent value="location" className="space-y-4">

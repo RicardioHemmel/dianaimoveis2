@@ -18,28 +18,7 @@ export default function PropertyDescription({
               {description}
             </p>
 
-            <div className="mt-8 pt-8 border-t border-border">
-              <div className="grid md:grid-cols-3 gap-6 text-center">
-                <div>
-                  <p className="font-display text-3xl font-bold text-action-primary">
-                    28
-                  </p>
-                  <p className="text-muted-foreground text-sm">Andares</p>
-                </div>
-                <div>
-                  <p className="font-display text-3xl font-bold text-action-primary">
-                    196
-                  </p>
-                  <p className="text-muted-foreground text-sm">Unidades</p>
-                </div>
-                <div>
-                  <p className="font-display text-3xl font-bold text-action-primary">
-                    4
-                  </p>
-                  <p className="text-muted-foreground text-sm">Torres</p>
-                </div>
-              </div>
-            </div>
+            <hr />
           </div>
         </div>
       </div>

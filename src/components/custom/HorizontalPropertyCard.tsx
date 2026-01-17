@@ -35,7 +35,7 @@ import {
 } from "@/lib/formatters/ui-formatters/property-delivery-date";
 import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
 import { showCoverImage } from "@/lib/media/showCoverImage";
-import { detailRange } from "@/lib/formatters/ui-formatters/property-ranges";
+import { formatRangeField } from "@/lib/formatters/ui-formatters/property-ranges";
 
 interface PropertyCardHorizontalProps {
   property: PropertyViewSchema;
@@ -128,7 +128,11 @@ export function PropertyCardHorizontal({
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Bed className="h-5 w-5" />
                     <span className="text-sm font-medium">
-                      {detailRange("quartos", bedrooms.min, bedrooms.max)}
+                      {formatRangeField(
+                        "bathrooms",
+                        bedrooms.min,
+                        bedrooms.max
+                      )}
                     </span>
                   </div>
                 )}
@@ -137,7 +141,11 @@ export function PropertyCardHorizontal({
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Bath className="h-5 w-5" />
                     <span className="text-sm font-medium">
-                      {detailRange("banheiros", bathrooms.min, bathrooms.max)}
+                      {formatRangeField(
+                        "bathrooms",
+                        bathrooms.min,
+                        bathrooms.max
+                      )}
                     </span>
                   </div>
                 )}
@@ -146,8 +154,8 @@ export function PropertyCardHorizontal({
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Car className="h-5 w-5" />
                     <span className="text-sm font-medium">
-                      {detailRange(
-                        "vagas",
+                      {formatRangeField(
+                        "parkingSpaces",
                         parkingSpaces.min,
                         parkingSpaces.max
                       )}

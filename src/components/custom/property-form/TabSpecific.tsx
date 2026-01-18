@@ -2,7 +2,6 @@
 
 // COMPONENTS
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { TabsContent } from "@/components/ui/tabs";
 import {
   FormControl,
@@ -25,18 +24,7 @@ import {
   MapPin,
   Sparkles,
   Layers,
-  Maximize,
-  Expand,
-  Sprout,
-  ArrowUp,
-  Minimize2,
-  Star,
   Building2,
-  LucideIcon,
-  Home,
-  Building,
-  Castle,
-  CircleSlash2,
 } from "lucide-react";
 
 // CONTEXT
@@ -44,9 +32,11 @@ import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
 import { cn } from "@/lib/utils";
 import { useWatch } from "react-hook-form";
-import { PropertyStandingsListSchema } from "@/lib/constants/properties/property-standings";
+import { propertyStandingMapper } from "@/lib/formatters/ui-formatters/property-standings";
+import { propertyTypologySelectMapper } from "@/lib/formatters/ui-formatters/property-typologies";
 
 export default function TabSpecific() {
+  // CONTEXT VALUES
   const { form, propertyDetails } = usePropertyFormContext();
   const propertyStandings = propertyDetails?.standings;
   const propertyTypologies = propertyDetails?.typologies;
@@ -65,25 +55,18 @@ export default function TabSpecific() {
     name: "propertyTypologies",
   });
 
-  // PROPERTY TYPOLOGIES ICONS
-  const propertyStandingIcons: Record<PropertyStandingsListSchema, LucideIcon> =
-    {
-      Popular: Home,
-      "Médio Padrão": Building,
-      "Alto Padrão": Building2,
-      "Altíssimo Padrão": Castle,
-    };
-
-  const mappedPropertyStandings = propertyStandings?.map((standing) => ({
-    ...standing,
-    icon:
-      propertyStandingIcons[standing.name as PropertyStandingsListSchema] ??
-      CircleSlash2,
-  }));
+  // ALL STANDINGS AND TYPOLOGIES MAPPED WITH ICONS AND COLORS
+  const mappedPropertyStandings = propertyStandingMapper(propertyStandings);
+  const mappedPropertyTypologies =
+    propertyTypologySelectMapper(propertyTypologies);
 
   // UPDATES SELECTED STANDING O RHF
   const handleStandingChange = (standingId: string) => {
-    form.setValue("propertyStanding", standingId);
+    const currentStanding = form.getValues("propertyStanding");
+
+    const updatedStanding = standingId === currentStanding ? "" : standingId;
+
+    form.setValue("propertyStanding", updatedStanding);
   };
 
   // UPDATES TYPOLOGIES LIST ON RHF
@@ -106,7 +89,7 @@ export default function TabSpecific() {
         <>
           <div className="space-y-6">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-lg bg-primary/10">
+              <div className="p-2 rounded-lg bg-gray-100">
                 <Building2 className="h-5 w-5 text-admin-primary-hover" />
               </div>
               <h3 className="text-lg font-semibold text-foreground">
@@ -194,41 +177,43 @@ export default function TabSpecific() {
 
               {/* STANDING LIST */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {mappedPropertyStandings &&
-                  mappedPropertyStandings.map((standing) => {
-                    const isSelected = currentStanding === standing._id;
-                    const IconComponent = standing.icon;
-                    return (
-                      <button
-                        key={standing._id}
-                        type="button"
-                        onClick={() => handleStandingChange(standing._id)}
+                {mappedPropertyStandings?.map((standing) => {
+                  const isSelected = currentStanding === standing._id;
+                  return (
+                    <button
+                      key={standing._id}
+                      type="button"
+                      onClick={() => handleStandingChange(standing._id)}
+                      className={cn(
+                        "relative p-4 rounded-xl border-2 transition-all duration-200 text-left group cursor-pointer min-h-32",
+                        isSelected
+                          ? "border-admin-primary bg-admin-primary/5 shadow-md"
+                          : "hover:border-admin-primary/50 hover:bg-admin-primary/10",
+                      )}
+                    >
+                      {isSelected && (
+                        <div className="absolute top-2 right-2 p-1 rounded-full bg-admin-primary">
+                          <Check className="h-3 w-3 text-white" />
+                        </div>
+                      )}
+                      <div
+                        className={`mb-2 w-fit p-3 rounded-2xl ${standing.bgColor}`}
+                      >
+                        <standing.icon
+                          className={`size-5 ${standing.textColor}`}
+                        />
+                      </div>
+                      <p
                         className={cn(
-                          "relative p-4 rounded-xl border-2 transition-all duration-200 text-left group cursor-pointer min-h-28",
-                          isSelected
-                            ? "border-admin-primary bg-admin-primary/5 shadow-md"
-                            : "hover:border-admin-primary/50 hover:bg-admin-primary/10"
+                          "font-medium text-sm",
+                          isSelected ? "text-primary" : "text-foreground",
                         )}
                       >
-                        {isSelected && (
-                          <div className="absolute top-2 right-2 p-1 rounded-full bg-admin-primary">
-                            <Check className="h-3 w-3 text-white" />
-                          </div>
-                        )}
-                        <span className="mb-2 ">
-                          <IconComponent className="size-5" />
-                        </span>
-                        <p
-                          className={cn(
-                            "font-medium text-sm",
-                            isSelected ? "text-primary" : "text-foreground"
-                          )}
-                        >
-                          {standing.name}
-                        </p>
-                      </button>
-                    );
-                  })}
+                        {standing.name}
+                      </p>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -251,55 +236,47 @@ export default function TabSpecific() {
 
               {/* TYPOLOGIES LIST */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {propertyTypologies &&
-                  propertyTypologies?.map((typology) => {
-                    const isSelected = currentTypologies.includes(typology._id);
-                    return (
-                      <button
-                        key={typology._id}
-                        type="button"
-                        onClick={() => toggleTypology(typology._id)}
-                        className={cn(
-                          "relative p-4 rounded-xl border-2 transition-all duration-200 text-center group",
-                          isSelected
-                            ? "border-primary bg-primary/5 shadow-md"
-                            : "border-border hover:border-primary/50 hover:bg-accent/50"
-                        )}
-                      >
-                        {isSelected && (
-                          <div className="absolute top-2 right-2 p-1 rounded-full bg-primary">
-                            <Check className="h-3 w-3 text-primary-foreground" />
-                          </div>
-                        )}
-                        <span className="text-2xl mb-2 block">
-                          {"icone vem aqui"}
-                        </span>
+                {mappedPropertyTypologies?.map((typology) => {
+                  const isSelected = currentTypologies.includes(typology._id);
+                  return (
+                    <button
+                      key={typology._id}
+                      type="button"
+                      onClick={() => toggleTypology(typology._id)}
+                      className={cn(
+                        "relative  p-4 rounded-xl border-2 transition-all duration-200 text-center group cursor-pointer",
+                        isSelected
+                          ? "border-admin-primary bg-admin-primary/5 shadow-md"
+                          : "hover:border-admin-primary/50 hover:bg-admin-primary/10",
+                      )}
+                    >
+                      {isSelected && (
+                        <div className="absolute top-2 right-2 p-1 rounded-full bg-admin-primary">
+                          <Check className="h-3 w-3 text-white" />
+                        </div>
+                      )}
+
+                      <div className="flex flex-col items-center justify-center text-center">
+                        <div
+                          className={`mb-2 w-fit mx-auto p-3 rounded-2xl ${typology.bgColor}`}
+                        >
+                          <typology.icon
+                            className={`size-5 ${typology.textColor}`}
+                          />
+                        </div>
+
                         <p
                           className={cn(
                             "font-medium text-sm",
-                            isSelected ? "text-primary" : "text-foreground"
+                            isSelected ? "text-primary" : "text-foreground",
                           )}
                         >
                           {typology.name}
                         </p>
-                      </button>
-                    );
-                  })}
-
-                {currentTypologies?.length > 0 && (
-                  <div className="flex items-center gap-2 pt-2">
-                    <Badge className="bg-primary/10 text-primary">
-                      {`${currentTypologies.length} ${currentTypologies?.length > 1 ? "selecionadas" : "selecionada"}`}
-                    </Badge>
-                    <button
-                      type="button"
-                      onClick={() => form.setValue("propertyTypologies", [])}
-                      className="text-xs text-muted-foreground hover:text-destructive transition-colors"
-                    >
-                      Limpar seleção
+                      </div>
                     </button>
-                  </div>
-                )}
+                  );
+                })}
               </div>
             </div>
           </div>

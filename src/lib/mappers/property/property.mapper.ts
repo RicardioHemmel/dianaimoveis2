@@ -30,14 +30,14 @@ export class PropertyMapper {
 
   // ---------------- RANGE FIELDS ----------------
   private static toPersistenceRange(
-    range: RangeSchema | undefined
+    range: RangeSchema | undefined,
   ): IRangeSchema | null {
     if (!range) return null;
     return { min: range.min, max: range.max };
   }
 
   private static toDomainRange(
-    range: IRangeSchema | null
+    range: IRangeSchema | null,
   ): RangeSchema | undefined {
     if (!range) return undefined;
     return {
@@ -48,7 +48,7 @@ export class PropertyMapper {
 
   // ---------------- TOGGLE FIELDS ----------------
   private static toPersistenceToggleField(
-    toggleField: ToggleFieldSchema
+    toggleField: ToggleFieldSchema,
   ): IToggleFieldSchema {
     return {
       value: toggleField.value,
@@ -57,7 +57,7 @@ export class PropertyMapper {
   }
 
   private static toDomainToggleField(
-    toggleField: IToggleFieldSchema
+    toggleField: IToggleFieldSchema,
   ): ToggleFieldSchema {
     return {
       value: toggleField.value,
@@ -67,7 +67,7 @@ export class PropertyMapper {
 
   // ---------------- GALLERY  ----------------
   private static toPersistenceGallery(
-    gallery: GalleryItemInputSchema[]
+    gallery: GalleryItemInputSchema[],
   ): IGallerySchema[] {
     if (!gallery.length) return [];
     return gallery.map((image) => ({
@@ -77,7 +77,7 @@ export class PropertyMapper {
   }
 
   private static toPersistenceFloorPlanGallery(
-    gallery: FloorPlanGalleryItemInputSchema[]
+    gallery: FloorPlanGalleryItemInputSchema[],
   ): IFloorPlanGallerySchema[] {
     if (!gallery.length) return [];
     return gallery.map((image) => ({
@@ -98,7 +98,7 @@ export class PropertyMapper {
 
   // ---------------- ADDRESS ----------------
   private static toPersistenceAddress(
-    address?: AddressSchema | null
+    address?: AddressSchema | null,
   ): IProperty["address"] {
     if (!address) return null;
 
@@ -108,14 +108,14 @@ export class PropertyMapper {
       city: address.city || null,
       stateUf: address.stateUf || null,
       zipCode: address.zipCode || null,
-      referencePoint: address.referencePoint,
+      referencePoint: address.referencePoint || null,
       lat: address.lat || null,
       lng: address.lng || null,
     };
   }
 
   private static toDomainAddress(
-    address?: IProperty["address"]
+    address?: IProperty["address"],
   ): PropertyBaseSchema["address"] {
     if (!address) return undefined;
     return {
@@ -124,7 +124,7 @@ export class PropertyMapper {
       city: address.city ?? undefined,
       stateUf: address.stateUf ?? undefined,
       zipCode: address.zipCode ?? undefined,
-      referencePoint: address.referencePoint,
+      referencePoint: address.referencePoint ?? undefined,
       lat: address.lat ?? undefined,
       lng: address.lng ?? undefined,
     };
@@ -140,7 +140,7 @@ export class PropertyMapper {
   }
 
   private static mapPopulatedRefArrayToView(
-    refs?: { _id: Types.ObjectId; name: string }[]
+    refs?: { _id: Types.ObjectId; name: string }[],
   ) {
     return (
       (refs?.map(this.mapPopulatedRefToView).filter(Boolean) as ViewRef[]) ?? []
@@ -184,7 +184,7 @@ export class PropertyMapper {
       // GALLERY
       gallery: this.toPersistenceGallery(property.gallery),
       floorPlanGallery: this.toPersistenceFloorPlanGallery(
-        property.floorPlanGallery
+        property.floorPlanGallery,
       ),
 
       //ADDRESS
@@ -250,10 +250,10 @@ export class PropertyMapper {
       propertyPurpose: this.mapPopulatedRefToView(property?.propertyPurpose),
       propertyStanding: this.mapPopulatedRefToView(property?.propertyStanding),
       propertyTypologies: this.mapPopulatedRefArrayToView(
-        property?.propertyTypologies
+        property?.propertyTypologies,
       ),
       propertyAmenities: this.mapPopulatedRefArrayToView(
-        property?.propertyAmenities
+        property?.propertyAmenities,
       ),
     };
   }
@@ -309,10 +309,10 @@ export class PropertyMapper {
       propertyPurpose: property.propertyPurpose?._id.toString(),
       propertyStanding: property.propertyStanding?._id.toString(),
       propertyTypologies: property.propertyTypologies.map((typology) =>
-        typology._id.toString()
+        typology._id.toString(),
       ),
       propertyAmenities: property.propertyAmenities.map((amenity) =>
-        amenity._id.toString()
+        amenity._id.toString(),
       ),
     };
   }

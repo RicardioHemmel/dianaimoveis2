@@ -16,10 +16,14 @@ export function Property({ property }: { property: PropertyViewSchema }) {
     <div className="bg-surface-base">
       <PropertyHero property={property} />
       <PropertyOverview property={property} />
-      <PropertyTypologies />
+
+      {property.propertyTypologies?.length > 0 && (
+        <PropertyTypologies typologies={property.propertyTypologies} />
+      )}
+
       <PropertyDescription property={property} />
       {property.propertyAmenities?.length > 0 && (
-        <PropertyAmenities propertyAmenities={property.propertyAmenities} />
+        <PropertyAmenities amenities={property.propertyAmenities} />
       )}
       {property.floorPlanGallery?.length > 0 && (
         <PropertyFloorPlans floorPlanGallery={property.floorPlanGallery} />

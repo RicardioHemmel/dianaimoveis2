@@ -14,7 +14,7 @@ export default function PropertyFloorPlans({
   const [activePlan, setActivePlan] = useState(0);
 
   return (
-    <section className="py-16 bg-muted/30">
+    <section className="py-16 bg-surface-base">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="title-section">Plantas</h2>
@@ -46,7 +46,7 @@ export default function PropertyFloorPlans({
                 height={600}
               />
             </div>
-            <p className="text-center text-muted-foreground mt-6">
+            <p className="text-center mt-6">
               {floorPlanGallery[activePlan].label}
             </p>
           </div>

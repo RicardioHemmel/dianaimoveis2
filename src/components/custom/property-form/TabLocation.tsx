@@ -23,7 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { PatternFormat } from "react-number-format";
-// import { GoogleMap } from "@/components/custom/GoogleMap";
+import { GoogleMap } from "@/components/custom/GoogleMap";
 
 //BRAZILIAN STATE
 import { brazilianStates } from "@/lib/constants/states/brazilian-states";
@@ -33,11 +33,32 @@ import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
 // ICONS
 import { Plus, MapPin, X, Navigation } from "lucide-react";
+import { useWatch } from "react-hook-form";
 
 export default function TabLocation() {
   const { form } = usePropertyFormContext();
-  const referencePoints = form.watch("address.referencePoint");
+
+  // TO DISPLAY GOOGLE MAPS
+  const lat = useWatch({
+    control: form.control,
+    name: "address.lat",
+  });
+
+  const lng = useWatch({
+    control: form.control,
+    name: "address.lng",
+  });
+
+  // TO DISPLAY REFERENCE POINTS LIST
+  const referencePoints = useWatch({
+    control: form.control,
+    name: "address.referencePoint",
+  });
+
+  // USE REF ON REFERENCE POINT INPUT TO PREVENT RE-RENDER EACH CHAR
   const referenceInputRef = useRef<HTMLInputElement | null>(null);
+
+  // DECIDE WHETER USER CAN ADD REFERENCE POINT BASED ON INPUT VALUE
   const [canAdd, setCanAdd] = useState(false);
 
   return (
@@ -245,7 +266,7 @@ export default function TabLocation() {
                       form.getValues("address.referencePoint") || [];
 
                     const updatedPoints = currentPoints.filter(
-                      (_, index) => index !== i
+                      (_, index) => index !== i,
                     );
 
                     form.setValue("address.referencePoint", updatedPoints, {
@@ -260,9 +281,23 @@ export default function TabLocation() {
             ))}
           </ul>
         )}
+      </div>
 
-        <div className="h-full min-h-[400px] overflow-hidden shadow-xl rounded-2xl mt-10">
-          {/* <GoogleMap /> */}
+      <div className="lg:col-span-3">
+        <div className="h-full min-h-[400px] overflow-hidden shadow-xl rounded-2xl">
+          {lat && lng ? (
+            <GoogleMap lat={lat} lng={lng} />
+          ) : (
+            <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+              <div className="text-center">
+                <MapPin className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
+                <p className="text-muted-foreground">Mapa interativo</p>
+                <p className="text-muted-foreground/70 text-sm">
+                  Vila Olímpia, São Paulo - SP
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </TabsContent>

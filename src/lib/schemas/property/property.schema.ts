@@ -17,7 +17,7 @@ const addressSchema = z.object({
   city: z.string().optional(),
   stateUf: z.string().optional(),
   zipCode: z.string().optional(),
-  referencePoint: z.array(z.string()),
+  referencePoint: z.array(z.string()).optional(),
   lat: z.number().optional(),
   lng: z.number().optional(),
 });
@@ -40,7 +40,7 @@ export const rangeFieldSchema = z
     {
       message: "Você deve preencher ambos os valores ou nenhum.",
       path: ["min"],
-    }
+    },
   )
   // VALIDATE IF MIN IS GREATER THEN MAX
   .refine(
@@ -53,7 +53,7 @@ export const rangeFieldSchema = z
     {
       message: "O valor mínimo não pode ser maior que o máximo",
       path: ["min"],
-    }
+    },
   );
 export type RangeSchema = z.infer<typeof rangeFieldSchema>;
 
@@ -193,15 +193,15 @@ export const DefaultValuesPropertyForm: PropertyInputSchema = {
   },
   isFeatured: false,
   isFurnished: {
-    show: true,
+    show: false,
     value: false,
   },
   isNearSubway: {
-    show: true,
+    show: false,
     value: false,
   },
   isPetFriendly: {
-    show: true,
+    show: false,
     value: false,
   },
 };

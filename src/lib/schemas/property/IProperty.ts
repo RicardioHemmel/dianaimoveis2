@@ -20,7 +20,7 @@ export interface IAddressSchema {
   city: string | null;
   stateUf: string | null;
   zipCode: string | null;
-  referencePoint: string[];
+  referencePoint: string[] | null;
   lat: number | null;
   lng: number | null;
 }

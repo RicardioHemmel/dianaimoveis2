@@ -33,6 +33,7 @@ import { Eye } from "lucide-react";
 
 // UI CONFIG
 import { formModeConfig } from "@/components/custom/property-form/form-ui-config";
+import { getCoordinates } from "@/lib/services/maps/maps.service";
 
 export default function PropertyForm() {
   const {
@@ -57,6 +58,7 @@ export default function PropertyForm() {
   const title = form.watch("title");
   const propertyId = form.watch("_id");
 
+  // FORM SUBMIT FUNCTION
   async function onSubmit(data: PropertyInputSchema) {
     if (
       formMode === "edit" &&
@@ -75,20 +77,42 @@ export default function PropertyForm() {
       toast.error("Aguarde o carregamento das imagens...");
       return;
     }
+
     startTransition(async () => {
       const finalGallery = (await galleryUploadHook.handleCloudUpload(
-        galleryUploadHook.filesUpload
+        galleryUploadHook.filesUpload,
       )) as { key: string; order: number }[];
 
       const finalFloorPlanGallery =
         (await floorPlanGalleryUploadHook.handleCloudUpload(
-          floorPlanGalleryUploadHook.filesUpload
+          floorPlanGalleryUploadHook.filesUpload,
         )) as { key: string; order: number; label: string }[];
+
+      // 2. GEOCODING
+      let lat = data.address?.lat;
+      let lng = data.address?.lng;
+
+      // MOUNT ADDRESS USING THE CURRENT DATA
+      const fullAddress = `${data.address?.street}, ${data.address?.neighborhood} - ${data.address?.city}`;
+
+      try {
+        const coords = await getCoordinates(fullAddress);
+        lat = coords.lat;
+        lng = coords.lng;
+      } catch (error) {
+        console.error("Erro ao obter geolocalização:", error);
+      }
+
       const payload = {
         ...data,
         gallery: finalGallery,
         floorPlanGallery: finalFloorPlanGallery,
         status: status,
+        address: {
+          ...data.address,
+          lat: lat,
+          lng: lng,
+        },
       };
 
       let result;

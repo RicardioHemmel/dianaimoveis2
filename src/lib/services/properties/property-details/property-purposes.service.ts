@@ -1,9 +1,9 @@
 import connectMongoDB from "@/lib/db/mongodbConnection";
 import PropertyPurpose from "@/lib/db/models/property/property-details/purposes.model";
 import { PropertyMapper } from "@/lib/mappers/property/property.mapper";
-import { PropertyDetail } from "@/lib/schemas/property/property.schema";
+import { PropertyDetailSchema } from "@/lib/schemas/property/property.schema";
 
-export async function getPurposes(): Promise<PropertyDetail[]> {
+export async function getPurposes(): Promise<PropertyDetailSchema[]> {
   await connectMongoDB();
 
   const purposes = await PropertyPurpose.find({}, { name: 1 }).sort({
@@ -15,6 +15,6 @@ export async function getPurposes(): Promise<PropertyDetail[]> {
   }
 
   return purposes.map((purpose) =>
-    PropertyMapper.PropertyDetailToView(purpose)
+    PropertyMapper.PropertyDetailToView(purpose),
   );
 }

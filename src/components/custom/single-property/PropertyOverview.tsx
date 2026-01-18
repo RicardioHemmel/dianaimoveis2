@@ -80,7 +80,7 @@ export default async function PropertyOverview({
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-3 gap-8">
           {/* MAIN INFO CARD */}
-          <div className="lg:col-span-2 bg-white rounded-xl">
+          <div className="lg:col-span-2 white-card rounded-xl">
             <div className="glass-card p-8">
               <div className="flex flex-wrap gap-6 my-3 items-start">
                 <div className="flex items-center gap-3">
@@ -166,7 +166,7 @@ export default async function PropertyOverview({
           </div>
 
           {/* PRICE CARD */}
-          <div className="lg:col-span-1 bg-white rounded-xl">
+          <div className="lg:col-span-1 white-card rounded-xl">
             <div className="glass-card p-8 sticky top-4">
               <p className="text-muted-foreground text-sm mb-1">
                 Valor do Imóvel

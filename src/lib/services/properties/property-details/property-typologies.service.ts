@@ -6,15 +6,13 @@ import { PropertyDetailSchema } from "@/lib/schemas/property/property.schema";
 export async function getTypologies(): Promise<PropertyDetailSchema[]> {
   await connectMongoDB();
 
-  const typologies = await PropertyTypologies.find({}, { name: 1 }).sort({
-    name: 1,
-  });
+  const typologies = await PropertyTypologies.find({}, { name: 1 });
 
   if (typologies.length === 0) {
     return [];
   }
 
   return typologies.map((typology) =>
-    PropertyMapper.PropertyDetailToView(typology)
+    PropertyMapper.PropertyDetailToView(typology),
   );
 }

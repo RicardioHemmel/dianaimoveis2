@@ -119,11 +119,11 @@ export class PropertyMapper {
   ): PropertyBaseSchema["address"] {
     if (!address) return undefined;
     return {
-      street: address.street ?? undefined,
-      neighborhood: address.neighborhood ?? undefined,
-      city: address.city ?? undefined,
-      stateUf: address.stateUf ?? undefined,
-      zipCode: address.zipCode ?? undefined,
+      street: address.street ?? "",
+      neighborhood: address.neighborhood ?? "",
+      city: address.city ?? "",
+      stateUf: address.stateUf ?? "",
+      zipCode: address.zipCode ?? "",
       referencePoint: address.referencePoint ?? undefined,
       lat: address.lat ?? undefined,
       lng: address.lng ?? undefined,

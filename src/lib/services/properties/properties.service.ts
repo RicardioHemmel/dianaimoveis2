@@ -17,7 +17,7 @@ import { StorageService } from "@/lib/services/storage/storage.service"; // <---
 
 //-------------------------------- CREATES ONE PROPERTY ----------------------- //
 export async function createProperty(
-  data: PropertyInputSchema
+  data: PropertyInputSchema,
 ): Promise<{ id: string }> {
   await connectMongoDB();
 
@@ -62,7 +62,7 @@ export async function updateProperty(id: string, data: PropertyInputSchema) {
 export async function updatePropertyImage(
   id: string,
   source: "gallery" | "floorPlanGallery",
-  images: GalleryItemInputSchema[] | FloorPlanGalleryItemInputSchema[]
+  images: GalleryItemInputSchema[] | FloorPlanGalleryItemInputSchema[],
 ) {
   await connectMongoDB();
 
@@ -70,7 +70,7 @@ export async function updatePropertyImage(
 
   const result = await Property.updateOne(
     { _id: id },
-    { $set: { [field]: images } }
+    { $set: { [field]: images } },
   );
 
   if (result.matchedCount === 0) {
@@ -108,8 +108,28 @@ export async function deleteProperty(id: string) {
     } catch (error) {
       console.error(
         `[CRITICAL] Falha ao deletar imagens do imóvel ${id} no storage. Keys órfãs: ${keysToDelete.join(", ")}`,
-        error
+        error,
       );
     }
   }
+}
+
+export async function setIsFeatured(id: string) {
+  await connectMongoDB();
+
+  const updatedProperty = await Property.findByIdAndUpdate(
+    id,
+    {
+      $bit: { isFeatured: { xor: 1 } },
+    },
+    { new: true },
+  );
+
+  if (!updatedProperty) {
+    throw new Error("Erro ao atualizar o imóvel: Imóvel não encontrado");
+  }
+
+  return {
+    isFeatured: updatedProperty.isFeatured,
+  };
 }

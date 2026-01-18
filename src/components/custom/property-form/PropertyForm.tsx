@@ -3,7 +3,7 @@
 // REACT | NEXT
 import { useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { FieldErrors } from "react-hook-form";
+import { FieldErrors, useWatch } from "react-hook-form";
 import Link from "next/link";
 
 // COMPONENTS
@@ -29,7 +29,7 @@ import { toast } from "sonner";
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
 // ICONS
-import { Eye } from "lucide-react";
+import { Eye, Star } from "lucide-react";
 
 // UI CONFIG
 import { formModeConfig } from "@/components/custom/property-form/form-ui-config";
@@ -56,7 +56,14 @@ export default function PropertyForm() {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const title = form.watch("title");
-  const propertyId = form.watch("_id");
+  const propertyId = useWatch({
+    control: form.control,
+    name: "_id",
+  });
+  const isFeatured = useWatch({
+    control: form.control,
+    name: "isFeatured",
+  });
 
   // FORM SUBMIT FUNCTION
   async function onSubmit(data: PropertyInputSchema) {
@@ -92,15 +99,21 @@ export default function PropertyForm() {
       let lat = data.address?.lat;
       let lng = data.address?.lng;
 
-      // MOUNT ADDRESS USING THE CURRENT DATA
-      const fullAddress = `${data.address?.street}, ${data.address?.neighborhood} - ${data.address?.city}`;
+      if (
+        data.address?.street &&
+        data.address?.neighborhood &&
+        data.address?.city
+      ) {
+        // MOUNT ADDRESS USING THE CURRENT DATA
+        const fullAddress = `${data.address?.street}, ${data.address?.neighborhood} - ${data.address?.city}`;
 
-      try {
-        const coords = await getCoordinates(fullAddress);
-        lat = coords.lat;
-        lng = coords.lng;
-      } catch (error) {
-        console.error("Erro ao obter geolocalização:", error);
+        try {
+          const coords = await getCoordinates(fullAddress);
+          lat = coords.lat;
+          lng = coords.lng;
+        } catch (error) {
+          console.error("Erro ao obter geolocalização:", error);
+        }
       }
 
       const payload = {
@@ -175,8 +188,26 @@ export default function PropertyForm() {
           </div>
         </div>
 
-        {/* GO SEE PROPERTY ON PREVIEW PAGE */}
         <div className="flex gap-3">
+          <Button
+            type="button"
+            variant={"outline"}
+            className={`
+    ${
+      isFeatured
+        ? "bg-white border-2 border-yellow-600/60 text-yellow-600 shadow-[0_0_10px_rgba(234,179,8,0.45)] transition ease-in-out duration-200 hover:text-yellow-600"
+        : ""
+    }
+  `}
+            onClick={() => form.setValue("isFeatured", !isFeatured)}
+          >
+            <Star
+              className={`${isFeatured ? "fill-yellow-600/60 text-yellow-600/60" : ""}`}
+            />
+            {isFeatured ? "Destacado" : "Destacar"}
+          </Button>
+
+          {/* GO TO PROPERTY PREVIEW PAGE */}
           {propertyId && (
             <Button type="button" asChild variant="outline">
               <Link href={`/preview/${propertyId}`} target="_blank">

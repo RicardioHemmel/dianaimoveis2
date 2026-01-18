@@ -1,6 +1,7 @@
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 import { MapPin, Navigation, Clock, Car } from "lucide-react";
-// import { GoogleMap } from "@/components/custom/GoogleMap";
+import { GoogleMap } from "@/components/custom/GoogleMap";
+import GoogleMapPlaceholder from "@/components/custom/GoogleMapPlaceholder";
 
 export default function PropertyLocation({
   address,
@@ -14,6 +15,8 @@ export default function PropertyLocation({
   const city = address?.city;
   const zipCode = address?.zipCode;
   const referencePoints = address?.referencePoint;
+  const lat = address?.lat;
+  const lng = address?.lng;
 
   return (
     <section className="py-16 bg-surface-muted">
@@ -75,20 +78,13 @@ export default function PropertyLocation({
 
           {/* MAP PLACEHOLDER */}
           <div className="lg:col-span-3">
-            {/* <div className="h-full min-h-[400px] overflow-hidden shadow-xl rounded-2xl">
-              <GoogleMap />
-            </div> */}
-            {/* <div className="h-full min-h-[400px] overflow-hidden shadow-xl rounded-2xl">
-              <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                <div className="text-center">
-                  <MapPin className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
-                  <p className="text-muted-foreground">Mapa interativo</p>
-                  <p className="text-muted-foreground/70 text-sm">
-                    Vila Olímpia, São Paulo - SP
-                  </p>
-                </div>
-              </div>
-            </div> */}
+            <div className="h-full min-h-[400px] overflow-hidden shadow-xl rounded-2xl">
+              {lat && lng ? (
+                <GoogleMap lat={lat} lng={lng} />
+              ) : (
+                <GoogleMapPlaceholder placeholderText="Um erro ocorreu com o endereço" />
+              )}
+            </div>
           </div>
         </div>
       </div>

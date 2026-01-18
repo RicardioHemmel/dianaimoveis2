@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/form";
 import { PatternFormat } from "react-number-format";
 import { GoogleMap } from "@/components/custom/GoogleMap";
+import GoogleMapPlaceholder from "@/components/custom/GoogleMapPlaceholder";
 
 //BRAZILIAN STATE
 import { brazilianStates } from "@/lib/constants/states/brazilian-states";
@@ -283,20 +284,12 @@ export default function TabLocation() {
         )}
       </div>
 
-      <div className="lg:col-span-3">
-        <div className="h-full min-h-[400px] overflow-hidden shadow-xl rounded-2xl">
+      <div className="lg:col-span-3 mt-10">
+        <div className="h-[450px] w-full overflow-hidden shadow-xl rounded-2xl relative">
           {lat && lng ? (
             <GoogleMap lat={lat} lng={lng} />
           ) : (
-            <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-              <div className="text-center">
-                <MapPin className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
-                <p className="text-muted-foreground">Mapa interativo</p>
-                <p className="text-muted-foreground/70 text-sm">
-                  Vila Olímpia, São Paulo - SP
-                </p>
-              </div>
-            </div>
+            <GoogleMapPlaceholder placeholderText="Salve o imóvel com o endereço preenchido para visualizar o mapa" />
           )}
         </div>
       </div>

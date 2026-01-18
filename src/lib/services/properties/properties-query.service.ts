@@ -38,7 +38,7 @@ export async function getProperties(): Promise<PropertyViewSchema[]> {
 
 //-------------------------------- RETURNS ONE PROPERTY BASED ON THE "ID" TO BE SHOWN --------------------------------//
 export async function getPropertyToView(
-  id: string
+  id: string,
 ): Promise<PropertyViewSchema | null> {
   await connectMongoDB();
 
@@ -48,22 +48,12 @@ export async function getPropertyToView(
 
   if (!property) return null;
 
-  // GARANTEES THAT THE GALLERY WILL RETURN WITH THE PREVIOUS DEFINED ORDER
-  if (property.gallery) {
-    property.gallery.sort((a, b) => a.order - b.order);
-  }
-
-  // GARANTEES THAT THE GALLERY WILL RETURN WITH THE PREVIOUS DEFINED ORDER
-  if (property.floorPlanGallery) {
-    property.floorPlanGallery.sort((a, b) => a.order - b.order);
-  }
-
   return PropertyMapper.toViewSchema(property);
 }
 
 //-------------------------------- RETURNS ONE PROPERTY BASED ON ID TO BE SET ON THE "PROPERTY EDIT FORM" --------------------------------//
 export async function getPropertyToInput(
-  id: string
+  id: string,
 ): Promise<PropertyInputSchema | null> {
   await connectMongoDB();
 
@@ -72,10 +62,6 @@ export async function getPropertyToInput(
     .lean<IPropertyPopulated>();
 
   if (!property) return null;
-
-  if (property.gallery) {
-    property.gallery.sort((a, b) => a.order - b.order);
-  }
 
   return PropertyMapper.toInputSchema(property);
 }
@@ -86,7 +72,13 @@ export async function getAllPropertyDetails() {
 
   // PROMISE.ALL TO EXECUTE ALL QUERIES IN PARALLEL (FASTER)
   const [amenities, purposes, standings, types, typologies] = await Promise.all(
-    [getAmenities(), getPurposes(), getStandings(), getTypes(), getTypologies()]
+    [
+      getAmenities(),
+      getPurposes(),
+      getStandings(),
+      getTypes(),
+      getTypologies(),
+    ],
   );
 
   return { amenities, purposes, standings, types, typologies };

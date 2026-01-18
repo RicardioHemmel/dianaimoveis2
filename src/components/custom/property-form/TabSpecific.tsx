@@ -90,7 +90,7 @@ export default function TabSpecific() {
           <div className="space-y-6">
             <div className="flex items-center gap-2">
               <div className="p-2 rounded-lg bg-gray-100">
-                <Building2 className="h-5 w-5 text-admin-primary-hover" />
+                <Building2 className="h-5 w-5" />
               </div>
               <h3 className="text-lg font-semibold text-foreground">
                 Informações Gerais

@@ -9,7 +9,6 @@ import {
   useEffect,
 } from "react";
 import { UseFormReturn } from "react-hook-form";
-import { toast } from "sonner";
 
 // SCHEMAS
 import {
@@ -20,9 +19,6 @@ import {
 // HOOKS
 import useFileUpload from "@/hooks/use-file-upload";
 import usePropertyForm from "@/hooks/properties/use-property-form";
-
-// SERVER ACTION
-import { updatePropertyImageAction } from "@/lib/server-actions/properties/update-property-image.action";
 
 // TABS LIST FOR NAVIGATION
 const TABS = [
@@ -89,7 +85,7 @@ export function PropertyFormProvider({
       initialData.floorPlanGallery.length > 0
     ) {
       floorPlanGalleryUploadHook.mapRemoteFilesToFileUpload(
-        initialData.floorPlanGallery
+        initialData.floorPlanGallery,
       );
     }
   }, [initialData]);
@@ -133,7 +129,7 @@ export function usePropertyFormContext() {
   const context = useContext(PropertyFormContext);
   if (!context) {
     throw new Error(
-      "usePropertyFormContext deve ser usado dentro de um PropertyFormProvider"
+      "usePropertyFormContext deve ser usado dentro de um PropertyFormProvider",
     );
   }
   return context;

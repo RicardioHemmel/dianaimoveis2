@@ -7,7 +7,7 @@ const gallerySchema = new Schema(
     key: { type: String, required: true },
     order: { type: Number, required: true },
   },
-  { _id: false }
+  { _id: false },
 );
 
 // SIMULAR TO THE GALLERY BUT WITH LABEL FOR DISPLAY
@@ -17,7 +17,7 @@ const floorPlanGallerySchema = new Schema(
     order: { type: Number, required: true },
     label: { type: String, required: true },
   },
-  { _id: false }
+  { _id: false },
 );
 
 // GUARANTEES INTEGRITY FOR PROPERTY DETAILS OF TYPE NUMBER
@@ -26,7 +26,7 @@ const rangeSchema = new Schema(
     min: Number,
     max: Number,
   },
-  { _id: false }
+  { _id: false },
 );
 
 // PROPERTY DETAILS WITH VISIBILITY TOGGLE
@@ -35,7 +35,7 @@ const toggleFieldSchema = new Schema(
     value: Boolean,
     show: Boolean,
   },
-  { _id: false }
+  { _id: false },
 );
 
 // PROPERTY ADDRESS
@@ -50,7 +50,7 @@ const addressSchema = new Schema(
     lat: Number,
     lng: Number,
   },
-  { _id: false }
+  { _id: false },
 );
 
 const propertySchema = new Schema<IProperty>(
@@ -112,8 +112,23 @@ const propertySchema = new Schema<IProperty>(
 
     address: addressSchema,
   },
-  { strict: true, timestamps: true }
+  { strict: true, timestamps: true },
 );
+
+// ENSURES THAT GALLERY AND FLOOR PLAN GALLERY WITH BE RETURNED ALREADY ORDERED
+propertySchema.post(["find", "findOne", "findOneAndUpdate"], function (doc) {
+  if (!doc) return;
+  const docs = Array.isArray(doc) ? doc : [doc];
+
+  docs.forEach((d) => {
+    d.gallery?.sort(
+      (a: { order: number }, b: { order: number }) => a.order - b.order,
+    );
+    d.floorPlanGallery?.sort(
+      (a: { order: number }, b: { order: number }) => a.order - b.order,
+    );
+  });
+});
 
 const PropertyModel =
   (mongoose.models.Property as Model<IProperty>) ||

@@ -24,11 +24,14 @@ import {
   Star,
 } from "lucide-react";
 
+// SCHEMA
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 
+// SERVER ACTIONS
 import { deletePropertyAction } from "@/lib/server-actions/properties/delete-property.action";
-import { redirect } from "next/navigation";
+import { setIsFeaturedAction } from "@/lib/server-actions/properties/toggle-is-featured.action";
 
+// FORMATTERS
 import {
   deliveryDateToDeliveryStatus,
   DeliveryStatus,
@@ -37,21 +40,23 @@ import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
 import { showCoverImage } from "@/lib/media/showCoverImage";
 import { formatRangeField } from "@/lib/formatters/ui-formatters/property-ranges";
 
+import { redirect } from "next/navigation";
+import { toast } from "sonner";
+
 interface PropertyCardHorizontalProps {
   property: PropertyViewSchema;
 }
-
 export function PropertyCardHorizontal({
   property,
 }: PropertyCardHorizontalProps) {
   const {
     deliveryDate,
     title,
-    propertyTypologies,
     bedrooms,
     bathrooms,
     parkingSpaces,
     isFeatured,
+    _id,
   } = property;
 
   const statusColors: Record<DeliveryStatus, string> = {
@@ -70,8 +75,23 @@ export function PropertyCardHorizontal({
   // PROPERTY EDIT LINK
   const propertyEditLink = `properties/${property._id}/edit`;
 
-  //----------------- PROPERTY TITLE  ------------------------//
+  // TOGGLE IS FEATURED
+  const handleIsFeaturedToggle = async (propertyId: string) => {
+    if (!propertyId) return;
 
+    const res = await setIsFeaturedAction(propertyId);
+
+    if (!res.success) {
+      toast.error(res.message ?? "Erro ao atualizar");
+      return;
+    }
+
+    toast.success(
+      res.data?.valueOf
+        ? "Imóvel marcado como destaque"
+        : "Imóvel removido dos destaques",
+    );
+  };
   return (
     <Card className="overflow-hidden shadow-xl bg-white group p-0">
       <div className="flex flex-col md:flex-row min-h-[176px]">
@@ -127,7 +147,7 @@ export function PropertyCardHorizontal({
                       {formatRangeField(
                         "bathrooms",
                         bedrooms.min,
-                        bedrooms.max
+                        bedrooms.max,
                       )}
                     </span>
                   </div>
@@ -140,7 +160,7 @@ export function PropertyCardHorizontal({
                       {formatRangeField(
                         "bathrooms",
                         bathrooms.min,
-                        bathrooms.max
+                        bathrooms.max,
                       )}
                     </span>
                   </div>
@@ -153,7 +173,7 @@ export function PropertyCardHorizontal({
                       {formatRangeField(
                         "parkingSpaces",
                         parkingSpaces.min,
-                        parkingSpaces.max
+                        parkingSpaces.max,
                       )}
                     </span>
                   </div>
@@ -168,18 +188,26 @@ export function PropertyCardHorizontal({
 
                 {/* ACTIONS */}
                 <div className="flex items-center gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    className="h-9 w-9 p-0 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-500 transition-colors"
+                  <form
+                    action={async () => {
+                      "use server";
+                      deletePropertyAction(property._id!);
+                      redirect("/property-list");
+                    }}
                   >
-                    <Star
-                      className={
-                        isFeatured ? "fill-amber-300 stroke-0 size-5" : ""
-                      }
-                    />
-                  </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className={`size-9 p-0 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-500  transition-colors ${isFeatured && "border-amber-300"}`}
+                    >
+                      <Star
+                        className={
+                          isFeatured ? "fill-amber-300 stroke-0 size-5" : ""
+                        }
+                      />
+                    </Button>
+                  </form>
 
                   <Button asChild variant="outline">
                     <Link href={propertyEditLink}>Editar</Link>
@@ -197,7 +225,7 @@ export function PropertyCardHorizontal({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem asChild>
-                        <Link href={`property/${property._id}`} target="_blank">
+                        <Link href={`preview/${property._id}`} target="_blank">
                           <Eye className="h-4 w-4 mr-2" />
                           Ver
                         </Link>

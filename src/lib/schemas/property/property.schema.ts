@@ -190,6 +190,8 @@ export const DefaultValuesPropertyForm: PropertyInputSchema = {
     stateUf: "",
     zipCode: "",
     referencePoint: [],
+    lat: undefined,
+    lng: undefined,
   },
   isFeatured: false,
   isFurnished: {

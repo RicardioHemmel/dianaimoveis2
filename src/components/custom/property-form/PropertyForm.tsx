@@ -1,17 +1,23 @@
 "use client";
 
 // REACT | NEXT
-import { useEffect, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { FieldErrors, useWatch } from "react-hook-form";
 import Link from "next/link";
 
 // COMPONENTS
+import PropertyFormTabs from "@/components/custom/property-form/PropertyFormTabs";
 import { Form } from "@/components/ui/form";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import PropertyFormTabs from "@/components/custom/property-form/PropertyFormTabs";
 import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { DeletePropertyDropdownItem } from "@/components/custom/DeletePropertyDropdownItem";
 
 // SCHEMA
 import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
@@ -29,7 +35,7 @@ import { toast } from "sonner";
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
 // ICONS
-import { Eye, Star } from "lucide-react";
+import { Eye, MoreVertical, Star, Trash2 } from "lucide-react";
 
 // UI CONFIG
 import { formModeConfig } from "@/components/custom/property-form/form-ui-config";
@@ -54,6 +60,7 @@ export default function PropertyForm() {
   const mode = formModeConfig[formMode];
 
   const [isPending, startTransition] = useTransition();
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const router = useRouter();
   const title = form.watch("title");
   const propertyId = useWatch({
@@ -235,6 +242,21 @@ export default function PropertyForm() {
           >
             Próximo
           </Button>
+
+          {propertyId && (
+            <>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button type="button" variant="outline" size="icon">
+                    <MoreVertical className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DeletePropertyDropdownItem propertyId={propertyId} />
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
+          )}
         </div>
       </div>
 

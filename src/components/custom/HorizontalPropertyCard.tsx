@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import Image from "next/image";
+import ToggleIsFeaturedBtn from "@/components/custom/ToggleIsFeaturedBtn";
 
 // ICONS
 import {
@@ -18,18 +19,12 @@ import {
   Bed,
   Bath,
   MoreVertical,
-  Trash2,
   Car,
   Eye,
-  Star,
 } from "lucide-react";
 
 // SCHEMA
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
-
-// SERVER ACTIONS
-import { deletePropertyAction } from "@/lib/server-actions/properties/delete-property.action";
-import { setIsFeaturedAction } from "@/lib/server-actions/properties/toggle-is-featured.action";
 
 // FORMATTERS
 import {
@@ -40,8 +35,8 @@ import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
 import { showCoverImage } from "@/lib/media/showCoverImage";
 import { formatRangeField } from "@/lib/formatters/ui-formatters/property-ranges";
 
-import { redirect } from "next/navigation";
-import { toast } from "sonner";
+// NEXT
+import { DeletePropertyDropdownItem } from "./DeletePropertyDropdownItem";
 
 interface PropertyCardHorizontalProps {
   property: PropertyViewSchema;
@@ -75,23 +70,6 @@ export function PropertyCardHorizontal({
   // PROPERTY EDIT LINK
   const propertyEditLink = `properties/${property._id}/edit`;
 
-  // TOGGLE IS FEATURED
-  const handleIsFeaturedToggle = async (propertyId: string) => {
-    if (!propertyId) return;
-
-    const res = await setIsFeaturedAction(propertyId);
-
-    if (!res.success) {
-      toast.error(res.message ?? "Erro ao atualizar");
-      return;
-    }
-
-    toast.success(
-      res.data?.valueOf
-        ? "Imóvel marcado como destaque"
-        : "Imóvel removido dos destaques",
-    );
-  };
   return (
     <Card className="overflow-hidden shadow-xl bg-white group p-0">
       <div className="flex flex-col md:flex-row min-h-[176px]">
@@ -188,26 +166,7 @@ export function PropertyCardHorizontal({
 
                 {/* ACTIONS */}
                 <div className="flex items-center gap-2">
-                  <form
-                    action={async () => {
-                      "use server";
-                      deletePropertyAction(property._id!);
-                      redirect("/property-list");
-                    }}
-                  >
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className={`size-9 p-0 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-500  transition-colors ${isFeatured && "border-amber-300"}`}
-                    >
-                      <Star
-                        className={
-                          isFeatured ? "fill-amber-300 stroke-0 size-5" : ""
-                        }
-                      />
-                    </Button>
-                  </form>
+                  <ToggleIsFeaturedBtn isFeatured={isFeatured} _id={_id!} />
 
                   <Button asChild variant="outline">
                     <Link href={propertyEditLink}>Editar</Link>
@@ -225,28 +184,12 @@ export function PropertyCardHorizontal({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem asChild>
-                        <Link href={`preview/${property._id}`} target="_blank">
+                        <Link href={`preview/${_id}`} target="_blank">
                           <Eye className="h-4 w-4 mr-2" />
                           Ver
                         </Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <form
-                          action={async () => {
-                            "use server";
-                            deletePropertyAction(property._id!);
-                            redirect("/property-list");
-                          }}
-                        >
-                          <button
-                            type="submit"
-                            className="flex cursor-pointer text-destructive"
-                          >
-                            <Trash2 className="h-4 w-4 mr-2 text-destructive" />
-                            Excluir
-                          </button>
-                        </form>
-                      </DropdownMenuItem>
+                      <DeletePropertyDropdownItem propertyId={_id!} />
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>

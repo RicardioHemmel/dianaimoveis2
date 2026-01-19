@@ -11,7 +11,7 @@ export default function PropertyTypes({
     <section className="py-16 bg-surface-base">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="title-section">Tipos Disponíveis</h2>
+          <h2 className="title-section">Tipologias Disponíveis</h2>
           <p className="subtitle-section">
             Escolha o formato ideal para o seu estilo de vida
           </p>

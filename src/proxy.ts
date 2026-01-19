@@ -17,6 +17,7 @@ const generatedPublicRoutes = navLinks.map((item) => ({
 
 // Public pages to redirect
 const loginPage = "/diana-corretora";
+const dianaImoveisMainPage = "/";
 const forgetPasswordPage = "/forget-password";
 const resetPasswordPage = "/reset-password";
 
@@ -29,7 +30,7 @@ const publicRoutes = [
 ] as const; // Says to typeScript that the objects inside publicRoutes wont change their values so it can assume a more specific type to them
 
 // Redirect page when not authenticated
-const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = loginPage;
+const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = dianaImoveisMainPage;
 
 // Redirect page when authenticated
 const REDIRECT_WHEN_AUTHENTICATED = "/dashboard";
@@ -40,7 +41,8 @@ export async function proxy(request: NextRequest) {
     if (route.path === path) return true;
     if (
       route.path === resetPasswordPage &&
-      path.startsWith(`${resetPasswordPage}/`) && path.split("/")[2].length === 40 // Avoids DB calls for validating invalid tokens
+      path.startsWith(`${resetPasswordPage}/`) &&
+      path.split("/")[2].length === 40 // Avoids DB calls for validating invalid tokens
     ) {
       return true;
     }

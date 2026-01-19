@@ -91,23 +91,41 @@ export async function deleteProperty(id: string) {
   }
 
   // GETS ALL PROPERTY IMAGES
-  const keysToDelete: string[] = [];
+  const galleryKeysToDelete: string[] = [];
+  const floorPlanGalleryKeysToDelete: string[] = [];
 
   if (property.gallery && property.gallery.length > 0) {
     property.gallery.forEach((img) => {
-      if (img.key) keysToDelete.push(img.key);
+      if (img.key) galleryKeysToDelete.push(img.key);
+    });
+  }
+
+  if (property.floorPlanGallery && property.floorPlanGallery.length > 0) {
+    property.floorPlanGallery.forEach((img) => {
+      if (img.key) floorPlanGalleryKeysToDelete.push(img.key);
     });
   }
 
   await Property.findByIdAndDelete(id);
 
   // DELETE FROM CLOUD ALL PROPERTY IMAGES
-  if (keysToDelete.length > 0) {
+  if (galleryKeysToDelete.length > 0) {
     try {
-      await StorageService.deleteManyFiles(keysToDelete);
+      await StorageService.deleteManyFiles(galleryKeysToDelete);
     } catch (error) {
       console.error(
-        `[CRITICAL] Falha ao deletar imagens do imóvel ${id} no storage. Keys órfãs: ${keysToDelete.join(", ")}`,
+        `[CRITICAL] Falha ao deletar imagens da galeria do imóvel ${id} no storage. Keys órfãs: ${galleryKeysToDelete.join(", ")}`,
+        error,
+      );
+    }
+  }
+
+  if (floorPlanGalleryKeysToDelete.length > 0) {
+    try {
+      await StorageService.deleteManyFiles(floorPlanGalleryKeysToDelete);
+    } catch (error) {
+      console.error(
+        `[CRITICAL] Falha ao deletar imagens da planta baixa do imóvel ${id} no storage. Keys órfãs: ${floorPlanGalleryKeysToDelete.join(", ")}`,
         error,
       );
     }
@@ -119,10 +137,17 @@ export async function setIsFeatured(id: string) {
 
   const updatedProperty = await Property.findByIdAndUpdate(
     id,
+    [
+      {
+        $set: {
+          isFeatured: { $not: "$isFeatured" },
+        },
+      },
+    ],
     {
-      $bit: { isFeatured: { xor: 1 } },
+      new: true,
+      updatePipeline: true,
     },
-    { new: true },
   );
 
   if (!updatedProperty) {

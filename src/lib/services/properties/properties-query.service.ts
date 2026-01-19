@@ -95,17 +95,30 @@ export async function getRelatedProperties(id: string) {
 
   const property = await Property.findById(id);
 
-  if (!property) return null;
+  if (!property || !property.propertyStanding) return [];
 
   const relatedProperties = await Property.find({
-    standing: property.propertyStanding,
+    propertyStanding: property.propertyStanding,
     _id: { $ne: property._id }, // AVOIDS BRINGING THE MAIN PROPERTY
   })
     .sort({ price: 1 })
-    .populate("propertyType")
+    .populate(POPULATE_FIELDS)
     .lean<IPropertyPopulated[]>(); // MINOR PRICE FIRST
 
   return relatedProperties.map((property) =>
     PropertyMapper.toViewSchema(property),
   );
+}
+
+// -------------------------------- RETURNS FEATURED PROPERTIES --------------------------------
+export async function getFeaturedProperties() {
+  await connectMongoDB();
+
+  const properties = await Property.find({ isFeatured: true })
+    .populate("propertyType")
+    .lean<IPropertyPopulated[]>();
+
+  if (!properties.length) return;
+
+  return properties.map((property) => PropertyMapper.toViewSchema(property));
 }

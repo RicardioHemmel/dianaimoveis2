@@ -104,13 +104,13 @@ export default function PropertyHero({
         <Expand className="h-5 w-5" />
       </Button>
 
-      {/* Property Info Overlay */}
+      {/* PROPERTY INFO OVERLAY */}
       <div className="absolute bottom-0 left-0 right-0 p-8 z-10">
         <div className="container mx-auto ">
           {deliveryDate && (
             <div className="inline-block bg-action-primary text-secondary-foreground px-4 py-1 rounded-full text-sm font-medium mb-3">
               <h2 className="text-lg">
-                {deliveryDateToDeliveryStatus(deliveryDate)}
+                {deliveryDateToDeliveryStatus(deliveryDate).label}
               </h2>
             </div>
           )}

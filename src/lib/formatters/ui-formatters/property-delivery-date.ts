@@ -1,17 +1,20 @@
 export type DeliveryStatus = "Lançamento" | "Pronto" | "Sem data";
 
-export function deliveryDateToDeliveryStatus(
-  deliveryDate?: string
-): DeliveryStatus {
-  if (!deliveryDate) return "Sem data";
+const statusColors: Record<DeliveryStatus, string> = {
+  Lançamento: "bg-emerald-500 text-white",
+  Pronto: "bg-blue-500 text-white",
+  "Sem data": "bg-white text-black",
+};
+
+export function deliveryDateToDeliveryStatus(deliveryDate?: string) {
+  if (!deliveryDate)
+    return { label: "Sem data", badgeColor: statusColors["Sem data"] };
   const today = new Date();
   const delivery = new Date(deliveryDate + "T00:00:00");
 
-  if (delivery > today) {
-    return "Lançamento";
-  } else {
-    return "Pronto";
-  }
+  const status = delivery > today ? "Lançamento" : "Pronto";
+
+  return { label: status, badgeColor: statusColors[status] };
 }
 
 // RETURN A FORMAT LIKE THIS (Dez/2027)

@@ -7,11 +7,17 @@ import PropertyFloorPlans from "@/components/custom/single-property/PropertyFloo
 import PropertyGallery from "@/components/custom/single-property/PropertyGallery";
 import PropertyLocation from "@/components/custom/single-property/PropertyLocation";
 import PropertyContact from "@/components/custom/single-property/PropertyContact";
-import RelatedProperties from "@/components/custom/single-property/PropertySimilar";
+import PropertyRelated from "@/components/custom/single-property/PropertyRelated";
 import PropertyTypologies from "@/components/custom/single-property/PropertyTypologies";
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 
-export function Property({ property }: { property: PropertyViewSchema }) {
+export function Property({
+  property,
+  relatedProperties,
+}: {
+  property: PropertyViewSchema;
+  relatedProperties: PropertyViewSchema[];
+}) {
   return (
     <div className="bg-surface-base">
       <PropertyHero property={property} />
@@ -39,7 +45,9 @@ export function Property({ property }: { property: PropertyViewSchema }) {
 
       <PropertyContact />
 
-      <RelatedProperties />
+      {relatedProperties && relatedProperties.length > 0 && (
+        <PropertyRelated relatedProperties={relatedProperties} />
+      )}
     </div>
   );
 }

@@ -35,11 +35,18 @@ const FIELD_CONFIG: Record<FieldTypes, { icon: LucideIcon }> = {
 export function formatRangeField(
   field: FieldTypes,
   min?: number,
-  max?: number
+  max?: number,
+  extendedLabel: boolean = true,
 ): string {
   if (!min || !max) return "";
 
   const isEqual = min === max;
+
+  // ONLY THE VALUES
+  if (!extendedLabel) {
+    return isEqual ? `${min}` : `${min} a ${max}`;
+  }
+
   const isSingular = isEqual && min === 1;
 
   switch (field) {
@@ -71,14 +78,20 @@ export function formatRangeField(
 }
 
 export function buildPropertyRanges(
-  data: Record<FieldTypes, RangeSchema | undefined>
+  data: Partial<Record<FieldTypes, RangeSchema | undefined>>,
+  extendedLabel: boolean = true,
 ): PropertyDetailItem[] {
   return (Object.keys(data) as FieldTypes[])
     .map((field) => {
       const value = data[field];
       if (!value?.min || !value?.max) return null;
 
-      const label = formatRangeField(field, value.min, value.max);
+      const label = formatRangeField(
+        field,
+        value.min,
+        value.max,
+        extendedLabel,
+      );
       if (!label) return null;
 
       return {

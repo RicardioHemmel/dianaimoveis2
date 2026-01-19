@@ -53,14 +53,12 @@ export default function PropertyForm() {
     isFirstTab,
     isLastTab,
     formMode,
+    initialData,
   } = usePropertyFormContext(); // CONTEXT
-
-  console.log(form.getValues());
 
   const mode = formModeConfig[formMode];
 
   const [isPending, startTransition] = useTransition();
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const router = useRouter();
   const title = form.watch("title");
   const propertyId = useWatch({
@@ -74,21 +72,20 @@ export default function PropertyForm() {
 
   // FORM SUBMIT FUNCTION
   async function onSubmit(data: PropertyInputSchema) {
-    if (
+    const isGalleryLoading =
       formMode === "edit" &&
-      galleryUploadHook.filesUpload.length === 0 &&
-      data.gallery?.length > 0
-    ) {
-      toast.error("Aguarde o carregamento das imagens...");
-      return;
-    }
+      initialData?.gallery?.length! > 0 &&
+      galleryUploadHook.filesUpload.length === 0;
 
-    if (
+    const isFloorPlanLoading =
       formMode === "edit" &&
-      floorPlanGalleryUploadHook.filesUpload.length === 0 &&
-      data.gallery?.length > 0
-    ) {
-      toast.error("Aguarde o carregamento das imagens...");
+      initialData?.floorPlanGallery?.length! > 0 &&
+      floorPlanGalleryUploadHook.filesUpload.length === 0;
+
+    if (isGalleryLoading || isFloorPlanLoading) {
+      toast.error(
+        "Os dados da galeria ainda estão sendo processados. Tente novamente em um segundo.",
+      );
       return;
     }
 

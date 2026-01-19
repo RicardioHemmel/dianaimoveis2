@@ -23,8 +23,4 @@ export const navLinks = [
     title: "Favoritos",
     path: "/favorites",
   },
-  {
-    title: "Blog",
-    path: "/blog",
-  },
 ];

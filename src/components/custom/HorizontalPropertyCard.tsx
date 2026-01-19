@@ -13,15 +13,7 @@ import Image from "next/image";
 import ToggleIsFeaturedBtn from "@/components/custom/ToggleIsFeaturedBtn";
 
 // ICONS
-import {
-  Building2,
-  MapPin,
-  Bed,
-  Bath,
-  MoreVertical,
-  Car,
-  Eye,
-} from "lucide-react";
+import { Building2, MapPin, MoreVertical, Eye } from "lucide-react";
 
 // SCHEMA
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
@@ -33,7 +25,7 @@ import {
 } from "@/lib/formatters/ui-formatters/property-delivery-date";
 import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
 import { showCoverImage } from "@/lib/media/showCoverImage";
-import { formatRangeField } from "@/lib/formatters/ui-formatters/property-ranges";
+import { buildPropertyRanges } from "@/lib/formatters/ui-formatters/property-ranges";
 
 // NEXT
 import { DeletePropertyDropdownItem } from "./DeletePropertyDropdownItem";
@@ -51,8 +43,16 @@ export function PropertyCardHorizontal({
     bathrooms,
     parkingSpaces,
     isFeatured,
+    gallery,
     _id,
   } = property;
+
+  // PROPERTY MAPPED ITEMS LIST
+  const rangeDetails = buildPropertyRanges({
+    bedrooms,
+    bathrooms,
+    parkingSpaces,
+  });
 
   const statusColors: Record<DeliveryStatus, string> = {
     Lançamento: "bg-neutral-800 text-white",
@@ -60,12 +60,8 @@ export function PropertyCardHorizontal({
     "Sem data": "bg-white text-black",
   };
 
-  //----------------- PROPERTY STATUS BADGE ------------------------//
-  // FORMATS THE PROPERTY STATUS
+  // FORMATS THE PROPERTY STATUS WITH IT'S BADGE COLOR
   const deliveryStatus = deliveryDateToDeliveryStatus(deliveryDate);
-
-  // DEFINES THE STATUS BADGE STYLE
-  const badgeStyle = statusColors[deliveryStatus];
 
   // PROPERTY EDIT LINK
   const propertyEditLink = `properties/${property._id}/edit`;
@@ -77,10 +73,10 @@ export function PropertyCardHorizontal({
         <div className="relative w-full md:w-64 h-48 md:h-auto bg-muted overflow-hidden shrink-0">
           <Link href={propertyEditLink}>
             <div className="w-full h-full flex items-center justify-center bg-[image:var(--gradient-primary)]">
-              {property.gallery.length > 0 ? (
+              {gallery.length > 0 ? (
                 <Image
                   alt="Imagem de Capa"
-                  src={showCoverImage(property.gallery)}
+                  src={showCoverImage(gallery)}
                   fill
                 />
               ) : (
@@ -88,8 +84,10 @@ export function PropertyCardHorizontal({
               )}
             </div>
 
-            <Badge className={`absolute top-3 left-3 ${badgeStyle}`}>
-              {deliveryStatus}
+            <Badge
+              className={`absolute top-3 left-3 ${deliveryStatus.badgeColor}`}
+            >
+              {deliveryStatus.label}
             </Badge>
           </Link>
         </div>
@@ -118,44 +116,15 @@ export function PropertyCardHorizontal({
 
               {/* SPECIFICATIONS */}
               <div className="flex flex-wrap items-center gap-6 mb-4">
-                {bedrooms && (
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Bed className="h-5 w-5" />
-                    <span className="text-sm font-medium">
-                      {formatRangeField(
-                        "bathrooms",
-                        bedrooms.min,
-                        bedrooms.max,
-                      )}
-                    </span>
+                {rangeDetails.map((detail, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center gap-2 text-muted-foreground"
+                  >
+                    <detail.icon className="size-5" />
+                    <span className="text-sm font-medium">{detail.label}</span>
                   </div>
-                )}
-
-                {bathrooms && (
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Bath className="h-5 w-5" />
-                    <span className="text-sm font-medium">
-                      {formatRangeField(
-                        "bathrooms",
-                        bathrooms.min,
-                        bathrooms.max,
-                      )}
-                    </span>
-                  </div>
-                )}
-
-                {parkingSpaces && (
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Car className="h-5 w-5" />
-                    <span className="text-sm font-medium">
-                      {formatRangeField(
-                        "parkingSpaces",
-                        parkingSpaces.min,
-                        parkingSpaces.max,
-                      )}
-                    </span>
-                  </div>
-                )}
+                ))}
               </div>
 
               {/* PRICE */}

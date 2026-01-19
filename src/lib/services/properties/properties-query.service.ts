@@ -22,7 +22,12 @@ const POPULATE_FIELDS = [
   "propertyPurpose",
   "propertyStanding",
   "propertyTypologies",
-  "propertyAmenities",
+  {
+    path: "propertyAmenities",
+    options: {
+      sort: { name: 1 },
+    },
+  },
 ];
 
 //-------------------------------- RETURN ALL PROPERTIES MAPPED TO BE SHOWN -------------------------------- //
@@ -82,4 +87,25 @@ export async function getAllPropertyDetails() {
   );
 
   return { amenities, purposes, standings, types, typologies };
+}
+
+// -------------------------------- RETURNS RELATED PROPERTIES BASED ON THE STANDING OF THE SELECTED PROPERTY --------------------------------
+export async function getRelatedProperties(id: string) {
+  await connectMongoDB();
+
+  const property = await Property.findById(id);
+
+  if (!property) return null;
+
+  const relatedProperties = await Property.find({
+    standing: property.propertyStanding,
+    _id: { $ne: property._id }, // AVOIDS BRINGING THE MAIN PROPERTY
+  })
+    .sort({ price: 1 })
+    .populate("propertyType")
+    .lean<IPropertyPopulated[]>(); // MINOR PRICE FIRST
+
+  return relatedProperties.map((property) =>
+    PropertyMapper.toViewSchema(property),
+  );
 }

@@ -27,7 +27,7 @@ const similarProperties = [
   },
 ];
 
-export default function PropertySimilar() {
+export default function RelatedProperties() {
   return (
     <section className="py-16 bg-muted/30">
       <div className="container mx-auto px-4">
@@ -46,7 +46,9 @@ export default function PropertySimilar() {
             >
               <div className="relative h-56 overflow-hidden">
                 <img
-                  src={"https://dianaimoveis.com/wp-content/uploads/2024/08/20240902160736271-1.jpg.webp"}
+                  src={
+                    "https://dianaimoveis.com/wp-content/uploads/2024/08/20240902160736271-1.jpg.webp"
+                  }
                   alt={property.name}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />

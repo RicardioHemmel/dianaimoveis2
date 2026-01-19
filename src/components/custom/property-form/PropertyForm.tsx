@@ -118,9 +118,15 @@ export default function PropertyForm() {
           const coords = await getCoordinates(fullAddress);
           lat = coords.lat;
           lng = coords.lng;
+
+          form.setValue("address.lat", lat);
+          form.setValue("address.lng", lng);
         } catch (error) {
           console.error("Erro ao obter geolocalização:", error);
         }
+      } else {
+        lat = undefined;
+        lng = undefined;
       }
 
       const payload = {

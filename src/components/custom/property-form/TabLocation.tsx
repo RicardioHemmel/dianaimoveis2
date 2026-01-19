@@ -284,13 +284,16 @@ export default function TabLocation() {
         )}
       </div>
 
-      <div className="lg:col-span-3 mt-10">
-        <div className="h-[450px] w-full overflow-hidden shadow-xl rounded-2xl relative">
-          {lat && lng ? (
-            <GoogleMap lat={lat} lng={lng} />
-          ) : (
-            <GoogleMapPlaceholder placeholderText="Salve o imóvel com o endereço preenchido para visualizar o mapa" />
-          )}
+      <div className="mt-10">
+        <h2 className="my-3 font-medium">Pré-visualização no Mapa</h2>
+        <div className="lg:col-span-3">
+          <div className="h-[450px] w-full overflow-hidden shadow-xl rounded-2xl relative">
+            {lat && lng ? (
+              <GoogleMap lat={lat} lng={lng} />
+            ) : (
+              <GoogleMapPlaceholder placeholderText="Salve o imóvel com o endereço completo preenchido para visualizar o mapa" />
+            )}
+          </div>
         </div>
       </div>
     </TabsContent>

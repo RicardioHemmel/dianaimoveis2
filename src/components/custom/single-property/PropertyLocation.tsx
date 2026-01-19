@@ -19,7 +19,7 @@ export default function PropertyLocation({
   const lng = address?.lng;
 
   return (
-    <section className="py-16 bg-surface-muted">
+    <section className="py-20 bg-surface-muted">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="title-section">Localização</h2>
@@ -31,49 +31,51 @@ export default function PropertyLocation({
         <div className="grid lg:grid-cols-5 gap-8">
           {/* INFO CARDS */}
           <div className="lg:col-span-2 space-y-4 ">
-            {/* FULL ADDRESS */}
-            <div className="white-card p-6">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-action-primary/10 flex items-center justify-center shrink-0">
-                  <MapPin className="h-6 w-6 text-action-primary" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-foreground mb-1">
-                    Endereço
-                  </h3>
-                  <p className="text-muted-foreground text-sm">
-                    {street}
-                    <br />
-                    {`${neighborhood}, ${city} - ${stateUf}`}
-                    <br />
-                    {`CEP: ${zipCode}`}
-                  </p>
+            {/* FULL ADDRESS CONTAINER*/}
+            {street && neighborhood && city && stateUf && (
+              <div className="white-card p-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-action-primary/10 flex items-center justify-center shrink-0">
+                    <MapPin className="h-6 w-6 text-action-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-foreground mb-1">
+                      Endereço
+                    </h3>
+                    <p className="text-muted-foreground text-sm">
+                      {street}
+                      <br />
+                      {`${neighborhood}, ${city} - ${stateUf}`}
+                      <br />
+                      {`CEP: ${zipCode}`}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* REFERENCE POINTS LIST */}
-            <div className="white-card p-6">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-action-primary/10 flex items-center justify-center shrink-0">
-                  <Navigation className="h-6 w-6 text-action-primary" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-foreground mb-2">
-                    Pontos de Referência
-                  </h3>
-                  <ul className="text-muted-foreground text-sm space-y-1">
-                    {referencePoints &&
-                      referencePoints?.length > 0 &&
-                      referencePoints?.map((rp, i) => (
+            {referencePoints && referencePoints?.length > 0 && (
+              <div className="white-card p-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-action-primary/10 flex items-center justify-center shrink-0">
+                    <Navigation className="h-6 w-6 text-action-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-foreground mb-2">
+                      Pontos de Referência
+                    </h3>
+                    <ul className="text-muted-foreground text-sm space-y-1">
+                      {referencePoints.map((rp, i) => (
                         <li key={i} className="list-disc ml-5">
                           {rp}
                         </li>
                       ))}
-                  </ul>
+                    </ul>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* MAP PLACEHOLDER */}

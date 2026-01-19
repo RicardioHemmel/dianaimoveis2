@@ -8,7 +8,7 @@ export default function PropertyTypes({
 }) {
   const mappedTypologies = propertyTypologySelectMapper(typologies);
   return (
-    <section className="py-16 bg-surface-base">
+    <section className="py-16 mb-8 bg-surface-base">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="title-section">Tipologias Disponíveis</h2>
@@ -17,7 +17,7 @@ export default function PropertyTypes({
           </p>
         </div>
 
-        <div className="flex justify-center gap-6 mx-auto">
+        <div className="flex flex-wrap justify-center gap-6 mx-auto">
           {mappedTypologies?.map((typology) => {
             return (
               <div

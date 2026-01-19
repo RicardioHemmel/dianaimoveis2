@@ -1,14 +1,12 @@
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 
 export default function PropertyDescription({
-  property,
+  description,
 }: {
-  property: PropertyViewSchema;
+  description: PropertyViewSchema["description"];
 }) {
-  const { description } = property;
-
   return (
-    <section className="py-16 bg-surface-muted">
+    <section className="py-16">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           <h2 className="title-section mb-3">Descrição</h2>

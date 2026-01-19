@@ -30,7 +30,7 @@ function MapUpdater({
   return null;
 }
 
-export function GoogleMap({ lat, lng, zoom = 15 }: MapProps) {
+export function GoogleMap({ lat, lng, zoom = 17 }: MapProps) {
   const position = { lat: lat, lng: lng };
 
   return (

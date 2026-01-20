@@ -43,13 +43,18 @@ export function GoogleMap({ lat, lng, zoom = 17 }: MapProps) {
         disableDefaultUI={false}
       >
         <AdvancedMarker position={position}>
-          <Pin
-            background={"#FBBC04"}
-            glyphColor={"#000"}
-            borderColor={"#000"}
-          />
-        </AdvancedMarker>
+          <div className="relative flex flex-col items-center justify-center translate-y-[-50%]">
+            {/* ROUNDED IMAGE */}
+            <img
+              src="/roundedLogo.svg"
+              alt="Diana Imóveis"
+              className="size-14 rounded-full border-2 border-black bg-white object-cover z-20 relative shadow-md"
+            />
 
+            {/* SQUARE ROTATED BY 45 DEGREES TO SIMULATE THE PIN */}
+            <div className="absolute -bottom-2 size-5 bg-white border-r-2 border-b-2 border-black rotate-45 z-10"></div>
+          </div>
+        </AdvancedMarker>
         {/* POSITION UPDATER */}
         <MapUpdater position={position} zoom={zoom} />
       </Map>

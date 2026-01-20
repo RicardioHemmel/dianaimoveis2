@@ -3,21 +3,19 @@ import FeaturedPropertiesCarousel from "@/components/custom/homePage/FeaturedPro
 import PropertyListing from "@/components/custom/homePage/PropertyListing";
 import PropertyQuickSearchBar from "@/components/custom/homePage/PropertyQuickSearchBar";
 
-// SERVICE
-import {
-  getFeaturedProperties,
-  getAllPropertiesToView,
-} from "@/lib/services/properties/properties-query.service";
+// QUERIES
+import { getFeaturedProperties } from "@/lib/services/properties/queries/properties-query.service";
+import { getStudios } from "@/lib/services/properties/queries/home/get-studios.service";
 
 export default async function HomePage() {
   const featuredProperties = await getFeaturedProperties();
-  const properties = await getAllPropertiesToView();
+  const studioProperties = await getStudios();
 
   return (
     <>
-      <FeaturedPropertiesCarousel featuredProperties={featuredProperties} />
+      <FeaturedPropertiesCarousel properties={featuredProperties} />
       <PropertyQuickSearchBar />
-      <PropertyListing properties={properties} />
+      <PropertyListing properties={studioProperties} />
     </>
   );
 }

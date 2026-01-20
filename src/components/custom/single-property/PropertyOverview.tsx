@@ -5,7 +5,7 @@ import { Building2, MapPin, Maximize, Calendar } from "lucide-react";
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 
 // FORMATERS
-import { deliveryDateToShotDate } from "@/lib/formatters/ui-formatters/property-delivery-date";
+import { deliveryDateToShortDate } from "@/lib/formatters/ui-formatters/property-delivery-date";
 import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
 import {
   buildPropertyRanges,
@@ -18,6 +18,7 @@ import { headers } from "next/headers";
 import { Button } from "@/components/ui/button";
 import { whatsAppRedirectBaseLink } from "@/lib/constants/links/whatsapp-redirect";
 import { ShareButton } from "@/components/custom/ShareButton";
+import { ToggleFavoriteBtn } from "@/components/custom/ToggleFavoriteBtn";
 
 export default async function PropertyOverview({
   property,
@@ -40,6 +41,7 @@ export default async function PropertyOverview({
     address,
     deliveryDate,
     title,
+    _id,
   } = property;
 
   // GET THE CURRENT URL FROM THE SERVER
@@ -139,7 +141,7 @@ export default async function PropertyOverview({
                     <div>
                       <p className="text-muted-foreground text-sm">Previsão</p>
                       <p className="font-semibold text-foreground">
-                        {deliveryDateToShotDate(deliveryDate)}
+                        {deliveryDateToShortDate(deliveryDate)}
                       </p>
                     </div>
                   </div>
@@ -172,10 +174,11 @@ export default async function PropertyOverview({
 
           {/* PRICE CARD */}
           <div className="lg:col-span-1 white-card rounded-xl">
-            <div className="glass-card p-8 sticky top-4">
+            <div className="p-8 relative">
               <p className="text-muted-foreground text-sm mb-1">
                 Valor do Imóvel
               </p>
+
               <h3 className="text-3xl font-display font-bold text-text-title mb-6">
                 A partir de{" "}
                 <span className="text-action-primary">{`${formattedPrice(price)}`}</span>
@@ -204,7 +207,15 @@ export default async function PropertyOverview({
                 </Button>
 
                 {/* SHARE BUTTON */}
-                <ShareButton title={title} />
+                <div className="flex gap-3">
+                  <div className="flex-[2] [&>button]:w-full ">
+                    <ShareButton title={title} />
+                  </div>
+
+                  <div className="flex-[1] [&>button]:w-full">
+                    <ToggleFavoriteBtn propertyId={_id!} variant="default" />
+                  </div>
+                </div>
               </div>
 
               <p className="text-center text-muted-foreground text-xs mt-4">

@@ -1,4 +1,4 @@
-const STORAGE_KEY = "properties";
+const STORAGE_KEY = "favorite_properties";
 
 export function getPropertiesFromLocalStorage(): string[] {
   if (typeof window === "undefined") return [];

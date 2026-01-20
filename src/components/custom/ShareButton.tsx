@@ -24,13 +24,8 @@ export function ShareButton({ title }: { title: string }) {
   };
 
   return (
-    <Button
-      variant="outline"
-      size="lg"
-      className="w-full"
-      onClick={handleShare}
-    >
-      <Share2 className="h-4 w-4 mr-2" />
+    <Button variant="outline" size="lg" onClick={handleShare}>
+      <Share2 className="size-4 mr-2" />
       Compartilhar
     </Button>
   );

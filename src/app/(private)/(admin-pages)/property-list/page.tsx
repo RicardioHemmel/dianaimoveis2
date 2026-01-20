@@ -1,5 +1,5 @@
 import { PropertyCardHorizontal } from "@/components/custom/HorizontalPropertyCard";
-import { getAllPropertiesToView } from "@/lib/services/properties/properties-query.service";
+import { getAllPropertiesToView } from "@/lib/services/properties/queries/properties-query.service";
 import { Button } from "@/components/ui/button";
 import { Building2, Home } from "lucide-react";
 import Link from "next/link";

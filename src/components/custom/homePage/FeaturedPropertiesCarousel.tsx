@@ -26,9 +26,9 @@ import { showCoverImage } from "@/lib/formatters/ui-formatters/showCoverImage";
 import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
 
 export default function FeaturedPropertiesCarousel({
-  featuredProperties,
+  properties,
 }: {
-  featuredProperties: PropertyViewSchema[];
+  properties: PropertyViewSchema[];
 }) {
   const [carouselApi, setCarouselApi] = useState<CarouselApi>(); // Gives carousel its mechanics
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -53,8 +53,8 @@ export default function FeaturedPropertiesCarousel({
         opts={{ loop: true }}
       >
         <CarouselContent>
-          {featuredProperties.length > 0 ? (
-            featuredProperties.map((property, index) => (
+          {properties.length > 0 ? (
+            properties.map((property, index) => (
               <CarouselItem key={index} className="w-full">
                 <Card className="h-[310px] sm:h-[470px] lg:h-[635px] 2xl:h-[750px] w-full p-0 border-none">
                   <CardContent className="h-full w-full flex items-center justify-center p-0 m-0">
@@ -91,11 +91,11 @@ export default function FeaturedPropertiesCarousel({
                       min-w-[210px] min-h-20 sm:min-w-[280px] sm:min-h-[110px] md:min-w-[340px] md:min-h-[110px] lg:min-w-[380px] lg:min-h-[150px]"
                         >
                           <div className="min-w-fit min-h-fit w-4/5 flex flex-col items-start justify-center md:gap-1">
-                            <div className="w-full flex justify-between">
+                            <div className="w-full flex justify-between relative">
                               <p className="text-[13px] sm:text-[15px] md:text-[20px] font-light">
                                 {property?.address?.city}
                               </p>
-                              <ExternalLink className="w-5 sm:w-15" />
+                              <ExternalLink className="absolute right-0 w-5 sm:w-15" />
                             </div>
                             <h2 className="text-[16px] sm:text-[21px] lg:text-3xl font-semibold">
                               {property.title}

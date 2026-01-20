@@ -1,6 +1,6 @@
 "use client";
 
-// Sidebar Shadcnui
+// COMPONENTS
 import {
   Sidebar,
   SidebarContent,
@@ -14,14 +14,16 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-// Next / React
+// NEXT | REACT
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 
-import { SIDEBAR_LINKS } from "@/lib/constants/links/sidebar-links";
+// ICONS
 import { LogOut, Settings } from "lucide-react";
+
+import { SIDEBAR_LINKS } from "@/lib/constants/links/sidebar-links";
 
 export function AppSidebar() {
   const pathname = usePathname();

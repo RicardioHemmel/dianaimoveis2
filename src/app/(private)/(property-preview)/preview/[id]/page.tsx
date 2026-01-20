@@ -5,7 +5,7 @@ import { Property } from "@/components/custom/single-property/Property";
 import {
   getPropertyToView,
   getRelatedProperties,
-} from "@/lib/services/properties/properties-query.service";
+} from "@/lib/services/properties/queries/properties-query.service";
 
 // NEXT
 import { notFound } from "next/navigation";

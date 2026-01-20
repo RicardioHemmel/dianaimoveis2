@@ -9,7 +9,10 @@ import { MapPin } from "lucide-react";
 // FORMATTER
 import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
 import { showCoverImage } from "@/lib/formatters/ui-formatters/showCoverImage";
-import { deliveryDateToDeliveryStatus } from "@/lib/formatters/ui-formatters/property-delivery-date";
+import {
+  deliveryDateToDeliveryStatus,
+  deliveryDateToShortDate,
+} from "@/lib/formatters/ui-formatters/property-delivery-date";
 import { buildPropertyRanges } from "@/lib/formatters/ui-formatters/property-ranges";
 
 // SCHEMAS
@@ -26,7 +29,6 @@ export function VerticalPropertyCard({
   const {
     address,
     propertyType,
-    propertyTypologies,
     deliveryDate,
     title,
     bedrooms,
@@ -53,10 +55,7 @@ export function VerticalPropertyCard({
   const deliveryStatus = deliveryDateToDeliveryStatus(deliveryDate);
 
   return (
-    <div
-      key={_id}
-      className="group relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500"
-    >
+    <article className="group relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500">
       {/* Image Container (clicável) */}
       <Link
         href={`/property/${_id}`}
@@ -70,7 +69,7 @@ export function VerticalPropertyCard({
 
         {/* Dark Gradient Overlay */}
         <div
-          className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent
+          className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent
     opacity-100 group-hover:opacity-40 transition-opacity duration-500 ease-in-out"
         />
 
@@ -88,18 +87,24 @@ export function VerticalPropertyCard({
         {/* PROPERTY TYPE & Typology - Bottom of Image */}
         <div className="absolute bottom-4 left-4 right-4 z-10">
           <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-medium border border-white/20">
-              {propertyType?.name}
-            </span>
-            <span className="px-3 py-1 rounded-full bg-secondary/80 backdrop-blur-md text-secondary-foreground text-xs font-semibold">
-              {propertyTypologies[0].name}
-            </span>
+            {propertyType && (
+              <span className="px-3 py-1 rounded-full bg-white/20 border border-white/20 backdrop-blur-md text-white text-xs font-medium">
+                {propertyType.name}
+              </span>
+            )}
+            {deliveryDate && (
+              <span className="px-3 py-1 rounded-full bg-white/20 border border-white/20 backdrop-blur-md text-white text-xs font-semibold">
+                {deliveryDateToShortDate(deliveryDate)}
+              </span>
+            )}
           </div>
         </div>
       </Link>
 
-      {/* TOGGLE FAVORITE BTN - TOP RIGHT */}
-      <ToggleFavoriteBtn propertyId={_id!} />
+      {/* FAVORITE BUTTON - TOP RIGHT */}
+      <span className="absolute top-4 right-4">
+        <ToggleFavoriteBtn propertyId={_id!} variant={"blur"} />
+      </span>
 
       {/* CONTENT */}
       <div className="p-6">
@@ -131,7 +136,7 @@ export function VerticalPropertyCard({
         </div>
 
         {/* DIVIDER */}
-        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent mb-5" />
+        <div className="h-px bg-linear-to-r from-transparent via-border to-transparent mb-5" />
 
         {/* PRICE + BUTTON */}
         <div className="flex items-end justify-between">
@@ -153,6 +158,6 @@ export function VerticalPropertyCard({
           </Link>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

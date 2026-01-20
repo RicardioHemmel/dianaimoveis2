@@ -17,7 +17,7 @@ import { getTypes } from "@/lib/services/properties/property-details/property-ty
 import { getTypologies } from "@/lib/services/properties/property-details/property-typologies.service";
 
 // --- CONSTANTS ---
-const POPULATE_FIELDS = [
+export const POPULATE_FIELDS = [
   "propertyType",
   "propertyPurpose",
   "propertyStanding",

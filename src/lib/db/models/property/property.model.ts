@@ -79,24 +79,28 @@ const propertySchema = new Schema<IProperty>(
       type: Schema.Types.ObjectId,
       ref: "PropertyType",
       required: true,
+      index: true,
     },
 
     propertyPurpose: {
       type: Schema.Types.ObjectId,
       ref: "PropertyPurpose",
+      index: true,
     },
     propertyStanding: {
       type: Schema.Types.ObjectId,
       ref: "PropertyStanding",
+      index: true,
     },
     propertyTypologies: [
       {
         type: Schema.Types.ObjectId,
         ref: "PropertyTypologies",
+        index: true,
       },
     ],
     propertyAmenities: [
-      { type: Schema.Types.ObjectId, ref: "PropertyAmenities" },
+      { type: Schema.Types.ObjectId, ref: "PropertyAmenities", index: true },
     ],
 
     gallery: [gallerySchema],
@@ -114,6 +118,24 @@ const propertySchema = new Schema<IProperty>(
   },
   { strict: true, timestamps: true },
 );
+
+//------------------- INDEX FOR MONGO QUERIES ----------------
+// // PURPOSE + PRICE
+// propertySchema.index({
+//   propertyPurpose: 1,
+//   price: 1,
+// });
+
+// // PURPOSE + CITY
+// propertySchema.index({
+//   status: 1,
+//   propertyPurpose: 1,
+//   "address.city": 1,
+//   price: 1,
+// });
+
+// // RECENT PROPERTIES
+// propertySchema.index({ status: 1, createdAt: -1 });
 
 // ENSURES THAT GALLERY AND FLOOR PLAN GALLERY WITH BE RETURNED ALREADY ORDERED
 propertySchema.post(["find", "findOne", "findOneAndUpdate"], function (doc) {

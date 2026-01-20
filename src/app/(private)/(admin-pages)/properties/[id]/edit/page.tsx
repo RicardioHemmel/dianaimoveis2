@@ -5,7 +5,7 @@ import PropertyFormWrapper from "@/components/custom/property-form/PropertyFormW
 import {
   getAllPropertyDetails,
   getPropertyToInput,
-} from "@/lib/services/properties/properties-query.service";
+} from "@/lib/services/properties/queries/properties-query.service";
 
 // DYNAMIC METADATA
 export async function generateMetadata({

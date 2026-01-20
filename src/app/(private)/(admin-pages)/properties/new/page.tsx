@@ -1,5 +1,5 @@
 import PropertyFormWrapper from "@/components/custom/property-form/PropertyFormWrapper";
-import { getAllPropertyDetails } from "@/lib/services/properties/properties-query.service";
+import { getAllPropertyDetails } from "@/lib/services/properties/queries/properties-query.service";
 
 import type { Metadata } from "next";
 

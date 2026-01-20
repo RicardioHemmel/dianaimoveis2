@@ -18,7 +18,7 @@ export function deliveryDateToDeliveryStatus(deliveryDate?: string) {
 }
 
 // RETURN A FORMAT LIKE THIS (Dez/2027)
-export function deliveryDateToShotDate(deliveryDate: string) {
+export function deliveryDateToShortDate(deliveryDate: string) {
   // "T00:00:00" AVOIDS TIME ZONE PROBLEMS THAT COULD CHANGE THE DAY/MONTH
   const date = new Date(deliveryDate + "T00:00:00");
 

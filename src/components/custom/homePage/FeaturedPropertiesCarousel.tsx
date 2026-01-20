@@ -22,7 +22,7 @@ import { Card, CardContent } from "@/components/ui/card";
 // ANIMATION INSIDE DE CAROUSEL
 import { motion } from "framer-motion";
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
-import { showCoverImage } from "@/lib/media/showCoverImage";
+import { showCoverImage } from "@/lib/formatters/ui-formatters/showCoverImage";
 import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
 
 export default function FeaturedPropertiesCarousel({

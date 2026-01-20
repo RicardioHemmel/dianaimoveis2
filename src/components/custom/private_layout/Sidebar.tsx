@@ -40,7 +40,7 @@ export function AppSidebar() {
         <div className="px-6 py-6 border-b border-white/10">
           <Link href={SIDEBAR_LINKS.dashboard.path}>
             <div className="flex items-center gap-2">
-              <div className="w-14 h-14 relative">
+              <div className="size-14 relative">
                 <Image src="/roundedLogo.svg" alt="App logo" fill />
               </div>
               <div>
@@ -114,6 +114,6 @@ export function AppSidebar() {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarFooter>
-    </Sidebar >
+    </Sidebar>
   );
 }

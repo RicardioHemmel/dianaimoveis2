@@ -5,11 +5,10 @@ import Link from "next/link";
 
 // ICONS
 import { MapPin } from "lucide-react";
-import { useState } from "react";
 
 // FORMATTER
 import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
-import { showCoverImage } from "@/lib/media/showCoverImage";
+import { showCoverImage } from "@/lib/formatters/ui-formatters/showCoverImage";
 import { deliveryDateToDeliveryStatus } from "@/lib/formatters/ui-formatters/property-delivery-date";
 import { buildPropertyRanges } from "@/lib/formatters/ui-formatters/property-ranges";
 
@@ -100,7 +99,7 @@ export function VerticalPropertyCard({
       </Link>
 
       {/* TOGGLE FAVORITE BTN - TOP RIGHT */}
-      <ToggleFavoriteBtn />
+      <ToggleFavoriteBtn propertyId={_id!} />
 
       {/* CONTENT */}
       <div className="p-6">

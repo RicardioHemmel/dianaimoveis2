@@ -24,7 +24,7 @@ import {
   DeliveryStatus,
 } from "@/lib/formatters/ui-formatters/property-delivery-date";
 import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
-import { showCoverImage } from "@/lib/media/showCoverImage";
+import { showCoverImage } from "@/lib/formatters/ui-formatters/showCoverImage";
 import { buildPropertyRanges } from "@/lib/formatters/ui-formatters/property-ranges";
 
 // NEXT
@@ -67,16 +67,17 @@ export function PropertyCardHorizontal({
   const propertyEditLink = `properties/${property._id}/edit`;
 
   return (
-    <Card className="overflow-hidden shadow-xl bg-white group p-0">
-      <div className="flex flex-col md:flex-row min-h-[176px]">
+    <Card className="overflow-hidden shadow-xl bg-white p-0">
+      <div className="flex flex-col md:flex-row min-h-44">
         {/* IMAGE SECTION */}
         <div className="relative w-full md:w-64 h-48 md:h-auto bg-muted overflow-hidden shrink-0">
           <Link href={propertyEditLink}>
-            <div className="w-full h-full flex items-center justify-center bg-[image:var(--gradient-primary)]">
+            <div className="relative w-full h-full flex items-center justify-center bg-[image:var(--gradient-primary)]">
               {gallery.length > 0 ? (
                 <Image
                   alt="Imagem de Capa"
                   src={showCoverImage(gallery)}
+                  sizes="(max-width: 768px) 100vw, 256px"
                   fill
                 />
               ) : (

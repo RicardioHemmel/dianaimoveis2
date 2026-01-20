@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
-import { showCoverImage } from "@/lib/media/showCoverImage";
+import { showCoverImage } from "@/lib/formatters/ui-formatters/showCoverImage";
 import { buildPropertyRanges } from "@/lib/formatters/ui-formatters/property-ranges";
 import { deliveryDateToDeliveryStatus } from "@/lib/formatters/ui-formatters/property-delivery-date";
 import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";

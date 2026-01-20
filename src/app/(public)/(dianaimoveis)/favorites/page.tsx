@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 
 // ICONS
-import { Heart, ArrowRight, Sparkles } from "lucide-react";
+import { Heart, ArrowRight } from "lucide-react";
 
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 
@@ -25,6 +25,7 @@ export default function FavoritePropertiesPage() {
   const [properties, setProperties] = useState<PropertyViewSchema[]>([]);
   const [showEmptyModal, setShowEmptyModal] = useState(false);
   const [hasLoadedFavorites, setHasLoadedFavorites] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // ON MOUTING GETS PROPERTY IDS
   useEffect(() => {
@@ -40,11 +41,13 @@ export default function FavoritePropertiesPage() {
     if (!favoritePropertiesIds.length) {
       setProperties([]);
       setShowEmptyModal(true);
+      setIsLoading(false);
       return;
     }
 
     const fetchFavoriteProperties = async () => {
       try {
+        setIsLoading(true);
         const response = await fetch("/api/properties/favorites", {
           method: "POST",
           headers: {
@@ -64,6 +67,8 @@ export default function FavoritePropertiesPage() {
         setShowEmptyModal(false);
       } catch (e) {
         console.error("Erro ao buscar os imóveis: ", e);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -103,7 +108,16 @@ export default function FavoritePropertiesPage() {
       {/* FAVORITE PROPERTIES LIST */}
       <section className="py-16 bg-muted/30">
         <div className="container mx-auto px-4">
-          {properties.length > 0 ? (
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[...Array(6)].map((_, i) => (
+                <div
+                  key={i}
+                  className="h-80 rounded-2xl bg-gray-200 animate-pulse"
+                />
+              ))}
+            </div>
+          ) : properties.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {properties.map((property) => (
                 <VerticalPropertyCard property={property} key={property._id} />

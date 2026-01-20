@@ -50,7 +50,7 @@ export function FavoriteDialogModal({
           <Link href="/properties" className="w-full">
             <Button
               size="lg"
-              className="w-full  bg-action-primary text-black hover:bg-action-primary-hover"
+              className="w-full bg-action-primary text-black hover:bg-action-primary-hover"
             >
               Explorar Imóveis
               <ArrowRight className="h-5 w-5 ml-2" />

@@ -1,6 +1,6 @@
 export function formattedPrice(
   price: number,
-  showCents: boolean = false
+  showCents: boolean = true,
 ): string {
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",

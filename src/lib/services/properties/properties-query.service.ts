@@ -31,7 +31,7 @@ const POPULATE_FIELDS = [
 ];
 
 //-------------------------------- RETURN ALL PROPERTIES MAPPED TO BE SHOWN -------------------------------- //
-export async function getProperties(): Promise<PropertyViewSchema[]> {
+export async function getAllPropertiesToView(): Promise<PropertyViewSchema[]> {
   await connectMongoDB();
 
   const properties = await Property.find()
@@ -118,7 +118,7 @@ export async function getFeaturedProperties() {
     .populate("propertyType")
     .lean<IPropertyPopulated[]>();
 
-  if (!properties.length) return;
+  if (!properties.length) return [];
 
   return properties.map((property) => PropertyMapper.toViewSchema(property));
 }

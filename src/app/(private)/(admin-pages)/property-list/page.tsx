@@ -1,11 +1,11 @@
 import { PropertyCardHorizontal } from "@/components/custom/HorizontalPropertyCard";
-import { getProperties } from "@/lib/services/properties/properties-query.service";
+import { getAllPropertiesToView } from "@/lib/services/properties/properties-query.service";
 import { Button } from "@/components/ui/button";
 import { Building2, Home } from "lucide-react";
 import Link from "next/link";
 
 export default async function PropertiesListPage() {
-  const properties = await getProperties();
+  const properties = await getAllPropertiesToView();
 
   const EmptyState = () => (
     <div className="flex flex-col items-center justify-center py-16 px-4">

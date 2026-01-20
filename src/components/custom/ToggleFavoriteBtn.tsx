@@ -12,10 +12,10 @@ export function ToggleFavoriteBtn() {
   return (
     <button
       onClick={(e) => handleFavoriteToggle("id 1", e)}
-      className={`absolute top-4 right-4 size-10 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 hover:scale-110 ${
+      className={`absolute top-4 right-4 size-10 rounded-full flex items-center justify-center backdrop-blur-sm transition-all duration-300 hover:scale-110${
         favorites.includes(6)
           ? "bg-red-500/30 border border-red-400/50 shadow-lg shadow-red-500/20"
-          : "bg-white/20 border border-white/30 hover:bg-white/30"
+          : "bg-white/20 border border-white/60 hover:bg-white/30"
       }`}
     >
       <Heart

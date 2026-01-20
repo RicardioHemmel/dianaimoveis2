@@ -30,8 +30,6 @@ export function BorderLessPropertyCard({
     price,
   } = property;
 
-  const isFavorite = true;
-
   // MAPPED DETAILS WITH THEIR ICONS
   const mappedPropertyDetails = buildPropertyRanges(
     {

@@ -1,12 +1,14 @@
 "use client";
 
-// Next / React
+// NEXT / REACT
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-// ShadcnUI
-import { Card, CardContent } from "@/components/ui/card";
+// ICONS
+import { ExternalLink } from "lucide-react";
+
+// COMPONENTS
 import {
   Carousel,
   CarouselContent,
@@ -15,34 +17,19 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/carousel";
+import { Card, CardContent } from "@/components/ui/card";
 
-import { ExternalLink } from "lucide-react";
-
-// Animation inside de Carousel
+// ANIMATION INSIDE DE CAROUSEL
 import { motion } from "framer-motion";
+import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
+import { showCoverImage } from "@/lib/media/showCoverImage";
+import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
 
-const featuredProperties = [
-  {
-    id: 1,
-    coverImage: "/testes/getHomeDesignCapa.webp",
-    address: {
-      city: "São Paulo",
-    },
-    title: "Get Home Design",
-    price: 3442336,
-  },
-  {
-    id: 2,
-    coverImage: "/testes/jeronimoCapa.webp",
-    address: {
-      city: "São Paulo",
-    },
-    title: "155 Jerônimo",
-    price: 155447,
-  },
-];
-
-export default function FeaturedPropertiesCarousel() {
+export default function FeaturedPropertiesCarousel({
+  featuredProperties,
+}: {
+  featuredProperties: PropertyViewSchema[];
+}) {
   const [carouselApi, setCarouselApi] = useState<CarouselApi>(); // Gives carousel its mechanics
   const [currentSlide, setCurrentSlide] = useState(0);
   const [count, setCount] = useState(0);
@@ -73,15 +60,15 @@ export default function FeaturedPropertiesCarousel() {
                   <CardContent className="h-full w-full flex items-center justify-center p-0 m-0">
                     <Link
                       className="relative w-full h-full"
-                      key={property.id}
-                      href={`/imovel/${property.id}`}
+                      key={property._id}
+                      href={`/property/${property._id}`}
                     >
-                      {property.coverImage ? (
+                      {property.gallery.length > 0 ? (
                         <Image
                           alt="Foto capa do imóvel destaque"
                           fill
                           className="object-cover"
-                          src={property.coverImage}
+                          src={showCoverImage(property.gallery)}
                           priority
                         />
                       ) : (
@@ -106,7 +93,7 @@ export default function FeaturedPropertiesCarousel() {
                           <div className="min-w-fit min-h-fit w-4/5 flex flex-col items-start justify-center md:gap-1">
                             <div className="w-full flex justify-between">
                               <p className="text-[13px] sm:text-[15px] md:text-[20px] font-light">
-                                {property.address.city}
+                                {property?.address?.city}
                               </p>
                               <ExternalLink className="w-5 sm:w-15" />
                             </div>
@@ -114,8 +101,7 @@ export default function FeaturedPropertiesCarousel() {
                               {property.title}
                             </h2>
                             <p className="text-[13px] sm:text-[18px] lg:text-[19px] font-normal mt-1 md:mt-0">
-                              A partir de: R$
-                              {property.price}
+                              A partir de {formattedPrice(property.price)}
                             </p>
                           </div>
                         </motion.div>
@@ -141,8 +127,8 @@ export default function FeaturedPropertiesCarousel() {
         </CarouselContent>
 
         {/* navigation buttons inside carousel */}
-        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow-md" />
-        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow-md" />
+        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2" />
+        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2" />
       </Carousel>
     </div>
   );

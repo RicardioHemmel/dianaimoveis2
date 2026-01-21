@@ -20,7 +20,10 @@ import {
 import { DeletePropertyDropdownItem } from "@/components/custom/DeletePropertyDropdownItem";
 
 // SCHEMA
-import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
+import {
+  PropertyInputSchema,
+  PropertyViewSchema,
+} from "@/lib/schemas/property/property.schema";
 
 // ZOD ERROR MESSAGES TREATMENT TO PT-BR
 import { extractFieldLabels } from "@/lib/errors/property-form-error-mapper";
@@ -35,11 +38,14 @@ import { toast } from "sonner";
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
 
 // ICONS
-import { Eye, MoreVertical, Star, Trash2 } from "lucide-react";
+import { Eye, MoreVertical, Star } from "lucide-react";
 
 // UI CONFIG
 import { formModeConfig } from "@/components/custom/property-form/form-ui-config";
 import { getCoordinates } from "@/lib/services/maps/maps.service";
+
+// FORMATTER
+import { statusFormatter } from "@/lib/formatters/ui-formatters/status-badge";
 
 export default function PropertyForm() {
   const {
@@ -69,6 +75,10 @@ export default function PropertyForm() {
     control: form.control,
     name: "isFeatured",
   });
+
+  const formattedStatus = statusFormatter(
+    initialData?.status as PropertyViewSchema["status"],
+  );
 
   // FORM SUBMIT FUNCTION
   async function onSubmit(data: PropertyInputSchema) {
@@ -181,13 +191,23 @@ export default function PropertyForm() {
         <div className="px-4">
           <div className="space-y-2">
             <div className="flex items-center gap-3">
+              {/* MODE BADGE */}
               <Badge
                 variant="outline"
                 className={`${mode.badgeClass} px-3 py-1`}
               >
-                <mode.Icon className="h-3 w-3 mr-1.5" />
+                <mode.icon className="h-3 w-3 mr-1.5" />
                 {mode.badgeText}
               </Badge>
+
+              {/* STATUS BADGE */}
+              {formattedStatus && (
+                <Badge
+                  className={`${formattedStatus.badgeColor} text-black px-3 py-1`}
+                >
+                  {formattedStatus.label}
+                </Badge>
+              )}
             </div>
             <h2 className="text-3xl font-bold text-foreground">
               {title || mode.defaultTitle}

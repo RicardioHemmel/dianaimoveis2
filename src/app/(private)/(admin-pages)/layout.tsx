@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { AppSidebar } from "@/components/custom/private-layout/Sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { Menu } from "lucide-react";
+import { Menu, SquareArrowOutUpRight } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
 import { auth } from "@/auth";
 import AccessDenied from "@/components/custom/AccessDenied";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Painel Administrativo",
@@ -31,10 +33,20 @@ export default async function PrivateLayout({
                 <Menu className="h-5 w-5" />
               </SidebarTrigger>
               <Toaster richColors position="top-right" />
-              <div className="flex-1">
+              <div className="flex-1 flex justify-between">
                 <h1 className="text-xl font-semibold text-foreground">
                   Dashboard
                 </h1>
+
+                <Button variant={"outline"} asChild>
+                  <Link
+                    href={process.env.NEXT_PUBLIC_BASE_URL!}
+                    target="_blank"
+                  >
+                    <SquareArrowOutUpRight className="size-4" />
+                    Ir para o site
+                  </Link>
+                </Button>
               </div>
             </header>
 

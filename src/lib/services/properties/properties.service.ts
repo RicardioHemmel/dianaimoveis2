@@ -12,6 +12,7 @@ import {
 
 // AUXILIARY SERVICES
 import { StorageService } from "@/lib/services/storage/storage.service"; // <--- Importamos o novo service
+import { POPULATE_FIELDS } from "./queries/properties-query.service";
 
 // MUTATIONS
 
@@ -156,5 +157,32 @@ export async function setIsFeatured(id: string) {
 
   return {
     isFeatured: updatedProperty.isFeatured,
+  };
+}
+
+// CHANGES BETWEEN "PUBLISHED" AND "DRAFT" STATUS
+export async function togglePropertyStatus(id: string) {
+  const property = await Property.findById(id);
+
+  if (!property) {
+    throw new Error("Imóvel não encontrado");
+  }
+
+  const newStatus = property.status === "DRAFT" ? "PUBLISHED" : "DRAFT";
+
+  const updatedProperty = await Property.findByIdAndUpdate(
+    id,
+    { status: newStatus },
+    { new: true },
+  )
+    .populate(POPULATE_FIELDS)
+    .lean<IPropertyPopulated>();
+
+  if (!updatedProperty) {
+    throw new Error("Falha ao atualizar status do imóvel");
+  }
+
+  return {
+    newStatus: updatedProperty.status,
   };
 }

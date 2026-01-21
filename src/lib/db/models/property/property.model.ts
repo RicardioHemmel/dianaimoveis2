@@ -120,7 +120,7 @@ const propertySchema = new Schema<IProperty>(
 );
 
 // ------------ IGNORES PROPERTIES WITH "DRAFT" STATUS AUTOMATICALLY ----------
-propertySchema.pre(/^find/, async function (this: Query<any, any>) {
+propertySchema.pre("find", async function (this: Query<any, any>) {
   const options = this.getOptions();
 
   if (options.includeDrafts === true) {

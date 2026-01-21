@@ -10,7 +10,7 @@ export function FloatingWhatsAppBtn() {
       avatar="/dianaPhoto.webp"
       allowEsc
       chatMessage="Olá, como posso te ajudar?"
-      statusMessage="Respostas em 1 hora"
+      statusMessage="Respostas em até 1 hora"
       placeholder="Digite uma mensagem"
       messageDelay={1.5}
     />

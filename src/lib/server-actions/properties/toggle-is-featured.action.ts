@@ -3,7 +3,7 @@
 import { setIsFeatured } from "@/lib/services/properties/properties.service";
 import { revalidatePath } from "next/cache";
 
-export async function setIsFeaturedAction(id: string) {
+export async function toggleIsFeatured(id: string) {
   try {
     const res = await setIsFeatured(id);
 

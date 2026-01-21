@@ -11,6 +11,8 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import ToggleIsFeaturedBtn from "@/components/custom/ToggleIsFeaturedBtn";
+import { DeletePropertyDropdownItem } from "@/components/custom/DeletePropertyDropdownItem";
+import { TogglePropertyStatusDropdownItem } from "@/components/custom/TogglePropertyStatusDropdownItem";
 
 // ICONS
 import { Building2, MapPin, MoreVertical, Eye } from "lucide-react";
@@ -19,17 +21,11 @@ import { Building2, MapPin, MoreVertical, Eye } from "lucide-react";
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 
 // FORMATTERS
-import {
-  deliveryDateToDeliveryStatus,
-  DeliveryStatus,
-} from "@/lib/formatters/ui-formatters/property-delivery-date";
+import { deliveryDateToDeliveryStatus } from "@/lib/formatters/ui-formatters/property-delivery-date";
 import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
 import { showCoverImage } from "@/lib/formatters/ui-formatters/show-cover-image";
 import { buildPropertyRanges } from "@/lib/formatters/ui-formatters/property-ranges";
 import { statusFormatter } from "@/lib/formatters/ui-formatters/status-badge";
-
-// NEXT
-import { DeletePropertyDropdownItem } from "./DeletePropertyDropdownItem";
 
 interface PropertyCardHorizontalProps {
   property: PropertyViewSchema;
@@ -166,6 +162,10 @@ export function PropertyCardHorizontal({
                           Ver
                         </Link>
                       </DropdownMenuItem>
+                      <TogglePropertyStatusDropdownItem
+                        propertyId={_id!}
+                        status={status}
+                      />
                       <DeletePropertyDropdownItem propertyId={_id!} />
                     </DropdownMenuContent>
                   </DropdownMenu>

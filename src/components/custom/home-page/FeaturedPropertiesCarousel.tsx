@@ -21,7 +21,11 @@ import { Card, CardContent } from "@/components/ui/card";
 
 // ANIMATION INSIDE DE CAROUSEL
 import { motion } from "framer-motion";
+
+// SCHEMA
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
+
+// FORMATTERS
 import { showCoverImage } from "@/lib/formatters/ui-formatters/showCoverImage";
 import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
 
@@ -30,7 +34,7 @@ export default function FeaturedPropertiesCarousel({
 }: {
   properties: PropertyViewSchema[];
 }) {
-  const [carouselApi, setCarouselApi] = useState<CarouselApi>(); // Gives carousel its mechanics
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>(); // GIVES CAROUSEL ITS MECHANICS
   const [currentSlide, setCurrentSlide] = useState(0);
   const [count, setCount] = useState(0);
 
@@ -56,7 +60,7 @@ export default function FeaturedPropertiesCarousel({
           {properties.length > 0 ? (
             properties.map((property, index) => (
               <CarouselItem key={index} className="w-full">
-                <Card className="h-[310px] sm:h-[470px] lg:h-[635px] 2xl:h-[750px] w-full p-0 border-none">
+                <Card className="h-[510px] sm:h-[720px] lg:h-[635px] 2xl:h-[750px] w-full p-0 border-none">
                   <CardContent className="h-full w-full flex items-center justify-center p-0 m-0">
                     <Link
                       className="relative w-full h-full"
@@ -78,7 +82,7 @@ export default function FeaturedPropertiesCarousel({
                           src="/templates/default/bannerMessage2.jpg"
                         />
                       )}
-                      <div className="w-full h-full flex items-end justify-center lg:justify-start">
+                      <div className="w-full h-full flex items-end justify-center 2xl:justify-start">
                         <motion.div
                           key={currentSlide}
                           initial={{ opacity: 0, y: 100 }}
@@ -86,26 +90,31 @@ export default function FeaturedPropertiesCarousel({
                           transition={{ duration: 1, ease: "easeOut" }}
                           className="
                           flex justify-center
-                      bg-black/80 text-white rounded-2xl 
-                      w-fit h-fit py-2 px-6 sm:py-3 lg:px-10 lg:py-5 z-10 ml-0 mb-4 lg:mb-8 lg:ml-10 2xl:mb-14 2xl:ml-20               
-                      min-w-[210px] min-h-20 sm:min-w-[280px] sm:min-h-[110px] md:min-w-[340px] md:min-h-[110px] lg:min-w-[380px] lg:min-h-[150px]"
+                      bg-black/80 text-white rounded-2xl z-10
+                      w-fit h-fit py-4 px-6  ml-0 mb-16                
+                      min-w-[310px] min-h-[80px] 
+                      sm:min-w-[280px] sm:min-h-[110px] sm:py-3 
+                      md:min-w-[370px] md:min-h-[115px] 
+                      lg:mb-16 lg:py-3 lg:px-4
+                      2xl:min-w-[380px] 2xl:min-h-[150px] 2xl:mb-24 2xl:ml-20"
                         >
-                          <div className="min-w-fit min-h-fit w-4/5 flex flex-col items-start justify-center md:gap-1">
+                          <div className="min-w-fit min-h-fit w-5/6 flex flex-col items-start justify-center md:gap-1">
                             <div className="w-full flex justify-between relative">
-                              <p className="text-[13px] sm:text-[15px] md:text-[20px] font-light">
+                              <p className="text-[13px] sm:text-[16px] 2xl:text-[20px] font-light">
                                 {property?.address?.city}
                               </p>
-                              <ExternalLink className="absolute right-0 w-5 sm:w-15" />
+                              <ExternalLink className="absolute right-0 w-5 sm:w-14" />
                             </div>
-                            <h2 className="text-[16px] sm:text-[21px] lg:text-3xl font-semibold">
+                            <h2 className="text-[16px] sm:text-[21px] 2xl:text-3xl font-semibold">
                               {property.title}
                             </h2>
-                            <p className="text-[13px] sm:text-[18px] lg:text-[19px] font-normal mt-1 md:mt-0">
+                            <p className="text-[13px] sm:text-[18px] 2xl:text-[19px] font-normal mt-1 md:mt-0">
                               A partir de {formattedPrice(property.price)}
                             </p>
                           </div>
                         </motion.div>
                       </div>
+                      <div className="absolute inset-0 bg-linear-to-t from-hero-bg/80 via-hero-bg/20 to-transparent" />
                     </Link>
                   </CardContent>
                 </Card>
@@ -126,9 +135,9 @@ export default function FeaturedPropertiesCarousel({
           )}
         </CarouselContent>
 
-        {/* navigation buttons inside carousel */}
-        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2" />
-        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2" />
+        {/* CAROUSEL NAVIGATION BUTTONS */}
+        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 h-full w-24" />
+        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 h-full w-24" />
       </Carousel>
     </div>
   );

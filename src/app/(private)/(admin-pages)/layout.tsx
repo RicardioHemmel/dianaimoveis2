@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { AppSidebar } from "@/components/custom/private_layout/Sidebar";
+import { AppSidebar } from "@/components/custom/private-layout/Sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Menu } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";

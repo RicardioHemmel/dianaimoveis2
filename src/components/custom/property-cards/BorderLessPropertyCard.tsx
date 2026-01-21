@@ -8,6 +8,7 @@ import { deliveryDateToDeliveryStatus } from "@/lib/formatters/ui-formatters/pro
 import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
 import { ToggleFavoriteBtn } from "../ToggleFavoriteBtn";
 import Link from "next/link";
+import { Building } from "lucide-react";
 
 export function BorderLessPropertyCard({
   property,
@@ -45,12 +46,21 @@ export function BorderLessPropertyCard({
       <Link className="group cursor-pointer" href={`/property/${_id}`}>
         {/* FULL IMAGE CARD */}
         <div className="relative aspect-4/5 overflow-hidden rounded-2xl">
-          <Image
-            src={showCoverImage(gallery) || "/placeholder.svg"}
-            alt={title}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
-          />
+          {gallery.length > 0 ? (
+            <Image
+              src={showCoverImage(gallery)}
+              alt={title}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+          ) : (
+            <div className="h-full flex flex-col justify-center items-center bg-linear-to-b from-hero-via to-hero-bg">
+              <div className="flex flex-col items-center z-20">
+                <Building className="size-18 text-action-primary " />
+                <p className="text-white mt-3">Imóvel sem imagem</p>
+              </div>
+            </div>
+          )}
 
           {/* GRADIENT OVERLAY */}
           <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
@@ -63,7 +73,7 @@ export function BorderLessPropertyCard({
           {/* BOTTOM CONTENT */}
           <div className="absolute inset-x-0 bottom-0 p-5 flex flex-col gap-3">
             {/* STATUS BADGE */}
-            {deliveryStatus && (
+            {deliveryDate && (
               <span
                 className={`text-white text-xs font-semibold px-3 py-1.5 rounded-full w-fit ${deliveryStatus.badgeColor}`}
               >

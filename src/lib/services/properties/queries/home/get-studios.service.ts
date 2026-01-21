@@ -9,12 +9,16 @@ import { IPropertyPopulated } from "@/lib/schemas/property/IProperty";
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 import { POPULATE_FIELDS } from "@/lib/services/properties/queries/properties-query.service";
 
-export async function getStudios(): Promise<PropertyViewSchema[]> {
+// RETURNS EVERY PROPERTY THAT CONTAINS "STUDIO" TYPOLOGY
+export async function getStudios(
+  limit: number = 10,
+): Promise<PropertyViewSchema[]> {
   await connectMongoDB();
   const studioTypology = await PropertyTypologies.findOne({ name: "Studio" });
   const properties = await Property.find({
     propertyTypologies: { $in: [studioTypology?._id!] },
   })
+    .limit(limit)
     .populate(POPULATE_FIELDS)
     .lean<IPropertyPopulated[]>();
 

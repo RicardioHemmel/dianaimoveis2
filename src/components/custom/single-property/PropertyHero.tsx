@@ -37,7 +37,7 @@ export default function PropertyHero({
     <section className="relative h-[70vh] min-h-[500px] overflow-hidden select-none">
       {/* BACKGROUND IMAGE */}
       <div className="absolute inset-0 ">
-        {gallery[currentImage]?.url ? (
+        {gallery.length > 0 ? (
           <>
             <Image
               alt="Imagem de Capa"

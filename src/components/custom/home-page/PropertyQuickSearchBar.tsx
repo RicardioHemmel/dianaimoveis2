@@ -39,7 +39,7 @@ export default function PropertyQuickSearchBar() {
                 onClick={() => setOperationType("comprar")}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
                   operationType === "comprar"
-                    ? "bg-primary text-primary-foreground shadow-sm"
+                    ? "bg-hero-bg text-primary-foreground shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
@@ -57,7 +57,7 @@ export default function PropertyQuickSearchBar() {
               </button>
             </div>
 
-            {/* Filters */}
+            {/* FILTERS */}
             <div className="flex flex-1 flex-col sm:flex-row gap-3">
               <Select value={location} onValueChange={setLocation}>
                 <SelectTrigger className="flex-1 h-10 bg-background border-border/50 rounded-lg text-sm">
@@ -87,7 +87,8 @@ export default function PropertyQuickSearchBar() {
                   <SelectItem value="1">1 quarto</SelectItem>
                   <SelectItem value="2">2 quartos</SelectItem>
                   <SelectItem value="3">3 quartos</SelectItem>
-                  <SelectItem value="4">4+ quartos</SelectItem>
+                  <SelectItem value="4">4 quartos</SelectItem>
+                  <SelectItem value="5">5+ quartos</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -96,7 +97,7 @@ export default function PropertyQuickSearchBar() {
             <div className="flex items-center gap-3 shrink-0">
               <Button
                 onClick={handleSearch}
-                className="h-10 px-6 rounded-lg font-medium"
+                className="rounded-lg font-medium bg-hero-bg"
               >
                 <Search className="h-4 w-4 mr-2" />
                 Buscar
@@ -105,7 +106,7 @@ export default function PropertyQuickSearchBar() {
               <Button
                 variant="outline"
                 onClick={() => router.push("/busca")}
-                className="h-10 px-4 rounded-lg border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground font-medium"
+                className="px-4 rounded-lg border-action-primary text-action-primary hover:bg-action-primary hover:text-white font-medium"
               >
                 <SlidersHorizontal className="h-4 w-4 mr-2" />
                 Mais filtros

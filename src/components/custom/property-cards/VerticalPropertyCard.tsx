@@ -2,9 +2,10 @@
 
 // REACT | NEXT
 import Link from "next/link";
+import Image from "next/image";
 
 // ICONS
-import { MapPin } from "lucide-react";
+import { Building, MapPin } from "lucide-react";
 
 // FORMATTER
 import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
@@ -55,19 +56,30 @@ export function VerticalPropertyCard({
   const deliveryStatus = deliveryDateToDeliveryStatus(deliveryDate);
 
   return (
-    <article className="group relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500">
-      {/* Image Container (clicável) */}
+    <article className="group relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 select-none">
+      {/* IMAGE CONTAINER */}
       <Link
         href={`/property/${_id}`}
         className="block relative h-64 overflow-hidden"
       >
-        <img
-          src={showCoverImage(gallery)}
-          alt={title}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-        />
+        <div className="w-full h-full relative flex items-center justify-center bg-linear-to-b from-hero-via to-hero-bg">
+          {gallery.length > 0 ? (
+            <Image
+              src={showCoverImage(gallery)}
+              alt={title}
+              className="object-cover transition-transform duration-700 group-hover:scale-110"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          ) : (
+            <div className="flex flex-col items-center z-20">
+              <Building className="size-15 text-action-primary " />
+              <p className="text-white mt-3">Imóvel sem imagem</p>
+            </div>
+          )}
+        </div>
 
-        {/* Dark Gradient Overlay */}
+        {/* DARK GRADIENT OVERLAY */}
         <div
           className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent
     opacity-100 group-hover:opacity-40 transition-opacity duration-500 ease-in-out"
@@ -114,12 +126,14 @@ export function VerticalPropertyCard({
         </h3>
 
         {/* ADDRESS */}
-        <div className="flex items-start gap-2 text-muted-foreground mb-5">
-          <MapPin className="size-4 mt-0.5 shrink-0 text-action-primary" />
-          <span className="text-sm line-clamp-1">
-            {address?.street}, {address?.neighborhood}
-          </span>
-        </div>
+        {(address?.street || address?.neighborhood) && (
+          <div className="flex items-start gap-2 text-muted-foreground mb-5">
+            <MapPin className="size-4 mt-0.5 shrink-0 text-action-primary" />
+            <span className="text-sm line-clamp-1">
+              {address?.street}, {address?.neighborhood}
+            </span>
+          </div>
+        )}
 
         {/* Property Features */}
         <div className="grid grid-cols-4 gap-3 mb-6">

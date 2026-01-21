@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 
 // ICONS
-import { Heart, ArrowRight } from "lucide-react";
+import { Heart, ArrowRight, Search } from "lucide-react";
 
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 
@@ -22,10 +22,10 @@ export default function FavoritePropertiesPage() {
   const [favoritePropertiesIds, setFavoritePropertiesIds] = useState<string[]>(
     [],
   );
-  const [properties, setProperties] = useState<PropertyViewSchema[]>([]);
-  const [showEmptyModal, setShowEmptyModal] = useState(false);
-  const [hasLoadedFavorites, setHasLoadedFavorites] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [properties, setProperties] = useState<PropertyViewSchema[]>([]); // PROPERTY LIST FROM DB
+  const [showEmptyModal, setShowEmptyModal] = useState(false); // MESSAGE WHEN THERE IS NO PROPERTY ON LOCAL STORAGE
+  const [hasLoadedFavorites, setHasLoadedFavorites] = useState(false); // FOR FETCHING CONTROL
+  const [isLoading, setIsLoading] = useState(true); // LOADING CONTROL
 
   // ON MOUTING GETS PROPERTY IDS
   useEffect(() => {
@@ -92,16 +92,21 @@ export default function FavoritePropertiesPage() {
             Seus imóveis favoritos salvos em um só lugar. Encontre rapidamente
             os que mais chamaram sua atenção.
           </p>
-          {properties.length > 0 && (
-            <div className="flex justify-center mt-8">
-              <div className="bg-white/10 backdrop-blur-md rounded-full px-6 py-3 border border-white/20">
-                <span className="text-white font-medium">
-                  {properties.length}{" "}
-                  {properties.length === 1 ? "imóvel salvo" : "imóveis salvos"}
-                </span>
-              </div>
+          <div className="flex justify-center gap-3 mt-8">
+            <div className="bg-white/10 backdrop-blur-md rounded-full px-6 py-3 border border-white/20">
+              <span className="text-white font-medium">
+                {properties.length}{" "}
+                {properties.length === 1 ? "imóvel salvo" : "imóveis salvos"}
+              </span>
             </div>
-          )}
+
+            <Link href={"/properties"}>
+              <div className="flex items-center gap-2 bg-action-primary backdrop-blur-md rounded-full px-6 py-3 border border-white/20 text-white font-medium">
+                <Search className="size-4" />
+                <span>Encontrar Imóveis</span>
+              </div>
+            </Link>
+          </div>
         </div>
       </section>
 

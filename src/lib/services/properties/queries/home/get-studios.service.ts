@@ -20,7 +20,5 @@ export async function getStudios(): Promise<PropertyViewSchema[]> {
 
   if (!properties.length) return [];
 
-  console.log(properties);
-
   return properties.map((property) => PropertyMapper.toViewSchema(property));
 }

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Dispatch, SetStateAction } from "react";
 
 // ICONS
-import { Heart, ArrowRight, Sparkles } from "lucide-react";
+import { Heart, ArrowRight, Sparkles, Save } from "lucide-react";
 
 // COMPONENT
 import { Button } from "@/components/ui/button";
@@ -46,6 +46,25 @@ export function FavoriteDialogModal({
             os imóveis que mais chamaram sua atenção.
           </AlertDialogDescription>
         </AlertDialogHeader>
+
+        <div className="bg-muted/50 rounded-2xl p-4 border border-border">
+          <div className="flex items-start gap-3">
+            <div className="p-2 bg-secondary/20 rounded-lg shrink-0">
+              <Save className="size-5 text-black" />
+            </div>
+            <div className="text-left">
+              <p className="font-semibold text-foreground text-sm">
+                Salvamos no seu dispositivo
+              </p>
+              <p className="text-muted-foreground text-sm">
+                Seus favoritos são salvos localmente no navegador. Isso
+                significa que eles estarão aqui sempre que você voltar usando
+                este mesmo dispositivo.
+              </p>
+            </div>
+          </div>
+        </div>
+
         <div className="flex flex-col gap-3 mt-4">
           <Link href="/properties" className="w-full">
             <Button

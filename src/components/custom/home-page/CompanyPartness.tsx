@@ -34,11 +34,11 @@ export function CompanyPartners() {
           <div className="absolute right-0 top-0 bottom-0 w-20 bg-linear-to-l from-background to-transparent z-10" />
 
           {/* INFINITE SCROLL ANIMATION */}
-          <div className="flex animate-horizontal-infinity-scroll">
+          <div className="flex animate-horizontal-infinity-scroll hover:paused">
             {/* DOUBLE THE ITEMS FOR SEAMLESS LOOP */}
             {[...partners, ...partners].map((partner, index) => (
               <div key={index} className="mx-8 group">
-                <div className="size-26 rounded-2xl bg-muted/50 border border-border/50 flex flex-col items-center justify-center gap-2 group-hover:border-secondary/50 group-hover:bg-secondary/5 transition-all duration-300">
+                <div className="size-26 rounded-2xl bg-muted/50 border border-border/50 flex flex-col items-center justify-center gap-2 group-hover:border-action-primary/50 group-hover:bg-gradient-to-br group-hover:from-action-primary/10 group-hover:to-transparent transition-all duration-300">
                   <span className="text-3xl font-display font-bold text-text-title/80 group-hover:text-action-primary transition-colors">
                     {partner.logo}
                   </span>

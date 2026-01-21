@@ -26,10 +26,10 @@ import { motion } from "framer-motion";
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 
 // FORMATTERS
-import { showCoverImage } from "@/lib/formatters/ui-formatters/showCoverImage";
+import { showCoverImage } from "@/lib/formatters/ui-formatters/show-cover-image";
 import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
 
-export default function FeaturedPropertiesCarousel({
+export function FeaturedPropertiesCarousel({
   properties,
 }: {
   properties: PropertyViewSchema[];

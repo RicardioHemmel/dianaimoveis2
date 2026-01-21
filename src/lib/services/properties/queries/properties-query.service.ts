@@ -30,11 +30,12 @@ export const POPULATE_FIELDS = [
   },
 ];
 
-//-------------------------------- RETURN ALL PROPERTIES MAPPED TO BE SHOWN -------------------------------- //
+//-------------------------------- RETURN ALL PROPERTIES INCLUDING DRAFTS MAPPED TO BE SHOWN -------------------------------- //
 export async function getAllPropertiesToView(): Promise<PropertyViewSchema[]> {
   await connectMongoDB();
 
   const properties = await Property.find()
+    .setOptions({ includeDrafts: true }) // BRINGS ALSO DRAFT PROPERTIES
     .populate(POPULATE_FIELDS)
     .lean<IPropertyPopulated[]>();
 

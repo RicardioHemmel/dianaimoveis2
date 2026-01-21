@@ -1,4 +1,4 @@
-import mongoose, { Schema, Model } from "mongoose";
+import mongoose, { Schema, Model, Query } from "mongoose";
 import { IProperty } from "@/lib/schemas/property/IProperty";
 
 // GALLERY WITH ORDER FOR DISPLAY AND CLOUD KEY
@@ -119,6 +119,16 @@ const propertySchema = new Schema<IProperty>(
   { strict: true, timestamps: true },
 );
 
+// ------------ IGNORES PROPERTIES WITH "DRAFT" STATUS AUTOMATICALLY ----------
+propertySchema.pre(/^find/, async function (this: Query<any, any>) {
+  const options = this.getOptions();
+
+  if (options.includeDrafts === true) {
+    return;
+  }
+
+  this.where({ status: "PUBLISHED" });
+});
 //------------------- INDEX FOR MONGO QUERIES ----------------
 // // PURPOSE + PRICE
 // propertySchema.index({

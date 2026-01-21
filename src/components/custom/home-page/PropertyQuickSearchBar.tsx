@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export default function PropertyQuickSearchBar() {
+export function PropertyQuickSearchBar() {
   const router = useRouter();
   const [operationType, setOperationType] = useState<string>("comprar");
   const [location, setLocation] = useState<string>("");

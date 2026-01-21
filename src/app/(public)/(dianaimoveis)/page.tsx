@@ -1,7 +1,8 @@
 // COMPONENTS
-import FeaturedPropertiesCarousel from "@/components/custom/home-page/FeaturedPropertiesCarousel";
-import PropertyListing from "@/components/custom/home-page/PropertyCardListing";
-import PropertyQuickSearchBar from "@/components/custom/home-page/PropertyQuickSearchBar";
+import { FeaturedPropertiesCarousel } from "@/components/custom/home-page/FeaturedPropertiesCarousel";
+import { PropertyListingStudiosCarousel } from "@/components/custom/home-page/PropertyListingStudiosCarousel";
+import { PropertyListingGrid } from "@/components/custom/home-page/PropertyListingGrid";
+import { PropertyQuickSearchBar } from "@/components/custom/home-page/PropertyQuickSearchBar";
 import { CompanyPartners } from "@/components/custom/home-page/CompanyPartness";
 
 // QUERIES
@@ -16,8 +17,9 @@ export default async function HomePage() {
     <>
       <FeaturedPropertiesCarousel properties={featuredProperties} />
       <PropertyQuickSearchBar />
-      <PropertyListing properties={studioProperties} />
+      <PropertyListingStudiosCarousel properties={studioProperties} />
       <CompanyPartners />
+      <PropertyListingGrid properties={studioProperties} />
     </>
   );
 }

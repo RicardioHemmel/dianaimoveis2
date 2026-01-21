@@ -24,8 +24,9 @@ import {
   DeliveryStatus,
 } from "@/lib/formatters/ui-formatters/property-delivery-date";
 import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
-import { showCoverImage } from "@/lib/formatters/ui-formatters/showCoverImage";
+import { showCoverImage } from "@/lib/formatters/ui-formatters/show-cover-image";
 import { buildPropertyRanges } from "@/lib/formatters/ui-formatters/property-ranges";
+import { statusFormatter } from "@/lib/formatters/ui-formatters/status-badge";
 
 // NEXT
 import { DeletePropertyDropdownItem } from "./DeletePropertyDropdownItem";
@@ -37,6 +38,7 @@ export function PropertyCardHorizontal({
   property,
 }: PropertyCardHorizontalProps) {
   const {
+    status,
     deliveryDate,
     title,
     bedrooms,
@@ -54,11 +56,8 @@ export function PropertyCardHorizontal({
     parkingSpaces,
   });
 
-  const statusColors: Record<DeliveryStatus, string> = {
-    Lançamento: "bg-neutral-800 text-white",
-    Pronto: "bg-emerald-600 text-white",
-    "Sem data": "bg-white text-black",
-  };
+  // LABEL AND STYLE FOR STATUS BADGE
+  const formattedStatus = statusFormatter(status);
 
   // FORMATS THE PROPERTY STATUS WITH IT'S BADGE COLOR
   const deliveryStatus = deliveryDateToDeliveryStatus(deliveryDate);
@@ -67,7 +66,15 @@ export function PropertyCardHorizontal({
   const propertyEditLink = `properties/${property._id}/edit`;
 
   return (
-    <Card className="overflow-hidden shadow-xl bg-white p-0">
+    <Card className="relative overflow-hidden shadow-xl bg-white p-0">
+      {/* FIXED STATUS BADGE - TOP RIGHT */}
+      <Badge
+        className={`absolute top-3 right-3 z-10 text-black  ${formattedStatus.badgeColor}`}
+      >
+        <formattedStatus.icon />
+        {formattedStatus.label}
+      </Badge>
+
       <div className="flex flex-col md:flex-row min-h-44">
         {/* IMAGE SECTION */}
         <div className="relative w-full md:w-64 h-48 md:h-auto bg-muted overflow-hidden shrink-0">

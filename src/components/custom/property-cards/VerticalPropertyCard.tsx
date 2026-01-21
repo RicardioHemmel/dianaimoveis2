@@ -9,7 +9,7 @@ import { Building, MapPin } from "lucide-react";
 
 // FORMATTER
 import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
-import { showCoverImage } from "@/lib/formatters/ui-formatters/showCoverImage";
+import { showCoverImage } from "@/lib/formatters/ui-formatters/show-cover-image";
 import {
   deliveryDateToDeliveryStatus,
   deliveryDateToShortDate,

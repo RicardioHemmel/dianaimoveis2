@@ -1,6 +1,7 @@
 // COMPONENTS
 import { SearchHeader } from "@/components/custom/search-results-page/SearchHeader";
 import { SearchFilters } from "@/components/custom/search-results-page/SearchFilters";
+import { MobileFiltersDrawer } from "@/components/custom/search-results-page/MobileFiltersDrawer";
 import { SearchResults } from "@/components/custom/search-results-page/SearchResults";
 
 // SERVICES
@@ -17,6 +18,7 @@ export default async function SearchResultsPage() {
     <div className="min-h-screen bg-background">
       <main>
         <SearchHeader />
+        <MobileFiltersDrawer />
         <div className="w-11/12 mx-auto px-6 py-8 lg:py-10">
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-center md:items-start">
             <aside className="hidden w-full xl:block lg:w-[320px] shrink-0">

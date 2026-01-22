@@ -12,6 +12,10 @@ import Image from "next/image";
 import { showCoverImage } from "@/lib/formatters/ui-formatters/show-cover-image";
 import { buildPropertyRanges } from "@/lib/formatters/ui-formatters/property-ranges";
 import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
+import {
+  deliveryDateToDeliveryStatus,
+  deliveryDateToShortDate,
+} from "@/lib/formatters/ui-formatters/property-delivery-date";
 
 // COMPONENTS
 import { ToggleFavoriteBtn } from "@/components/custom/ToggleFavoriteBtn";
@@ -46,6 +50,9 @@ export function HorizontalPropertyCard({
     false,
   );
 
+  // DELIVERY STATUS WITH CUSTOM BADGE
+  const deliveryStatus = deliveryDateToDeliveryStatus(deliveryDate);
+
   return (
     <Link
       href={`/property/${_id}`}
@@ -66,6 +73,27 @@ export function HorizontalPropertyCard({
             <Building className="size-15 text-action-primary " />
             <p className="text-white mt-3">Imóvel sem imagem</p>
           </div>
+        )}
+      </div>
+
+      {/* STATUS BADGE - TOP RIGHT */}
+      <div className="absolute top-8 right-20 z-10 flex gap-2">
+        {deliveryDate && (
+          <span
+            className={`px-3 py-1.5 rounded-full text-primary-foreground text-xs font-bold shadow-lg bg-hero-bg`}
+          >
+            {deliveryStatus.label}
+          </span>
+        )}
+        {propertyType && (
+          <span className="px-3 py-1 rounded-full bg-hero-bg border border-white/20 backdrop-blur-md text-white text-xs font-medium">
+            {propertyType.name}
+          </span>
+        )}
+        {deliveryDate && (
+          <span className="px-3 py-1 rounded-full bg-hero-bg border border-white/20 backdrop-blur-md text-white text-xs font-semibold">
+            {deliveryDateToShortDate(deliveryDate)}
+          </span>
         )}
       </div>
 

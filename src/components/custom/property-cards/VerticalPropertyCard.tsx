@@ -135,7 +135,7 @@ export function VerticalPropertyCard({
           </div>
         )}
 
-        {/* Property Features */}
+        {/* PROPERTY DETAILS */}
         <div className="grid grid-cols-4 gap-1 sm:gap-3 mb-6">
           {mappedPropertyDetails.map((detail, i) => (
             <div className="flex flex-col items-center gap-1.5" key={i}>

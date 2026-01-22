@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Grid3X3, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,19 +12,28 @@ import {
 } from "@/components/ui/select";
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 import { MorphingCardListing } from "../property-cards/listing/MorphingCardListing";
+import { useBreakpoint } from "@/hooks/useBreakpoint";
 
-export function SearchResultsGrid({
+export function SearchResults({
   properties,
 }: {
   properties: PropertyViewSchema[];
 }) {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const width = useBreakpoint();
+  const isMobile = width < 768;
+
+  useEffect(() => {
+    if (isMobile === true) {
+      setViewMode("grid");
+    }
+  }, [isMobile]);
 
   return (
     <div>
       {/* TOOLBAR */}
       <div className="flex flex-col md:flex-row items-center md:justify-between gap-4 mb-6">
-        <div className="flex items-center gap-4">
+        <div className="hidden md:flex items-center gap-4">
           <span className="text-sm">Trocar visualização dos imóveis</span>
           <div className="flex items-center gap-2">
             {/* CHANGE TO GRID CARDS */}

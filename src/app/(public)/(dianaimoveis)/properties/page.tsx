@@ -1,7 +1,7 @@
 // COMPONENTS
 import { SearchHeader } from "@/components/custom/search-results-page/SearchHeader";
 import { SearchFilters } from "@/components/custom/search-results-page/SearchFilters";
-import { SearchResultsGrid } from "@/components/custom/search-results-page/SearchResultsGrid";
+import { SearchResults } from "@/components/custom/search-results-page/SearchResults";
 
 // SERVICES
 import { getAllPropertiesToView } from "@/lib/services/properties/queries/properties-query.service";
@@ -10,7 +10,7 @@ export default async function SearchResultsPage() {
   const properties = await getAllPropertiesToView();
 
   if (!properties.length) {
-    return "peniz";
+    return "Sem imóveis para listar";
   }
 
   return (
@@ -22,8 +22,8 @@ export default async function SearchResultsPage() {
             <aside className="hidden w-full xl:block lg:w-[320px] shrink-0">
               <SearchFilters />
             </aside>
-            <div className="flex-1 min-w-0">
-              <SearchResultsGrid properties={properties} />
+            <div className="w-full sm:w-[80%] md:w-full">
+              <SearchResults properties={properties} />
             </div>
           </div>
         </div>

@@ -34,7 +34,7 @@ export function CompanyPartners() {
           <div className="absolute right-0 top-0 bottom-0 w-20 bg-linear-to-l from-background to-transparent z-10" />
 
           {/* INFINITE SCROLL ANIMATION */}
-          <div className="flex animate-horizontal-infinity-scroll [animation-duration:5s] md:[animation-duration:12s] lg:[animation-duration:20s]  hover:paused">
+          <div className="flex animate-horizontal-infinity-scroll animation-duration-[4s] md:animation-duration-[12s] lganimation-duration-[20s]  hover:paused">
             {/* DOUBLE THE ITEMS FOR SEAMLESS LOOP */}
             {[...partners, ...partners].map((partner, index) => (
               <div key={index} className="mx-8 group">

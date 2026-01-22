@@ -1,7 +1,7 @@
 "use client";
 
 // NEXT / REACT
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -18,6 +18,7 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
+import Autoplay from "embla-carousel-autoplay";
 
 // ANIMATION INSIDE DE CAROUSEL
 import { motion } from "framer-motion";
@@ -37,6 +38,13 @@ export function FeaturedPropertiesCarousel({
   const [carouselApi, setCarouselApi] = useState<CarouselApi>(); // GIVES CAROUSEL ITS MECHANICS
   const [currentSlide, setCurrentSlide] = useState(0);
   const [count, setCount] = useState(0);
+  const autoplay = useRef(
+    Autoplay({
+      delay: 4000,
+      stopOnInteraction: false,
+      stopOnMouseEnter: true,
+    }),
+  );
 
   useEffect(() => {
     if (!carouselApi) return;
@@ -55,6 +63,7 @@ export function FeaturedPropertiesCarousel({
         setApi={setCarouselApi}
         className="w-full"
         opts={{ loop: true }}
+        plugins={[autoplay.current]}
       >
         <CarouselContent>
           {properties.length > 0 ? (

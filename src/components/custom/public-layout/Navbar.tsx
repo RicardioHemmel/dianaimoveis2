@@ -62,7 +62,7 @@ export function Navbar() {
                     <Link
                       href={item.path}
                       className={`${
-                        isActive ? "text-action-primary" : ""
+                        isActive ? "text-white bg-hero-bg px-3" : ""
                       } font-semibold hover:bg-zinc-200/70`}
                     >
                       {item.title}

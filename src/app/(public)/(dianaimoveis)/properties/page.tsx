@@ -17,9 +17,9 @@ export default async function SearchResultsPage() {
     <div className="min-h-screen bg-background">
       <main>
         <SearchHeader />
-        <div className="container mx-auto px-4 py-8 lg:py-10">
-          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
-            <aside className="w-full lg:w-[320px] shrink-0">
+        <div className="w-11/12 mx-auto px-6 py-8 lg:py-10">
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-center md:items-start">
+            <aside className="hidden w-full xl:block lg:w-[320px] shrink-0">
               <SearchFilters />
             </aside>
             <div className="flex-1 min-w-0">

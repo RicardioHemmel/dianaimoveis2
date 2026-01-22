@@ -23,7 +23,7 @@ export function SearchResultsGrid({
   return (
     <div>
       {/* TOOLBAR */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div className="flex flex-col md:flex-row items-center md:justify-between gap-4 mb-6">
         <div className="flex items-center gap-4">
           <span className="text-sm">Trocar visualização dos imóveis</span>
           <div className="flex items-center gap-2">

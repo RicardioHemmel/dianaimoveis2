@@ -76,7 +76,9 @@ export function HorizontalPropertyCard({
             <h3 className="font-display text-2xl font-semibold text-text-title group-hover:text-action-primary transition-colors">
               {property.title}
             </h3>
-            <ToggleFavoriteBtn propertyId={_id!} variant={"blur"} />
+            <span className="bg-gray-300 rounded-full">
+              <ToggleFavoriteBtn propertyId={_id!} variant={"blur"} />
+            </span>
           </div>
 
           {address?.neighborhood && address.city && (

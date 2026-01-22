@@ -10,14 +10,16 @@ export function PropertyListingStudiosCarousel({
 }) {
   return (
     <section className="py-20 bg-muted/30">
-      <div className="container mx-auto px-4">
+      <div className="w-[94%] 2xl:w-[80%] mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="title-section mb-3">Studios para Morar ou Investir</h2>
           <p className="subtitle-section">
             Descubra os melhores studios da cidade de São Paulo
           </p>
         </div>
-        <VerticalCardCarouselListing properties={properties} />
+        <div className="flex justify-center">
+          <VerticalCardCarouselListing properties={properties} />
+        </div>
       </div>
     </section>
   );

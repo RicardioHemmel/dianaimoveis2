@@ -32,17 +32,17 @@ export function VerticalCardCarouselListing({
         align: "start",
         loop: true,
       }}
-      className="w-full"
+      className="w-[95%] sm:w-[80%] md:w-full"
     >
       <CarouselContent>
         {properties.map((property) => (
           <CarouselItem
             key={property._id}
-            className="basis-full sm:basis-1/2 xl:basis-1/3"
+            className="basis-full md:basis-1/2 xl:basis-1/3"
           >
             <div className="p-1">
               <Card>
-                <CardContent className="p-0">
+                <CardContent className="p-0 sm:p-6 md:p-0">
                   <VerticalPropertyCard
                     property={property}
                     key={property._id}

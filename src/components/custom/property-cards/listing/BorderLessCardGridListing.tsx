@@ -9,7 +9,7 @@ export function BorderLessCardsGridListing({
   properties: PropertyViewSchema[];
 }) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 2xl:gap-10">
       {properties.map((property) => (
         <BorderLessPropertyCard property={property} key={property._id} />
       ))}

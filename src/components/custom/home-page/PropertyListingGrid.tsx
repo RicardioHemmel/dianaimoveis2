@@ -10,7 +10,7 @@ export function PropertyListingGrid({
 }) {
   return (
     <section className="py-20 bg-muted/30">
-      <div className="container mx-auto px-4">
+      <div className="w-full mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="title-section mb-3">Descubra seu novo lar</h2>
           <p className="subtitle-section">
@@ -19,7 +19,9 @@ export function PropertyListingGrid({
         </div>
 
         {/* PROPERTY CAROUSEL */}
-        <BorderLessCardsGridListing properties={properties} />
+        <div className="w-full 2xl:w-[90%] mx-auto px-6">
+          <BorderLessCardsGridListing properties={properties} />
+        </div>
       </div>
     </section>
   );

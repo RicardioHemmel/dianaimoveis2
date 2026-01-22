@@ -158,7 +158,7 @@ export function VerticalPropertyCard({
             <span className="text-muted-foreground text-xs uppercase tracking-wider block mb-1">
               A partir de
             </span>
-            <span className="font-display text-2xl font-bold text-foreground font-primary">
+            <span className="font-display text-xl font-bold text-foreground font-primary">
               {formattedPrice(price)}
             </span>
           </div>
@@ -166,7 +166,7 @@ export function VerticalPropertyCard({
           {/* GO TO PROPERTY PAGE */}
           <Link
             href={`/property/${_id}`}
-            className="px-4 py-2 rounded-full bg-hero-bg text-white text-sm font-semibold hover:bg-hero-via transition-all duration-300"
+            className="px-3 py-2 rounded-full bg-hero-bg text-white text-sm font-semibold hover:bg-hero-via transition-all duration-300"
           >
             Ver Detalhes
           </Link>

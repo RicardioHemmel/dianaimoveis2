@@ -56,7 +56,7 @@ export function VerticalPropertyCard({
   const deliveryStatus = deliveryDateToDeliveryStatus(deliveryDate);
 
   return (
-    <article className="group relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 select-none">
+    <article className="group relative rounded-2xl overflow-hidden shadow-xl select-none">
       {/* IMAGE CONTAINER */}
       <Link
         href={`/property/${_id}`}
@@ -67,7 +67,7 @@ export function VerticalPropertyCard({
             <Image
               src={showCoverImage(gallery)}
               alt={title}
-              className="object-cover transition-transform duration-700 group-hover:scale-110"
+              className="object-cover transition-transform duration-400 group-hover:scale-110"
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />

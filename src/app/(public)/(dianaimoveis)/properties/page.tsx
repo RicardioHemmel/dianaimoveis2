@@ -1,10 +1,18 @@
-"use client";
-
+// COMPONENTS
 import { SearchHeader } from "@/components/custom/search-results-page/SearchHeader";
 import { SearchFilters } from "@/components/custom/search-results-page/SearchFilters";
 import { SearchResultsGrid } from "@/components/custom/search-results-page/SearchResultsGrid";
 
-export default function SearchResultsPage() {
+// SERVICES
+import { getAllPropertiesToView } from "@/lib/services/properties/queries/properties-query.service";
+
+export default async function SearchResultsPage() {
+  const properties = await getAllPropertiesToView();
+
+  if (!properties.length) {
+    return "peniz";
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <main>
@@ -15,7 +23,7 @@ export default function SearchResultsPage() {
               <SearchFilters />
             </aside>
             <div className="flex-1 min-w-0">
-              <SearchResultsGrid />
+              <SearchResultsGrid properties={properties} />
             </div>
           </div>
         </div>

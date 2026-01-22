@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/carousel";
 import { useEffect, useState } from "react";
 
-export function CarouselListing({
+export function VerticalCardCarouselListing({
   properties,
 }: {
   properties: PropertyViewSchema[];

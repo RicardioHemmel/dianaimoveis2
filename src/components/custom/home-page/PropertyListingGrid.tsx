@@ -1,7 +1,7 @@
 "use client";
 
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
-import { BorderLessCardsGridListing } from "@/components/custom/property-cards/listing/GridListing";
+import { BorderLessCardsGridListing } from "@/components/custom/property-cards/listing/BorderLessCardGridListing";
 
 export function PropertyListingGrid({
   properties,

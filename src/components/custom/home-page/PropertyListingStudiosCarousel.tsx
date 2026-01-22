@@ -1,7 +1,7 @@
 "use client";
 
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
-import { CarouselListing } from "@/components/custom/property-cards/listing/CarouselListing";
+import { VerticalCardCarouselListing } from "@/components/custom/property-cards/listing/VerticalCardCarouselListing";
 
 export function PropertyListingStudiosCarousel({
   properties,
@@ -17,7 +17,7 @@ export function PropertyListingStudiosCarousel({
             Descubra os melhores studios da cidade de São Paulo
           </p>
         </div>
-        <CarouselListing properties={properties} />
+        <VerticalCardCarouselListing properties={properties} />
       </div>
     </section>
   );

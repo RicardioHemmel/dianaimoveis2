@@ -66,9 +66,9 @@ export default async function SearchResultsPage({
     : null;
 
   // DELIVERY STATUS -> "PRONTO", "LANÇAMENTO"
-  const sortOption = resolvedParams?.sortOption
+  const sortOption: SortOptions = resolvedParams?.sortOption
     ? resolvedParams?.sortOption
-    : null;
+    : "date_desc";
 
   // SETS ALL FILTER OPTIONS
   const selectedFilters: SelectedFilters = {

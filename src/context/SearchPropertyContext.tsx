@@ -30,11 +30,11 @@ export type DeliveryStatus = "Pronto" | "Lançamento";
 
 // SORT ITEMS
 export type SortOptions =
+  | "date_asc"
+  | "area_asc"
   | "price_asc"
   | "price_desc"
   | "date_desc"
-  | "date_asc"
-  | "area_asc"
   | "area_desc"
   | "launch"
   | "ready";
@@ -54,7 +54,7 @@ export interface SelectedFilters {
   bathrooms: DetailsQty | null;
   parkingSpaces: DetailsQty | null;
   deliveryStatus: DeliveryStatus | null;
-  sortOption: SortOptions | null;
+  sortOption: SortOptions;
 }
 
 //areaRange: RangeSchema | null;
@@ -69,7 +69,7 @@ export const defaultSelectedFilters: SelectedFilters = {
   bathrooms: null,
   parkingSpaces: null,
   deliveryStatus: null,
-  sortOption: null,
+  sortOption: "date_desc",
 };
 
 // neighborhood: null,
@@ -218,9 +218,7 @@ export function SearchPropertyProvider({
     selectedFilters.bedrooms !== null ||
     selectedFilters.bathrooms !== null ||
     selectedFilters.parkingSpaces !== null ||
-    selectedFilters.deliveryStatus !== null ||
-    selectedFilters.sortOption !== null;
-
+    selectedFilters.deliveryStatus !== null;
   // CONTEXT VALUES
   const value = {
     availableFilters,

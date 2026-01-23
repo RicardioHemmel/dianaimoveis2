@@ -15,7 +15,8 @@ import { useBreakpoint } from "@/hooks/useBreakpoint";
 import { useSearchPropertyContext } from "@/context/SearchPropertyContext";
 
 export function SearchResults() {
-  const { properties, toggleSingleItem } = useSearchPropertyContext();
+  const { properties, toggleSingleItem, selectedFilters } =
+    useSearchPropertyContext();
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const width = useBreakpoint();
   const isMobile = width < 768;
@@ -58,17 +59,17 @@ export function SearchResults() {
         <div className="flex items-center gap-3">
           <span className="text-sm">Ordenar por:</span>
           <Select
-            defaultValue="date_desc"
+            defaultValue={selectedFilters.sortOption}
             onValueChange={(value) => toggleSingleItem("sortOption", value)}
           >
             <SelectTrigger className="w-44 h-9 bg-card border-border rounded-lg text-sm">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="bg-card border-border z-50">
-              <SelectItem value="price_asc">Menor preço</SelectItem>
-              <SelectItem value="price_desc">Maior preço</SelectItem>
               <SelectItem value="date_desc">Mais recentes</SelectItem>
               <SelectItem value="date_asc">Mais antigos</SelectItem>
+              <SelectItem value="price_asc">Menor preço</SelectItem>
+              <SelectItem value="price_desc">Maior preço</SelectItem>
               <SelectItem value="area_asc">Menor área</SelectItem>
               <SelectItem value="area_desc">Maior área</SelectItem>
               <SelectItem value="launch">Lançamento</SelectItem>

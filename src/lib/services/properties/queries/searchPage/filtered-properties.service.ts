@@ -20,7 +20,7 @@ import { POPULATE_FIELDS } from "@/lib/services/properties/queries/properties-qu
 import { DetailsQty, SelectedFilters } from "@/context/SearchPropertyContext";
 import { Types } from "mongoose";
 
-//--------------------------------------------- AUXILIARY ------------------------------------------
+//--------------------------------------------- AUXILIARY FOR RANGE FILTERS ------------------------------------------
 const applyRangeFilter = (
   query: any,
   field: string,
@@ -45,40 +45,54 @@ export async function getFilteredProperties(
 
   const query: any = {};
 
-  // SORT DATA
-  let sortQuery: any = { createdAt: -1 };
+  // SORT DATA WITH SORT WEIGHTS
+  let pipeline: any[] = [{ $match: query }];
 
   switch (filters.sortOption) {
-    case "price_desc":
-      sortQuery = { price: -1 };
-      break;
-
-    case "price_asc":
-      sortQuery = { price: 1 };
-      break;
-
-    case "date_desc":
-      sortQuery = { createdAt: -1 };
-      break;
-
-    case "date_asc":
-      sortQuery = { createdAt: 1 };
+    // PROPERTIES THAT CONTAIN AREA COMES FIRST INSTEAD OF THE ONES WITH "NULL AREA"
+    case "area_asc":
+      pipeline.push(
+        {
+          $addFields: { hasArea: { $cond: [{ $gt: ["$area.min", 0] }, 1, 0] } },
+        },
+        { $sort: { hasArea: -1, "area.min": 1 } },
+      );
       break;
 
     case "area_desc":
-      sortQuery = { "area.min": -1 };
+      pipeline.push({ $sort: { "area.min": -1 } });
       break;
 
-    case "area_asc":
-      sortQuery = { "area.min": 1 };
+    // PROPERTIES THAT CONTAI DELIVERY_DATE COMES FIRST INDETAD OF THE ONES WITH "NULL DELIVERY_DATE"
+    case "ready":
+      pipeline.push(
+        {
+          $addFields: {
+            hasDate: { $cond: [{ $ifNull: ["$deliveryDate", false] }, 1, 0] },
+          },
+        },
+        { $sort: { hasDate: -1, deliveryDate: 1 } },
+      );
       break;
 
     case "launch":
-      sortQuery = { deliveryDate: -1 };
+      pipeline.push({ $sort: { deliveryDate: -1 } });
       break;
 
-    case "ready":
-      sortQuery = { deliveryDate: 1 };
+    case "price_asc":
+      pipeline.push({ $sort: { price: 1 } });
+      break;
+
+    case "price_desc":
+      pipeline.push({ $sort: { price: -1 } });
+      break;
+
+    case "date_asc":
+      pipeline.push({ $sort: { createdAt: 1 } });
+      break;
+
+    default: // DEFAUL "DATE_DESC"
+      pipeline.push({ $sort: { createdAt: -1 } });
       break;
   }
 
@@ -112,13 +126,19 @@ export async function getFilteredProperties(
   applyRangeFilter(query, "bathrooms", filters.bathrooms);
   applyRangeFilter(query, "parkingSpaces", filters.parkingSpaces);
 
-  const properties = await Property.find(query)
-    .sort(sortQuery)
-    .populate(POPULATE_FIELDS)
-    .lean<IPropertyPopulated[]>();
+  // USES AGGREGATE TO BE ABLE TO SORT BY WEIGHT SORT
+  const properties = await Property.aggregate(pipeline);
 
-  return properties.map((property) => PropertyMapper.toViewSchema(property));
+  const populatedProperties = (await Property.populate(
+    properties,
+    POPULATE_FIELDS,
+  )) as unknown as IPropertyPopulated[];
+
+  return populatedProperties.map((property) =>
+    PropertyMapper.toViewSchema(property),
+  );
 }
+
 // -------------------------------- RETURNS ALL NECESSARY FILTERS --------------------------------
 export async function getPropertyFilterValues() {
   await connectMongoDB();

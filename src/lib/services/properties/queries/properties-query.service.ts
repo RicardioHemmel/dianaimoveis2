@@ -15,13 +15,14 @@ import { getPurposes } from "@/lib/services/properties/property-details/property
 import { getStandings } from "@/lib/services/properties/property-details/property-standings.service";
 import { getTypes } from "@/lib/services/properties/property-details/property-types.service";
 import { getTypologies } from "@/lib/services/properties/property-details/property-typologies.service";
+import { PopulateOptions } from "mongoose";
 
 // --- CONSTANTS ---
-export const POPULATE_FIELDS = [
-  "propertyType",
-  "propertyPurpose",
-  "propertyStanding",
-  "propertyTypologies",
+export const POPULATE_FIELDS: PopulateOptions[] = [
+  { path: "propertyType" },
+  { path: "propertyPurpose" },
+  { path: "propertyStanding" },
+  { path: "propertyTypologies" },
   {
     path: "propertyAmenities",
     options: {

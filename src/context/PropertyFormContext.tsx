@@ -31,7 +31,7 @@ const TABS = [
 ];
 
 // DEFINE THE FORMAT OF THE CONTEXT
-interface PropertyFormContextType {
+interface PropertyFormContextProps {
   // DATA
   form: UseFormReturn<PropertyInputSchema>;
   formMode: "create" | "edit";
@@ -51,7 +51,9 @@ interface PropertyFormContextType {
   isLastTab: boolean;
 }
 
-const PropertyFormContext = createContext<PropertyFormContextType | null>(null);
+const PropertyFormContext = createContext<PropertyFormContextProps | null>(
+  null,
+);
 
 interface ProviderProps {
   children: ReactNode;

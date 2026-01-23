@@ -10,15 +10,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 import { MorphingCardListing } from "../property-cards/listing/MorphingCardListing";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
+import { useSearchPropertyContext } from "@/context/SearchPropertyContext";
 
-export function SearchResults({
-  properties,
-}: {
-  properties: PropertyViewSchema[];
-}) {
+export function SearchResults() {
+  const { properties, toggleSingleItem } = useSearchPropertyContext();
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const width = useBreakpoint();
   const isMobile = width < 768;
@@ -33,7 +30,7 @@ export function SearchResults({
     <div>
       {/* TOOLBAR */}
       <div className="flex flex-col md:flex-row items-center md:justify-between gap-4 mb-6">
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden md:flex items-center gap-4 px-4">
           <span className="text-sm">Trocar visualização dos imóveis</span>
           <div className="flex items-center gap-2">
             {/* CHANGE TO GRID CARDS */}
@@ -60,19 +57,22 @@ export function SearchResults({
 
         <div className="flex items-center gap-3">
           <span className="text-sm">Ordenar por:</span>
-          <Select defaultValue="menor-preco">
+          <Select
+            defaultValue="date_desc"
+            onValueChange={(value) => toggleSingleItem("sortOption", value)}
+          >
             <SelectTrigger className="w-44 h-9 bg-card border-border rounded-lg text-sm">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="bg-card border-border z-50">
-              <SelectItem value="menor-preco">Menor preço</SelectItem>
-              <SelectItem value="maior-preco">Maior preço</SelectItem>
-              <SelectItem value="recentes">Mais recentes</SelectItem>
-              <SelectItem value="recentes">Mais antigos</SelectItem>
-              <SelectItem value="area">Menor área</SelectItem>
-              <SelectItem value="area">Maior área</SelectItem>
-              <SelectItem value="area">Lançamento</SelectItem>
-              <SelectItem value="area">Pronto</SelectItem>
+              <SelectItem value="price_asc">Menor preço</SelectItem>
+              <SelectItem value="price_desc">Maior preço</SelectItem>
+              <SelectItem value="date_desc">Mais recentes</SelectItem>
+              <SelectItem value="date_asc">Mais antigos</SelectItem>
+              <SelectItem value="area_asc">Menor área</SelectItem>
+              <SelectItem value="area_desc">Maior área</SelectItem>
+              <SelectItem value="launch">Lançamento</SelectItem>
+              <SelectItem value="ready">Pronto</SelectItem>
             </SelectContent>
           </Select>
         </div>

@@ -1,6 +1,9 @@
+"use client";
+
 import { X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useSearchPropertyContext } from "@/context/SearchPropertyContext";
 
 const activeFilters = [
   { label: "Comprar", key: "finalidade" },
@@ -9,6 +12,8 @@ const activeFilters = [
 ];
 
 export function SearchHeader() {
+  const { properties } = useSearchPropertyContext();
+
   return (
     <div className="bg-surface-muted border-b border-border">
       <div className="container mx-auto px-4 py-6">
@@ -18,12 +23,14 @@ export function SearchHeader() {
               Resultados da Busca
             </h1>
             <p className="text-muted-foreground mt-1">
-              <span className="font-bold text-text-title">24 imóveis</span>{" "}
+              <span className="font-bold text-text-title">
+                {properties.length} imóveis
+              </span>{" "}
               encontrados
             </p>
           </div>
 
-          {/* Active Filters */}
+          {/* ACTIVE FILTERS */}
           <div className="flex flex-wrap items-center gap-2">
             <span>Filtros ativos:</span>
             {activeFilters.map((filter) => (

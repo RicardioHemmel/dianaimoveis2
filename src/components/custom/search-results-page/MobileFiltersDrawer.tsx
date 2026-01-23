@@ -224,24 +224,23 @@ export function MobileFiltersDrawer() {
   return (
     <>
       {/* FIXED FILTER BUTTON BAR */}
-      <div className="fixed top-16 left-0 right-0 z-40 bg-card/95 backdrop-blur-lg border-b border-border/50 shadow-md lg:hidden">
+      <div className="xl:hidden">
         <div className="container mx-auto px-4 py-3">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button
                 variant="outline"
-                className="w-full h-12 rounded-xl border-border/50 bg-background/50 hover:bg-background justify-between"
+                className="w-full h-12 rounded-xl border-border/50 bg-gray-100 hover:bg-background justify-between"
               >
                 <div className="flex items-center gap-2">
-                  <SlidersHorizontal className="h-4 w-4 text-secondary" />
                   <span className="font-medium">Filtros</span>
                   {hasActiveFilters && (
-                    <span className="bg-secondary text-secondary-foreground text-xs font-bold px-2 py-0.5 rounded-full">
-                      {activeFiltersCount}
+                    <span className="bg-action-primary text-xs font-bold px-2 py-0.5 rounded-full">
+                      {`${activeFiltersCount} ${activeFiltersCount > 1 ? "filtros" : "filtro"} ativado`}
                     </span>
                   )}
                 </div>
-                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                <SlidersHorizontal className="size-5" />
               </Button>
             </SheetTrigger>
 
@@ -250,7 +249,7 @@ export function MobileFiltersDrawer() {
               className="h-[85vh] rounded-t-3xl bg-card border-t border-border/30 p-0 overflow-hidden"
             >
               {/* Header */}
-              <div className="bg-gradient-to-r from-primary to-primary/90 px-5 py-4 flex items-center justify-between">
+              <div className="bg-linear-to-r from-primary to-primary/90 px-5 py-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-secondary/20 flex items-center justify-center">
                     <Sparkles className="h-4 w-4 text-secondary" />

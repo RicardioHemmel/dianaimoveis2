@@ -4,17 +4,15 @@
 import {
   Home,
   Bed,
-  DollarSign,
   Maximize,
-  Sparkles,
   Car,
   Bath,
   Calendar,
   SlidersHorizontal,
+  Search,
 } from "lucide-react";
 
 // COMPONENTS
-import { Slider } from "@/components/ui/slider";
 import {
   Chip,
   NumberChip,
@@ -24,6 +22,7 @@ import {
   FilterGroup,
 } from "@/components/custom/search-results-page/Filters";
 import { SliderFilter } from "@/components/custom/search-results-page/SliderFilter";
+import { AmenitiesFilter } from "@/components/custom/search-results-page/AmenitiesFilter";
 
 // CONTEXT
 import {
@@ -31,9 +30,7 @@ import {
   DETAILS_QTY_OPTIONS,
   useSearchPropertyContext,
 } from "@/context/SearchPropertyContext";
-
-// FORMATTERS
-import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
+import { Input } from "@/components/ui/input";
 
 export function SearchFilters() {
   // SEARCH CONTEXT
@@ -82,6 +79,12 @@ export function SearchFilters() {
       <div className="flex-1 overflow-y-auto px-5 py-4">
         {/*  TYPOLOGIES  */}
         <FilterGroup id="typologies" title="O que você procura?">
+          <FilterItem Icon={Search} label="Empreendimento / Construtora">
+            <div className="flex flex-wrap gap-2">
+              <Input variant={"gray"} placeholder="Buscar imóveis..." />
+            </div>
+          </FilterItem>
+
           <FilterItem Icon={Home} label="Tipologias">
             <div className="flex flex-wrap gap-2">
               {typologies.map((item) => (
@@ -177,18 +180,7 @@ export function SearchFilters() {
 
         {/* AMENITIES */}
         <FilterGroup id="amenities" title="Lazeres">
-          <FilterItem Icon={Sparkles} label="Características">
-            <div className="flex flex-wrap gap-2">
-              {amenities.map((item) => (
-                <Chip
-                  key={item._id}
-                  label={item.name}
-                  selected={selectedFilters.amenities.includes(item._id)}
-                  onClick={() => toggleListItem("amenities", item._id)}
-                />
-              ))}
-            </div>
-          </FilterItem>
+          <AmenitiesFilter amenitiesList={amenities} />
         </FilterGroup>
       </div>
     </div>

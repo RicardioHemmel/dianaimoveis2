@@ -117,9 +117,15 @@ export default function PropertyHero({
           <h1 className="font-display text-4xl md:text-4xl text-primary-foreground mb-2 ">
             {title}
           </h1>
-          <p className="text-primary-foreground/80 text-lg">
-            {`${address?.street} - ${address?.neighborhood}, ${address?.city} - ${address?.stateUf}`}
-          </p>
+          {address?.street &&
+            address?.neighborhood &&
+            address?.city &&
+            address?.street &&
+            address?.stateUf && (
+              <p className="text-primary-foreground/80 text-lg">
+                {`${address?.street} - ${address?.neighborhood}, ${address?.city} - ${address?.stateUf}`}
+              </p>
+            )}
         </div>
       </div>
     </section>

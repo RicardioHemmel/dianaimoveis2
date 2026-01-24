@@ -41,7 +41,11 @@ export function Property({
         <PropertyGallery gallery={property.gallery} />
       )}
 
-      {property.address && <PropertyLocation address={property.address} />}
+      {property.address?.street &&
+        property.address?.neighborhood &&
+        property.address?.city && (
+          <PropertyLocation address={property.address} />
+        )}
 
       <PropertyContact />
 

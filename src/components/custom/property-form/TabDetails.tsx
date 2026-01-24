@@ -15,8 +15,6 @@ import {
   Sofa,
   Train,
   BedDouble,
-  BadgeDollarSign,
-  HandCoins,
   Building,
 } from "lucide-react";
 

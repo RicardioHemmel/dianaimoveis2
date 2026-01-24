@@ -8,7 +8,7 @@ import {
 } from "@/context/SearchPropertyContext";
 import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
 import { LucideIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface SliderFilterProps {
   Icon: LucideIcon;

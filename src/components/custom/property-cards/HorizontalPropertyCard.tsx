@@ -59,7 +59,7 @@ export function HorizontalPropertyCard({
       className="rounded-2xl overflow-hidden border border-border/50 shadow-xl group hover:-translate-y-2 cursor-pointer flex flex-col md:flex-row transition-all duration-700 ease-out"
     >
       {/* IMAGE */}
-      <div className="relative w-full md:w-72 h-56 md:h-auto shrink-0 overflow-hidden flex items-center justify-center">
+      <div className="relative w-full md:w-72 h-56 md:h-auto shrink-0 overflow-hidden flex items-center justify-center bg-linear-to-b from-hero-via to-hero-bg">
         {gallery.length > 0 ? (
           <Image
             src={showCoverImage(gallery)}

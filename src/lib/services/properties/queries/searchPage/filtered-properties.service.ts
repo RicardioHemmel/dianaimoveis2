@@ -122,7 +122,7 @@ export async function getFilteredProperties(
 
   if (filters.amenities?.length) {
     query.propertyAmenities = {
-      $in: filters.amenities.map((id) => new Types.ObjectId(id)),
+      $all: filters.amenities.map((id) => new Types.ObjectId(id)),
     };
   }
 

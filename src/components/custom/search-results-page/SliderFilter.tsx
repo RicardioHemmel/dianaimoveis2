@@ -6,8 +6,9 @@ import {
   SelectedFilters,
   useSearchPropertyContext,
 } from "@/context/SearchPropertyContext";
+import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
 import { LucideIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface SliderFilterProps {
   Icon: LucideIcon;
@@ -41,6 +42,19 @@ export function SliderFilter({
     setSliderValueUI({ min: values[0], max: values[1] });
   };
 
+  const formatValue = (value: number) => {
+    switch (filterKey) {
+      case "areaRange":
+        return `${value} m²`;
+
+      case "priceRange":
+        return formattedPrice(value, false);
+
+      default:
+        return value;
+    }
+  };
+
   return (
     <FilterItem Icon={Icon} label={label}>
       <div className="space-y-4">
@@ -48,14 +62,14 @@ export function SliderFilter({
           <div className="bg-muted rounded-lg px-2.5 py-1.5">
             <span className="text-[10px] text-muted-foreground block">Min</span>
             <span className="text-xs font-semibold text-foreground">
-              {sliderValueUI.min}m²
+              {formatValue(sliderValueUI.min)}
             </span>
           </div>
           <div className="flex-1 mx-2 border-t border-dashed border-border" />
           <div className="bg-muted rounded-lg px-2.5 py-1.5 text-right">
             <span className="text-[10px] text-muted-foreground block">Max</span>
             <span className="text-xs font-semibold text-foreground">
-              {sliderValueUI.max}m²
+              {formatValue(sliderValueUI.max)}
             </span>
           </div>
         </div>

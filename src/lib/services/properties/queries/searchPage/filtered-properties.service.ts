@@ -37,14 +37,6 @@ const applyDetailFilter = (
   }
 };
 
-const applyRangelFilter = (query: any, field: string, range: Range | null) => {
-  if (range === null) return;
-
-  // USER SEARCH -> 40, 90  PROPERTY -> 35, 60    60 >= 40 && 35 <= 90
-  query[`${field}.max`] = { $gte: range.min };
-  query[`${field}.min`] = { $lte: range.max };
-};
-
 //-------------------------------- RETURN ALL PROPERTIES THAT MATCHES THE FILTER QUERY -------------------------------- //
 export async function getFilteredProperties(
   filters: SelectedFilters,
@@ -139,8 +131,19 @@ export async function getFilteredProperties(
   applyDetailFilter(query, "bathrooms", filters.bathrooms);
   applyDetailFilter(query, "parkingSpaces", filters.parkingSpaces);
 
-  //-------------- RANGE FILTERS ------------------
-  applyRangelFilter(query, "area", filters.areaRange);
+  //-------------- SLIDER FILTERS ------------------
+
+  if (filters.areaRange) {
+    query["area.min"] = { $gte: filters.areaRange.min };
+    query["area.max"] = { $lte: filters.areaRange.max };
+  }
+
+  if (filters.priceRange) {
+    query.price = {
+      $gte: filters.priceRange.min,
+      $lte: filters.priceRange.max,
+    };
+  }
 
   // ---------------- PAGINATION ----------------
   const skip = (page - 1) * limit;

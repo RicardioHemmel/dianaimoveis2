@@ -16,6 +16,7 @@ import {
   PropertyDetailSchema,
   PropertyViewSchema,
 } from "@/lib/schemas/property/property.schema";
+import { formattedPrice } from "@/lib/formatters/ui-formatters/price-BRL";
 
 // PROPERTY DELIVERY STATUS FILTER
 export type Range = { min: number; max: number };
@@ -186,6 +187,12 @@ export function SearchPropertyProvider({
       params.set("areaMax", String(filters.areaRange.max));
     }
 
+    // PRICE RANGE
+    if (filters.priceRange) {
+      params.set("priceMin", String(filters.priceRange.min));
+      params.set("priceMax", String(filters.priceRange.max));
+    }
+
     // RETURNS FILTERED URL
     return params.toString();
   }
@@ -250,9 +257,10 @@ export function SearchPropertyProvider({
     selectedFilters.bathrooms !== null ||
     selectedFilters.parkingSpaces !== null ||
     selectedFilters.deliveryStatus !== null ||
-    selectedFilters.areaRange !== null;
+    selectedFilters.areaRange !== null ||
+    selectedFilters.priceRange !== null;
 
-  // MOUNTS ALL FILTER BADGES
+  //------------ MOUNTS ALL FILTER BADGES -------------
   const [activeFiltersBadge, setActiveFiltersBadge] = useState<
     { label: string; key: keyof SelectedFilters }[]
   >([]);
@@ -303,7 +311,14 @@ export function SearchPropertyProvider({
     if (selectedFilters.areaRange !== null) {
       active.push({
         label: `Metragem: ${selectedFilters.areaRange.min} - ${selectedFilters.areaRange.max} m²`,
-        key: "deliveryStatus",
+        key: "areaRange",
+      });
+    }
+
+    if (selectedFilters.priceRange !== null) {
+      active.push({
+        label: `R$ ${formattedPrice(selectedFilters.priceRange.min, false, false)} - ${formattedPrice(selectedFilters.priceRange.max, false, false)}`,
+        key: "priceRange",
       });
     }
 
@@ -330,6 +345,8 @@ export function SearchPropertyProvider({
         case "bathrooms":
         case "parkingSpaces":
         case "deliveryStatus":
+        case "areaRange":
+        case "priceRange":
           return {
             ...prev,
             [key]: null,

@@ -33,21 +33,21 @@ export function FilterGroup({ children, id, title }: FilterGroupProps) {
     <div className="border-b border-border/30 last:border-b-0">
       <button
         onClick={() => toggleGroup(id)}
-        className="flex items-center justify-between w-full py-4 text-left transition-colors hover:text-secondary"
+        className="flex items-center justify-between w-full py-4 text-left transition-colors hover:text-action-primary"
       >
-        <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+        <span className="text-xs font-bold uppercase tracking-wider">
           {title}
         </span>
         <ChevronDown
           className={cn(
-            "h-4 w-4 text-muted-foreground transition-transform duration-200",
+            "size-4 text-muted-foreground transition-transform duration-300",
             isExpanded && "rotate-180",
           )}
         />
       </button>
       <div
         className={cn(
-          "overflow-hidden transition-all duration-300 ease-out",
+          "overflow-hidden transition-all duration-400",
           isExpanded ? "max-h-[800px] opacity-100 pb-5" : "max-h-0 opacity-0",
         )}
       >

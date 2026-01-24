@@ -146,41 +146,20 @@ export function SearchFilters() {
             label="Área (m²)"
             inputLimits={areaRange}
             filterRange={selectedFilters.areaRange}
+            key={`areaRange-${selectedFilters.areaRange?.min ?? "min"}-${selectedFilters.areaRange?.max ?? "max"}`}
           />
         </FilterGroup>
 
-        {/* Grupo: Valores e Status */}
         <FilterGroup id="values" title="Valores e Status">
-          <FilterItem Icon={DollarSign} label="Faixa de Preço">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="bg-muted rounded-lg px-2.5 py-1.5">
-                  <span className="text-[10px] text-muted-foreground block">
-                    Min
-                  </span>
-                  <span className="text-xs font-semibold text-foreground">
-                    {formattedPrice(priceRange.min, false)}
-                  </span>
-                </div>
-                <div className="flex-1 mx-2 border-t border-dashed border-border" />
-                <div className="bg-muted rounded-lg px-2.5 py-1.5 text-right">
-                  <span className="text-[10px] text-muted-foreground block">
-                    Max
-                  </span>
-                  <span className="text-xs font-semibold text-foreground">
-                    {formattedPrice(priceRange.max, false)}
-                  </span>
-                </div>
-              </div>
-              <Slider
-                defaultValue={[priceRange.min, priceRange.max]}
-                min={priceRange.min}
-                max={priceRange.max}
-                step={1000}
-                className="[&_[role=slider]]:bg-action-primary [&_[role=slider]]:border-2 [&_[role=slider]]:border-action-primary [&_[role=slider]]:w-4 [&_[role=slider]]:h-4 [&_[role=slider]]:shadow-lg [&_.relative]:bg-muted [&_.absolute]:bg-action-primary"
-              />
-            </div>
-          </FilterItem>
+          {/* PRICE FILTER */}
+          <SliderFilter
+            Icon={Maximize}
+            filterKey="priceRange"
+            label="Faixa de Preço"
+            inputLimits={priceRange}
+            filterRange={selectedFilters.priceRange}
+            key={`priceRange-${selectedFilters.priceRange?.min ?? "min"}-${selectedFilters.priceRange?.max ?? "max"}`}
+          />
 
           <FilterItem Icon={Calendar} label="Status do Imóvel">
             <div className="flex flex-wrap gap-2">

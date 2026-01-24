@@ -46,43 +46,44 @@ export default async function SearchResultsPage({
   const resolvedParams = await searchParams;
 
   //----------- TRANSFORMS PARAMETERS FROM URL INTO ARRAYS FOR DB QUERY --------
+
+  //---------- TYPOLOGIES
   const typologies = resolvedParams?.typologies
     ? resolvedParams.typologies.split(",")
     : [];
 
+  //---------- AMENITIES
   const amenities = resolvedParams?.amenities
     ? resolvedParams.amenities.split(",")
     : [];
 
-  //------------- SINGULAR VALUES -------
-
-  // BEDROOMS -> "0", "1" , "2"
+  //---------- BEDROOMS -> "0", "1" , "2"
   const bedrooms = resolvedParams?.bedrooms ? resolvedParams?.bedrooms : null;
 
-  // BATHROOMS -> "0", "1" , "2"
+  //---------- BATHROOMS -> "0", "1" , "2"
   const bathrooms = resolvedParams?.bathrooms
     ? resolvedParams?.bathrooms
     : null;
 
-  // PARKING SPACES -> "0", "1" , "2"
+  //---------- PARKING SPACES -> "0", "1" , "2"
   const parkingSpaces = resolvedParams?.parkingSpaces
     ? resolvedParams?.parkingSpaces
     : null;
 
-  // DELIVERY STATUS -> "PRONTO", "LANÇAMENTO"
+  //---------- DELIVERY STATUS -> "PRONTO", "LANÇAMENTO"
   const deliveryStatus = resolvedParams?.deliveryStatus
     ? resolvedParams?.deliveryStatus
     : null;
 
-  // DELIVERY STATUS -> "PRONTO", "LANÇAMENTO"
+  //---------- DELIVERY STATUS -> "PRONTO", "LANÇAMENTO"
   const sortOption = resolvedParams?.sortOption
     ? resolvedParams?.sortOption
     : null;
 
-  // DELIVERY STATUS -> "PRONTO", "LANÇAMENTO"
+  //---------- DELIVERY STATUS -> "PRONTO", "LANÇAMENTO"
   const page = resolvedParams?.page ? Number(resolvedParams?.page) : 1;
 
-  // AREA RANGE
+  //---------- AREA RANGE
   const areaMin = resolvedParams?.areaMin
     ? Number(resolvedParams?.areaMin)
     : null;
@@ -96,7 +97,7 @@ export default async function SearchResultsPage({
       ? { min: areaMin, max: areaMax }
       : null;
 
-  // PRICE RANGE
+  //------- PRICE RANGE
   const priceMin = resolvedParams?.priceMin
     ? Number(resolvedParams?.priceMin)
     : null;

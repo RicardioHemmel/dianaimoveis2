@@ -5,14 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useSearchPropertyContext } from "@/context/SearchPropertyContext";
 
-const activeFilters = [
-  { label: "Comprar", key: "finalidade" },
-  { label: "Brooklin", key: "bairro" },
-  { label: "2+ quartos", key: "quartos" },
-];
-
 export function SearchHeader() {
-  const { properties } = useSearchPropertyContext();
+  const { properties, clearFilters, activeFiltersBadge, cleanSpecificFilter } =
+    useSearchPropertyContext();
 
   return (
     <div className="bg-surface-muted border-b border-border">
@@ -33,20 +28,30 @@ export function SearchHeader() {
           {/* ACTIVE FILTERS */}
           <div className="flex flex-wrap items-center gap-2">
             <span>Filtros ativos:</span>
-            {activeFilters.map((filter) => (
-              <Badge
-                key={filter.key}
-                className="pl-3 pr-2 py-1.5 bg-action-primary/30 text-secondary-foreground hover:bg-secondary/30 cursor-pointer"
-              >
-                {filter.label}
-                <button className="ml-2 hover:text-destructive">
-                  <X className="h-3 w-3" />
-                </button>
+            {activeFiltersBadge.length ? (
+              activeFiltersBadge.map((filter) => (
+                <Badge
+                  key={filter.key}
+                  className="pl-3 pr-2 py-1.5 bg-action-primary text-secondary-foreground"
+                >
+                  {filter.label}
+                  <button
+                    onClick={() => cleanSpecificFilter(filter.key)}
+                    className="ml-1 hover:text-destructive cursor-pointer"
+                  >
+                    <X className="size-4" />
+                  </button>
+                </Badge>
+              ))
+            ) : (
+              <Badge className="py-1.5 bg-action-primary/90 text-secondary-foreground">
+                Nenhum
               </Badge>
-            ))}
+            )}
             <Button
               variant={"outline"}
               className="text-sm hover:underline font-medium rounded-2xl"
+              onClick={clearFilters}
             >
               Limpar todos
             </Button>

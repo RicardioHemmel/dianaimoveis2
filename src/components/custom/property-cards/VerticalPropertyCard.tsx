@@ -140,7 +140,7 @@ export function VerticalPropertyCard({
           {mappedPropertyDetails.map((detail, i) => (
             <div className="flex flex-col items-center gap-1.5" key={i}>
               <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
-                <detail.icon className="h-4 w-4 text-primary" />
+                <detail.icon className="size-4 text-gray-800" />
               </div>
               <span className="text-xs font-medium text-muted-foreground">
                 {detail.label}

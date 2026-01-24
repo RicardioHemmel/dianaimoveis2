@@ -15,12 +15,14 @@ import { useBreakpoint } from "@/hooks/useBreakpoint";
 import { useSearchPropertyContext } from "@/context/SearchPropertyContext";
 
 export function SearchResults() {
+  // CONTEXT
   const { properties, toggleSingleItem, selectedFilters } =
     useSearchPropertyContext();
+
+  // CHANGES CARDS BASED ON WIDTH
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const width = useBreakpoint();
   const isMobile = width < 768;
-
   useEffect(() => {
     if (isMobile === true) {
       setViewMode("grid");

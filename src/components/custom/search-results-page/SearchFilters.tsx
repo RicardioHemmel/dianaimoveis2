@@ -74,9 +74,8 @@ export function SearchFilters() {
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
-              className="flex items-center gap-1 text-xs text-white rounded-2xl bg-action-primary pl-2 px-3 py-1 cursor-pointer"
+              className="text-xs text-white rounded-2xl bg-action-primary px-4 py-1 cursor-pointer"
             >
-              <X className="size-3" />
               Limpar
             </button>
           )}

@@ -7,6 +7,7 @@ import {
   ReactNode,
   useState,
   useEffect,
+  useRef,
 } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -15,6 +16,7 @@ import {
   PropertyDetailSchema,
   PropertyViewSchema,
 } from "@/lib/schemas/property/property.schema";
+import { keyof } from "zod";
 
 // FILTERS VALUES FROM DB
 export interface AvailableFiltersFromDB {
@@ -75,17 +77,18 @@ export const defaultSelectedFilters: SelectedFilters = {
 // neighborhood: null,
 // priceRange: null,
 // areaRange: null,
-// deliveryStatus: null,
 
 interface SearchPropertyContextProps {
   properties: PropertyViewSchema[];
   availableFilters: AvailableFiltersFromDB; // DYNAMIC FILTER VALUES FROM DB
   selectedFilters: SelectedFilters; //SELECTED FILTERS BY THE USER
   hasActiveFilters: boolean; // DECIDE WHEN TO SHOW "CLEAN SEARCH" BUTTONS
+  activeFiltersBadge: { label: string; key: keyof SelectedFilters }[]; // FOR UI BADGES ON HEADER
   setSelectedFilters: React.Dispatch<React.SetStateAction<SelectedFilters>>; // STATE FOR USERS SELECTED FILTERS
   clearFilters: () => void; // QUERY CLEANUP
   toggleListItem: (key: "typologies" | "amenities", id: string) => void; // CHANGE FILTER AND SEARCH
   toggleSingleItem: (key: keyof SelectedFilters, value: any) => void; // CHANGE FILTER AND SEARCH
+  cleanSpecificFilter: (key: keyof SelectedFilters) => void;
 }
 
 const SearchPropertyContext = createContext<SearchPropertyContextProps | null>(
@@ -108,13 +111,19 @@ export function SearchPropertyProvider({
   // INSTANCES FOR QUERY FILTER USING URL
   const pathName = usePathname();
   const { replace } = useRouter();
+  const lastQueryRef = useRef<string>(""); // USED TO COMPARE IF THERE WERE CHANGES TO UPDATE URL
 
   // SELECTED VALUES BY THE USER
   const [selectedFilters, setSelectedFilters] =
     useState<SelectedFilters>(initialFilters);
 
   useEffect(() => {
-    setSelectedFilters(initialFilters);
+    const isSame =
+      JSON.stringify(selectedFilters) === JSON.stringify(initialFilters);
+
+    if (!isSame) {
+      setSelectedFilters(initialFilters);
+    }
   }, [initialFilters]);
 
   // MOUNTS THE URL FILTER QUERY
@@ -159,14 +168,16 @@ export function SearchPropertyProvider({
     return params.toString();
   }
 
-  // FETCH DATA
-  async function applyFilters(
-    filtersToApply: SelectedFilters = selectedFilters,
-  ) {
-    const filterQuery = buildQueryParams(filtersToApply);
-    replace(`${pathName}?${filterQuery}`, { scroll: false });
-    console.log(filterQuery, { scroll: false });
-  }
+  // FETCH DATA WHEN ANY FILTER CHANGES
+  useEffect(() => {
+    const query = buildQueryParams(selectedFilters);
+
+    // AVOID INFINITE REPLACE IF THE URL IS ALREADY THE SAME
+    if (query !== lastQueryRef.current) {
+      lastQueryRef.current = query;
+      replace(`${pathName}?${query}`, { scroll: false });
+    }
+  }, [selectedFilters]);
 
   // CLEAN URL
   function clearFilters() {
@@ -182,17 +193,10 @@ export function SearchPropertyProvider({
       ? currentList.filter((item) => item !== id)
       : [...currentList, id];
 
-    // UPDATED FILTERS
-    const updatedFilters = {
+    setSelectedFilters({
       ...selectedFilters,
       [key]: updatedList,
-    };
-
-    // REFLECTES NEW FILTER STATE ON UI
-    setSelectedFilters(updatedFilters);
-
-    // FETCH THE QUERY
-    applyFilters(updatedFilters);
+    });
   };
 
   // SINGLE VALUES "BEDROOMS", "SUITES"
@@ -200,15 +204,10 @@ export function SearchPropertyProvider({
     // TOGGLE BETWEEN ADDING THE VALUE OR SETTING NULL
     const newValue = selectedFilters[key] === value ? null : value;
 
-    // UPDATED FILTERS
-    const updatedFilters = {
+    setSelectedFilters({
       ...selectedFilters,
       [key]: newValue,
-    };
-
-    // UI AND QUERY
-    setSelectedFilters(updatedFilters);
-    applyFilters(updatedFilters);
+    });
   };
 
   // DECIDES WHEN TO SHOW "CLEAN" BUTTONS
@@ -219,16 +218,101 @@ export function SearchPropertyProvider({
     selectedFilters.bathrooms !== null ||
     selectedFilters.parkingSpaces !== null ||
     selectedFilters.deliveryStatus !== null;
-  // CONTEXT VALUES
+
+  // MOUNTS ALL FILTER BADGES
+  const [activeFiltersBadge, setActiveFiltersBadge] = useState<
+    { label: string; key: keyof SelectedFilters }[]
+  >([]);
+  function getActiveFilters(selectedFilters: SelectedFilters) {
+    const active: { label: string; key: keyof SelectedFilters }[] = [];
+    if (selectedFilters.typologies.length) {
+      active.push({
+        label: `Tipologias ${selectedFilters.typologies.length}`,
+        key: "typologies",
+      });
+    }
+
+    if (selectedFilters.amenities.length) {
+      active.push({
+        label: `Lazeres ${selectedFilters.amenities.length}`,
+        key: "amenities",
+      });
+    }
+
+    if (selectedFilters.bedrooms !== null) {
+      active.push({
+        label: `Quartos ${selectedFilters.bedrooms}`,
+        key: "bedrooms",
+      });
+    }
+
+    if (selectedFilters.bathrooms !== null) {
+      active.push({
+        label: `Banheiros ${selectedFilters.bathrooms}`,
+        key: "bathrooms",
+      });
+    }
+
+    if (selectedFilters.parkingSpaces !== null) {
+      active.push({
+        label: `Vagas ${selectedFilters.parkingSpaces}`,
+        key: "parkingSpaces",
+      });
+    }
+
+    if (selectedFilters.deliveryStatus !== null) {
+      active.push({
+        label: `${selectedFilters.deliveryStatus}`,
+        key: "deliveryStatus",
+      });
+    }
+
+    setActiveFiltersBadge(active);
+  }
+
+  // UPDATES FILTER BADGES WHEN A FILTER CHANGES
+  useEffect(() => {
+    getActiveFilters(selectedFilters);
+  }, [selectedFilters]);
+
+  // CLEAN SPECIFIC FILTER
+  function cleanSpecificFilter(key: keyof SelectedFilters) {
+    setSelectedFilters((prev) => {
+      switch (key) {
+        case "typologies":
+        case "amenities":
+          return {
+            ...prev,
+            [key]: [],
+          };
+
+        case "bedrooms":
+        case "bathrooms":
+        case "parkingSpaces":
+        case "deliveryStatus":
+          return {
+            ...prev,
+            [key]: null,
+          };
+
+        default:
+          return prev;
+      }
+    });
+  }
+
+  //------------- CONTEXT VALUES ------------------
   const value = {
     availableFilters,
     selectedFilters,
+    hasActiveFilters,
+    properties,
+    activeFiltersBadge,
     setSelectedFilters,
     clearFilters,
-    hasActiveFilters,
     toggleListItem,
     toggleSingleItem,
-    properties,
+    cleanSpecificFilter,
   };
 
   return (

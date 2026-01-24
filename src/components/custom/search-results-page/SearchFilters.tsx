@@ -1,8 +1,5 @@
 "use client";
 
-// REACT | NEXT
-import { useState } from "react";
-
 // ICONS
 import {
   Home,
@@ -10,8 +7,6 @@ import {
   DollarSign,
   Maximize,
   Sparkles,
-  X,
-  Building2,
   Car,
   Bath,
   Calendar,
@@ -28,6 +23,7 @@ import {
   FilterItem,
   FilterGroup,
 } from "@/components/custom/search-results-page/Filters";
+import { SliderFilter } from "@/components/custom/search-results-page/SliderFilter";
 
 // CONTEXT
 import {
@@ -50,8 +46,8 @@ export function SearchFilters() {
     toggleSingleItem,
   } = useSearchPropertyContext();
 
-  const [priceRange, setPriceRange] = useState([500000, 3000000]);
-  const [areaRange, setAreaRange] = useState([30, 200]);
+  // FILTER VALUES FROM DB
+  const { amenities, typologies, areaRange, priceRange } = availableFilters;
 
   return (
     <div className="rounded-2xl border border-border/30 shadow-lg sticky top-24 max-h-[calc(100vh-7rem)] overflow-hidden flex flex-col">
@@ -88,7 +84,7 @@ export function SearchFilters() {
         <FilterGroup id="typologies" title="O que você procura?">
           <FilterItem Icon={Home} label="Tipologias">
             <div className="flex flex-wrap gap-2">
-              {availableFilters.typologies.map((item) => (
+              {typologies.map((item) => (
                 <Chip
                   key={item._id}
                   label={item.name}
@@ -100,7 +96,7 @@ export function SearchFilters() {
           </FilterItem>
         </FilterGroup>
 
-        {/* PROPERTY FEATURES */}
+        {/* PROPERTY DETAILS */}
         <FilterGroup id="details" title="Características do Imóvel">
           <div className="flex flex-col gap-y-9">
             <FilterItem Icon={Bed} label="Quartos">
@@ -143,37 +139,14 @@ export function SearchFilters() {
             </FilterItem>
           </div>
 
-          <FilterItem Icon={Maximize} label="Área (m²)">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="bg-muted rounded-lg px-2.5 py-1.5">
-                  <span className="text-[10px] text-muted-foreground block">
-                    Min
-                  </span>
-                  <span className="text-xs font-semibold text-foreground">
-                    {areaRange[0]}m²
-                  </span>
-                </div>
-                <div className="flex-1 mx-2 border-t border-dashed border-border" />
-                <div className="bg-muted rounded-lg px-2.5 py-1.5 text-right">
-                  <span className="text-[10px] text-muted-foreground block">
-                    Max
-                  </span>
-                  <span className="text-xs font-semibold text-foreground">
-                    {areaRange[1]}m²
-                  </span>
-                </div>
-              </div>
-              <Slider
-                value={areaRange}
-                onValueChange={setAreaRange}
-                min={20}
-                max={500}
-                step={10}
-                className="[&_[role=slider]]:bg-secondary [&_[role=slider]]:border-2 [&_[role=slider]]:border-secondary [&_[role=slider]]:w-4 [&_[role=slider]]:h-4 [&_[role=slider]]:shadow-lg [&_.relative]:bg-muted [&_.absolute]:bg-secondary"
-              />
-            </div>
-          </FilterItem>
+          {/* AREA FILTER */}
+          <SliderFilter
+            Icon={Maximize}
+            filterKey="areaRange"
+            label="Área (m²)"
+            inputLimits={areaRange}
+            filterRange={selectedFilters.areaRange}
+          />
         </FilterGroup>
 
         {/* Grupo: Valores e Status */}
@@ -186,7 +159,7 @@ export function SearchFilters() {
                     Min
                   </span>
                   <span className="text-xs font-semibold text-foreground">
-                    {formattedPrice(priceRange[0], false)}
+                    {formattedPrice(priceRange.min, false)}
                   </span>
                 </div>
                 <div className="flex-1 mx-2 border-t border-dashed border-border" />
@@ -195,17 +168,16 @@ export function SearchFilters() {
                     Max
                   </span>
                   <span className="text-xs font-semibold text-foreground">
-                    {formattedPrice(priceRange[1], false)}
+                    {formattedPrice(priceRange.max, false)}
                   </span>
                 </div>
               </div>
               <Slider
-                value={priceRange}
-                onValueChange={setPriceRange}
-                min={100000}
-                max={10000000}
-                step={50000}
-                className="[&_[role=slider]]:bg-secondary [&_[role=slider]]:border-2 [&_[role=slider]]:border-secondary [&_[role=slider]]:w-4 [&_[role=slider]]:h-4 [&_[role=slider]]:shadow-lg [&_.relative]:bg-muted [&_.absolute]:bg-secondary"
+                defaultValue={[priceRange.min, priceRange.max]}
+                min={priceRange.min}
+                max={priceRange.max}
+                step={1000}
+                className="[&_[role=slider]]:bg-action-primary [&_[role=slider]]:border-2 [&_[role=slider]]:border-action-primary [&_[role=slider]]:w-4 [&_[role=slider]]:h-4 [&_[role=slider]]:shadow-lg [&_.relative]:bg-muted [&_.absolute]:bg-action-primary"
               />
             </div>
           </FilterItem>
@@ -228,7 +200,7 @@ export function SearchFilters() {
         <FilterGroup id="amenities" title="Lazeres">
           <FilterItem Icon={Sparkles} label="Características">
             <div className="flex flex-wrap gap-2">
-              {availableFilters.amenities.map((item) => (
+              {amenities.map((item) => (
                 <Chip
                   key={item._id}
                   label={item.name}

@@ -19,6 +19,7 @@ import {
   SortOptions,
 } from "@/context/SearchPropertyContext";
 
+// SEARCH PARAM VALUES
 interface SearchResultsPageProps {
   searchParams: Promise<{
     typologies?: string;
@@ -28,11 +29,19 @@ interface SearchResultsPageProps {
     parkingSpaces?: DetailsQty;
     deliveryStatus?: DeliveryStatus;
     sortOption?: SortOptions;
+    page?: string;
+    areaMin?: string;
+    areaMax?: string;
+    priceMin?: string;
+    priceMax?: string;
   }>;
 }
 export default async function SearchResultsPage({
   searchParams,
 }: SearchResultsPageProps) {
+  // FILTER VALUES TO POPULATE UI
+  const availableFilters = await getPropertyFilterValues();
+
   // AWAIT THE URL PARAMS
   const resolvedParams = await searchParams;
 
@@ -66,9 +75,40 @@ export default async function SearchResultsPage({
     : null;
 
   // DELIVERY STATUS -> "PRONTO", "LANÇAMENTO"
-  const sortOption: SortOptions = resolvedParams?.sortOption
+  const sortOption = resolvedParams?.sortOption
     ? resolvedParams?.sortOption
-    : "date_desc";
+    : null;
+
+  // DELIVERY STATUS -> "PRONTO", "LANÇAMENTO"
+  const page = resolvedParams?.page ? Number(resolvedParams?.page) : 1;
+
+  // AREA RANGE
+  const areaMin = resolvedParams?.areaMin
+    ? Number(resolvedParams?.areaMin)
+    : null;
+
+  const areaMax = resolvedParams?.areaMax
+    ? Number(resolvedParams?.areaMax)
+    : null;
+
+  const areaRange =
+    areaMin !== null && areaMax !== null
+      ? { min: areaMin, max: areaMax }
+      : null;
+
+  // PRICE RANGE
+  const priceMin = resolvedParams?.priceMin
+    ? Number(resolvedParams?.priceMin)
+    : null;
+
+  const priceMax = resolvedParams?.priceMax
+    ? Number(resolvedParams?.priceMax)
+    : null;
+
+  const priceRange =
+    priceMin !== null && priceMax !== null
+      ? { min: priceMin, max: priceMax }
+      : null;
 
   // SETS ALL FILTER OPTIONS
   const selectedFilters: SelectedFilters = {
@@ -79,19 +119,28 @@ export default async function SearchResultsPage({
     parkingSpaces,
     deliveryStatus,
     sortOption,
+    areaRange,
+    priceRange,
   };
 
-  // FETCHES FILTERED PROPERTIES
-  const properties = await getFilteredProperties(selectedFilters);
+  // FETCHES FILTERED PROPERTIES WITH PAGINATION
+  const res = await getFilteredProperties(selectedFilters, {
+    page: page,
+    limit: 9,
+  });
 
-  // FILTER VALUES TO POPULATE UI
-  const availableFilters = await getPropertyFilterValues();
+  // FILTERED PROPERTIES
+  const properties = res.properties;
+
+  // PAGINATION
+  const pagination = res.pagination;
 
   return (
     <SearchPropertyProvider
       properties={properties}
       availableFilters={availableFilters}
       initialFilters={selectedFilters}
+      pagination={pagination}
     >
       <div className="min-h-screen bg-background">
         <main>
@@ -103,13 +152,7 @@ export default async function SearchResultsPage({
                 <SearchFilters />
               </aside>
               <div className="w-full sm:w-[80%] md:w-full">
-                {properties.length > 0 ? (
-                  <SearchResults />
-                ) : (
-                  <div>
-                    <h1>tem nada aqui não uai</h1>
-                  </div>
-                )}
+                <SearchResults />
               </div>
             </div>
           </div>

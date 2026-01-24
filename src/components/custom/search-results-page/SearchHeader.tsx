@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useSearchPropertyContext } from "@/context/SearchPropertyContext";
 
 export function SearchHeader() {
-  const { properties, clearFilters, activeFiltersBadge, cleanSpecificFilter } =
+  const { clearFilters, activeFiltersBadge, cleanSpecificFilter, pagination } =
     useSearchPropertyContext();
 
   return (
@@ -19,7 +19,7 @@ export function SearchHeader() {
             </h1>
             <p className="text-muted-foreground mt-1">
               <span className="font-bold text-text-title">
-                {properties.length} imóveis
+                {pagination.totalItems} imóveis
               </span>{" "}
               encontrados
             </p>

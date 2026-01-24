@@ -16,13 +16,9 @@ import {
   PropertyDetailSchema,
   PropertyViewSchema,
 } from "@/lib/schemas/property/property.schema";
-import { keyof } from "zod";
 
-// FILTERS VALUES FROM DB
-export interface AvailableFiltersFromDB {
-  typologies: PropertyDetailSchema[];
-  amenities: PropertyDetailSchema[];
-}
+// PROPERTY DELIVERY STATUS FILTER
+export type Range = { min: number; max: number };
 
 // PROPERTY DETAILS QTY FILTER
 export type DetailsQty = "1" | "2" | "3" | "4" | "5+";
@@ -48,6 +44,14 @@ export const DELIVERY_STATUS_OPTIONS: DeliveryStatus[] = [
   "Lançamento",
 ];
 
+// FILTERS VALUES FROM DB
+export interface AvailableFiltersFromDB {
+  typologies: PropertyDetailSchema[];
+  amenities: PropertyDetailSchema[];
+  areaRange: Range;
+  priceRange: Range;
+}
+
 // POSSIBLE FILTER VALUES USER CAN SELECT
 export interface SelectedFilters {
   typologies: string[];
@@ -56,12 +60,12 @@ export interface SelectedFilters {
   bathrooms: DetailsQty | null;
   parkingSpaces: DetailsQty | null;
   deliveryStatus: DeliveryStatus | null;
-  sortOption: SortOptions;
+  sortOption: SortOptions | null;
+  areaRange: Range | null;
+  priceRange: Range | null;
 }
 
-//areaRange: RangeSchema | null;
 // neighborhood: string | null;
-// priceRange: RangeSchema | null;
 
 // DEFAULT VALUE FOR THE FILTERS
 export const defaultSelectedFilters: SelectedFilters = {
@@ -71,12 +75,19 @@ export const defaultSelectedFilters: SelectedFilters = {
   bathrooms: null,
   parkingSpaces: null,
   deliveryStatus: null,
-  sortOption: "date_desc",
+  sortOption: null,
+  areaRange: null,
+  priceRange: null,
 };
 
+export interface PaginationSchema {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  limit: number;
+}
+
 // neighborhood: null,
-// priceRange: null,
-// areaRange: null,
 
 interface SearchPropertyContextProps {
   properties: PropertyViewSchema[];
@@ -84,11 +95,13 @@ interface SearchPropertyContextProps {
   selectedFilters: SelectedFilters; //SELECTED FILTERS BY THE USER
   hasActiveFilters: boolean; // DECIDE WHEN TO SHOW "CLEAN SEARCH" BUTTONS
   activeFiltersBadge: { label: string; key: keyof SelectedFilters }[]; // FOR UI BADGES ON HEADER
+  pagination: PaginationSchema;
   setSelectedFilters: React.Dispatch<React.SetStateAction<SelectedFilters>>; // STATE FOR USERS SELECTED FILTERS
   clearFilters: () => void; // QUERY CLEANUP
+  cleanSpecificFilter: (key: keyof SelectedFilters) => void; // FULLY CLEAN ONE FILTER
   toggleListItem: (key: "typologies" | "amenities", id: string) => void; // CHANGE FILTER AND SEARCH
   toggleSingleItem: (key: keyof SelectedFilters, value: any) => void; // CHANGE FILTER AND SEARCH
-  cleanSpecificFilter: (key: keyof SelectedFilters) => void;
+  setSliderValue: (key: keyof SelectedFilters, value: number[]) => void; // CHANGE FILTER AND SEARCH
 }
 
 const SearchPropertyContext = createContext<SearchPropertyContextProps | null>(
@@ -100,6 +113,7 @@ interface ProviderProps {
   properties: PropertyViewSchema[];
   availableFilters: AvailableFiltersFromDB;
   initialFilters: SelectedFilters;
+  pagination: PaginationSchema;
 }
 
 export function SearchPropertyProvider({
@@ -107,6 +121,7 @@ export function SearchPropertyProvider({
   properties,
   availableFilters,
   initialFilters,
+  pagination,
 }: ProviderProps) {
   // INSTANCES FOR QUERY FILTER USING URL
   const pathName = usePathname();
@@ -165,6 +180,13 @@ export function SearchPropertyProvider({
       params.set("sortOption", filters.sortOption);
     }
 
+    // AREA RANGE
+    if (filters.areaRange) {
+      params.set("areaMin", String(filters.areaRange.min));
+      params.set("areaMax", String(filters.areaRange.max));
+    }
+
+    // RETURNS FILTERED URL
     return params.toString();
   }
 
@@ -182,8 +204,10 @@ export function SearchPropertyProvider({
   // CLEAN URL
   function clearFilters() {
     setSelectedFilters(defaultSelectedFilters);
-    replace(pathName);
+    replace("/properties");
   }
+
+  // --------------------------- FILTERS UPDATE ------------------------------
 
   // FOR LISTS "TYPOLOGIES" | "AMENITIES"
   const toggleListItem = (key: "typologies" | "amenities", id: string) => {
@@ -210,6 +234,14 @@ export function SearchPropertyProvider({
     });
   };
 
+  // SLIDER VALUES
+  const setSliderValue = (key: keyof SelectedFilters, value: number[]) => {
+    setSelectedFilters({
+      ...selectedFilters,
+      [key]: { min: value[0], max: value[1] },
+    });
+  };
+
   // DECIDES WHEN TO SHOW "CLEAN" BUTTONS
   const hasActiveFilters =
     selectedFilters.typologies.length > 0 ||
@@ -217,7 +249,8 @@ export function SearchPropertyProvider({
     selectedFilters.bedrooms !== null ||
     selectedFilters.bathrooms !== null ||
     selectedFilters.parkingSpaces !== null ||
-    selectedFilters.deliveryStatus !== null;
+    selectedFilters.deliveryStatus !== null ||
+    selectedFilters.areaRange !== null;
 
   // MOUNTS ALL FILTER BADGES
   const [activeFiltersBadge, setActiveFiltersBadge] = useState<
@@ -267,6 +300,13 @@ export function SearchPropertyProvider({
       });
     }
 
+    if (selectedFilters.areaRange !== null) {
+      active.push({
+        label: `Metragem: ${selectedFilters.areaRange.min} - ${selectedFilters.areaRange.max} m²`,
+        key: "deliveryStatus",
+      });
+    }
+
     setActiveFiltersBadge(active);
   }
 
@@ -308,10 +348,12 @@ export function SearchPropertyProvider({
     hasActiveFilters,
     properties,
     activeFiltersBadge,
+    pagination,
     setSelectedFilters,
     clearFilters,
     toggleListItem,
     toggleSingleItem,
+    setSliderValue,
     cleanSpecificFilter,
   };
 

@@ -14,11 +14,7 @@ import { getTypologies } from "@/lib/services/properties/property-details/proper
 import { POPULATE_FIELDS } from "@/lib/services/properties/queries/properties-query.service";
 
 //SCHEMA
-import {
-  DetailsQty,
-  Range,
-  SelectedFilters,
-} from "@/context/SearchPropertyContext";
+import { DetailsQty, SelectedFilters } from "@/context/SearchPropertyContext";
 
 //--------------------------------------------- AUXILIARY FOR RANGE FILTERS ------------------------------------------
 const applyDetailFilter = (
@@ -143,6 +139,16 @@ export async function getFilteredProperties(
       $gte: filters.priceRange.min,
       $lte: filters.priceRange.max,
     };
+  }
+
+  //-------------- TEXT FILTER ------------------
+
+  if (filters.search) {
+    const search = filters.search.trim();
+    query.$or = [
+      { title: { $regex: search, $options: "i" } }, // REGEX WITH "I" IGNORES UPPER AND LOWER CASE
+      { constructionCompany: { $regex: search, $options: "i" } },
+    ];
   }
 
   // ---------------- PAGINATION ----------------

@@ -23,6 +23,7 @@ import {
 } from "@/components/custom/search-results-page/Filters";
 import { SliderFilter } from "@/components/custom/search-results-page/SliderFilter";
 import { AmenitiesFilter } from "@/components/custom/search-results-page/AmenitiesFilter";
+import { SearchFilter } from "@/components/custom/search-results-page/TextSearchFilter";
 
 // CONTEXT
 import {
@@ -30,7 +31,6 @@ import {
   DETAILS_QTY_OPTIONS,
   useSearchPropertyContext,
 } from "@/context/SearchPropertyContext";
-import { Input } from "@/components/ui/input";
 
 export function SearchFilters() {
   // SEARCH CONTEXT
@@ -39,15 +39,15 @@ export function SearchFilters() {
     selectedFilters,
     clearFilters,
     hasActiveFilters,
-    toggleListItem,
-    toggleSingleItem,
+    setListItem,
+    setSingleItem,
   } = useSearchPropertyContext();
 
   // FILTER VALUES FROM DB
   const { amenities, typologies, areaRange, priceRange } = availableFilters;
 
   return (
-    <div className="rounded-2xl border border-border/30 shadow-lg sticky top-24 max-h-[calc(100vh-7rem)] overflow-hidden flex flex-col">
+    <div className="rounded-2xl border border-border/30 shadow-lg sticky top-4 max-h-[calc(100vh-7rem)] overflow-hidden flex flex-col">
       {/* HEADER */}
       <div className="bg-linear-to-r from-hero-bg to-hero-to px-5 py-4 shrink-0">
         <div className="flex items-center justify-between">
@@ -81,7 +81,7 @@ export function SearchFilters() {
         <FilterGroup id="typologies" title="O que você procura?">
           <FilterItem Icon={Search} label="Empreendimento / Construtora">
             <div className="flex flex-wrap gap-2">
-              <Input variant={"gray"} placeholder="Buscar imóveis..." />
+              <SearchFilter />
             </div>
           </FilterItem>
 
@@ -92,7 +92,7 @@ export function SearchFilters() {
                   key={item._id}
                   label={item.name}
                   selected={selectedFilters.typologies.includes(item._id)}
-                  onClick={() => toggleListItem("typologies", item._id)}
+                  onClick={() => setListItem("typologies", item._id)}
                 />
               ))}
             </div>
@@ -109,7 +109,7 @@ export function SearchFilters() {
                     key={opt}
                     value={opt}
                     selected={selectedFilters.bedrooms === opt}
-                    onClick={() => toggleSingleItem("bedrooms", opt)}
+                    onClick={() => setSingleItem("bedrooms", opt)}
                   />
                 ))}
               </div>
@@ -122,7 +122,7 @@ export function SearchFilters() {
                     key={opt}
                     value={opt}
                     selected={selectedFilters.bathrooms === opt}
-                    onClick={() => toggleSingleItem("bathrooms", opt)}
+                    onClick={() => setSingleItem("bathrooms", opt)}
                   />
                 ))}
               </div>
@@ -135,7 +135,7 @@ export function SearchFilters() {
                     key={opt}
                     value={opt}
                     selected={selectedFilters.parkingSpaces === opt}
-                    onClick={() => toggleSingleItem("parkingSpaces", opt)}
+                    onClick={() => setSingleItem("parkingSpaces", opt)}
                   />
                 ))}
               </div>
@@ -171,7 +171,7 @@ export function SearchFilters() {
                   key={item}
                   label={item}
                   selected={selectedFilters.deliveryStatus === item}
-                  onClick={() => toggleSingleItem("deliveryStatus", item)}
+                  onClick={() => setSingleItem("deliveryStatus", item)}
                 />
               ))}
             </div>

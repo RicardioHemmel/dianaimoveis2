@@ -34,6 +34,7 @@ interface SearchResultsPageProps {
     areaMax?: string;
     priceMin?: string;
     priceMax?: string;
+    search?: string;
   }>;
 }
 export default async function SearchResultsPage({
@@ -111,6 +112,9 @@ export default async function SearchResultsPage({
       ? { min: priceMin, max: priceMax }
       : null;
 
+  // --------- TEXT FILTER
+  const search = resolvedParams.search ? resolvedParams.search : null;
+
   // SETS ALL FILTER OPTIONS
   const selectedFilters: SelectedFilters = {
     typologies,
@@ -122,6 +126,7 @@ export default async function SearchResultsPage({
     sortOption,
     areaRange,
     priceRange,
+    search,
   };
 
   // FETCHES FILTERED PROPERTIES WITH PAGINATION
@@ -148,7 +153,7 @@ export default async function SearchResultsPage({
           <SearchHeader />
           <MobileFiltersDrawer />
           <div className="w-11/12 mx-auto px-6 py-8 lg:py-10">
-            <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-center md:items-start">
+            <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-center md:items-stretch">
               <aside className="hidden w-full xl:block lg:w-[320px] shrink-0">
                 <SearchFilters />
               </aside>

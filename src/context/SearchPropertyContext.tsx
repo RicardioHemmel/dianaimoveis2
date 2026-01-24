@@ -64,9 +64,8 @@ export interface SelectedFilters {
   sortOption: SortOptions | null;
   areaRange: Range | null;
   priceRange: Range | null;
+  search: string | null;
 }
-
-// neighborhood: string | null;
 
 // DEFAULT VALUE FOR THE FILTERS
 export const defaultSelectedFilters: SelectedFilters = {
@@ -79,6 +78,7 @@ export const defaultSelectedFilters: SelectedFilters = {
   sortOption: null,
   areaRange: null,
   priceRange: null,
+  search: null,
 };
 
 export interface PaginationSchema {
@@ -87,8 +87,6 @@ export interface PaginationSchema {
   totalItems: number;
   limit: number;
 }
-
-// neighborhood: null,
 
 interface SearchPropertyContextProps {
   properties: PropertyViewSchema[];
@@ -100,8 +98,8 @@ interface SearchPropertyContextProps {
   setSelectedFilters: React.Dispatch<React.SetStateAction<SelectedFilters>>; // STATE FOR USERS SELECTED FILTERS
   clearFilters: () => void; // QUERY CLEANUP
   cleanSpecificFilter: (key: keyof SelectedFilters) => void; // FULLY CLEAN ONE FILTER
-  toggleListItem: (key: "typologies" | "amenities", id: string) => void; // CHANGE FILTER AND SEARCH
-  toggleSingleItem: (key: keyof SelectedFilters, value: any) => void; // CHANGE FILTER AND SEARCH
+  setListItem: (key: "typologies" | "amenities", id: string) => void; // CHANGE FILTER AND SEARCH
+  setSingleItem: (key: keyof SelectedFilters, value: any) => void; // CHANGE FILTER AND SEARCH
   setSliderValue: (key: keyof SelectedFilters, value: number[]) => void; // CHANGE FILTER AND SEARCH
 }
 
@@ -193,6 +191,11 @@ export function SearchPropertyProvider({
       params.set("priceMax", String(filters.priceRange.max));
     }
 
+    // TEXT FILTER
+    if (filters.search) {
+      params.set("search", String(filters.search));
+    }
+
     // RETURNS FILTERED URL
     return params.toString();
   }
@@ -217,7 +220,7 @@ export function SearchPropertyProvider({
   // --------------------------- FILTERS UPDATE ------------------------------
 
   // FOR LISTS "TYPOLOGIES" | "AMENITIES"
-  const toggleListItem = (key: "typologies" | "amenities", id: string) => {
+  const setListItem = (key: "typologies" | "amenities", id: string) => {
     // UPDATES THE LIST ADDING OR REMOVING THE CLICKED ITEM
     const currentList = selectedFilters[key];
     const updatedList = currentList.includes(id)
@@ -231,7 +234,7 @@ export function SearchPropertyProvider({
   };
 
   // SINGLE VALUES "BEDROOMS", "SUITES"
-  const toggleSingleItem = (key: keyof SelectedFilters, value: any) => {
+  const setSingleItem = (key: keyof SelectedFilters, value: any) => {
     // TOGGLE BETWEEN ADDING THE VALUE OR SETTING NULL
     const newValue = selectedFilters[key] === value ? null : value;
 
@@ -258,7 +261,8 @@ export function SearchPropertyProvider({
     selectedFilters.parkingSpaces !== null ||
     selectedFilters.deliveryStatus !== null ||
     selectedFilters.areaRange !== null ||
-    selectedFilters.priceRange !== null;
+    selectedFilters.priceRange !== null ||
+    selectedFilters.search !== null;
 
   //------------ MOUNTS ALL FILTER BADGES -------------
   const [activeFiltersBadge, setActiveFiltersBadge] = useState<
@@ -322,6 +326,13 @@ export function SearchPropertyProvider({
       });
     }
 
+    if (selectedFilters.search !== null) {
+      active.push({
+        label: `Busca: ${selectedFilters.search}`,
+        key: "search",
+      });
+    }
+
     setActiveFiltersBadge(active);
   }
 
@@ -347,6 +358,7 @@ export function SearchPropertyProvider({
         case "deliveryStatus":
         case "areaRange":
         case "priceRange":
+        case "search":
           return {
             ...prev,
             [key]: null,
@@ -368,8 +380,8 @@ export function SearchPropertyProvider({
     pagination,
     setSelectedFilters,
     clearFilters,
-    toggleListItem,
-    toggleSingleItem,
+    setListItem,
+    setSingleItem,
     setSliderValue,
     cleanSpecificFilter,
   };

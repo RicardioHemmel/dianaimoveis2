@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Chip } from "./SearchFilterChips";
 import { PropertyDetailSchema } from "@/lib/schemas/property/property.schema";
 import { useSearchPropertyContext } from "@/context/SearchPropertyContext";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 interface AmenitiesFilterProps {
   amenitiesList: PropertyDetailSchema[];
@@ -13,7 +13,7 @@ interface AmenitiesFilterProps {
 
 export function AmenitiesFilter({ amenitiesList }: AmenitiesFilterProps) {
   // CONTEXT
-  const { toggleListItem, selectedFilters } = useSearchPropertyContext();
+  const { setListItem, selectedFilters } = useSearchPropertyContext();
 
   // TEXT FILTER FOR AMENITIES
   const [amenitiesFilter, setAmenitiesFilter] = useState("");
@@ -24,10 +24,6 @@ export function AmenitiesFilter({ amenitiesList }: AmenitiesFilterProps) {
     const search = amenitiesFilter.toLowerCase();
     return amenitiesList.filter((a) => a.name.toLowerCase().includes(search));
   }, [amenitiesFilter, amenitiesList]);
-
-  useEffect(() => {
-    return () => {};
-  }, []);
 
   return (
     <FilterItem Icon={Sparkles} label="Características">
@@ -46,7 +42,7 @@ export function AmenitiesFilter({ amenitiesList }: AmenitiesFilterProps) {
         {amenitiesFilter && (
           <button
             onClick={() => setAmenitiesFilter("")}
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1 cursor-pointer"
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-destructive transition-colors p-1 cursor-pointer"
           >
             <X className="size-4" />
           </button>
@@ -58,7 +54,7 @@ export function AmenitiesFilter({ amenitiesList }: AmenitiesFilterProps) {
             key={item._id}
             label={item.name}
             selected={selectedFilters.amenities.includes(item._id)}
-            onClick={() => toggleListItem("amenities", item._id)}
+            onClick={() => setListItem("amenities", item._id)}
           />
         ))}
       </div>

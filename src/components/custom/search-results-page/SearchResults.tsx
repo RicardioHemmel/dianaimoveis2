@@ -26,7 +26,7 @@ import { useSearchPropertyContext } from "@/context/SearchPropertyContext";
 
 export function SearchResults() {
   // CONTEXT
-  const { properties, toggleSingleItem, selectedFilters, pagination } =
+  const { properties, setSingleItem, selectedFilters, pagination } =
     useSearchPropertyContext();
 
   // CHANGES CARDS BASED ON WIDTH
@@ -75,7 +75,7 @@ export function SearchResults() {
               <span className="text-sm">Ordenar por:</span>
               <Select
                 defaultValue={selectedFilters.sortOption || "date_desc"}
-                onValueChange={(value) => toggleSingleItem("sortOption", value)}
+                onValueChange={(value) => setSingleItem("sortOption", value)}
               >
                 <SelectTrigger className="w-44 h-9 bg-card border-border rounded-lg text-sm">
                   <SelectValue />

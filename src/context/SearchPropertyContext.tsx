@@ -65,6 +65,7 @@ export interface SelectedFilters {
   areaRange: Range | null;
   priceRange: Range | null;
   search: string | null;
+  neighborhood: string | null;
 }
 
 // DEFAULT VALUE FOR THE FILTERS
@@ -79,6 +80,7 @@ export const defaultSelectedFilters: SelectedFilters = {
   areaRange: null,
   priceRange: null,
   search: null,
+  neighborhood: null,
 };
 
 export interface PaginationSchema {
@@ -196,6 +198,11 @@ export function SearchPropertyProvider({
       params.set("search", String(filters.search));
     }
 
+    // NEIGHBORHOOD FILTER
+    if (filters.neighborhood) {
+      params.set("neighborhood", String(filters.neighborhood));
+    }
+
     // RETURNS FILTERED URL
     return params.toString();
   }
@@ -262,7 +269,8 @@ export function SearchPropertyProvider({
     selectedFilters.deliveryStatus !== null ||
     selectedFilters.areaRange !== null ||
     selectedFilters.priceRange !== null ||
-    selectedFilters.search !== null;
+    selectedFilters.search !== null ||
+    selectedFilters.neighborhood !== null;
 
   //------------ MOUNTS ALL FILTER BADGES -------------
   const [activeFiltersBadge, setActiveFiltersBadge] = useState<
@@ -333,6 +341,13 @@ export function SearchPropertyProvider({
       });
     }
 
+    if (selectedFilters.neighborhood !== null) {
+      active.push({
+        label: `Bairro: ${selectedFilters.neighborhood}`,
+        key: "neighborhood",
+      });
+    }
+
     setActiveFiltersBadge(active);
   }
 
@@ -359,6 +374,7 @@ export function SearchPropertyProvider({
         case "areaRange":
         case "priceRange":
         case "search":
+        case "neighborhood":
           return {
             ...prev,
             [key]: null,

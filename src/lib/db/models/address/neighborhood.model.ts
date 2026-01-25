@@ -3,7 +3,7 @@ import { INeighborhood } from "@/lib/schemas/neighborhood/INeighborhood";
 
 // MONGODB SCHEMA
 const neighborhoodSchema = new Schema<INeighborhood>({
-  name: { type: String, required: true },
+  name: { type: String, required: true, unique: true },
 });
 
 //MONGOOSE.MODELS.USER CHECKS IF IT HAS ALREADY BEEN COMPILED TO AVOID RECOMPILATION ERROR IN NEXT.JS (HOT RELOAD)

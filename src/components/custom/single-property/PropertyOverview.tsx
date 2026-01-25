@@ -111,7 +111,7 @@ export default async function PropertyOverview({
                     <div>
                       <p className="text-muted-foreground text-sm">Bairro</p>
                       <p className="font-semibold text-foreground">
-                        {address.neighborhood}
+                        {address.neighborhood.name}
                       </p>
                     </div>
                   </div>

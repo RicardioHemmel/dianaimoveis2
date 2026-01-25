@@ -141,7 +141,7 @@ export async function getFilteredProperties(
     };
   }
 
-  //-------------- TEXT FILTER ------------------
+  //-------------- TITLE | CONSTRUCTION COMPANY FILTER ------------------
 
   if (filters.search) {
     const search = filters.search.trim();
@@ -151,6 +151,15 @@ export async function getFilteredProperties(
     ];
   }
 
+  //-------------- TITLE | CONSTRUCTION COMPANY FILTER ------------------
+
+  if (filters.neighborhood) {
+    const neighborhood = filters.neighborhood;
+    query["address.neighborhood.name"] = {
+      $regex: neighborhood,
+      $options: "i",
+    };
+  }
   // ---------------- PAGINATION ----------------
   const skip = (page - 1) * limit;
 

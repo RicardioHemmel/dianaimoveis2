@@ -117,11 +117,11 @@ export default function PropertyForm() {
 
       if (
         data.address?.street &&
-        data.address?.neighborhood &&
+        data.address?.neighborhood?.name &&
         data.address?.city
       ) {
         // MOUNT ADDRESS USING THE CURRENT DATA
-        const fullAddress = `${data.address?.street}, ${data.address?.neighborhood} - ${data.address?.city}`;
+        const fullAddress = `${data.address?.street}, ${data.address?.neighborhood.name} - ${data.address?.city}`;
 
         try {
           const coords = await getCoordinates(fullAddress);

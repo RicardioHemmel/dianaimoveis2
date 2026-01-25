@@ -19,6 +19,7 @@ export function BorderLessPropertyCard({
     deliveryDate,
     constructionCompany,
     title,
+    address,
     bedrooms,
     bathrooms,
     parkingSpaces,
@@ -64,7 +65,7 @@ export function BorderLessPropertyCard({
           )}
 
           {/* GRADIENT OVERLAY */}
-          <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent" />
 
           {/* TOP RIGHT - FAVORITE BUTTON */}
           <span className="absolute top-3 right-3">
@@ -94,6 +95,12 @@ export function BorderLessPropertyCard({
             <h3 className="font-bold text-white text-xl leading-tight line-clamp-2">
               {title}
             </h3>
+
+            {address?.street && address?.neighborhood && (
+              <span className="text-white text-sm leading-tight line-clamp-2">
+                {`${address.street} - ${address.neighborhood.name}`}
+              </span>
+            )}
 
             {/* PRICE */}
             <p className="text-white/80 text-sm">

@@ -10,6 +10,7 @@ import {
   Calendar,
   SlidersHorizontal,
   Search,
+  MapPin,
 } from "lucide-react";
 
 // COMPONENTS
@@ -24,6 +25,7 @@ import {
 import { SliderFilter } from "@/components/custom/search-results-page/SliderFilter";
 import { AmenitiesFilter } from "@/components/custom/search-results-page/AmenitiesFilter";
 import { SearchFilter } from "@/components/custom/search-results-page/TextSearchFilter";
+import { NeighborhoodFilter } from "@/components/custom/search-results-page/NeighborhoodFilter";
 
 // CONTEXT
 import {
@@ -77,14 +79,22 @@ export function SearchFilters() {
 
       {/* SCROLLABLE FILTERS CONTENT */}
       <div className="flex-1 overflow-y-auto px-5 py-4">
-        {/*  TYPOLOGIES  */}
         <FilterGroup id="typologies" title="O que você procura?">
+          {/* TITLE | CONSTRUCTION COMPANY */}
           <FilterItem Icon={Search} label="Empreendimento / Construtora">
             <div className="flex flex-wrap gap-2">
               <SearchFilter />
             </div>
           </FilterItem>
 
+          {/* LOCATION */}
+          <FilterItem Icon={MapPin} label="Bairro">
+            <div className="flex flex-wrap gap-2">
+              <NeighborhoodFilter />
+            </div>
+          </FilterItem>
+
+          {/*  TYPOLOGIES  */}
           <FilterItem Icon={Home} label="Tipologias">
             <div className="flex flex-wrap gap-2">
               {typologies.map((item) => (

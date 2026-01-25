@@ -4,12 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Search,
-  MapPin,
   BedDouble,
   SlidersHorizontal,
   Bath,
   Car,
-  Pin,
+  Building2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,8 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
-import { InputGroup, InputGroupAddon } from "@/components/ui/input-group";
+import { SearchLocationInput } from "@/components/custom/home-page/SearchLocationInput";
 
 // PROPERTY DETAILS QTY FILTER
 export type DetailsQty = "1" | "2" | "3" | "4" | "5+";
@@ -31,10 +29,10 @@ export function PropertyQuickSearchBar() {
   const router = useRouter();
 
   // FILTER STATES
-  const [deliveryStatus, setDeliveryStatus] = useState<"Lançamento" | "Pronto">(
-    "Lançamento",
-  );
   const [bedrooms, setBedrooms] = useState<DetailsQty | undefined>(undefined);
+  const [neighborhood, setNeighborhood] = useState<string | undefined>(
+    undefined,
+  );
   const [bathrooms, setBathrooms] = useState<DetailsQty | undefined>(undefined);
   const [parkingSpaces, setParkingSpaces] = useState<DetailsQty | undefined>(
     undefined,
@@ -43,10 +41,11 @@ export function PropertyQuickSearchBar() {
   // HANDLE FILTER SEARCH
   const handleSearch = () => {
     const params = new URLSearchParams();
+    // ADD FILTERS TO SEARCHPARAMS
+    if (neighborhood) params.set("neighborhood", neighborhood);
     if (bedrooms) params.set("bedrooms", bedrooms);
     if (bathrooms) params.set("bathrooms", bathrooms);
     if (parkingSpaces) params.set("parkingSpaces", parkingSpaces);
-
     router.push(`/properties?${params.toString()}`);
   };
 
@@ -56,40 +55,17 @@ export function PropertyQuickSearchBar() {
         <div className="bg-card rounded-2xl shadow-xl border border-border/30 p-10 md:p-6 ">
           {/* SINGLE ROW LAYOUT */}
           <div className="flex flex-col lg:flex-row lg:items-center gap-4">
-            <div className="flex bg-muted rounded-lg p-1 shrink-0">
-              <button
-                onClick={() => setDeliveryStatus("Pronto")}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all cursor-pointer ${
-                  deliveryStatus === "Lançamento"
-                    ? "bg-hero-bg text-white shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                Pronto
-              </button>
-
-              <button
-                onClick={() => setDeliveryStatus("Lançamento")}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all cursor-pointer ${
-                  deliveryStatus === "Pronto"
-                    ? "bg-hero-bg text-white shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                Lançamento
-              </button>
+            <div className="flex items-center p-4 shrink-0 bg-hero-bg rounded-full">
+              <Building2 className="size-6 text-white" />
             </div>
 
             {/* FILTERS */}
             <div className="flex flex-1 flex-col sm:flex-row gap-3">
               {/* LOCATION */}
               <span className="w-full px-2">
-                <InputGroup className="rounded-lg">
-                  <Input placeholder="Localização" className="border-none" />
-                  <InputGroupAddon>
-                    <MapPin />
-                  </InputGroupAddon>
-                </InputGroup>
+                <SearchLocationInput
+                  onLocationChange={(val) => setNeighborhood(val)}
+                />
               </span>
 
               {/* BEDROOMS */}
@@ -97,10 +73,7 @@ export function PropertyQuickSearchBar() {
                 value={bedrooms}
                 onValueChange={(value) => setBedrooms(value as DetailsQty)}
               >
-                <SelectTrigger
-                  variant={"gray"}
-                  className="w-full sm:w-36 h-10 border-border/50 rounded-lg text-sm"
-                >
+                <SelectTrigger className="w-full sm:w-36 h-10 border-border/50 rounded-lg text-sm">
                   <div className="flex items-center gap-2">
                     <BedDouble className="size-4 text-muted-foreground" />
                     <SelectValue placeholder="Quartos" />
@@ -120,10 +93,7 @@ export function PropertyQuickSearchBar() {
                 value={bathrooms}
                 onValueChange={(value) => setBathrooms(value as DetailsQty)}
               >
-                <SelectTrigger
-                  variant={"gray"}
-                  className="w-full sm:w-36 h-10 bg-background border-border/50 rounded-lg text-sm"
-                >
+                <SelectTrigger className="w-full sm:w-36 h-10 bg-background border-border/50 rounded-lg text-sm">
                   <div className="flex items-center gap-2">
                     <Bath className="h-4 w-4 text-muted-foreground" />
                     <SelectValue placeholder="Banheiros" />
@@ -143,10 +113,7 @@ export function PropertyQuickSearchBar() {
                 value={parkingSpaces}
                 onValueChange={(value) => setParkingSpaces(value as DetailsQty)}
               >
-                <SelectTrigger
-                  variant={"gray"}
-                  className="w-full sm:w-36 h-10 bg-background border-border/50 rounded-lg text-sm"
-                >
+                <SelectTrigger className="w-full sm:w-36 h-10 bg-background border-border/50 rounded-lg text-sm">
                   <div className="flex items-center gap-2">
                     <Car className="h-4 w-4 text-muted-foreground" />
                     <SelectValue placeholder="Vagas" />

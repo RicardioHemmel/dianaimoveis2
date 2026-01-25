@@ -10,7 +10,7 @@ export default function PropertyLocation({
 }) {
   // ADDRESS
   const street = address?.street;
-  const neighborhood = address?.neighborhood;
+  const neighborhood = address?.neighborhood?.name;
   const stateUf = address?.stateUf;
   const city = address?.city;
   const zipCode = address?.zipCode;

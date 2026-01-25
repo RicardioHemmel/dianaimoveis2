@@ -1,0 +1,11 @@
+export const CONSTRUCTION_COMPANIES = [
+  "Even",
+  "Cyrela",
+  "Eztec",
+  "Gafisa",
+  "Tegra",
+  "Vitacon",
+  "SKR",
+  "Lavvi",
+  "Gamaro",
+];

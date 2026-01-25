@@ -111,7 +111,7 @@ export function HorizontalPropertyCard({
 
           {address?.neighborhood && address.city && (
             <p className="text-sm mb-4">
-              {address?.neighborhood}, {address?.city}
+              {address?.street} - {address?.neighborhood.name}
             </p>
           )}
 

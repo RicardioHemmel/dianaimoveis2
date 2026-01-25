@@ -35,6 +35,7 @@ interface SearchResultsPageProps {
     priceMin?: string;
     priceMax?: string;
     search?: string;
+    neighborhood?: string;
   }>;
 }
 export default async function SearchResultsPage({
@@ -112,8 +113,13 @@ export default async function SearchResultsPage({
       ? { min: priceMin, max: priceMax }
       : null;
 
-  // --------- TEXT FILTER
+  // --------- PROPERTY TITLE | CONSTRUCTION COMPANY
   const search = resolvedParams.search ? resolvedParams.search : null;
+
+  // --------- NEIGHBORHOOD FILTER
+  const neighborhood = resolvedParams.neighborhood
+    ? resolvedParams.neighborhood
+    : null;
 
   // SETS ALL FILTER OPTIONS
   const selectedFilters: SelectedFilters = {
@@ -127,6 +133,7 @@ export default async function SearchResultsPage({
     areaRange,
     priceRange,
     search,
+    neighborhood,
   };
 
   // FETCHES FILTERED PROPERTIES WITH PAGINATION

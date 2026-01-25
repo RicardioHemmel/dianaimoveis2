@@ -123,7 +123,7 @@ export default function PropertyHero({
             address?.street &&
             address?.stateUf && (
               <p className="text-primary-foreground/80 text-lg">
-                {`${address?.street} - ${address?.neighborhood}, ${address?.city} - ${address?.stateUf}`}
+                {`${address?.street} - ${address?.neighborhood.name}, ${address?.city} - ${address?.stateUf}`}
               </p>
             )}
         </div>

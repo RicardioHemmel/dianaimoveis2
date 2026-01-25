@@ -43,7 +43,7 @@ const addressSchema = new Schema(
   {
     street: String,
     neighborhood: {
-      id: { type: Schema.Types.ObjectId, ref: "Neighborhood", index: true },
+      _id: { type: Schema.Types.ObjectId, ref: "Neighborhood", index: true },
       name: String, // FOR FAST READ
     },
     city: String,

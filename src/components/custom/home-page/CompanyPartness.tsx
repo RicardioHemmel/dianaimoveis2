@@ -25,7 +25,7 @@ export function CompanyPartners() {
             </span>
           </div>
           <p className="text-muted-foreground">
-            Trabalhamos com as melhores construtoras do mercado
+            Trabalhamos com todas as construtoras do mercado
           </p>
         </div>
 

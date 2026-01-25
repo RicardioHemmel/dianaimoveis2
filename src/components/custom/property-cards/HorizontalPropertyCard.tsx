@@ -27,7 +27,7 @@ export function HorizontalPropertyCard({
 }) {
   const {
     address,
-    propertyType,
+    constructionCompany,
     deliveryDate,
     title,
     bedrooms,
@@ -85,9 +85,9 @@ export function HorizontalPropertyCard({
             {deliveryStatus.label}
           </span>
         )}
-        {propertyType && (
+        {constructionCompany && (
           <span className="px-3 py-1 rounded-full bg-hero-bg border border-white/20 backdrop-blur-md text-white text-xs font-medium">
-            {propertyType.name}
+            {constructionCompany}
           </span>
         )}
         {deliveryDate && (

@@ -2,7 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search, MapPin, BedDouble, SlidersHorizontal } from "lucide-react";
+import {
+  Search,
+  MapPin,
+  BedDouble,
+  SlidersHorizontal,
+  Bath,
+  Car,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -11,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Link from "next/link";
 
 export function PropertyQuickSearchBar() {
   const router = useRouter();
@@ -28,54 +36,33 @@ export function PropertyQuickSearchBar() {
   };
 
   return (
-    <section className="relative -mt-12 z-20 pb-6">
+    <section className="relative -mt-12 z-20">
       <div className="container mx-auto px-4">
-        <div className="bg-card rounded-2xl shadow-xl border border-border/30 p-5 md:p-6">
+        <div className="bg-card rounded-2xl shadow-xl border border-border/30 md:p-6 ">
           {/* Single row layout */}
           <div className="flex flex-col lg:flex-row lg:items-center gap-4">
-            {/* Operation Type Toggle */}
-            <div className="flex bg-muted rounded-lg p-1 shrink-0">
-              <button
-                onClick={() => setOperationType("comprar")}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                  operationType === "comprar"
-                    ? "bg-hero-bg text-primary-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                Comprar
-              </button>
-              <button
-                onClick={() => setOperationType("alugar")}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                  operationType === "alugar"
-                    ? "bg-secondary text-secondary-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                Alugar
-              </button>
-            </div>
-
+            <button
+              onClick={() => setOperationType("comprar")}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                operationType === "comprar"
+                  ? "bg-hero-bg text-white shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Pronto
+            </button>
+            <button
+              onClick={() => setOperationType("alugar")}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                operationType === "alugar"
+                  ? "bg-hero-bg text-white shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Lançamento
+            </button>
             {/* FILTERS */}
             <div className="flex flex-1 flex-col sm:flex-row gap-3">
-              <Select value={location} onValueChange={setLocation}>
-                <SelectTrigger className="flex-1 h-10 bg-background border-border/50 rounded-lg text-sm">
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-muted-foreground" />
-                    <SelectValue placeholder="Localização" />
-                  </div>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="centro">Centro</SelectItem>
-                  <SelectItem value="zona-sul">Zona Sul</SelectItem>
-                  <SelectItem value="zona-norte">Zona Norte</SelectItem>
-                  <SelectItem value="zona-oeste">Zona Oeste</SelectItem>
-                  <SelectItem value="zona-leste">Zona Leste</SelectItem>
-                  <SelectItem value="litoral">Litoral</SelectItem>
-                </SelectContent>
-              </Select>
-
               <Select value={bedrooms} onValueChange={setBedrooms}>
                 <SelectTrigger className="w-full sm:w-36 h-10 bg-background border-border/50 rounded-lg text-sm">
                   <div className="flex items-center gap-2">
@@ -88,7 +75,39 @@ export function PropertyQuickSearchBar() {
                   <SelectItem value="2">2 quartos</SelectItem>
                   <SelectItem value="3">3 quartos</SelectItem>
                   <SelectItem value="4">4 quartos</SelectItem>
-                  <SelectItem value="5">5+ quartos</SelectItem>
+                  <SelectItem value="5+">5+ quartos</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={bedrooms} onValueChange={setBedrooms}>
+                <SelectTrigger className="w-full sm:w-36 h-10 bg-background border-border/50 rounded-lg text-sm">
+                  <div className="flex items-center gap-2">
+                    <Bath className="h-4 w-4 text-muted-foreground" />
+                    <SelectValue placeholder="Quartos" />
+                  </div>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1">1 banheiro</SelectItem>
+                  <SelectItem value="2">2 banheiros</SelectItem>
+                  <SelectItem value="3">3 banheiros</SelectItem>
+                  <SelectItem value="4">4 banheiros</SelectItem>
+                  <SelectItem value="5+">5+ banheiros</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={bedrooms} onValueChange={setBedrooms}>
+                <SelectTrigger className="w-full sm:w-36 h-10 bg-background border-border/50 rounded-lg text-sm">
+                  <div className="flex items-center gap-2">
+                    <Car className="h-4 w-4 text-muted-foreground" />
+                    <SelectValue placeholder="Quartos" />
+                  </div>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1">1 vaga</SelectItem>
+                  <SelectItem value="2">2 vagas</SelectItem>
+                  <SelectItem value="3">3 vagas</SelectItem>
+                  <SelectItem value="4">4 vagas</SelectItem>
+                  <SelectItem value="5+">5+ vagas</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -103,13 +122,16 @@ export function PropertyQuickSearchBar() {
                 Buscar
               </Button>
 
+              {/* ADVANCED SEARCH BUTTON */}
               <Button
                 variant="outline"
-                onClick={() => router.push("/busca")}
                 className="px-4 rounded-lg border-action-primary text-action-primary hover:bg-action-primary hover:text-white font-medium"
+                asChild
               >
-                <SlidersHorizontal className="h-4 w-4 mr-2" />
-                Mais filtros
+                <Link href={"/properties"}>
+                  <SlidersHorizontal className="h-4 w-4 mr-2" />
+                  Mais filtros
+                </Link>
               </Button>
             </div>
           </div>

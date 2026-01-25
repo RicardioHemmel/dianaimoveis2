@@ -17,6 +17,7 @@ export function BorderLessPropertyCard({
 }) {
   const {
     deliveryDate,
+    constructionCompany,
     title,
     bedrooms,
     bathrooms,
@@ -70,14 +71,22 @@ export function BorderLessPropertyCard({
             <ToggleFavoriteBtn propertyId={_id!} variant={"blur"} />
           </span>
 
+          {deliveryDate && (
+            <span
+              className={`absolute top-3 left-3 text-white text-xs font-semibold px-3 py-1.5 rounded-full w-fit ${deliveryStatus.badgeColor}`}
+            >
+              {deliveryStatus.label}
+            </span>
+          )}
+
           {/* BOTTOM CONTENT */}
           <div className="absolute inset-x-0 bottom-0 p-5 flex flex-col gap-3">
             {/* STATUS BADGE */}
-            {deliveryDate && (
+            {constructionCompany && (
               <span
-                className={`text-white text-xs font-semibold px-3 py-1.5 rounded-full w-fit ${deliveryStatus.badgeColor}`}
+                className={`px-3 py-1 rounded-full bg-white/20 border border-white/20 backdrop-blur-md text-white text-xs font-medium w-fit`}
               >
-                {deliveryStatus.label}
+                {constructionCompany}
               </span>
             )}
 

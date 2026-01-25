@@ -2,45 +2,48 @@
 
 // REACT | NEXT
 import { useEffect, useState, useRef } from "react";
+// COMPONENTS
 import { Input } from "@/components/ui/input";
 import { FormControl, FormItem, FormLabel } from "@/components/ui/form";
+// CONTEXT
 import { usePropertyFormContext } from "@/context/PropertyFormContext";
+// HOOK
 import { useNeighborhoodInput } from "@/hooks/use-neighborhood-input";
+// ICONS
 import { Plus, Loader2, MapPin } from "lucide-react";
 
 export function NeighborhoodInput() {
-  const { form } = usePropertyFormContext();
+  const { form } = usePropertyFormContext(); // CONTEXT
   const {
     handleSubmit,
     neighborhoods,
     query,
     setQuery,
-    loading, // Loading real vindo do hook
+    loading, // NEIGHBORHOOD FETCH LOADING
     setNeighborhoods,
   } = useNeighborhoodInput();
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [delayedLoading, setDelayedLoading] = useState(false); // Novo estado para o feedback visual
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(false); // CREATE AND NEIGHBORHOOD LIST DIV
+  const [hasExactMatch, setHasExactMatch] = useState(false); // FOR CREATE OPTION DISPLAY
+  const [delayedLoading, setDelayedLoading] = useState(false); // ONLY SETS SEARCHING ANIMATION AFTER 1 SEC
+  const containerRef = useRef<HTMLDivElement>(null); // FOR BETTER EXPERIENCE ON CLOSING DIV
 
-  // LOGICA PARA EVITAR PISCAGEM: Só mostra loading se passar de 1s
+  // WHEN FETCH LOADING CHANGES TO TRUE CREATES A TIMEOUT
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
     if (loading) {
-      // Se começou a carregar, espera 1s para ativar o visual de loading
       timer = setTimeout(() => {
         setDelayedLoading(true);
       }, 1000);
     } else {
-      // Se parou de carregar, remove o visual imediatamente
       setDelayedLoading(false);
     }
 
     return () => clearTimeout(timer);
   }, [loading]);
 
-  // Fecha a lista ao clicar fora
+  // CLOSES DIV WHEN CLICKING AWAY
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -54,20 +57,47 @@ export function NeighborhoodInput() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // WHEN QUERY REACHES 3 CHARS, OPENS DIV
   useEffect(() => {
-    setIsOpen(query.length > 2);
-  }, [query]);
+    const match = neighborhoods.some(
+      (n) => n.name.toLowerCase() === query.trim().toLowerCase(),
+    );
+    setHasExactMatch(match);
+    if (query.length >= 3 && (neighborhoods.length > 0 || !hasExactMatch)) {
+      setIsOpen(true);
+    }
+  }, [query, neighborhoods]);
 
-  const handleSelect = (n: { _id: string; name: string }) => {
-    form.setValue("address.neighborhood", { _id: n._id, name: n.name });
-    setQuery(n.name);
+  // SETS THE SELECTED NEIGHBORHOOD TO PROPETY FORM
+  const handleSelect = (neighborhood: { _id: string; name: string }) => {
+    form.setValue("address.neighborhood", neighborhood);
+    setQuery(neighborhood.name);
     setNeighborhoods([]);
     setIsOpen(false);
   };
 
+  // HANDLES NEIGHBORHOOD CREATION
   const handleCreate = async () => {
     await handleSubmit(form);
     setIsOpen(false);
+  };
+
+  // IF KEYBOARD KEY IS "ENTER" CREATES OR INSERTS A NEIGHBORHOOD
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // PREVENTS SUBMITING MAIN FORM
+
+      if (hasExactMatch) {
+        // IF THERE ARE NEIGHBORHOODS SELECTS THE FIRST ONE
+        const exactMatch = neighborhoods.find(
+          (n) => n.name.toLowerCase() === query.toLowerCase(),
+        );
+        if (exactMatch) handleSelect(exactMatch);
+      } else if (!loading && query.length >= 3) {
+        // IF THERES NO RESULT, CREATES A NEW NEIGHBORHOOD
+        handleCreate();
+      }
+    }
   };
 
   return (
@@ -76,17 +106,19 @@ export function NeighborhoodInput() {
 
       <div className="relative">
         <FormControl>
+          {/* NEIGHBORHOOD SEARCH INPUT */}
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            onFocus={() => query.length > 2 && setIsOpen(true)}
+            onFocus={() => query.length >= 3 && setIsOpen(true)}
+            onKeyDown={handleKeyDown}
             placeholder="Digite o bairro"
             variant={"gray"}
-            className="mt-1.5 pr-10"
+            className="mt-1.5"
           />
         </FormControl>
 
-        {/* Ícone usa o delayedLoading para não piscar no input */}
+        {/* ANIMATION WITH 1 SEC DELAY */}
         {delayedLoading && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2">
             <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
@@ -97,7 +129,7 @@ export function NeighborhoodInput() {
       {isOpen && (
         <div className="absolute top-full z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border bg-popover text-popover-foreground shadow-lg animate-in fade-in zoom-in-95">
           <div className="p-1">
-            {neighborhoods.length > 0 ? (
+            {neighborhoods.length > 0 && (
               <div className={loading ? "opacity-50" : "opacity-100"}>
                 <p className="px-2 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Bairros encontrados
@@ -114,14 +146,18 @@ export function NeighborhoodInput() {
                   </button>
                 ))}
               </div>
-            ) : (
-              // Só mostra "Criar" ou "Nenhum" se o loading REAL parou
-              !loading &&
-              query.length > 2 && (
+            )}
+
+            {!hasExactMatch && !loading && query.length >= 3 && (
+              <div
+                className={neighborhoods.length > 0 ? "mt-1 border-t pt-1" : ""}
+              >
                 <div className="p-1 animate-in fade-in duration-200">
-                  <p className="px-2 py-2 text-sm text-muted-foreground italic">
-                    Nenhum bairro encontrado.
-                  </p>
+                  {neighborhoods.length === 0 && (
+                    <p className="px-2 py-2 text-sm text-muted-foreground italic">
+                      Nenhum bairro encontrado.
+                    </p>
+                  )}
                   <button
                     type="button"
                     className="flex w-full items-center gap-2 rounded-sm bg-primary/5 px-2 py-2.5 text-sm font-medium text-primary hover:bg-primary/10 transition-all cursor-pointer border border-primary/10"
@@ -131,7 +167,7 @@ export function NeighborhoodInput() {
                     <span className="truncate">Criar bairro "{query}"</span>
                   </button>
                 </div>
-              )
+              </div>
             )}
 
             {/* Texto de busca só aparece após 1s de espera */}

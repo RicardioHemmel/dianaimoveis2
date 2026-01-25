@@ -45,16 +45,13 @@ export function useNeighborhoodInput() {
       } catch (err: any) {
         if (err.name === "AbortError") {
           console.log("Requisição cancelada (debounce)");
-        } else {
-          console.error("Erro inesperado:", err);
-          setNeighborhoods([]);
         }
       } finally {
         if (!signal.aborted) {
           setLoading(false);
         }
       }
-    }, 300);
+    }, 400);
 
     // CLEANUP FUNCTION
     return () => {

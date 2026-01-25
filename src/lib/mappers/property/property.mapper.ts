@@ -7,6 +7,7 @@ import {
   FloorPlanGalleryItemInputSchema,
   PropertyViewSchema,
   PropertyBaseSchema,
+  NeighborhoodSchema,
 } from "@/lib/schemas/property/property.schema";
 import {
   IProperty,
@@ -16,6 +17,7 @@ import {
   IToggleFieldSchema,
   IGallerySchema,
   IFloorPlanGallerySchema,
+  INeighborhood,
 } from "@/lib/schemas/property/IProperty";
 import { Types } from "mongoose";
 import { resolveImageUrl } from "@/lib/media/resolveImageUrl"; // GENERATES URL FROM ENV FILE
@@ -104,7 +106,12 @@ export class PropertyMapper {
 
     return {
       street: address.street || null,
-      neighborhood: address.neighborhood || null,
+      neighborhood: address.neighborhood
+        ? {
+            _id: new Types.ObjectId(address.neighborhood._id),
+            name: address.neighborhood.name,
+          }
+        : null,
       city: address.city || null,
       stateUf: address.stateUf || null,
       zipCode: address.zipCode || null,
@@ -120,7 +127,12 @@ export class PropertyMapper {
     if (!address) return undefined;
     return {
       street: address.street ?? "",
-      neighborhood: address.neighborhood ?? "",
+      neighborhood: address.neighborhood
+        ? {
+            _id: address.neighborhood._id?.toString(),
+            name: address.neighborhood.name,
+          }
+        : undefined,
       city: address.city ?? "",
       stateUf: address.stateUf ?? "",
       zipCode: address.zipCode ?? "",
@@ -317,10 +329,19 @@ export class PropertyMapper {
     };
   }
 
-  static PropertyDetailToView(PropertyDetail: IPopulatedRef) {
+  static PropertyDetailToView(propertyDetail: IPopulatedRef) {
     return {
-      _id: PropertyDetail._id.toString(),
-      name: PropertyDetail.name,
+      _id: propertyDetail._id.toString(),
+      name: propertyDetail.name,
+    };
+  }
+
+  static PropertyNeighborhoodToSchema(
+    neighborhood: INeighborhood,
+  ): NeighborhoodSchema {
+    return {
+      _id: neighborhood._id.toString(),
+      name: neighborhood.name,
     };
   }
 }

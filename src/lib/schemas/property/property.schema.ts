@@ -11,9 +11,16 @@ const toggleFieldSchema = z.object({
 export type ToggleFieldSchema = z.infer<typeof toggleFieldSchema>;
 
 // -------- ADDRESS
+const neighborhoodSchema = z.object({
+  _id: z.string(),
+  name: z.string(),
+});
+
+export type NeighborhoodSchema = z.infer<typeof neighborhoodSchema>;
+
 const addressSchema = z.object({
   street: z.string().optional(),
-  neighborhood: z.string().optional(),
+  neighborhood: neighborhoodSchema.optional(),
   city: z.string().optional(),
   stateUf: z.string().optional(),
   zipCode: z.string().optional(),
@@ -186,7 +193,6 @@ export const DefaultValuesPropertyForm: PropertyInputSchema = {
   address: {
     street: "",
     city: "",
-    neighborhood: "",
     stateUf: "",
     zipCode: "",
     referencePoint: [],

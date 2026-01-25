@@ -14,7 +14,7 @@ interface CreatePropertyActionResponse extends ServerActionResponse {
 }
 
 export async function createPropertyAction(
-  formData: PropertyInputSchema
+  formData: PropertyInputSchema,
 ): Promise<CreatePropertyActionResponse> {
   const parsed = propertyInputSchema.safeParse(formData);
 

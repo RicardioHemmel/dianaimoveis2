@@ -130,7 +130,7 @@ export function VerticalPropertyCard({
           <div className="flex items-start gap-2 text-muted-foreground mb-5">
             <MapPin className="size-4 mt-0.5 shrink-0 text-action-primary" />
             <span className="text-sm line-clamp-1">
-              {address?.street}, {address?.neighborhood}
+              {address?.street}, {address?.neighborhood?.name}
             </span>
           </div>
         )}

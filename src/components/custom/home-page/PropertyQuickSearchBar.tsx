@@ -9,6 +9,7 @@ import {
   SlidersHorizontal,
   Bath,
   Car,
+  Pin,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,54 +20,89 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Link from "next/link";
+import { Input } from "@/components/ui/input";
+import { InputGroup, InputGroupAddon } from "@/components/ui/input-group";
+
+// PROPERTY DETAILS QTY FILTER
+export type DetailsQty = "1" | "2" | "3" | "4" | "5+";
 
 export function PropertyQuickSearchBar() {
+  // REDIRECT
   const router = useRouter();
-  const [operationType, setOperationType] = useState<string>("comprar");
-  const [location, setLocation] = useState<string>("");
-  const [bedrooms, setBedrooms] = useState<string>("");
 
+  // FILTER STATES
+  const [deliveryStatus, setDeliveryStatus] = useState<"Lançamento" | "Pronto">(
+    "Lançamento",
+  );
+  const [bedrooms, setBedrooms] = useState<DetailsQty | undefined>(undefined);
+  const [bathrooms, setBathrooms] = useState<DetailsQty | undefined>(undefined);
+  const [parkingSpaces, setParkingSpaces] = useState<DetailsQty | undefined>(
+    undefined,
+  );
+
+  // HANDLE FILTER SEARCH
   const handleSearch = () => {
     const params = new URLSearchParams();
-    if (operationType) params.set("operacao", operationType);
-    if (location) params.set("localizacao", location);
-    if (bedrooms) params.set("quartos", bedrooms);
+    if (bedrooms) params.set("bedrooms", bedrooms);
+    if (bathrooms) params.set("bathrooms", bathrooms);
+    if (parkingSpaces) params.set("parkingSpaces", parkingSpaces);
 
-    router.push(`/busca?${params.toString()}`);
+    router.push(`/properties?${params.toString()}`);
   };
 
   return (
     <section className="relative -mt-12 z-20">
       <div className="container mx-auto px-4">
-        <div className="bg-card rounded-2xl shadow-xl border border-border/30 md:p-6 ">
-          {/* Single row layout */}
+        <div className="bg-card rounded-2xl shadow-xl border border-border/30 p-10 md:p-6 ">
+          {/* SINGLE ROW LAYOUT */}
           <div className="flex flex-col lg:flex-row lg:items-center gap-4">
-            <button
-              onClick={() => setOperationType("comprar")}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                operationType === "comprar"
-                  ? "bg-hero-bg text-white shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Pronto
-            </button>
-            <button
-              onClick={() => setOperationType("alugar")}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                operationType === "alugar"
-                  ? "bg-hero-bg text-white shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Lançamento
-            </button>
+            <div className="flex bg-muted rounded-lg p-1 shrink-0">
+              <button
+                onClick={() => setDeliveryStatus("Pronto")}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all cursor-pointer ${
+                  deliveryStatus === "Lançamento"
+                    ? "bg-hero-bg text-white shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Pronto
+              </button>
+
+              <button
+                onClick={() => setDeliveryStatus("Lançamento")}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all cursor-pointer ${
+                  deliveryStatus === "Pronto"
+                    ? "bg-hero-bg text-white shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Lançamento
+              </button>
+            </div>
+
             {/* FILTERS */}
             <div className="flex flex-1 flex-col sm:flex-row gap-3">
-              <Select value={bedrooms} onValueChange={setBedrooms}>
-                <SelectTrigger className="w-full sm:w-36 h-10 bg-background border-border/50 rounded-lg text-sm">
+              {/* LOCATION */}
+              <span className="w-full px-2">
+                <InputGroup className="rounded-lg">
+                  <Input placeholder="Localização" className="border-none" />
+                  <InputGroupAddon>
+                    <MapPin />
+                  </InputGroupAddon>
+                </InputGroup>
+              </span>
+
+              {/* BEDROOMS */}
+              <Select
+                value={bedrooms}
+                onValueChange={(value) => setBedrooms(value as DetailsQty)}
+              >
+                <SelectTrigger
+                  variant={"gray"}
+                  className="w-full sm:w-36 h-10 border-border/50 rounded-lg text-sm"
+                >
                   <div className="flex items-center gap-2">
-                    <BedDouble className="h-4 w-4 text-muted-foreground" />
+                    <BedDouble className="size-4 text-muted-foreground" />
                     <SelectValue placeholder="Quartos" />
                   </div>
                 </SelectTrigger>
@@ -79,11 +115,18 @@ export function PropertyQuickSearchBar() {
                 </SelectContent>
               </Select>
 
-              <Select value={bedrooms} onValueChange={setBedrooms}>
-                <SelectTrigger className="w-full sm:w-36 h-10 bg-background border-border/50 rounded-lg text-sm">
+              {/* BATHROOMS */}
+              <Select
+                value={bathrooms}
+                onValueChange={(value) => setBathrooms(value as DetailsQty)}
+              >
+                <SelectTrigger
+                  variant={"gray"}
+                  className="w-full sm:w-36 h-10 bg-background border-border/50 rounded-lg text-sm"
+                >
                   <div className="flex items-center gap-2">
                     <Bath className="h-4 w-4 text-muted-foreground" />
-                    <SelectValue placeholder="Quartos" />
+                    <SelectValue placeholder="Banheiros" />
                   </div>
                 </SelectTrigger>
                 <SelectContent>
@@ -95,11 +138,18 @@ export function PropertyQuickSearchBar() {
                 </SelectContent>
               </Select>
 
-              <Select value={bedrooms} onValueChange={setBedrooms}>
-                <SelectTrigger className="w-full sm:w-36 h-10 bg-background border-border/50 rounded-lg text-sm">
+              {/* PARKING SPACES */}
+              <Select
+                value={parkingSpaces}
+                onValueChange={(value) => setParkingSpaces(value as DetailsQty)}
+              >
+                <SelectTrigger
+                  variant={"gray"}
+                  className="w-full sm:w-36 h-10 bg-background border-border/50 rounded-lg text-sm"
+                >
                   <div className="flex items-center gap-2">
                     <Car className="h-4 w-4 text-muted-foreground" />
-                    <SelectValue placeholder="Quartos" />
+                    <SelectValue placeholder="Vagas" />
                   </div>
                 </SelectTrigger>
                 <SelectContent>
@@ -116,7 +166,7 @@ export function PropertyQuickSearchBar() {
             <div className="flex items-center gap-3 shrink-0">
               <Button
                 onClick={handleSearch}
-                className="rounded-lg font-medium bg-hero-bg"
+                className="rounded-lg font-medium bg-hero-bg hover:bg-hero-bg-hover"
               >
                 <Search className="h-4 w-4 mr-2" />
                 Buscar

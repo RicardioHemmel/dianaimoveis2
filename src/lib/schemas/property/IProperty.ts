@@ -14,9 +14,14 @@ export interface IRangeSchema {
   max?: number;
 }
 
+export interface INeighborhood {
+  _id: Types.ObjectId;
+  name: string;
+}
+
 export interface IAddressSchema {
   street: string | null;
-  neighborhood: string | null;
+  neighborhood: INeighborhood | null;
   city: string | null;
   stateUf: string | null;
   zipCode: string | null;

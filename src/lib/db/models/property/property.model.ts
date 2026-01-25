@@ -42,7 +42,10 @@ const toggleFieldSchema = new Schema(
 const addressSchema = new Schema(
   {
     street: String,
-    neighborhood: String,
+    neighborhood: {
+      id: { type: Schema.Types.ObjectId, ref: "Neighborhood", index: true },
+      name: String, // FOR FAST READ
+    },
     city: String,
     stateUf: String,
     zipCode: String,

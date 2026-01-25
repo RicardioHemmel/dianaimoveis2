@@ -35,6 +35,7 @@ import { usePropertyFormContext } from "@/context/PropertyFormContext";
 // ICONS
 import { Plus, MapPin, X, Navigation } from "lucide-react";
 import { useWatch } from "react-hook-form";
+import { NeighborhoodInput } from "./custom-input/NeighborhoodInput";
 
 export default function TabLocation() {
   const { form } = usePropertyFormContext();
@@ -86,25 +87,10 @@ export default function TabLocation() {
           />
         </div>
 
-        <FormField
-          control={form.control}
-          name="address.neighborhood"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Bairro</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Digite o bairro"
-                  variant="gray"
-                  className="mt-1.5"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {/* NEIGHBORHOOD INPUT */}
+        <NeighborhoodInput />
 
+        {/* CITY */}
         <FormField
           control={form.control}
           name="address.city"
@@ -124,6 +110,7 @@ export default function TabLocation() {
           )}
         />
 
+        {/* STATE - UF */}
         <FormField
           control={form.control}
           name="address.stateUf"
@@ -148,6 +135,7 @@ export default function TabLocation() {
           )}
         />
 
+        {/* CEP  */}
         <FormField
           control={form.control}
           name={"address.zipCode"}
@@ -174,6 +162,7 @@ export default function TabLocation() {
         />
       </div>
 
+      {/* REFERENCE POINT */}
       <div className="col-span-2 mt-4">
         <FormField
           control={form.control}

@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/select";
 
 // HOOKS
-import { useBreakpoint } from "@/hooks/useBreakpoint";
+import { useBreakpoint } from "@/hooks/use-breakpoint";
 
 // CONTEXT
 import { useSearchPropertyContext } from "@/context/SearchPropertyContext";

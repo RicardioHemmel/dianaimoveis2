@@ -11,7 +11,7 @@ const toggleFieldSchema = z.object({
 export type ToggleFieldSchema = z.infer<typeof toggleFieldSchema>;
 
 // -------- ADDRESS
-const neighborhoodSchema = z.object({
+export const neighborhoodSchema = z.object({
   _id: z.string(),
   name: z.string(),
 });

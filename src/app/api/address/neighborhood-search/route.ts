@@ -1,21 +1,39 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import Neighborhood from "@/lib/db/models/address/neighborhood.model";
 import connectMongoDB from "@/lib/db/mongodbConnection";
+import { PropertyMapper } from "@/lib/mappers/property/property.mapper";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function handler(req: NextApiRequest, res: NextApiResponse) {
-  await connectMongoDB();
+export async function GET(req: NextRequest) {
+  try {
+    await connectMongoDB();
 
-  const { q } = req.query;
+    // GET URL PARAM
+    const searchParams = req.nextUrl.searchParams;
+    const query = searchParams.get("q");
 
-  if (!q || typeof q !== "string") {
-    return res.status(200).json([]);
+    // IF THERE NO QUERY, RETURN
+    if (!query) {
+      return NextResponse.json([], { status: 200 });
+    }
+
+    // SEARCH NEIGHBORHOODS ON DB
+    const neighborhoods = await Neighborhood.find({
+      name: { $regex: query, $options: "i" }, // IGNORES UPPER AND LOWER CASE
+    })
+      .limit(8)
+      .lean();
+
+    // MAPS TO ZOD SCHEMA
+    const mappedNeighborhoods = neighborhoods.map((n) =>
+      PropertyMapper.PropertyNeighborhoodToSchema(n),
+    );
+
+    return NextResponse.json(mappedNeighborhoods, { status: 200 });
+  } catch (error) {
+    console.error("Erro na busca de bairros:", error);
+    return NextResponse.json(
+      { error: "Erro interno no servidor" },
+      { status: 500 },
+    );
   }
-
-  const neighborhoods = await Neighborhood.find({
-    name: { $regex: q, $options: "i" },
-  })
-    .limit(10)
-    .lean();
-
-  return res.status(200).json(neighborhoods);
 }

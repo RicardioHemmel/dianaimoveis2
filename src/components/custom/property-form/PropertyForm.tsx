@@ -62,6 +62,8 @@ export default function PropertyForm() {
     initialData,
   } = usePropertyFormContext(); // CONTEXT
 
+  console.log(form.getValues());
+
   const mode = formModeConfig[formMode];
 
   const [isPending, startTransition] = useTransition();

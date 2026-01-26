@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { EmptySearchResults } from "@/components/custom/search-results-page/EmptySearchResults";
 
 // HOOKS
 import { useBreakpoint } from "@/hooks/use-breakpoint";
@@ -101,7 +102,9 @@ export function SearchResults() {
           <Pagination />
         </div>
       ) : (
-        <div> Nenhum imóvel encontrado</div>
+        <div className="mt-8">
+          <EmptySearchResults />
+        </div>
       )}
     </>
   );

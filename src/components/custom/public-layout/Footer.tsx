@@ -9,9 +9,11 @@ import {
   Heart,
 } from "lucide-react";
 import Link from "next/link";
+import { getExperienceYears } from "@/lib/formatters/ui-formatters/experience-years";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
+  const experienceYears = getExperienceYears();
   return (
     <footer className="relative bg-hero-bg text-primary-foreground overflow-hidden">
       {/* MAIN FOOTER CONTENT */}
@@ -24,9 +26,8 @@ export function Footer() {
               Diana Imóveis
             </h4>
             <p className="text-primary-foreground/70 text-sm leading-relaxed mb-6 pr-4">
-              Realizando o sonho da casa própria há mais de 20 anos em São
-              Paulo. Expertise e dedicação para encontrar o imóvel perfeito para
-              você.
+              Realizando o sonho da casa própria há mais de {experienceYears} anos em São Paulo. 
+              Atuamos com dedicação e transparência para encontrar o imóvel ideal para você e sua família.
             </p>
             <div className="flex gap-3 justify-center md:justify-start">
               {[
@@ -84,7 +85,7 @@ export function Footer() {
                   <span className="w-10 h-10 rounded-lg bg-primary-foreground/10 flex items-center justify-center group-hover:bg-secondary group-hover:text-secondary-foreground transition-all">
                     <Phone className="h-4 w-4" />
                   </span>
-                  (11) 96653-6993​
+                  (11) 96653-6993
                 </a>
               </li>
               <li>
@@ -110,15 +111,15 @@ export function Footer() {
             <ul className="space-y-2 text-primary-foreground/70 text-sm mb-6">
               <li className="flex justify-between md:justify-between">
                 <span>Segunda a Sexta</span>
-                <span className="text-secondary">8h às 18h</span>
+                <span className="text-secondary">8h às 22h</span>
               </li>
               <li className="flex justify-between md:justify-between">
                 <span>Sábados</span>
-                <span className="text-secondary">8h às 18h</span>
+                <span className="text-secondary">8h às 22h</span>
               </li>
               <li className="flex justify-between md:justify-between">
                 <span>Domingos e Feriados</span>
-                <span className="text-secondary">8h às 18h</span>
+                <span className="text-secondary">8h às 22h</span>
               </li>
             </ul>
             <div className="p-4 rounded-xl bg-primary-foreground/5 border border-primary-foreground/10">

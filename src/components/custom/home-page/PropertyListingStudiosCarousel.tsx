@@ -9,7 +9,7 @@ export function PropertyListingStudiosCarousel({
   properties: PropertyViewSchema[];
 }) {
   return (
-    <section className="py-20 bg-muted/30">
+    <section className="py-20 bg-[#F2F4F7]">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="title-section mb-3">Studios para Morar ou Investir</h2>

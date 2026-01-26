@@ -26,6 +26,12 @@
   --color-surface-base: #f9fafb;
   --color-surface-muted: #f5f7f8;
 
+   /* Navbar colors */
+   --color-navbar-bg: #fbfbfb;
+   --color-navbar-text: #1F2933;
+   --color-navbar-hover: #0C2E4F;
+   --color-navbar-active: #C9A24D;
+
   /* Hero */
   --color-hero-bg: #142952;
   --color-hero-bg-hover: #0a1936;
@@ -34,7 +40,7 @@
   --color-hero-to: hsl(220, 66%, 18%);
 
   /* Actions */
-  --color-action-primary: #f1c644;
+  --color-action-primary: #e7b520;
   --color-action-primary-hover: #cca42c;
 
   /* =========================

@@ -20,8 +20,14 @@
   --bg-hero: #142952;
   --bg-hero-hover: #0a1936;
 
-  --action-primary: #f1c644;
+  --action-primary: #e7b520;
   --action-primary-hover: #cca42c;
+
+  /* NAVBAR COLORS */
+
+  --navbar-bg: #fbfbfb;
+  --navbar-text: #1F2933;
+  --navbar-bg-hover: #0C2E4F;
 
   /* DASHBOARD VARIABLES */
   --soft-primary-custom: #018493;

@@ -166,7 +166,7 @@ export function VerticalPropertyCard({
           {/* GO TO PROPERTY PAGE */}
           <Link
             href={`/property/${_id}`}
-            className="px-4 py-2 rounded-full bg-hero-bg text-white text-sm font-semibold hover:bg-hero-via transition-all duration-300"
+            className="px-4 py-2 rounded-full bg-action-primary text-white text-sm font-semibold hover:bg-action-primary-hover transition-all duration-300"
           >
             Ver Detalhes
           </Link>

@@ -36,7 +36,7 @@ export function Navbar() {
   const [open, setOpen] = useState<boolean>(false);
 
   return (
-    <header className="flex justify-center min-h-20 border-b">
+    <header className="bg-navbar-bg flex justify-center min-h-20 border-b">
       <div className="w-[90%] max-w-7xl flex justify-between items-center">
         {/* LOGO */}
         <div>
@@ -61,12 +61,10 @@ export function Navbar() {
                   <NavigationMenuLink asChild>
                     <Link
                       href={item.path}
-                      className={`${
-                        isActive ? "text-action-primary" : ""
-                      } font-semibold hover:bg-zinc-200/70`}
-                    >
+                      className={`font-semibold transition-colors px-3 py-2 rounded-md ${isActive ? "text-[var(--color-action-primary)]" : "text-navbar-text"} hover:text-white hover:bg-[var(--color-navbar-hover)]`}>
                       {item.title}
                     </Link>
+
                   </NavigationMenuLink>
                 </NavigationMenuItem>
               );
@@ -75,15 +73,15 @@ export function Navbar() {
         </NavigationMenu>
 
         {/* ACTIONS (WHATS + REDES) */}
-        <div className="hidden xl:flex items-center gap-5">
+        <div className="hidden xl:flex items-center gap-5 text-navbar-text">
           <Button
             variant="ghost"
             size="icon"
-            className="bg-gray-100 hover:bg-bg-tag hover:text-tag transition-all duration-300"
+            className="bg-gray-200 hover:bg-bg-tag hover:text-tag transition-all duration-300"
             asChild
           >
             <Link href="/properties">
-              <Search className="h-5 w-5" />
+              <Search className="bg-gray-200 h-5 w-5" />
             </Link>
           </Button>
 
@@ -93,8 +91,8 @@ export function Navbar() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Phone className="w-5 h-5 mr-2" />
-              Fale Comigo
+              <Phone className="text-navbar-text w-5 h-5 mr-2" />
+              Entre em contato
             </a>
           </Button>
         </div>
@@ -125,9 +123,8 @@ export function Navbar() {
                       key={item.title}
                       href={item.path}
                       onClick={() => setOpen(false)}
-                      className={`${
-                        isActive ? "text-[#447C9C]" : ""
-                      } font-semibold text-2xl`}
+                      className={`${isActive ? "text-[#447C9C]" : ""
+                        } font-semibold text-2xl`}
                     >
                       {item.title}
                     </Link>

@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 // FORMATTER
 import { getExperienceYears } from "@/lib/formatters/ui-formatters/experience-years";
 
+import Image from "next/image";
+
 export const metadata: Metadata = {
   title: "Sobre",
 };
@@ -46,8 +48,9 @@ export default function AboutPage() {
       {/* HERO SECTION */}
       <section className="flex justify-center items-center h-[440px] bg-linear-to-br from-hero-from via-hero-via to-hero-to">
         <div className="flex flex-col justify-center align-middle text-center animate-fade-in">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 ">
-            Sobre a <span className="text-tag">Diana Imóveis</span>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+            Sobre a{" "}
+            <span className="text-tag-text !font-primary">Diana Imóveis</span>
           </h1>
           <p className="text-lg text-white/80 max-w-2xl mx-auto">
             Transformando sonhos em realidade com dedicação, experiência e um
@@ -62,23 +65,26 @@ export default function AboutPage() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* PHOTO CONTAINER */}
             <div>
-              <div className="relative max-w-sm mx-auto">
+              <div className="relative max-w-sm mx-auto flex justify-center">
                 {/* DECORATIVE RECTANGLES */}
-                <div className="absolute -top-4 -left-4 w-full h-full bg-bg-tag rounded-2xl" />
-                <div className="absolute -bottom-4 -right-4 w-full h-full bg-[#cac2d4ab] rounded-2xl" />
+                <div className="absolute -top-4 left-2 sm:-left-4 w-[80%]  sm:w-full h-full bg-action-primary/40 rounded-2xl" />
+                <div className="absolute -bottom-4 right-2 sm:-right-4 w-[80%]  sm:w-full h-full bg-[#cac2d4ab] rounded-2xl" />
 
                 {/* MAIN PHOTO */}
-                <div className="relative overflow-hidden rounded-2xl shadow-2xl">
-                  <img
-                    src={"/dianaPhoto.webp"}
+                <div className="relative  w-[80%] sm:w-full h-[350px] sm:h-[420px] overflow-hidden rounded-2xl shadow-2xl">
+                  <Image
+                    src={"/dianaPhoto.png"}
                     alt="Corretora Diana"
-                    className="w-full h-auto object-cover"
+                    className="object-cover"
+                    fill
                   />
                 </div>
 
                 {/* CRECI BADGE */}
-                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-[60%] bg-white shadow-xl rounded-full px-6 py-3 flex items-center gap-2">
-                  <Award className="w-5 h-5 text-tag" />
+                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-[60%] bg-white shadow-xl rounded-full px-5 py-2 flex items-center gap-2">
+                  <span className="bg-action-primary/15 rounded-full p-2">
+                    <Award className="size-5 text-action-primary" />
+                  </span>
                   <span className="font-semibold text-zinc-900 text-sm sm:text-base">
                     CRECI: 197556-F
                   </span>
@@ -89,11 +95,11 @@ export default function AboutPage() {
             {/* CONTENT */}
             <div className="w-full md:w-[90%]">
               <div className="flex justify-center lg:inline-block">
-                <span className="inline-block px-4 py-2 bg-bg-tag text-tag rounded-full text-sm font-medium mb-6 ">
+                <span className="inline-block px-4 py-2 bg-action-primary/85 text-white rounded-full text-sm font-medium mb-6 ">
                   Quem Sou Eu
                 </span>
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6 text-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
                 Corretora Diana
               </h2>
 
@@ -150,10 +156,10 @@ export default function AboutPage() {
             {stats.map((stat, index) => (
               <div
                 key={index}
-                className="text-center p-8 bg-background rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in"
+                className="text-center p-8 white-card rounded-2xl transition-all duration-300 hover:-translate-y-1 animate-fade-in"
               >
-                <div className="w-16 h-16 mx-auto mb-4 bg-bg-tag rounded-full flex items-center justify-center">
-                  <stat.icon className="w-8 h-8 text-tag" />
+                <div className="size-16 mx-auto mb-4 bg-action-primary/15 rounded-full flex items-center justify-center">
+                  <stat.icon className="size-8 text-action-primary" />
                 </div>
                 <div className="text-4xl font-bold text-navy mb-2">
                   {stat.value}
@@ -169,7 +175,7 @@ export default function AboutPage() {
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12 animate-fade-in">
-            <span className="inline-block px-4 py-2 bg-bg-tag text-tag rounded-full text-sm font-medium mb-6">
+            <span className="inline-block px-4 py-2 bg-action-primary/15 text-action-primary rounded-full text-sm font-medium mb-6">
               Nossos Valores
             </span>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -187,7 +193,7 @@ export default function AboutPage() {
                 className="group p-8 bg-muted/30 rounded-2xl hover:bg-secondary/5 transition-all duration-300 animate-slide-up"
               >
                 <div
-                  className="w-14 h-14 mb-6 bg-bg-tag rounded-xl flex items-center justify-center 
+                  className="w-14 h-14 mb-6 bg-action-primary/15 rounded-xl flex items-center justify-center 
     group-hover:bg-action-primary group-hover:scale-110 transition-all duration-300"
                 >
                   <value.icon
@@ -218,7 +224,7 @@ export default function AboutPage() {
               Porque Dele e por Ele, e para Ele, são todas as coisas; glória,
               pois, a Ele eternamente. Amém.
             </blockquote>
-            <cite className="text-tag font-medium text-lg">
+            <cite className="text-action-primary font-medium text-lg">
               — Romanos 11:36
             </cite>
           </div>

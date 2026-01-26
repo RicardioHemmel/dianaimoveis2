@@ -4,14 +4,16 @@ import {
   MapPin,
   Instagram,
   Facebook,
-  Linkedin,
   Youtube,
   Heart,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+import { getExperienceYears } from "@/lib/formatters/ui-formatters/experience-years";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
+  const experienceYears = getExperienceYears();
   return (
     <footer className="relative bg-hero-bg text-primary-foreground overflow-hidden">
       {/* MAIN FOOTER CONTENT */}
@@ -23,28 +25,32 @@ export function Footer() {
               <span className="w-8 h-0.5 bg-action-primary" />
               Diana Imóveis
             </h4>
-            <p className="text-primary-foreground/70 text-sm leading-relaxed mb-6 pr-4">
-              Realizando o sonho da casa própria há mais de 20 anos em São
-              Paulo. Expertise e dedicação para encontrar o imóvel perfeito para
-              você.
+            <p className="text-primary-foreground/70 text-sm leading-relaxed mb-6 pr-2">
+              Há mais de {experienceYears} anos em São Paulo, conectamos você às
+              melhores oportunidades de moradia e investimento.
             </p>
             <div className="flex gap-3 justify-center md:justify-start">
               {[
-                { icon: Instagram, href: "#" },
-                { icon: Facebook, href: "#" },
-                { icon: Linkedin, href: "#" },
+                {
+                  icon: Instagram,
+                  href: "https://www.instagram.com/dianaimoveis_corretora/",
+                },
+                {
+                  icon: Facebook,
+                  href: "https://www.facebook.com/profile.php?id=61564438610067",
+                },
               ].map((social, index) => (
-                <a
+                <Link
                   key={index}
                   href={social.href}
-                  className="w-10 h-10 rounded-lg bg-primary-foreground/10 flex items-center justify-center hover:bg-secondary hover:text-secondary-foreground transition-all duration-300 hover:scale-110"
+                  className="size-10 rounded-lg bg-primary-foreground/10 flex items-center justify-center hover:bg-secondary hover:text-secondary-foreground transition-all duration-300 hover:scale-110"
                 >
                   <social.icon className="h-5 w-5" />
-                </a>
+                </Link>
               ))}
             </div>
           </div>
-          {/* Quick Links */}
+          {/* QUICK LINKS */}
           <div className="text-center md:text-left">
             <h4 className="font-semibold mb-6 flex items-center gap-2 justify-center md:justify-start">
               <span className="w-8 h-0.5 bg-action-primary" />
@@ -52,11 +58,11 @@ export function Footer() {
             </h4>
             <ul className="space-y-3 text-primary-foreground/70 text-sm">
               {[
-                { label: "Imóveis à Venda", href: "/imoveis" },
-                { label: "Lançamentos", href: "/lancamentos" },
-                { label: "Buscar Imóveis", href: "/busca" },
-                { label: "Sobre Nós", href: "/sobre" },
-                { label: "Blog", href: "#" },
+                { label: "Buscar Imóveis", href: "/properties" },
+                { label: "Lançamentos", href: "/properties?sortOption=launch" },
+                { label: "Sobre Nós", href: "/about" },
+                { label: "Anunciar imóvel", href: "/announce-property" },
+                { label: "Imóveis Favoritados", href: "/favorites" },
               ].map((link) => (
                 <li key={link.label}>
                   <Link
@@ -69,7 +75,7 @@ export function Footer() {
               ))}
             </ul>
           </div>
-          {/* Contact */}
+          {/* CONTACT */}
           <div className="text-center md:text-left">
             <h4 className="font-semibold mb-6 flex items-center gap-2 justify-center md:justify-start">
               <span className="w-8 h-0.5 bg-action-primary" />
@@ -77,19 +83,43 @@ export function Footer() {
             </h4>
             <ul className="space-y-4 text-primary-foreground/70 text-sm">
               <li>
-                <a
-                  href="tel:+5511999999999"
+                <Link
+                  href="tel:+5511966536993"
                   className="flex items-center gap-3 hover:text-secondary transition-colors group justify-center md:justify-start"
                 >
                   <span className="w-10 h-10 rounded-lg bg-primary-foreground/10 flex items-center justify-center group-hover:bg-secondary group-hover:text-secondary-foreground transition-all">
                     <Phone className="h-4 w-4" />
                   </span>
-                  (11) 96653-6993​
-                </a>
+                  (11) 96653-6993
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="https://wa.me/5511966536993?text=Olá%20Diana,"
+                  className="flex items-center gap-3 hover:text-secondary transition-colors group justify-center md:justify-start"
+                >
+                  <span className="group size-10 rounded-lg bg-primary-foreground/10 flex items-center justify-center transition-all group-hover:bg-secondary">
+                    <Image
+                      src="/icons/whatsapp.svg"
+                      alt="whatsapp icon"
+                      width={20}
+                      height={20}
+                      className="  invert 
+      brightness-200 
+      opacity-70 
+      transition-all 
+      group-hover:invert-0 
+      group-hover:brightness-0 
+      group-hover:opacity-100
+    "
+                    />
+                  </span>
+                  (11) 96653-6993
+                </Link>
               </li>
               <li>
                 <a
-                  href="mailto:contato@veryimoveis.com.br"
+                  href="https://mail.google.com/mail/?view=cm&fs=1&to=dianahemmel@creci.org.br&su=Diana%20Im%C3%B3veis&body=Ol%C3%A1%20Diana,"
                   className="flex items-center gap-3 hover:text-secondary transition-colors group justify-center md:justify-start"
                 >
                   <span className="w-10 h-10 rounded-lg bg-primary-foreground/10 flex items-center justify-center group-hover:bg-secondary group-hover:text-secondary-foreground transition-all">
@@ -101,24 +131,24 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Hours & Certifications */}
-          <div className="text-center md:text-left">
+          {/* HOURS & CERTIFICATIONS */}
+          <div className="text-center flex flex-col items-center md:items-start">
             <h4 className="font-semibold mb-6 flex items-center gap-2 justify-center md:justify-start">
               <span className="w-8 h-0.5 bg-action-primary" />
               Horário de Atendimento
             </h4>
-            <ul className="space-y-2 text-primary-foreground/70 text-sm mb-6">
-              <li className="flex justify-between md:justify-between">
+            <ul className="space-y-2 text-primary-foreground/70 text-sm mb-6 w-7/8 sm:w-3/5 md:w-4/4">
+              <li className="flex justify-between">
                 <span>Segunda a Sexta</span>
-                <span className="text-secondary">8h às 18h</span>
+                <span className="text-secondary md">8h às 22h</span>
               </li>
-              <li className="flex justify-between md:justify-between">
+              <li className="flex justify-between">
                 <span>Sábados</span>
-                <span className="text-secondary">8h às 18h</span>
+                <span className="text-secondary">8h às 22h</span>
               </li>
-              <li className="flex justify-between md:justify-between">
+              <li className="flex justify-between">
                 <span>Domingos e Feriados</span>
-                <span className="text-secondary">8h às 18h</span>
+                <span className="text-secondary">8h às 22h</span>
               </li>
             </ul>
             <div className="p-4 rounded-xl bg-primary-foreground/5 border border-primary-foreground/10">

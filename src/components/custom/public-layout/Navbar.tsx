@@ -39,13 +39,14 @@ export function Navbar() {
     <header className="flex justify-center min-h-20 border-b">
       <div className="w-[90%] max-w-7xl flex justify-between items-center">
         {/* LOGO */}
-        <div>
+        <div className="max-w-[100px]">
           <Link href="/">
             <Image
-              width={95}
-              height={95}
-              src="/LogoDianaRemovedBg.png"
+              width={100}
+              height={100}
+              src="/DianaImoveisLogo.svg"
               alt="Navbar Logo"
+              className="w-full h-auto me-3"
               priority
             />
           </Link>
@@ -79,7 +80,7 @@ export function Navbar() {
           <Button
             variant="ghost"
             size="icon"
-            className="bg-gray-100 hover:bg-bg-tag hover:text-tag transition-all duration-300"
+            className="bg-gray-100 hover:bg-action-primary hover:text-tag transition-all duration-300"
             asChild
           >
             <Link href="/properties">
@@ -87,7 +88,7 @@ export function Navbar() {
             </Link>
           </Button>
 
-          <Button asChild size={"lg"} variant={"gold"}>
+          <Button asChild size={"lg"} variant={"gold"} className="rounded-full">
             <a
               href="https://wa.me/5511966536993?text=Olá%20Diana,"
               target="_blank"
@@ -126,8 +127,10 @@ export function Navbar() {
                       href={item.path}
                       onClick={() => setOpen(false)}
                       className={`${
-                        isActive ? "text-[#447C9C]" : ""
-                      } font-semibold text-2xl`}
+                        isActive
+                          ? "text-white bg-hero-bg px-6 py-3 rounded-lg"
+                          : ""
+                      } font-semibold hover:bg-zinc-200/70`}
                     >
                       {item.title}
                     </Link>

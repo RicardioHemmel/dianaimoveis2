@@ -16,7 +16,7 @@ export function SortOptionsFilter() {
   return (
     <div className="flex items-center gap-2">
       {/* LABEL DESKTOP */}
-      <span className="text-sm font-medium hidden md:inline text-muted-foreground whitespace-nowrap">
+      <span className="text-sm font-medium hidden xl:inline text-muted-foreground whitespace-nowrap">
         Ordenar por:
       </span>
 
@@ -27,18 +27,18 @@ export function SortOptionsFilter() {
         <SelectTrigger
           className="
             /* Mobile: Estilo de Ícone */
-            size-10 p-0 flex items-center justify-center rounded-xl bg-gray-100 border-border
+            size-10 p-0 flex items-center justify-center rounded-xl bg-gray-100 xl:bg-white border-border
             /* Desktop: Estilo de Dropdown */
             md:w-44 md:h-9 md:px-3 md:rounded-lg
             /* Remove a setinha padrão do shadcn se quiser um visual mais limpo no mobile */
-            [&>svg:last-child]:hidden md:[&>svg:last-child]:block
+            [&>svg:last-child]:hidden xl:[&>svg:last-child]:block
           "
         >
           {/* ICON ONLY VISIBLE ON MOBILE */}
-          <ListFilter className="size-5  md:hidden" />
+          <ListFilter className="size-5  xl:hidden" />
 
           {/* Valor visível apenas no Desktop */}
-          <div className="hidden md:block truncate">
+          <div className="hidden xl:block truncate">
             <SelectValue placeholder="Ordenar" />
           </div>
         </SelectTrigger>

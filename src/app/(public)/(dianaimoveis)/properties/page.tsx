@@ -18,6 +18,7 @@ import {
   SelectedFilters,
   SortOptions,
 } from "@/context/SearchPropertyContext";
+import { SortOptionsFilter } from "@/components/custom/search-results-page/SortOptionsFilter";
 
 // SEARCH PARAM VALUES
 interface SearchResultsPageProps {
@@ -159,7 +160,7 @@ export default async function SearchResultsPage({
         <main>
           <SearchHeader />
           <MobileFiltersDrawer />
-          <div className="w-11/12 mx-auto px-6 py-8 lg:py-10">
+          <div className="w-11/12 mx-auto px-6 pb-8 lg:py-10">
             <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-center md:items-stretch">
               <aside className="hidden w-full xl:block lg:w-[320px] shrink-0">
                 <SearchFilters />

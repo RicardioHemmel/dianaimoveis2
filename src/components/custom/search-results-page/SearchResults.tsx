@@ -10,14 +10,8 @@ import { Grid3X3, List } from "lucide-react";
 import { Pagination } from "@/components/custom/search-results-page/Pagination";
 import { MorphingCardListing } from "../property-cards/listing/MorphingCardListing";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { EmptySearchResults } from "@/components/custom/search-results-page/EmptySearchResults";
+import { SortOptionsFilter } from "@/components/custom/search-results-page/SortOptionsFilter";
 
 // HOOKS
 import { useBreakpoint } from "@/hooks/use-breakpoint";
@@ -27,8 +21,7 @@ import { useSearchPropertyContext } from "@/context/SearchPropertyContext";
 
 export function SearchResults() {
   // CONTEXT
-  const { properties, setSingleItem, selectedFilters, pagination } =
-    useSearchPropertyContext();
+  const { properties } = useSearchPropertyContext();
 
   // CHANGES CARDS BASED ON WIDTH
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -72,26 +65,8 @@ export function SearchResults() {
             </div>
 
             {/* SORT OPTIONS */}
-            <div className="flex items-center gap-3">
-              <span className="text-sm">Ordenar por:</span>
-              <Select
-                defaultValue={selectedFilters.sortOption || "date_desc"}
-                onValueChange={(value) => setSingleItem("sortOption", value)}
-              >
-                <SelectTrigger className="w-44 h-9 bg-card border-border rounded-lg text-sm">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-card border-border z-50">
-                  <SelectItem value="date_desc">Mais recentes</SelectItem>
-                  <SelectItem value="date_asc">Mais antigos</SelectItem>
-                  <SelectItem value="price_asc">Menor preço</SelectItem>
-                  <SelectItem value="price_desc">Maior preço</SelectItem>
-                  <SelectItem value="area_asc">Menor área</SelectItem>
-                  <SelectItem value="area_desc">Maior área</SelectItem>
-                  <SelectItem value="launch">Lançamento</SelectItem>
-                  <SelectItem value="ready">Pronto</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="hidden md:block">
+              <SortOptionsFilter />
             </div>
           </div>
 

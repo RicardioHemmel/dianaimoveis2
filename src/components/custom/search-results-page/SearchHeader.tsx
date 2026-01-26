@@ -12,8 +12,8 @@ export function SearchHeader() {
   return (
     <div className="bg-surface-muted border-b border-border">
       <div className="container mx-auto px-4 py-6">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
+        <div className="flex flex-col md:flex-row items-center md:justify-between gap-4">
+          <div className="flex items-center gap-5 md:block">
             <h1 className="font-display text-2xl md:text-3xl font-semibold text-text-title">
               Resultados da Busca
             </h1>
@@ -26,32 +26,36 @@ export function SearchHeader() {
           </div>
 
           {/* ACTIVE FILTERS */}
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 max-w-[620px]">
             <span>Filtros ativos:</span>
             {activeFiltersBadge.length ? (
               <>
-                {activeFiltersBadge.map((filter) => (
-                  <Badge
-                    key={filter.key}
-                    className="pl-3 pr-2 py-1.5 bg-action-primary text-secondary-foreground"
-                  >
-                    {filter.label}
-                    <button
-                      onClick={() => cleanSpecificFilter(filter.key)}
-                      className="ml-1 hover:text-destructive cursor-pointer"
-                    >
-                      <X className="size-4" />
-                    </button>
-                  </Badge>
-                ))}
+                <div className="flex">
+                  <div>
+                    {activeFiltersBadge.map((filter) => (
+                      <Badge
+                        key={filter.key}
+                        className="pl-3 pr-2 py-1.5 m-1 bg-action-primary text-secondary-foreground"
+                      >
+                        {filter.label}
+                        <button
+                          onClick={() => cleanSpecificFilter(filter.key)}
+                          className="ml-1 hover:text-destructive cursor-pointer"
+                        >
+                          <X className="size-4" />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
 
-                <Button
-                  variant={"outline"}
-                  className="text-sm hover:underline font-medium rounded-2xl"
-                  onClick={clearFilters}
-                >
-                  Limpar todos
-                </Button>
+                  <Button
+                    variant={"outline"}
+                    className="text-sm hover:underline font-medium rounded-2xl"
+                    onClick={clearFilters}
+                  >
+                    Limpar todos
+                  </Button>
+                </div>
               </>
             ) : (
               <Badge className="py-1.5 bg-action-primary/90 text-secondary-foreground">

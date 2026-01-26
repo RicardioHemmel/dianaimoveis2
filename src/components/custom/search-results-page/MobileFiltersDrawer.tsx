@@ -27,6 +27,7 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { SortOptionsFilter } from "./SortOptionsFilter";
 
 export function MobileFiltersDrawer() {
   const [isOpen, setIsOpen] = useState(false);
@@ -225,12 +226,12 @@ export function MobileFiltersDrawer() {
     <>
       {/* FIXED FILTER BUTTON BAR */}
       <div className="xl:hidden">
-        <div className="container mx-auto px-4 py-3">
+        <div className="container flex items-center mx-auto px-4 py-3 gap-2">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button
                 variant="outline"
-                className="w-full h-12 rounded-xl border-border/50 bg-gray-100 hover:bg-background justify-between"
+                className="flex-1 h-12 rounded-xl border-border/50 bg-gray-100 hover:bg-background justify-between px-4"
               >
                 <div className="flex items-center gap-2">
                   <span className="font-medium">Filtros</span>
@@ -516,6 +517,9 @@ export function MobileFiltersDrawer() {
               </div>
             </SheetContent>
           </Sheet>
+          <div className="shrink-0">
+            <SortOptionsFilter />
+          </div>
         </div>
       </div>
     </>

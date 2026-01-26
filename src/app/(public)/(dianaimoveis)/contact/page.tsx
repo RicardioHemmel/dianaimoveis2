@@ -54,7 +54,7 @@ export default function ContactClient() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-surface-muted">
+    <div className="min-h-screen flex flex-col">
       {/* HERO SECTION */}
       <section
         className="relative flex justify-center items-center h-[440px] 
@@ -77,7 +77,7 @@ export default function ContactClient() {
       </section>
 
       {/* CONTENT */}
-      <section className="py-16 md:py-24 bg-background">
+      <section className="py-16 md:py-24 bg-surface-muted">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
             {/* FORM */}

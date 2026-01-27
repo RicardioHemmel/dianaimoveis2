@@ -141,7 +141,7 @@ export function MobileFiltersDrawer() {
           </span>
           <ChevronDown
             className={cn(
-              "h-4 w-4 text-muted-foreground transition-transform duration-200",
+              "size-4 text-muted-foreground transition-transform duration-200",
               isExpanded && "rotate-180",
             )}
           />
@@ -226,7 +226,7 @@ export function MobileFiltersDrawer() {
     <>
       {/* FIXED FILTER BUTTON BAR */}
       <div className="xl:hidden">
-        <div className="container flex items-center mx-auto px-4 py-3 gap-2">
+        <div className="container flex items-center mx-auto px-8 py-3 gap-2">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button
@@ -517,7 +517,7 @@ export function MobileFiltersDrawer() {
               </div>
             </SheetContent>
           </Sheet>
-          <div className="shrink-0">
+          <div className="shrink-0 md:hidden">
             <SortOptionsFilter />
           </div>
         </div>

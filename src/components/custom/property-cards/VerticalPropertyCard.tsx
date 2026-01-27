@@ -159,7 +159,7 @@ export function VerticalPropertyCard({
               A partir de
             </span>
             <span className="font-display text-lg sm:text-xl font-bold text-foreground font-primary">
-              {formattedPrice(price)}
+              {formattedPrice(price, false)}
             </span>
           </div>
 

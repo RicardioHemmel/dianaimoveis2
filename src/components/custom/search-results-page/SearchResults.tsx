@@ -65,7 +65,7 @@ export function SearchResults() {
             </div>
 
             {/* SORT OPTIONS */}
-            <div className="hidden xl:block">
+            <div className="hidden md:block">
               <SortOptionsFilter />
             </div>
           </div>

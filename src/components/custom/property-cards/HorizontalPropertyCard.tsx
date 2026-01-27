@@ -129,7 +129,7 @@ export function HorizontalPropertyCard({
         {/* PRICE */}
         <div className="mt-4 pt-4 border-t border-border/50">
           <p className="text-xl font-semibold text-text-title">
-            {formattedPrice(price)}
+            {formattedPrice(price, false)}
           </p>
         </div>
       </div>

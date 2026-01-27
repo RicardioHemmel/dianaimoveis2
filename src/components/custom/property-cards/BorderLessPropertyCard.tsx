@@ -106,7 +106,7 @@ export function BorderLessPropertyCard({
             <p className="text-white/80 text-sm">
               A partir de{" "}
               <span className="font-bold text-white text-lg">
-                {formattedPrice(price)}
+                {formattedPrice(price, false)}
               </span>
             </p>
 

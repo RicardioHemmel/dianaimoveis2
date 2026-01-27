@@ -65,7 +65,7 @@ export interface SelectedFilters {
   areaRange: Range | null;
   priceRange: Range | null;
   search: string | null;
-  neighborhood: string | null;
+  address: string | null;
 }
 
 // DEFAULT VALUE FOR THE FILTERS
@@ -80,7 +80,7 @@ export const defaultSelectedFilters: SelectedFilters = {
   areaRange: null,
   priceRange: null,
   search: null,
-  neighborhood: null,
+  address: null,
 };
 
 export interface PaginationSchema {
@@ -198,9 +198,9 @@ export function SearchPropertyProvider({
       params.set("search", String(filters.search));
     }
 
-    // NEIGHBORHOOD FILTER
-    if (filters.neighborhood) {
-      params.set("neighborhood", String(filters.neighborhood));
+    // ADDRESS FILTER
+    if (filters.address) {
+      params.set("address", String(filters.address));
     }
 
     // RETURNS FILTERED URL
@@ -270,7 +270,7 @@ export function SearchPropertyProvider({
     selectedFilters.areaRange !== null ||
     selectedFilters.priceRange !== null ||
     selectedFilters.search !== null ||
-    selectedFilters.neighborhood !== null;
+    selectedFilters.address !== null;
 
   //------------ MOUNTS ALL FILTER BADGES -------------
   const [activeFiltersBadge, setActiveFiltersBadge] = useState<
@@ -341,10 +341,10 @@ export function SearchPropertyProvider({
       });
     }
 
-    if (selectedFilters.neighborhood !== null) {
+    if (selectedFilters.address !== null) {
       active.push({
-        label: `Bairro: ${selectedFilters.neighborhood}`,
-        key: "neighborhood",
+        label: `Endereço: ${selectedFilters.address}`,
+        key: "address",
       });
     }
 
@@ -374,7 +374,7 @@ export function SearchPropertyProvider({
         case "areaRange":
         case "priceRange":
         case "search":
-        case "neighborhood":
+        case "address":
           return {
             ...prev,
             [key]: null,

@@ -25,7 +25,7 @@ import {
 import { SliderFilter } from "@/components/custom/search-results-page/SliderFilter";
 import { AmenitiesFilter } from "@/components/custom/search-results-page/AmenitiesFilter";
 import { SearchFilter } from "@/components/custom/search-results-page/TextSearchFilter";
-import { NeighborhoodFilter } from "@/components/custom/search-results-page/NeighborhoodFilter";
+import { AddressFilter } from "@/components/custom/search-results-page/AddressFilter";
 
 // CONTEXT
 import {
@@ -90,7 +90,7 @@ export function SearchFilters() {
           {/* LOCATION */}
           <FilterItem Icon={MapPin} label="Bairro">
             <div className="flex flex-wrap gap-2">
-              <NeighborhoodFilter />
+              <AddressFilter />
             </div>
           </FilterItem>
 

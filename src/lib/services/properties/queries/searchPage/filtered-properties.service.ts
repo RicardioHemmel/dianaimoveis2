@@ -151,14 +151,14 @@ export async function getFilteredProperties(
     ];
   }
 
-  //-------------- TITLE | CONSTRUCTION COMPANY FILTER ------------------
+  //-------------- ADDRESS FILTER ------------------
 
-  if (filters.neighborhood) {
-    const neighborhood = filters.neighborhood;
-    query["address.neighborhood.name"] = {
-      $regex: neighborhood,
-      $options: "i",
-    };
+  if (filters.address) {
+    const address = filters.address;
+    query.$or = [
+      { ["address.neighborhood"]: { $regex: address, $options: "i" } }, // REGEX WITH "I" IGNORES UPPER AND LOWER CASE
+      { ["address.street"]: { $regex: address, $options: "i" } },
+    ];
   }
   // ---------------- PAGINATION ----------------
   const skip = (page - 1) * limit;

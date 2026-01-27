@@ -30,9 +30,7 @@ export function PropertyQuickSearchBar() {
 
   // FILTER STATES
   const [bedrooms, setBedrooms] = useState<DetailsQty | undefined>(undefined);
-  const [neighborhood, setNeighborhood] = useState<string | undefined>(
-    undefined,
-  );
+  const [address, setAddress] = useState<string | undefined>(undefined);
   const [bathrooms, setBathrooms] = useState<DetailsQty | undefined>(undefined);
   const [parkingSpaces, setParkingSpaces] = useState<DetailsQty | undefined>(
     undefined,
@@ -42,7 +40,7 @@ export function PropertyQuickSearchBar() {
   const handleSearch = () => {
     const params = new URLSearchParams();
     // ADD FILTERS TO SEARCHPARAMS
-    if (neighborhood) params.set("neighborhood", neighborhood);
+    if (address) params.set("address", address);
     if (bedrooms) params.set("bedrooms", bedrooms);
     if (bathrooms) params.set("bathrooms", bathrooms);
     if (parkingSpaces) params.set("parkingSpaces", parkingSpaces);
@@ -64,7 +62,7 @@ export function PropertyQuickSearchBar() {
               {/* LOCATION */}
               <span className="w-full px-2">
                 <SearchLocationInput
-                  onLocationChange={(val) => setNeighborhood(val)}
+                  onLocationChange={(val) => setAddress(val)}
                 />
               </span>
 

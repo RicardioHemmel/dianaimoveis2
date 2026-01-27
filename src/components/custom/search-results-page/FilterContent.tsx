@@ -22,7 +22,7 @@ import {
 import { SliderFilter } from "@/components/custom/search-results-page/SliderFilter";
 import { AmenitiesFilter } from "@/components/custom/search-results-page/AmenitiesFilter";
 import { SearchFilter } from "@/components/custom/search-results-page/TextSearchFilter";
-import { NeighborhoodFilter } from "@/components/custom/search-results-page/NeighborhoodFilter";
+import { NeighborhoodFilter } from "@/components/custom/search-results-page/AddressFilter";
 import {
   DELIVERY_STATUS_OPTIONS,
   DETAILS_QTY_OPTIONS,

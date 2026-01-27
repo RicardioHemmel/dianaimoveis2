@@ -1,4 +1,3 @@
-// REACT | NEXT
 import { useEffect, useState } from "react";
 // SCHEMAS
 import {
@@ -6,15 +5,20 @@ import {
   PropertyInputSchema,
 } from "@/lib/schemas/property/property.schema";
 import { UseFormReturn } from "react-hook-form";
-export function useNeighborhoodInput() {
+
+export function useNeighborhoodInput(
+  onDebounceTrigger?: (value: string) => void,
+) {
   const [query, setQuery] = useState("");
   const [neighborhoods, setNeighborhoods] = useState<NeighborhoodSchema[]>([]);
   const [loading, setLoading] = useState(false);
 
   // SEARCH NEIGHBORHOODS
   useEffect(() => {
+    //IF THE QUERY IS EMPTY, CLEAR EVERYTHING AND TELL THE GLOBAL FILTER TO CLEAR IT TOO
     if (!query) {
       setNeighborhoods([]);
+      if (onDebounceTrigger) onDebounceTrigger("");
       return;
     }
 
@@ -22,8 +26,13 @@ export function useNeighborhoodInput() {
     const controller = new AbortController();
     const signal = controller.signal;
 
-    // TIMER FOR DEBOUNCE
+    // TIMER FOR DEBOUNCE 0.5s
     const timer = setTimeout(async () => {
+      // TRIGGERS GLOBAL SEARCH (CONTEXT) AFTER TIMEOUT
+      if (onDebounceTrigger) {
+        onDebounceTrigger(query);
+      }
+
       try {
         setLoading(true);
 
@@ -44,59 +53,54 @@ export function useNeighborhoodInput() {
         }
       } catch (err: any) {
         if (err.name === "AbortError") {
-          console.log("Requisição cancelada (debounce)");
+        } else {
+          console.error(err);
         }
       } finally {
         if (!signal.aborted) {
           setLoading(false);
         }
       }
-    }, 400);
+    }, 500);
 
     // CLEANUP FUNCTION
     return () => {
       clearTimeout(timer);
-      controller.abort(); // CANCELS THE FETCH REQUEST IF IT IS ALREADY IN PROGRESS
+      controller.abort(); // CANCELS THE FETCH REQUEST
     };
   }, [query]);
 
   // CREATES A NEW NEIGHBORHOOD
   async function handleSubmit(form: UseFormReturn<PropertyInputSchema>) {
-    // Evita submissão vazia
     if (!query || query.trim().length === 0) return;
 
     try {
       const res = await fetch("/api/address/create-neighborhood", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // Garante que espaços extras não sejam enviados
         body: JSON.stringify({ name: query.trim() }),
       });
 
       if (!res.ok) {
         const errorData = await res.json();
         console.error("Erro ao criar:", errorData);
-        // Aqui você poderia colocar um Toast de erro
         return;
       }
 
       const newNeighborhood = await res.json();
 
-      // Atualiza o formulário do React Hook Form
       form.setValue("address.neighborhood", {
         _id: newNeighborhood._id,
         name: newNeighborhood.name,
       });
 
-      // Feedback visual: Atualiza a query para o nome oficial retornado (ex: capitalização correta)
       setQuery(newNeighborhood.name);
-
-      // Fecha a lista de sugestões
       setNeighborhoods([]);
     } catch (error) {
       console.error("Erro de conexão:", error);
     }
   }
+
   return {
     query,
     neighborhoods,

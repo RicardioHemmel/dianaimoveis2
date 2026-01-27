@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
     const neighborhoods = await Neighborhood.find({
       name: { $regex: query, $options: "i" }, // IGNORES UPPER AND LOWER CASE
     })
-      .limit(8)
+      .limit(6)
       .lean();
 
     // MAPS TO ZOD SCHEMA

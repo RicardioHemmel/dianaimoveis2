@@ -4,29 +4,47 @@ import { useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useSearchPropertyContext } from "@/context/SearchPropertyContext";
 import { useNeighborhoodInput } from "@/hooks/use-neighborhood-input";
-import { Loader2, MapPin, Search, X } from "lucide-react";
+import { ChevronUp, Loader2, MapPin, Search, X } from "lucide-react";
 
-export function NeighborhoodFilter() {
+export function AddressFilter() {
   const { setSingleItem, selectedFilters } = useSearchPropertyContext();
+
+  //REF TO CONTROL THE ORIGIN OF THE CHANGE
+  //IF TRUE, IT MEANS THE USER CLICKED OR THE VALUE CAME FROM THE URL,
+  //THEN WE SHOULDN'T RUN DEBOUNCE AGAIN.
+  const skipDebounceRef = useRef(false);
+
   const {
     setQuery,
     neighborhoods,
     loading: isFetchingApi,
     setNeighborhoods,
-  } = useNeighborhoodInput();
+  } = useNeighborhoodInput((debouncedValue) => {
+    //CALLBACK CHECK
+    //IF THE FLAG IS ACTIVE, WE IGNORE THIS DEBOUNCE CYCLE AND RESET THE FLAG.
+    if (skipDebounceRef.current) {
+      skipDebounceRef.current = false;
+      return;
+    }
+
+    // MANUAL TYPING BY THE USER, SO APPLY THE FILTER
+    setSingleItem("address", debouncedValue);
+  });
 
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [inputValue, setInputValue] = useState(selectedFilters.address ?? "");
 
-  const [inputValue, setInputValue] = useState(
-    selectedFilters.neighborhood ?? "",
-  );
-
+  // SYNCS VIA URL/CONTEXT
   useEffect(() => {
-    const val = selectedFilters.neighborhood ?? "";
-    setInputValue(val);
-    setQuery(val);
-  }, [selectedFilters.neighborhood, setQuery]);
+    const val = selectedFilters.address ?? "";
+    if (val !== inputValue) {
+      // WE MARKED IT TO SKIP THE DEBOUNCE AS WE ARE ONLY SYNCING VISUALLY
+      skipDebounceRef.current = true;
+      setInputValue(val);
+      setQuery(val);
+    }
+  }, [selectedFilters.address]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -41,36 +59,38 @@ export function NeighborhoodFilter() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Lógica de digitação
   function handleInputChange(value: string) {
+    // ENSURES THAT THE FLAG IS FALSE, AS THE USER IS TYPING
+    skipDebounceRef.current = false;
+
     setInputValue(value);
     setQuery(value);
     setIsOpen(value.length >= 1);
 
-    // CONDIÇÃO: Se o usuário apagar tudo manualmente, limpa o filtro global/URL
     if (value.trim() === "") {
-      setSingleItem("neighborhood", "");
+      setSingleItem("address", "");
       setIsOpen(false);
     }
   }
 
-  // Lógica de seleção (Dispara o filtro na URL/Contexto)
   function handleSelect(name: string) {
-    setInputValue(name);
-    setQuery(name);
+    //THIS PREVENTS THE SET_QUERY BELOW FROM TRIGGERING A NEW FILTER 500MS FROM NOW
+    skipDebounceRef.current = true;
 
-    // Atualiza o contexto imediatamente ao selecionar
-    setSingleItem("neighborhood", name);
+    setInputValue(name);
+    setQuery(name); //UPDATE THE HOOK JUST TO MAINTAIN INTERNAL CONSISTENCY
+
+    // APPLY THE FILTER IMMEDIATELY
+    setSingleItem("address", name);
 
     setNeighborhoods([]);
     setIsOpen(false);
   }
 
-  // Lógica do botão X (Limpa o filtro global/URL)
   function handleClear() {
     setInputValue("");
     setQuery("");
-    setSingleItem("neighborhood", ""); // Limpa a URL/Contexto
+    setSingleItem("address", "");
     setNeighborhoods([]);
     setIsOpen(false);
   }
@@ -110,12 +130,18 @@ export function NeighborhoodFilter() {
         </div>
       </div>
 
+      {/* SUGESTIONS CONTAINER */}
       {isOpen && neighborhoods.length > 0 && (
         <div className="absolute top-full z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border bg-popover text-popover-foreground shadow-lg animate-in fade-in zoom-in-95">
           <div className="p-1">
-            <p className="px-2 py-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-              Bairros sugeridos
-            </p>
+            <div className="flex justify-between">
+              <p className="px-2 py-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                Sugestões
+              </p>
+              <button onClick={() => setIsOpen(false)}>
+                <ChevronUp className="size-5 cursor-pointer" />
+              </button>
+            </div>
             {neighborhoods.map((n) => (
               <button
                 key={n._id}

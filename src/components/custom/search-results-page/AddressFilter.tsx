@@ -107,7 +107,7 @@ export function AddressFilter() {
             setIsOpen(true)
           }
           variant="gray"
-          placeholder="Filtrar por bairro..."
+          placeholder="Filtrar por rua, bairro..."
           className="pr-10"
         />
 

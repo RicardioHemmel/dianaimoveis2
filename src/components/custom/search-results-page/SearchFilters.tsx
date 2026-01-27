@@ -87,8 +87,8 @@ export function SearchFilters() {
             </div>
           </FilterItem>
 
-          {/* LOCATION */}
-          <FilterItem Icon={MapPin} label="Bairro">
+          {/* ADDRESS */}
+          <FilterItem Icon={MapPin} label="Endereço">
             <div className="flex flex-wrap gap-2">
               <AddressFilter />
             </div>

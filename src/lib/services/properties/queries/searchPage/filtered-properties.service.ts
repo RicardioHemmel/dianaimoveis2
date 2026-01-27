@@ -156,7 +156,7 @@ export async function getFilteredProperties(
   if (filters.address) {
     const address = filters.address;
     query.$or = [
-      { ["address.neighborhood"]: { $regex: address, $options: "i" } }, // REGEX WITH "I" IGNORES UPPER AND LOWER CASE
+      { ["address.neighborhood.name"]: { $regex: address, $options: "i" } }, // REGEX WITH "I" IGNORES UPPER AND LOWER CASE
       { ["address.street"]: { $regex: address, $options: "i" } },
     ];
   }

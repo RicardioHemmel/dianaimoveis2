@@ -155,10 +155,7 @@ export async function getFilteredProperties(
 
   if (filters.address) {
     const address = filters.address;
-    query.$or = [
-      { ["address.neighborhood.name"]: { $regex: address, $options: "i" } }, // REGEX WITH "I" IGNORES UPPER AND LOWER CASE
-      { ["address.street"]: { $regex: address, $options: "i" } },
-    ];
+    query["address.neighborhood.name"] = { $regex: address, $options: "i" }; // REGEX WITH "I" IGNORES UPPER AND LOWER CASE
   }
   // ---------------- PAGINATION ----------------
   const skip = (page - 1) * limit;

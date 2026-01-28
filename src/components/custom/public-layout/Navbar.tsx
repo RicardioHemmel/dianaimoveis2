@@ -30,6 +30,7 @@ import { useState } from "react";
 // NAVLINKS
 import { navLinks } from "@/lib/constants/links/navbar-links";
 import { Button } from "@/components/ui/button";
+import { whatsappLink } from "@/lib/constants/links/contacts";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -89,11 +90,7 @@ export function Navbar() {
           </Button>
 
           <Button asChild size={"lg"} variant={"gold"} className="rounded-full">
-            <a
-              href="https://wa.me/5511966536993?text=Olá%20Diana,"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
               <Phone className="w-5 h-5 mr-2" />
               Fale Comigo
             </a>
@@ -111,7 +108,6 @@ export function Navbar() {
             <SheetContent
               side="left"
               className="bg-white w-screen sm:max-w-screen z-10000"
-              aria-describedby={undefined}
             >
               {/* ITS NECESSARY TO HAVE A TITLE FOR SCREEN READER USERS*/}
               <VisuallyHidden>

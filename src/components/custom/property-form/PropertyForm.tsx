@@ -76,15 +76,6 @@ export default function PropertyForm() {
     name: "isFeatured",
   });
 
-  const badgeStatus = useWatch({
-    control: form.control,
-    name: "status",
-  });
-
-  const formattedStatus = useMemo(() => {
-    return statusFormatter(badgeStatus);
-  }, [badgeStatus]);
-
   // FORM SUBMIT FUNCTION
   async function onSubmit(data: PropertyInputSchema) {
     const isGalleryLoading =
@@ -206,13 +197,13 @@ export default function PropertyForm() {
               </Badge>
 
               {/* STATUS BADGE */}
-              {formattedStatus && (
+              {/* {badgeStatus !== "" && (
                 <Badge
                   className={`${formattedStatus.badgeColor} text-black px-3 py-1`}
                 >
                   {formattedStatus.label}
                 </Badge>
-              )}
+              )} */}
             </div>
             <h2 className="text-3xl font-bold text-foreground">
               {title || mode.defaultTitle}

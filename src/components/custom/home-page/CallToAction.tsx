@@ -59,11 +59,11 @@ export function HomeCallToAction() {
             {/* TRUST INDICATORS */}
             <div className="flex justify-center lg:justify-start flex-wrap gap-6 mb-10">
               <div className="flex items-center gap-2 text-primary-foreground/90">
-                <Clock className="size-5 text-secondary" />
+                <Clock className="size-5 text-action-primary" />
                 <span>Resposta em até 1h</span>
               </div>
-              <div className="flex items-center gap-2 text-primary-foreground/90">
-                <MessageCircle className="h-5 w-5 text-secondary" />
+              <div className="flex items-center gap-2 text-primary-foreground/90 shadow-2xl ">
+                <MessageCircle className="h-5 w-5 text-action-primary" />
                 <span>WhatsApp disponível</span>
               </div>
             </div>
@@ -135,7 +135,7 @@ export function HomeCallToAction() {
                   <option value="noite">Noite (18h - 21h)</option>
                 </select>
 
-                <Button className="w-full h-12 rounded-xl text-base font-semibold">
+                <Button className="w-full h-12 rounded-xl text-base font-semibold bg-hero-bg">
                   Solicitar contato
                 </Button>
               </form>

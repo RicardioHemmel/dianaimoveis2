@@ -10,6 +10,13 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { getExperienceYears } from "@/lib/formatters/ui-formatters/experience-years";
+import {
+  whatsappLink,
+  facebookLink,
+  instagramLink,
+  callLink,
+  emailLink,
+} from "@/lib/constants/links/contacts";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -33,11 +40,11 @@ export function Footer() {
               {[
                 {
                   icon: Instagram,
-                  href: "https://www.instagram.com/dianaimoveis_corretora/",
+                  href: instagramLink,
                 },
                 {
                   icon: Facebook,
-                  href: "https://www.facebook.com/profile.php?id=61564438610067",
+                  href: facebookLink,
                 },
               ].map((social, index) => (
                 <Link
@@ -84,7 +91,7 @@ export function Footer() {
             <ul className="space-y-4 text-primary-foreground/70 text-sm">
               <li>
                 <Link
-                  href="tel:+5511966536993"
+                  href={callLink}
                   className="flex items-center gap-3 hover:text-secondary transition-colors group justify-center md:justify-start"
                 >
                   <span className="w-10 h-10 rounded-lg bg-primary-foreground/10 flex items-center justify-center group-hover:bg-secondary group-hover:text-secondary-foreground transition-all">
@@ -95,7 +102,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="https://wa.me/5511966536993?text=Olá%20Diana,"
+                  href={whatsappLink}
                   className="flex items-center gap-3 hover:text-secondary transition-colors group justify-center md:justify-start"
                 >
                   <span className="group size-10 rounded-lg bg-primary-foreground/10 flex items-center justify-center transition-all group-hover:bg-secondary">
@@ -104,7 +111,7 @@ export function Footer() {
                       alt="whatsapp icon"
                       width={20}
                       height={20}
-                      className="  invert 
+                      className="invert 
       brightness-200 
       opacity-70 
       transition-all 
@@ -119,7 +126,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://mail.google.com/mail/?view=cm&fs=1&to=dianahemmel@creci.org.br&su=Diana%20Im%C3%B3veis&body=Ol%C3%A1%20Diana,"
+                  href={emailLink}
                   className="flex items-center gap-3 hover:text-secondary transition-colors group justify-center md:justify-start"
                 >
                   <span className="w-10 h-10 rounded-lg bg-primary-foreground/10 flex items-center justify-center group-hover:bg-secondary group-hover:text-secondary-foreground transition-all">

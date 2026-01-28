@@ -58,3 +58,31 @@ export async function getAllProperties(
 
   return properties.map((property) => PropertyMapper.toViewSchema(property));
 }
+
+// -------------------------------- RETURNS NEIGHBORHOOD PROPERTIES QTY --------------------------------
+export async function getQtyPropertiesOnNeighborhoods(neighborhoods: string[]) {
+  await connectMongoDB();
+
+  const result = await Property.aggregate([
+    {
+      $match: {
+        "address.neighborhood.name": { $in: neighborhoods }, // ONLY BRINGS PROPERTIES IN THE NEIGHBORHOODS LIST
+      },
+    },
+    {
+      $group: {
+        _id: "$address.neighborhood.name", // GROUP INTO A "BUCKET" ALL PROPERTIES WITH THE SAME NEIGHBORHOOD AND COUNT THEM
+        total: { $sum: 1 },
+      },
+    },
+    {
+      $project: {
+        _id: 0, // CHANGES "_ID" LABEL TO "NEIGHBORHOOD"
+        neighborhood: "$_id",
+        total: 1,
+      },
+    },
+  ]);
+
+  return result;
+}

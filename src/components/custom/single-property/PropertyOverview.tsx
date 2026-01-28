@@ -16,7 +16,7 @@ import { buildToggleFieldLabels } from "@/lib/formatters/ui-formatters/property-
 import Link from "next/link";
 import { headers } from "next/headers";
 import { Button } from "@/components/ui/button";
-import { whatsAppRedirectBaseLink } from "@/lib/constants/links/whatsapp-redirect";
+import { whatsAppRedirectBaseLink } from "@/lib/constants/links/contacts";
 import { ShareButton } from "@/components/custom/ShareButton";
 import { ToggleFavoriteBtn } from "@/components/custom/ToggleFavoriteBtn";
 

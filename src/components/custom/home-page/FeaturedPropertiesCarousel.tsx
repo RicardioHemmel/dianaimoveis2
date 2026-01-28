@@ -101,7 +101,7 @@ export function FeaturedPropertiesCarousel({
                             className="
                           flex justify-center
                       bg-black/80 text-white rounded-2xl z-10
-                      w-fit h-fit py-4 px-6  ml-0 mb-16                
+                      w-fit h-fit py-4 px-6  ml-0 mb-8                
                       min-w-[310px] min-h-[80px] 
                       sm:min-w-[280px] sm:min-h-[110px] sm:py-3 
                       md:min-w-[370px] md:min-h-[115px] 

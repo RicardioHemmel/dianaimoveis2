@@ -67,7 +67,7 @@ export function BorderLessCardsGridListing({
         ) : !hasNextPage ? (
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="group flex flex-col items-center gap-3 transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+            className="group flex flex-col items-center gap-3 transition-all duration-300 hover:-translate-y-1 cursor-pointer mt-15"
           >
             <span className="text-muted-foreground text-sm font-medium group-hover:text-primary transition-colors">
               Você chegou ao fim!

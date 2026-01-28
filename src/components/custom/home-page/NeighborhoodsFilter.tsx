@@ -108,18 +108,18 @@ export async function NeighborhoodsSection() {
     <section className="py-16 md:py-24 bg-surface-muted">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-12 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
+        <div className="mb-12 flex flex-col gap-4 items-center xl:flex-row xl:items-end md:justify-between">
+          <div className="flex flex-col items-center xl:items-start space-y-3">
+            <div className="flex justify-center items-center gap-2">
               <Home className="size-5 text-action-primary" />
               <span className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
                 Explore por região
               </span>
             </div>
-            <h2 className="tracking-tight title-section">
+            <h2 className="tracking-tight title-section my-4 xl:my-0">
               Encontre seu próximo lar nos melhores bairros
             </h2>
-            <p className="max-w-2xl text-muted-foreground text-pretty">
+            <p className="max-w-2xl text-muted-foreground text-center xl:text-pretty">
               Descubra imóveis exclusivos nas regiões mais valorizadas de São
               Paulo. Cada bairro com sua personalidade única e qualidade de vida
               incomparável.
@@ -128,10 +128,10 @@ export async function NeighborhoodsSection() {
 
           <Link
             href="/properties"
-            className="group inline-flex items-center gap-2 rounded-lg bg-hero-bg hover:bg-hero-bg-hover px-5 py-3 text-sm font-medium text-white transition-all "
+            className="w-fit group inline-flex justify-center items-center gap-2 rounded-lg bg-hero-bg hover:bg-hero-bg-hover px-5 py-3 text-sm font-medium text-white transition-all"
           >
             Ver todos os bairros
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
         </div>
 

@@ -145,15 +145,15 @@
   --animate-scale-up: scale-up 0.5s ease-in-out;
 
   @keyframes horizontal-infinity-scroll {
-    0% {
+    from {
       transform: translateX(0);
     }
-    100% {
+    to {
       transform: translateX(-50%);
     }
   }
 
-  --animate-horizontal-infinity-scroll: horizontal-infinity-scroll 20s linear
+  --animate-horizontal-infinity-scroll: horizontal-infinity-scroll 25s linear
     infinite;
 
   @keyframes infinity-float {

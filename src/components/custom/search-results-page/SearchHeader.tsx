@@ -6,14 +6,19 @@ import { Button } from "@/components/ui/button";
 import { useSearchPropertyContext } from "@/context/SearchPropertyContext";
 
 export function SearchHeader() {
-  const { clearFilters, activeFiltersBadge, cleanSpecificFilter, pagination } =
-    useSearchPropertyContext();
+  const {
+    clearFilters,
+    activeFiltersBadge,
+    cleanSpecificFilter,
+    pagination,
+    selectedFilters,
+  } = useSearchPropertyContext();
 
   return (
     <div className="bg-surface-muted border-b border-border">
       <div className="container mx-auto px-4 py-6">
         <div className="flex flex-col md:flex-row items-center md:justify-between gap-4">
-          <div className="flex items-center gap-5 md:block">
+          <div className="flex-col flex items-center gap-5 md:block">
             <h1 className="font-display text-2xl md:text-3xl font-semibold text-text-title">
               Resultados da Busca
             </h1>
@@ -28,7 +33,7 @@ export function SearchHeader() {
           {/* ACTIVE FILTERS */}
           <div className="flex flex-wrap items-center gap-2 max-w-[620px]">
             <span>Filtros ativos:</span>
-            {activeFiltersBadge.length ? (
+            {activeFiltersBadge.length > 0 ? (
               <>
                 <div className="flex">
                   <div>

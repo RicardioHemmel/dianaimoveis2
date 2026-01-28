@@ -1,7 +1,7 @@
 // COMPONENTS
 import { SearchHeader } from "@/components/custom/search-results-page/SearchHeader";
-import { SearchFilters } from "@/components/custom/search-results-page/SearchFilters";
-import { MobileFiltersDrawer } from "@/components/custom/search-results-page/MobileFiltersDrawer";
+import { DesktopSearchFilters } from "@/components/custom/search-results-page/DesktopSearchFilters";
+import { MobileSearchFilters } from "@/components/custom/search-results-page/MobileSearchFilters";
 import { SearchResults } from "@/components/custom/search-results-page/SearchResults";
 
 // SERVICES
@@ -18,7 +18,6 @@ import {
   SelectedFilters,
   SortOptions,
 } from "@/context/SearchPropertyContext";
-import { SortOptionsFilter } from "@/components/custom/search-results-page/SortOptionsFilter";
 
 // SEARCH PARAM VALUES
 interface SearchResultsPageProps {
@@ -157,11 +156,11 @@ export default async function SearchResultsPage({
       <div className="min-h-screen bg-background">
         <main>
           <SearchHeader />
-          <MobileFiltersDrawer />
-          <div className="w-11/12 mx-auto px-6 pb-8 lg:py-10">
+          <MobileSearchFilters />
+          <div className="w-11/12 mx-auto md:px-6 pb-8 md:py-6 xl:py-10">
             <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-center md:items-stretch">
               <aside className="hidden w-full xl:block lg:w-[320px] shrink-0">
-                <SearchFilters />
+                <DesktopSearchFilters />
               </aside>
               <div className="w-full sm:w-[80%] md:w-full">
                 <SearchResults />

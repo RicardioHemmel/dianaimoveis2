@@ -94,6 +94,7 @@ interface SearchPropertyContextProps {
   properties: PropertyViewSchema[];
   availableFilters: AvailableFiltersFromDB; // DYNAMIC FILTER VALUES FROM DB
   selectedFilters: SelectedFilters; //SELECTED FILTERS BY THE USER
+  draftFilters: SelectedFilters;
   hasActiveFilters: boolean; // DECIDE WHEN TO SHOW "CLEAN SEARCH" BUTTONS
   activeFiltersBadge: { label: string; key: keyof SelectedFilters }[]; // FOR UI BADGES ON HEADER
   pagination: PaginationSchema;
@@ -103,6 +104,8 @@ interface SearchPropertyContextProps {
   setListItem: (key: "typologies" | "amenities", id: string) => void; // CHANGE FILTER AND SEARCH
   setSingleItem: (key: keyof SelectedFilters, value: any) => void; // CHANGE FILTER AND SEARCH
   setSliderValue: (key: keyof SelectedFilters, value: number[]) => void; // CHANGE FILTER AND SEARCH
+  applySpecificFilter: (key: keyof SelectedFilters, value: any) => void;
+  applyFilters: (filtersToApply: SelectedFilters) => void;
 }
 
 const SearchPropertyContext = createContext<SearchPropertyContextProps | null>(
@@ -129,20 +132,91 @@ export function SearchPropertyProvider({
   const { replace } = useRouter();
   const lastQueryRef = useRef<string>(""); // USED TO COMPARE IF THERE WERE CHANGES TO UPDATE URL
 
-  // SELECTED VALUES BY THE USER
+  // WHAT'S IN THE URL/REALITY (SYNCHRONIZED WITH INITIALFILTERS)
   const [selectedFilters, setSelectedFilters] =
     useState<SelectedFilters>(initialFilters);
 
-  useEffect(() => {
-    const isSame =
-      JSON.stringify(selectedFilters) === JSON.stringify(initialFilters);
+  // THE DRAFT (IMMEDIATE UPDATE ON UI )
+  const [draftFilters, setDraftFilters] =
+    useState<SelectedFilters>(initialFilters);
 
-    if (!isSame) {
-      setSelectedFilters(initialFilters);
-    }
+  // SYNCHRONIZES STATES WHEN THE URL CHANGES
+  useEffect(() => {
+    setSelectedFilters(initialFilters);
+    setDraftFilters(initialFilters);
+    lastQueryRef.current = buildQueryParams(initialFilters);
   }, [initialFilters]);
 
-  // MOUNTS THE URL FILTER QUERY
+  // CENTRALIZED FUNCTION TO APPLY FILTERS TO THE URL
+  const applyFilters = (filtersToApply: SelectedFilters = draftFilters) => {
+    setSelectedFilters(filtersToApply);
+    const query = buildQueryParams(filtersToApply);
+
+    // IF THE QUERY IF DIFFERENT FROM THE PREVIOUS ONE UPDATES IT
+    if (query !== lastQueryRef.current) {
+      lastQueryRef.current = query;
+      replace(`${pathName}?${query}`, { scroll: false });
+    }
+  };
+
+  // DECIDES TO UPDATE FILTER IMMEDIATELY OR WHEN CLICKED ON A BUTTON
+  const updateDraft = (newFilters: SelectedFilters) => {
+    setDraftFilters(newFilters);
+
+    // ON DESKTOP, THE USER'S "WILL" IS REFLECTED IN THE URL INSTANTLY
+    const isDesktop =
+      typeof window !== "undefined" ? window.innerWidth > 1280 : false;
+    if (isDesktop) {
+      applyFilters(newFilters);
+    }
+  };
+
+  // --------------------------- FILTERS UPDATE ------------------------------
+
+  // FOR LISTS "TYPOLOGIES" | "AMENITIES"
+  const setListItem = (key: "typologies" | "amenities", id: string) => {
+    const current = draftFilters[key];
+    const updated = current.includes(id)
+      ? current.filter((i) => i !== id)
+      : [...current, id];
+    updateDraft({ ...draftFilters, [key]: updated });
+  };
+
+  // SINGLE VALUES "BEDROOMS", "SUITES"
+  const setSingleItem = (key: keyof SelectedFilters, value: any) => {
+    const newValue = draftFilters[key] === value ? null : value;
+    updateDraft({ ...draftFilters, [key]: newValue });
+  };
+
+  // SLIDER VALUES
+  const setSliderValue = (key: keyof SelectedFilters, value: number[]) => {
+    updateDraft({ ...draftFilters, [key]: { min: value[0], max: value[1] } });
+  };
+
+  // CLEAN ALL FILTERS
+  function clearFilters() {
+    setSelectedFilters(defaultSelectedFilters);
+    replace("/properties");
+  }
+
+  // CLEAN SPECIFIC FILTER
+  const cleanSpecificFilter = (key: keyof SelectedFilters) => {
+    const resetValue = key === "typologies" || key === "amenities" ? [] : null;
+    const updated = { ...draftFilters, [key]: resetValue };
+    setDraftFilters(updated);
+    applyFilters(updated);
+  };
+
+  // WE CREATED A SPECIFIC FUNCTION FOR "IMMEDIATE EXECUTION" CASES (LIKE SORT)
+  const applySpecificFilter = (key: keyof SelectedFilters, value: any) => {
+    const newValue = draftFilters[key] === value ? null : value;
+    const updated = { ...draftFilters, [key]: newValue };
+
+    setDraftFilters(updated);
+    applyFilters(updated);
+  };
+  //-------------------------- MOUNTS THE URL FILTER QUERY ------------------------------
+
   function buildQueryParams(filters: SelectedFilters): string {
     const params = new URLSearchParams();
 
@@ -210,54 +284,13 @@ export function SearchPropertyProvider({
   // FETCH DATA WHEN ANY FILTER CHANGES
   useEffect(() => {
     const query = buildQueryParams(selectedFilters);
-
-    // AVOID INFINITE REPLACE IF THE URL IS ALREADY THE SAME
-    if (query !== lastQueryRef.current) {
+    const isDesktop =
+      typeof window !== "undefined" ? window.innerWidth > 1280 : false;
+    if (query !== lastQueryRef.current && isDesktop) {
       lastQueryRef.current = query;
       replace(`${pathName}?${query}`, { scroll: false });
     }
   }, [selectedFilters]);
-
-  // CLEAN URL
-  function clearFilters() {
-    setSelectedFilters(defaultSelectedFilters);
-    replace("/properties");
-  }
-
-  // --------------------------- FILTERS UPDATE ------------------------------
-
-  // FOR LISTS "TYPOLOGIES" | "AMENITIES"
-  const setListItem = (key: "typologies" | "amenities", id: string) => {
-    // UPDATES THE LIST ADDING OR REMOVING THE CLICKED ITEM
-    const currentList = selectedFilters[key];
-    const updatedList = currentList.includes(id)
-      ? currentList.filter((item) => item !== id)
-      : [...currentList, id];
-
-    setSelectedFilters({
-      ...selectedFilters,
-      [key]: updatedList,
-    });
-  };
-
-  // SINGLE VALUES "BEDROOMS", "SUITES"
-  const setSingleItem = (key: keyof SelectedFilters, value: any) => {
-    // TOGGLE BETWEEN ADDING THE VALUE OR SETTING NULL
-    const newValue = selectedFilters[key] === value ? null : value;
-
-    setSelectedFilters({
-      ...selectedFilters,
-      [key]: newValue,
-    });
-  };
-
-  // SLIDER VALUES
-  const setSliderValue = (key: keyof SelectedFilters, value: number[]) => {
-    setSelectedFilters({
-      ...selectedFilters,
-      [key]: { min: value[0], max: value[1] },
-    });
-  };
 
   // DECIDES WHEN TO SHOW "CLEAN" BUTTONS
   const hasActiveFilters =
@@ -269,8 +302,8 @@ export function SearchPropertyProvider({
     selectedFilters.deliveryStatus !== null ||
     selectedFilters.areaRange !== null ||
     selectedFilters.priceRange !== null ||
-    selectedFilters.search !== null ||
-    selectedFilters.address !== null;
+    (selectedFilters.search !== null && selectedFilters.search.trim() !== "") ||
+    (selectedFilters.address !== null && selectedFilters.address.trim() !== "");
 
   //------------ MOUNTS ALL FILTER BADGES -------------
   const [activeFiltersBadge, setActiveFiltersBadge] = useState<
@@ -334,14 +367,14 @@ export function SearchPropertyProvider({
       });
     }
 
-    if (selectedFilters.search !== null) {
+    if (selectedFilters.search && selectedFilters.search.trim() !== "") {
       active.push({
         label: `Busca: ${selectedFilters.search}`,
         key: "search",
       });
     }
 
-    if (selectedFilters.address !== null) {
+    if (selectedFilters.address && selectedFilters.address.trim() !== "") {
       active.push({
         label: `Endereço: ${selectedFilters.address}`,
         key: "address",
@@ -356,40 +389,11 @@ export function SearchPropertyProvider({
     getActiveFilters(selectedFilters);
   }, [selectedFilters]);
 
-  // CLEAN SPECIFIC FILTER
-  function cleanSpecificFilter(key: keyof SelectedFilters) {
-    setSelectedFilters((prev) => {
-      switch (key) {
-        case "typologies":
-        case "amenities":
-          return {
-            ...prev,
-            [key]: [],
-          };
-
-        case "bedrooms":
-        case "bathrooms":
-        case "parkingSpaces":
-        case "deliveryStatus":
-        case "areaRange":
-        case "priceRange":
-        case "search":
-        case "address":
-          return {
-            ...prev,
-            [key]: null,
-          };
-
-        default:
-          return prev;
-      }
-    });
-  }
-
   //------------- CONTEXT VALUES ------------------
   const value = {
     availableFilters,
     selectedFilters,
+    draftFilters,
     hasActiveFilters,
     properties,
     activeFiltersBadge,
@@ -400,6 +404,8 @@ export function SearchPropertyProvider({
     setSingleItem,
     setSliderValue,
     cleanSpecificFilter,
+    applySpecificFilter,
+    applyFilters,
   };
 
   return (

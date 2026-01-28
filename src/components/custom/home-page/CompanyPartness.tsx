@@ -31,18 +31,28 @@ export function CompanyPartners() {
 
         <div className="relative overflow-hidden">
           {/* GRADIENT MASKS */}
-          <div className="absolute left-0 top-0 bottom-0 w-20 bg-linear-to-r from-background to-transparent z-10" />
-          <div className="absolute right-0 top-0 bottom-0 w-20 bg-linear-to-l from-background to-transparent z-10" />
-
+          <div className="absolute left-0 top-0 bottom-0 w-10 sm:w-20 bg-linear-to-r from-background to-transparent z-10" />
+          <div className="absolute right-0 top-0 bottom-0 w-10 sm:w-20 bg-linear-to-l from-background to-transparent z-10" />
           {/* INFINITE SCROLL ANIMATION */}
-          <div className="flex animate-horizontal-infinity-scroll animation-duration-[4s] md:animation-duration-[12s] lganimation-duration-[20s]  hover:paused">
+          <div
+            className="
+              flex 
+              w-max
+              animate-horizontal-infinity-scroll
+              [--scroll-duration:15s]
+              sm:[--scroll-duration:20s]
+              md:[--scroll-duration:25s]
+              lg:[--scroll-duration:30s]
+              hover:paused
+            "
+          >
             {/* DOUBLE THE ITEMS FOR SEAMLESS LOOP */}
             {[...partners, ...partners].map((partner, index) => (
-              <div key={index} className="mx-8 group">
+              <div key={index} className="mx-8 shrink-0 group">
                 <div className="size-26 rounded-2xl bg-muted/50 border border-border/50 flex flex-col items-center justify-center gap-2 group-hover:border-action-primary/50 group-hover:bg-gradient-to-br group-hover:from-action-primary/10 group-hover:to-transparent transition-all duration-300 p-6">
                   <div className="flex items-center justify-center">
                     <Image
-                      src={partner.logo}
+                      src={partner.logo || "/placeholder.svg"}
                       alt={`Logo ${partner.name}`}
                       className="max-h-full max-w-full object-contain"
                       width={80}
@@ -55,7 +65,7 @@ export function CompanyPartners() {
                 </div>
               </div>
             ))}
-          </div>
+          </div>{" "}
         </div>
       </div>
     </section>

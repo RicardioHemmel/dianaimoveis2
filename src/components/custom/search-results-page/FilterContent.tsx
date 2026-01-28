@@ -22,7 +22,7 @@ import {
 import { SliderFilter } from "@/components/custom/search-results-page/SliderFilter";
 import { AmenitiesFilter } from "@/components/custom/search-results-page/AmenitiesFilter";
 import { SearchFilter } from "@/components/custom/search-results-page/TextSearchFilter";
-import { NeighborhoodFilter } from "@/components/custom/search-results-page/AddressFilter";
+import { AddressFilter } from "@/components/custom/search-results-page/AddressFilter";
 import {
   DELIVERY_STATUS_OPTIONS,
   DETAILS_QTY_OPTIONS,
@@ -30,36 +30,36 @@ import {
 } from "@/context/SearchPropertyContext";
 
 export function FiltersContent() {
-  const { availableFilters, selectedFilters, setListItem, setSingleItem } =
+  const { availableFilters, draftFilters, setListItem, setSingleItem } =
     useSearchPropertyContext();
 
   const { amenities, typologies, areaRange, priceRange } = availableFilters;
 
   return (
-    <div className="flex flex-col pb-20 lg:pb-0">
+    <div className="flex flex-col items-start overflow-y-auto py-2">
       <FilterGroup id="typologies" title="O que você procura?">
-        {/* CONSTRUTORA */}
+        {/* TITLE | CONSTRUCTION COMPANY */}
         <FilterItem Icon={Search} label="Empreendimento / Construtora">
           <div className="flex flex-wrap gap-2">
             <SearchFilter />
           </div>
         </FilterItem>
 
-        {/* BAIRRO */}
-        <FilterItem Icon={MapPin} label="Bairro">
+        {/* ADDRESS */}
+        <FilterItem Icon={MapPin} label="Endereço">
           <div className="flex flex-wrap gap-2">
-            <NeighborhoodFilter />
+            <AddressFilter />
           </div>
         </FilterItem>
 
-        {/* TIPOLOGIAS */}
+        {/*  TYPOLOGIES  */}
         <FilterItem Icon={Home} label="Tipologias">
           <div className="flex flex-wrap gap-2">
             {typologies.map((item) => (
               <Chip
                 key={item._id}
                 label={item.name}
-                selected={selectedFilters.typologies.includes(item._id)}
+                selected={draftFilters.typologies.includes(item._id)}
                 onClick={() => setListItem("typologies", item._id)}
               />
             ))}
@@ -67,7 +67,7 @@ export function FiltersContent() {
         </FilterItem>
       </FilterGroup>
 
-      {/* DETALHES */}
+      {/* PROPERTY DETAILS */}
       <FilterGroup id="details" title="Características do Imóvel">
         <div className="flex flex-col gap-y-9">
           <FilterItem Icon={Bed} label="Quartos">
@@ -76,7 +76,7 @@ export function FiltersContent() {
                 <NumberChip
                   key={opt}
                   value={opt}
-                  selected={selectedFilters.bedrooms === opt}
+                  selected={draftFilters.bedrooms === opt}
                   onClick={() => setSingleItem("bedrooms", opt)}
                 />
               ))}
@@ -89,7 +89,7 @@ export function FiltersContent() {
                 <NumberChip
                   key={opt}
                   value={opt}
-                  selected={selectedFilters.bathrooms === opt}
+                  selected={draftFilters.bathrooms === opt}
                   onClick={() => setSingleItem("bathrooms", opt)}
                 />
               ))}
@@ -102,7 +102,7 @@ export function FiltersContent() {
                 <NumberChip
                   key={opt}
                   value={opt}
-                  selected={selectedFilters.parkingSpaces === opt}
+                  selected={draftFilters.parkingSpaces === opt}
                   onClick={() => setSingleItem("parkingSpaces", opt)}
                 />
               ))}
@@ -110,26 +110,26 @@ export function FiltersContent() {
           </FilterItem>
         </div>
 
-        {/* AREA */}
+        {/* AREA FILTER */}
         <SliderFilter
           Icon={Maximize}
           filterKey="areaRange"
           label="Área (m²)"
           inputLimits={areaRange}
-          filterRange={selectedFilters.areaRange}
-          key={`areaRange-${selectedFilters.areaRange?.min}-${selectedFilters.areaRange?.max}`}
+          filterRange={draftFilters.areaRange}
+          key={`areaRange-${draftFilters.areaRange?.min ?? "min"}-${draftFilters.areaRange?.max ?? "max"}`}
         />
       </FilterGroup>
 
-      {/* VALORES E STATUS */}
       <FilterGroup id="values" title="Valores e Status">
+        {/* PRICE FILTER */}
         <SliderFilter
           Icon={Maximize}
           filterKey="priceRange"
           label="Faixa de Preço"
           inputLimits={priceRange}
-          filterRange={selectedFilters.priceRange}
-          key={`priceRange-${selectedFilters.priceRange?.min}-${selectedFilters.priceRange?.max}`}
+          filterRange={draftFilters.priceRange}
+          key={`priceRange-${draftFilters.priceRange?.min ?? "min"}-${draftFilters.priceRange?.max ?? "max"}`}
         />
 
         <FilterItem Icon={Calendar} label="Status do Imóvel">
@@ -138,7 +138,7 @@ export function FiltersContent() {
               <Chip
                 key={item}
                 label={item}
-                selected={selectedFilters.deliveryStatus === item}
+                selected={draftFilters.deliveryStatus === item}
                 onClick={() => setSingleItem("deliveryStatus", item)}
               />
             ))}

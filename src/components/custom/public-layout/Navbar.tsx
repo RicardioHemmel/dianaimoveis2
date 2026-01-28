@@ -39,15 +39,15 @@ export function Navbar() {
     <header className="flex justify-center min-h-20 border-b">
       <div className="w-[90%] max-w-7xl flex justify-between items-center">
         {/* LOGO */}
-        <div className="max-w-[100px]">
-          <Link href="/">
+        <div className="max-w-[86px]">
+          <Link href="/" className="block">
             <Image
-              width={100}
-              height={100}
               src="/DianaImoveisLogo.svg"
               alt="Navbar Logo"
-              className="w-full h-auto me-3"
+              width={86}
+              height={86}
               priority
+              className="w-full h-auto"
             />
           </Link>
         </div>

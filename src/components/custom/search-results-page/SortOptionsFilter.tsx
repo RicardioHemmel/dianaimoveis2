@@ -11,7 +11,7 @@ import { useSearchPropertyContext } from "@/context/SearchPropertyContext";
 import { ListFilter } from "lucide-react";
 
 export function SortOptionsFilter() {
-  const { selectedFilters, setSingleItem } = useSearchPropertyContext();
+  const { selectedFilters, applySpecificFilter } = useSearchPropertyContext();
 
   return (
     <div className="flex items-center gap-2">
@@ -22,7 +22,7 @@ export function SortOptionsFilter() {
 
       <Select
         defaultValue={selectedFilters.sortOption || "date_desc"}
-        onValueChange={(value) => setSingleItem("sortOption", value)}
+        onValueChange={(value) => applySpecificFilter("sortOption", value)}
       >
         <SelectTrigger
           className="

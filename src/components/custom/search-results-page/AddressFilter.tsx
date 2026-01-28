@@ -7,45 +7,31 @@ import { useNeighborhoodInput } from "@/hooks/use-neighborhood-input";
 import { ChevronUp, Loader2, MapPin, Search, X } from "lucide-react";
 
 export function AddressFilter() {
-  const { setSingleItem, selectedFilters } = useSearchPropertyContext();
+  const { setSingleItem, draftFilters } = useSearchPropertyContext();
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
-  //REF TO CONTROL THE ORIGIN OF THE CHANGE
-  //IF TRUE, IT MEANS THE USER CLICKED OR THE VALUE CAME FROM THE URL,
-  //THEN WE SHOULDN'T RUN DEBOUNCE AGAIN.
-  const skipDebounceRef = useRef(false);
+  // Fonte da verdade para o input visual
+  const [inputValue, setInputValue] = useState(draftFilters.address ?? "");
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const {
     setQuery,
     neighborhoods,
     loading: isFetchingApi,
     setNeighborhoods,
-  } = useNeighborhoodInput((debouncedValue) => {
-    //CALLBACK CHECK
-    //IF THE FLAG IS ACTIVE, WE IGNORE THIS DEBOUNCE CYCLE AND RESET THE FLAG.
-    if (skipDebounceRef.current) {
-      skipDebounceRef.current = false;
-      return;
-    }
-
-    // MANUAL TYPING BY THE USER, SO APPLY THE FILTER
-    setSingleItem("address", debouncedValue);
+  } = useNeighborhoodInput(() => {
+    // Não fazemos nada no callback do hook, pois controlaremos o debounce manualmente
+    // igual ao SearchFilter para evitar que ele limpe a URL sozinho.
   });
 
-  const [isOpen, setIsOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [inputValue, setInputValue] = useState(selectedFilters.address ?? "");
-
-  // SYNCS VIA URL/CONTEXT
+  // SINCRONIZAÇÃO EXTERNA (URL -> INPUT)
   useEffect(() => {
-    const val = selectedFilters.address ?? "";
-    if (val !== inputValue) {
-      // WE MARKED IT TO SKIP THE DEBOUNCE AS WE ARE ONLY SYNCING VISUALLY
-      skipDebounceRef.current = true;
-      setInputValue(val);
-      setQuery(val);
-    }
-  }, [selectedFilters.address]);
+    setInputValue(draftFilters.address ?? "");
+    setQuery(draftFilters.address ?? "");
+  }, [draftFilters.address, setQuery]);
 
+  // FECHAR AO CLICAR FORA
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -60,34 +46,34 @@ export function AddressFilter() {
   }, []);
 
   function handleInputChange(value: string) {
-    // ENSURES THAT THE FLAG IS FALSE, AS THE USER IS TYPING
-    skipDebounceRef.current = false;
-
     setInputValue(value);
-    setQuery(value);
+    setQuery(value); // Atualiza o hook de sugestões
     setIsOpen(value.length >= 1);
 
-    if (value.trim() === "") {
-      setSingleItem("address", "");
-      setIsOpen(false);
-    }
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    // DEBOUNCE MANUAL (IGUAL AO SEARCHFILTER)
+    debounceRef.current = setTimeout(() => {
+      // SÓ aplica o filtro se o valor mudou de fato para evitar loops
+      if (value !== (draftFilters.address ?? "")) {
+        setSingleItem("address", value);
+      }
+    }, 500);
   }
 
   function handleSelect(name: string) {
-    //THIS PREVENTS THE SET_QUERY BELOW FROM TRIGGERING A NEW FILTER 500MS FROM NOW
-    skipDebounceRef.current = true;
+    if (debounceRef.current) clearTimeout(debounceRef.current);
 
     setInputValue(name);
-    setQuery(name); //UPDATE THE HOOK JUST TO MAINTAIN INTERNAL CONSISTENCY
-
-    // APPLY THE FILTER IMMEDIATELY
-    setSingleItem("address", name);
-
+    setQuery(name);
+    setSingleItem("address", name); // Aplica imediatamente
     setNeighborhoods([]);
     setIsOpen(false);
   }
 
   function handleClear() {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
     setInputValue("");
     setQuery("");
     setSingleItem("address", "");
@@ -110,18 +96,16 @@ export function AddressFilter() {
           placeholder="Filtrar por rua, bairro..."
           className="pr-10"
         />
-
         <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
           {inputValue && (
             <button
               type="button"
               onClick={handleClear}
-              className="text-muted-foreground hover:text-destructive transition-colors p-0.5 cursor-pointer mr-1"
+              className="text-muted-foreground hover:text-destructive p-0.5 cursor-pointer mr-1"
             >
               <X className="size-3.5" />
             </button>
           )}
-
           {isFetchingApi ? (
             <Loader2 className="size-4 animate-spin text-muted-foreground" />
           ) : (
@@ -130,16 +114,15 @@ export function AddressFilter() {
         </div>
       </div>
 
-      {/* SUGESTIONS CONTAINER */}
       {isOpen && neighborhoods.length > 0 && (
-        <div className="absolute top-full z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border bg-popover text-popover-foreground shadow-lg animate-in fade-in zoom-in-95">
+        <div className="absolute top-full z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border bg-popover text-popover-foreground shadow-lg">
           <div className="p-1">
-            <div className="flex justify-between">
-              <p className="px-2 py-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+            <div className="flex justify-between items-center px-2 py-1">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                 Sugestões
               </p>
-              <button onClick={() => setIsOpen(false)}>
-                <ChevronUp className="size-5 cursor-pointer" />
+              <button type="button" onClick={() => setIsOpen(false)}>
+                <ChevronUp className="size-4" />
               </button>
             </div>
             {neighborhoods.map((n) => (
@@ -147,7 +130,7 @@ export function AddressFilter() {
                 key={n._id}
                 type="button"
                 onClick={() => handleSelect(n.name)}
-                className="flex w-full items-center gap-2 rounded-sm px-2 py-2 text-sm hover:bg-accent text-left transition-colors cursor-pointer"
+                className="flex w-full items-center gap-2 rounded-sm px-2 py-2 text-sm hover:bg-accent text-left transition-colors"
               >
                 <Search className="size-3.5 text-muted-foreground" />
                 <span className="truncate">{n.name}</span>

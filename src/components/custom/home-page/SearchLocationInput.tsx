@@ -48,7 +48,7 @@ export function SearchLocationInput({
     <div className="relative w-full" ref={containerRef}>
       <div className="relative flex items-center">
         <Input
-          placeholder="Localização (Bairro)"
+          placeholder="Localização"
           value={query}
           onChange={(e) => {
             const val = e.target.value;

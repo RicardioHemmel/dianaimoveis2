@@ -30,7 +30,7 @@ export function FilterGroup({ children, id, title }: FilterGroupProps) {
   const isExpanded = expandedGroups.includes(id);
 
   return (
-    <div className="border-b border-border/30 last:border-b-0">
+    <div className="w-full border-b border-border/30 last:border-b-0 px-2">
       <button
         onClick={() => toggleGroup(id)}
         className="flex items-center justify-between w-full py-4 text-left transition-colors hover:text-action-primary"

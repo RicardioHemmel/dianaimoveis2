@@ -3,6 +3,7 @@ import { FeaturedPropertiesCarousel } from "@/components/custom/home-page/Featur
 import { PropertyListingStudiosCarousel } from "@/components/custom/home-page/PropertyListingStudiosCarousel";
 import { PropertyListingGrid } from "@/components/custom/home-page/PropertyListingGrid";
 import { PropertyQuickSearchBar } from "@/components/custom/home-page/PropertyQuickSearchBar";
+import { HomeCallToAction } from "@/components/custom/home-page/CallToAction";
 import { CompanyPartners } from "@/components/custom/home-page/CompanyPartness";
 
 // QUERIES
@@ -23,6 +24,7 @@ export default async function HomePage() {
       <PropertyQuickSearchBar />
       <PropertyListingStudiosCarousel properties={studioProperties} />
       <CompanyPartners />
+      <HomeCallToAction />
       <PropertyListingGrid properties={allProperties} />
     </>
   );

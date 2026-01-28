@@ -11,6 +11,10 @@ const partners = [
   { name: "SKR", logo: "/company-logos/logo_skr.png" },
   { name: "Lavvi", logo: "/company-logos/logo_lavvi.png" },
   { name: "Gamaro", logo: "/company-logos/logo_gamaro.png" },
+  { name: "Setin", logo: "/company-logos/logo_setin.png" },
+  { name: "Helbor", logo: "/company-logos/logo_helbor.png" },
+  { name: "Mac", logo: "/company-logos/logo_mac.png" },
+  { name: "Diálogo", logo: "/company-logos/logo_dialogo.png" },
 ];
 
 export function CompanyPartners() {

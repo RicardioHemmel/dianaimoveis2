@@ -6,12 +6,16 @@ import { PropertyQuickSearchBar } from "@/components/custom/home-page/PropertyQu
 import { CompanyPartners } from "@/components/custom/home-page/CompanyPartness";
 
 // QUERIES
-import { getFeaturedProperties } from "@/lib/services/properties/queries/properties-query.service";
-import { getStudios } from "@/lib/services/properties/queries/homePage/get-studios.service";
+import {
+  getStudios,
+  getFeaturedProperties,
+  getAllProperties,
+} from "@/lib/services/properties/queries/homePage/query.service";
 
 export default async function HomePage() {
   const featuredProperties = await getFeaturedProperties();
   const studioProperties = await getStudios();
+  const allProperties = await getAllProperties(1, 12);
 
   return (
     <>
@@ -19,7 +23,7 @@ export default async function HomePage() {
       <PropertyQuickSearchBar />
       <PropertyListingStudiosCarousel properties={studioProperties} />
       <CompanyPartners />
-      <PropertyListingGrid properties={studioProperties} />
+      <PropertyListingGrid properties={allProperties} />
     </>
   );
 }

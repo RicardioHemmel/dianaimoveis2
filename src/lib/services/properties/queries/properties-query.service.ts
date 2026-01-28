@@ -65,7 +65,7 @@ export async function getPropertyToInput(
   await connectMongoDB();
 
   const property = await Property.findById(id)
-    .populate("propertyType") // RETURNS THE POPULATED TYPE TO SET "Apartamento" AS THE DEFAULT VALUE
+    .populate("propertyType")
     .lean<IPropertyPopulated>();
 
   if (!property) return null;
@@ -110,17 +110,4 @@ export async function getRelatedProperties(id: string) {
   return relatedProperties.map((property) =>
     PropertyMapper.toViewSchema(property),
   );
-}
-
-// -------------------------------- RETURNS FEATURED PROPERTIES --------------------------------
-export async function getFeaturedProperties() {
-  await connectMongoDB();
-
-  const properties = await Property.find({ isFeatured: true })
-    .populate("propertyType")
-    .lean<IPropertyPopulated[]>();
-
-  if (!properties.length) return [];
-
-  return properties.map((property) => PropertyMapper.toViewSchema(property));
 }

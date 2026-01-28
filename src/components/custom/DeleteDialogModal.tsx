@@ -47,7 +47,7 @@ export function DeleteDialogModal({
                 await deletePropertyAction(propertyId);
                 setShowDeleteDialog(false);
                 toast.success("Imóvel deletado com sucesso");
-                router.push("/property-list");
+                router.replace("/property-list", { scroll: false });
               } catch (e) {
                 console.log("Erro ao excluir imóvel: ", e);
               }

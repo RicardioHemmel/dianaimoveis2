@@ -24,7 +24,7 @@ export function TogglePropertyStatusDropdownItem({
       toast.error(res.message ?? "Erro ao atualizar status");
       return;
     }
-    router.push("/property-list");
+    router.replace("/property-list", { scroll: false });
   };
 
   return (

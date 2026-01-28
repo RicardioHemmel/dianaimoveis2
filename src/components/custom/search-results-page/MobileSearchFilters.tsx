@@ -62,7 +62,7 @@ export function MobileSearchFilters() {
 
           <SheetContent
             side="left"
-            className="w-full sm:max-w-md flex flex-col p-0 h-dvh"
+            className="w-full sm:max-w-md flex flex-col p-0 h-dvh z-10000"
           >
             <SheetHeader className="px-5 py-4 border-b shrink-0">
               <SheetTitle className="text-left font-display font-semibold">

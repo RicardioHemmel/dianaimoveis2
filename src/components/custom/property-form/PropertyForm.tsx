@@ -1,7 +1,7 @@
 "use client";
 
 // REACT | NEXT
-import { useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { FieldErrors, useWatch } from "react-hook-form";
 import Link from "next/link";
@@ -62,8 +62,6 @@ export default function PropertyForm() {
     initialData,
   } = usePropertyFormContext(); // CONTEXT
 
-  console.log(form.getValues());
-
   const mode = formModeConfig[formMode];
 
   const [isPending, startTransition] = useTransition();
@@ -78,9 +76,14 @@ export default function PropertyForm() {
     name: "isFeatured",
   });
 
-  const formattedStatus = statusFormatter(
-    initialData?.status as PropertyViewSchema["status"],
-  );
+  const badgeStatus = useWatch({
+    control: form.control,
+    name: "status",
+  });
+
+  const formattedStatus = useMemo(() => {
+    return statusFormatter(badgeStatus);
+  }, [badgeStatus]);
 
   // FORM SUBMIT FUNCTION
   async function onSubmit(data: PropertyInputSchema) {
@@ -297,7 +300,10 @@ export default function PropertyForm() {
                 type="submit"
                 variant="outline"
                 disabled={isPending}
-                onClick={() => setStatus("DRAFT")}
+                onClick={() => {
+                  setStatus("DRAFT");
+                  form.setValue("status", "DRAFT", { shouldDirty: true });
+                }}
               >
                 Salvar rascunho
               </Button>
@@ -307,7 +313,10 @@ export default function PropertyForm() {
                 className="bg-[image:var(--gradient-primary)] hover:brightness-90"
                 type="submit"
                 disabled={isPending}
-                onClick={() => setStatus("PUBLISHED")}
+                onClick={() => {
+                  setStatus("PUBLISHED");
+                  form.setValue("status", "PUBLISHED", { shouldDirty: true });
+                }}
               >
                 {isPending ? loadingText : `${actionText} imóvel`}
               </Button>

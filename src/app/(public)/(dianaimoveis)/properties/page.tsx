@@ -8,7 +8,7 @@ import { SearchResults } from "@/components/custom/search-results-page/SearchRes
 import {
   getFilteredProperties,
   getPropertyFilterValues,
-} from "@/lib/services/properties/queries/searchPage/filtered-properties.service";
+} from "@/lib/services/properties/queries/searchPage/query.service";
 
 // PROVIDER
 import {

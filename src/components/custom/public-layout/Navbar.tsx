@@ -110,7 +110,7 @@ export function Navbar() {
             </SheetTrigger>
             <SheetContent
               side="left"
-              className="bg-white w-screen sm:max-w-screen "
+              className="bg-white w-screen sm:max-w-screen z-10000"
               aria-describedby={undefined}
             >
               {/* ITS NECESSARY TO HAVE A TITLE FOR SCREEN READER USERS*/}

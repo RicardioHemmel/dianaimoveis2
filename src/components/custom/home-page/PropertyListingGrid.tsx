@@ -1,5 +1,3 @@
-"use client";
-
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 import { BorderLessCardsGridListing } from "@/components/custom/property-cards/listing/BorderLessCardGridListing";
 
@@ -20,7 +18,7 @@ export function PropertyListingGrid({
 
         {/* PROPERTY CAROUSEL */}
         <div className="w-full 2xl:w-[90%] mx-auto px-6">
-          <BorderLessCardsGridListing properties={properties} />
+          <BorderLessCardsGridListing initialData={properties} />
         </div>
       </div>
     </section>

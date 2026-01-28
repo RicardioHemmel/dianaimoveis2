@@ -26,3 +26,35 @@ export async function getStudios(
 
   return properties.map((property) => PropertyMapper.toViewSchema(property));
 }
+
+// -------------------------------- RETURNS FEATURED PROPERTIES --------------------------------
+export async function getFeaturedProperties() {
+  await connectMongoDB();
+
+  const properties = await Property.find({ isFeatured: true }).lean<
+    IPropertyPopulated[]
+  >();
+
+  if (!properties.length) return [];
+
+  return properties.map((property) => PropertyMapper.toViewSchema(property));
+}
+
+// -------------------------------- RETURNS ALL PROPERTIES --------------------------------
+export async function getAllProperties(
+  page: number = 1,
+  limit: number = 12,
+): Promise<PropertyViewSchema[]> {
+  await connectMongoDB();
+
+  const skip = (page - 1) * limit;
+
+  const properties = await Property.find()
+    .skip(skip)
+    .limit(limit)
+    .lean<IPropertyPopulated[]>();
+
+  if (!properties.length) return [];
+
+  return properties.map((property) => PropertyMapper.toViewSchema(property));
+}

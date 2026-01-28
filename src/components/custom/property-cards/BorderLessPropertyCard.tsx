@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 import { showCoverImage } from "@/lib/formatters/ui-formatters/show-cover-image";

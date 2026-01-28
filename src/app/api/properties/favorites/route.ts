@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getFavorites } from "@/lib/services/properties/queries/favoritesPage/get-favorite-properties.service";
+import { getFavorites } from "@/lib/services/properties/queries/favoritesPage/query.service";
 
 export async function POST(req: NextRequest) {
   try {

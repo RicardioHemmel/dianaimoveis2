@@ -99,7 +99,7 @@ export interface IPropertyPopulated extends Omit<
   | "propertyTypologies"
   | "propertyAmenities"
 > {
-  propertyType: IPopulatedRef;
+  propertyType?: IPopulatedRef;
   propertyPurpose?: IPopulatedRef;
   propertyStanding?: IPopulatedRef;
   propertyStatus?: IPopulatedRef;

@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { uploadRequestSchema } from "@/lib/schemas/media/file.schema";
 import { StorageService } from "@/lib/services/storage/storage.service";
 
 // UPLOADS IMAGES TO CLOUD
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     // PARSE AND VALIDATION
     const body = await req.json();
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
     console.error("Erro na rota de upload:", error);
     return NextResponse.json(
       { error: "Failed to upload file" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

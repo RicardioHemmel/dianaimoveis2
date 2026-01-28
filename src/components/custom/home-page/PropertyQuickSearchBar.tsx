@@ -48,7 +48,7 @@ export function PropertyQuickSearchBar() {
   };
 
   return (
-    <section className="relative mt-6 sm:-mt-12 z-20 px-2 sm:px-4">
+    <section className="relative mt-6 lg:-mt-12 z-20 px-2 sm:px-4">
       <div className="container mx-auto">
         <div className="bg-card rounded-2xl shadow-xl border border-border/30 p-4 md:p-6 lg:p-8 xl:p-10">
           {/* SINGLE ROW LAYOUT */}
@@ -84,9 +84,12 @@ export function PropertyQuickSearchBar() {
                         setBedrooms(value as DetailsQty)
                       }
                     >
-                      <SelectTrigger className="w-full h-10 sm:h-11 border-border/50 rounded-lg text-sm">
+                      <SelectTrigger
+                        className="w-full h-10 sm:h-11 border-border/50 rounded-lg text-sm"
+                        variant={"gray"}
+                      >
                         <div className="flex items-center gap-2">
-                          <BedDouble className="size-4 text-muted-foreground" />
+                          <BedDouble className="size-4 text-text-title" />
                           <SelectValue placeholder="Quartos" />
                         </div>
                       </SelectTrigger>
@@ -108,9 +111,12 @@ export function PropertyQuickSearchBar() {
                         setBathrooms(value as DetailsQty)
                       }
                     >
-                      <SelectTrigger className="w-full h-10 sm:h-11 border-border/50 rounded-lg text-sm">
+                      <SelectTrigger
+                        className="w-full h-10 sm:h-11 border-border/50 rounded-lg text-sm"
+                        variant={"gray"}
+                      >
                         <div className="flex items-center gap-2">
-                          <Bath className="h-4 w-4 text-muted-foreground" />
+                          <Bath className="size-4 text-text-title" />
                           <SelectValue placeholder="Banheiros" />
                         </div>
                       </SelectTrigger>
@@ -132,9 +138,12 @@ export function PropertyQuickSearchBar() {
                         setParkingSpaces(value as DetailsQty)
                       }
                     >
-                      <SelectTrigger className="w-full h-10 sm:h-11 border-border/50 rounded-lg text-sm">
+                      <SelectTrigger
+                        className="w-full h-10 sm:h-11 border-border/50 rounded-lg text-sm"
+                        variant={"gray"}
+                      >
                         <div className="flex items-center gap-2">
-                          <Car className="h-4 w-4 text-muted-foreground" />
+                          <Car className="size-4 text-text-title" />
                           <SelectValue placeholder="Vagas" />
                         </div>
                       </SelectTrigger>

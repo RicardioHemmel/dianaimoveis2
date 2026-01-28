@@ -49,6 +49,7 @@ export function SearchLocationInput({
       <div className="relative flex items-center">
         <Input
           placeholder="Localização"
+          variant={"gray"}
           value={query}
           onChange={(e) => {
             const val = e.target.value;
@@ -57,13 +58,13 @@ export function SearchLocationInput({
             setIsOpen(val.length >= 1);
           }}
           onFocus={() => query.length >= 2 && setIsOpen(true)}
-          className="pr-10 h-10 border-border/50 rounded-lg text-sm bg-background"
+          className="pr-10 h-10 border-border/50 rounded-lg text-sm"
         />
         <div className="absolute right-3">
           {loading ? (
-            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+            <Loader2 className="size-4 animate-spin text-muted-foreground" />
           ) : (
-            <MapPin className="h-4 w-4 text-muted-foreground" />
+            <MapPin className="size-4 text-text-title" />
           )}
         </div>
       </div>

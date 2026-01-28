@@ -2,6 +2,14 @@ import { ArrowRight, Phone, MessageCircle, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 
 export function HomeCallToAction() {
   return (
@@ -118,22 +126,22 @@ export function HomeCallToAction() {
               </div>
 
               <form className="space-y-4">
-                <input
-                  type="text"
-                  placeholder="Seu nome"
-                  className="w-full h-12 px-4 bg-muted/50 border border-border/50 rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-secondary transition-colors"
-                />
-                <input
+                <Input variant={"gray"} type="text" placeholder="Seu nome" />
+                <Input
+                  variant={"gray"}
                   type="tel"
                   placeholder="Seu telefone com DDD"
-                  className="w-full h-12 px-4 bg-muted/50 border border-border/50 rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-secondary transition-colors"
                 />
-                <select className="w-full h-12 px-4 bg-muted/50 border border-border/50 rounded-xl text-muted-foreground focus:outline-none focus:border-secondary transition-colors appearance-none cursor-pointer">
-                  <option value="">Melhor horário para contato</option>
-                  <option value="manha">Manhã (9h - 12h)</option>
-                  <option value="tarde">Tarde (12h - 18h)</option>
-                  <option value="noite">Noite (18h - 21h)</option>
-                </select>
+                <Select>
+                  <SelectTrigger variant={"gray"} className="w-full">
+                    <SelectValue placeholder="Melhor horário" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="manha">Manhã (9h - 12h)</SelectItem>
+                    <SelectItem value="tarde">Tarde (12h - 18h)</SelectItem>
+                    <SelectItem value="noite">Noite (18h - 21h)</SelectItem>
+                  </SelectContent>
+                </Select>
 
                 <Button className="w-full h-12 rounded-xl text-base font-semibold bg-hero-bg">
                   Solicitar contato

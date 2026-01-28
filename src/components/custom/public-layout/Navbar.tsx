@@ -92,7 +92,7 @@ export function Navbar() {
           <Button asChild size={"lg"} variant={"gold"} className="rounded-full">
             <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
               <Phone className="w-5 h-5 mr-2" />
-              Fale Comigo
+              Fale Conosco
             </a>
           </Button>
         </div>

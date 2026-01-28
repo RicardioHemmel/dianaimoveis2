@@ -46,17 +46,19 @@ export default function AboutPage() {
   return (
     <div>
       {/* HERO SECTION */}
-      <section className="flex justify-center items-center h-[440px] bg-linear-to-br from-hero-from via-hero-via to-hero-to">
-        <div className="flex flex-col justify-center align-middle text-center animate-fade-in">
+      <section className="relative flex justify-center items-center h-[440px]  bg-[url('/banners/announcePropertyBanner.png')] bg-cover bg-center bg-no-repeat">
+        <div className="flex flex-col justify-center align-middle text-center animate-fade-in z-10">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
             Sobre a{" "}
-            <span className="text-tag-text !font-primary">Diana Imóveis</span>
+            <span className="text-tag-text font-primary!">Diana Imóveis</span>
           </h1>
           <p className="text-lg text-white/80 max-w-2xl mx-auto">
             Transformando sonhos em realidade com dedicação, experiência e um
             atendimento humanizado.
           </p>
         </div>
+
+        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/60 to-transparent" />
       </section>
 
       {/* ABOUT DIANA SECTION */}

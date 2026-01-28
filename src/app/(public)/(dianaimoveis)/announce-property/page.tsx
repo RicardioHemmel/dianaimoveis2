@@ -14,6 +14,7 @@ import {
   Shield,
   Building2,
 } from "lucide-react";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,6 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { emailLink, whatsappLink } from "@/lib/constants/links/contacts";
 
 const benefits = [
   {
@@ -84,35 +86,39 @@ export default function AnnouncePropertyPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen">
       {/* HERO */}
-      <section className="bg-[#142952] h-[320px] flex items-center justify-center">
-        <div className="text-center text-white px-4 max-w-4xl">
-          <span className=" bg-action-primary/10 inline-block mb-5 rounded-full px-4 py-1 text-sm text-action-primary">
+      <section className="relative flex justify-center items-center py-16 sm:py-0 min-h-[440px]  bg-[url('/banners/aboutUsBanner.png')] bg-cover bg-center bg-no-repeat">
+        <div className="flex flex-col justify-center items-center text-center animate-fade-in z-10 w-full sm:w-5/10">
+          <span className="w-fit bg-action-primary mb-5 rounded-full px-4 py-1 text-sm font-bold">
             Anúncio Grátis
           </span>
 
-          <h1 className="text-4xl md:text-5xl font-bold mt-5">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
             Venda ou Alugue seu Imóvel com a{" "}
-            <span className="text-action-primary">Diana Imóveis</span>
+            <span className="text-tag-text font-primary!">Diana Imóveis</span>
           </h1>
-
-          <p className="mt-4 text-white/80 text-lg">
-            Alcance milhares de interessados com um processo simples, rápido e
-            eficiente.
+          <p className="text-lg text-white/80 max-w-2xl mx-auto">
+            Transformando sonhos em realidade com dedicação, experiência e um
+            atendimento humanizado.
           </p>
         </div>
+
+        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/60 to-black/30" />
       </section>
 
       {/* STEPS */}
-      <section className="bg-muted py-8">
-        <div className="container mx-auto grid md:grid-cols-3 gap-6 text-center">
+      <section className="bg-zinc-200 py-8">
+        <div className="container mx-auto grid md:grid-cols-3 gap-6 text-center place-items-center">
           {[
             ["01", "Preencha o formulário"],
             ["02", "Análise do anúncio"],
             ["03", "Publicação em 24h"],
           ].map(([n, text]) => (
-            <div key={n} className="flex items-center justify-center gap-3">
+            <div
+              key={n}
+              className="w-[60%] md:w-full flex items-center justify-between md:justify-center gap-3"
+            >
               <span className="text-action-primary font-bold text-2xl">
                 {n}
               </span>
@@ -123,10 +129,10 @@ export default function AnnouncePropertyPage() {
       </section>
 
       {/* CONTENT */}
-      <section className="py-16 bg-background">
+      <section className="py-16 bg-surface-base">
         <div className="container mx-auto grid lg:grid-cols-3 gap-12 px-4">
           {/* FORM */}
-          <div className="lg:col-span-2 bg-card rounded-2xl p-8 shadow-elegant border border-border">
+          <div className="lg:col-span-2 white-card rounded-2xl p-8 ">
             <h2 className="text-2xl font-serif font-bold mb-6">
               Cadastre seu Imóvel
             </h2>
@@ -169,7 +175,7 @@ export default function AnnouncePropertyPage() {
 
                 <div className="grid md:grid-cols-2 gap-4">
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Você é..." />
                     </SelectTrigger>
                     <SelectContent>
@@ -246,7 +252,7 @@ export default function AnnouncePropertyPage() {
                     value={formData.type}
                     onValueChange={(v) => handleChange("type", v)}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Tipo do imóvel" />
                     </SelectTrigger>
                     <SelectContent>
@@ -313,10 +319,10 @@ export default function AnnouncePropertyPage() {
               {benefits.map((benefit) => (
                 <div
                   key={benefit.title}
-                  className="flex items-start gap-4 p-4 bg-card rounded-2xl border hover:border-gold/30 transition-colors"
+                  className="flex items-start gap-4 p-4 white-card rounded-2xl border hover:border-gold/30 transition-colors"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-[#142952] flex items-center justify-center text-action-primary">
-                    <benefit.icon className="h-5 w-5 text-gold" />
+                  <div className="size-10 rounded-xl bg-hero-bg flex items-center justify-center text-action-primary">
+                    <benefit.icon className="size-5 text-gold" />
                   </div>
                   <div>
                     <p className="font-semibold">{benefit.title}</p>
@@ -328,37 +334,22 @@ export default function AnnouncePropertyPage() {
               ))}
             </div>
 
-            <div className="bg-[#142952] text-white rounded-xl p-6">
+            <div className="bg-hero-bg text-white rounded-xl p-6">
               <h3 className="font-semibold mb-3">Precisa de ajuda?</h3>
               <div className="space-y-2 text-sm">
-                <p className="flex gap-2">
-                  <Phone className="h-4 w-4 text-action-primary" /> (11)
-                  96653-6993
-                </p>
-                <p className="flex gap-2">
-                  <Mail className="h-4 w-4 text-action-primary" />{" "}
-                  dianahemmel@creci.org.br
-                </p>
+                <Link href={whatsappLink}>
+                  <p className="flex gap-2">
+                    <Phone className="h-4 w-4 text-action-primary" /> (11)
+                    96653-6993
+                  </p>
+                </Link>
+                <Link href={emailLink}>
+                  <p className="flex gap-2 mt-4">
+                    <Mail className="h-4 w-4 text-action-primary" />{" "}
+                    dianahemmel@creci.org.br
+                  </p>
+                </Link>
               </div>
-            </div>
-
-            <div className="bg-[#f3f5f7] rounded-xl p-6">
-              <h3 className="font-semibold mb-3 text-lg">
-                Checklist do Anúncio
-              </h3>
-              <ul className="space-y-3">
-                {[
-                  "Fotos de qualidade",
-                  "Documentação em dia",
-                  "Preço competitivo",
-                  "Descrição completa",
-                ].map((item) => (
-                  <li key={item} className="flex gap-2">
-                    <CheckCircle className="h-4 w-4 text-action-primary" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
             </div>
           </div>
         </div>

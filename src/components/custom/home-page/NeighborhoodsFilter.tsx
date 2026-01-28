@@ -105,7 +105,7 @@ export async function NeighborhoodsSection() {
     };
   });
   return (
-    <section className="py-16 md:py-24 bg-surface-muted">
+    <section className="py-16 md:py-24 bg-linear-to-br from-slate-200 via-white/40 to-slate-300/50  ">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12 flex flex-col gap-4 items-center xl:flex-row xl:items-end md:justify-between">
@@ -119,7 +119,7 @@ export async function NeighborhoodsSection() {
             <h2 className="tracking-tight title-section my-4 xl:my-0">
               Encontre seu próximo lar nos melhores bairros
             </h2>
-            <p className="max-w-2xl text-muted-foreground text-center xl:text-pretty">
+            <p className="max-w-2xl text-muted-foreground text-center xl:text-left xl:text-pretty">
               Descubra imóveis exclusivos nas regiões mais valorizadas de São
               Paulo. Cada bairro com sua personalidade única e qualidade de vida
               incomparável.

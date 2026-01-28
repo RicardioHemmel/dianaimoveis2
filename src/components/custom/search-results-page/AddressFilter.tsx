@@ -93,7 +93,7 @@ export function AddressFilter() {
             setIsOpen(true)
           }
           variant="gray"
-          placeholder="Filtrar por rua, bairro..."
+          placeholder="Filtrar por bairro"
           className="pr-10"
         />
         <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">

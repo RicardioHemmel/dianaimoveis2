@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 import { useActionState, useEffect } from "react";
-import { callRequestEmailAction } from "@/lib/server-actions/emails/call-request-email";
+import { callRequestEmailAction } from "@/lib/server-actions/emails/call-request-email.action";
 import { toast } from "sonner";
 import { PatternFormat } from "react-number-format";
 

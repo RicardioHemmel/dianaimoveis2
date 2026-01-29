@@ -7,7 +7,7 @@ import connectMongoDB from "@/lib/db/mongodbConnection";
 import ServerActionResponse from "@/lib/types/server-action-response";
 
 // EMAIL TSX
-import PropertyContactEmail from "@/components/custom/emails/PropertyContact";
+import CallRequestEmail from "@/components/custom/emails/CallRequest";
 
 // EMAIL SERVICE
 import { Resend } from "resend";
@@ -15,20 +15,17 @@ import { Resend } from "resend";
 // EMAIL PROVIDER
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function propertyContactEmailAction(
+export async function callRequestEmailAction(
   _: unknown,
   formData: FormData,
 ): Promise<ServerActionResponse> {
-  const propertyTitle = formData.get("propertyTitle")?.toString();
   const name = formData.get("name")?.toString();
-  const email = formData.get("email")?.toString().toLowerCase();
   const phone = formData.get("phone")?.toString();
-  const message = formData.get("message")?.toString();
+  const bestTime = formData.get("bestTime")?.toString();
 
-  if (!name || !email || !message || !phone || !propertyTitle) {
+  if (!name || !phone || !bestTime) {
     return { success: false, message: "Campos obrigatórios faltando." };
   }
-
   const phoneRegex = /^\(\d{2}\)\s\d{5}-\d{4}$/;
 
   if (!phoneRegex.test(phone)) {
@@ -44,14 +41,11 @@ export async function propertyContactEmailAction(
     const { error } = await resend.emails.send({
       from: `${process.env.EMAIL_FROM_NAME} <${process.env.EMAIL_FROM_EMAIL}>`,
       to: [process.env.DIANA_EMAIL!],
-      replyTo: email,
-      subject: `Novo Contato através do Diana Imóveis - ${name}`,
-      react: PropertyContactEmail({
-        propertyTitle: propertyTitle,
+      subject: `Solicitação de Contato - ${name}`,
+      react: CallRequestEmail({
         name: name,
+        bestTime: bestTime,
         phone: phone,
-        email: email,
-        message: message,
       }),
     });
 

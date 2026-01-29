@@ -24,7 +24,7 @@ export async function Property({ property }: { property: PropertyViewSchema }) {
   const headersList = await headers();
   const domain = headersList.get("host") || "";
   const protocol = headersList.get("x-forwarded-proto") || "https";
-  const pageUrl = `${protocol}://${domain}`;
+  const pageUrl = `${protocol}://${domain}/property/${property._id}`;
 
   // MOUNT THE MESSAGES
   const customTitle = `${property.title} - Diana Imóveis`;

@@ -74,8 +74,16 @@ export default function PropertyContact({
                     placeholder="(00) 00000-0000"
                     className="pl-12 h-12 bg-slate-50"
                     variant={"gray"}
-                    disabled={pending}
                     required
+                    allowEmptyFormatting={false}
+                    isAllowed={(values) => {
+                      return values.value.length <= 11;
+                    }}
+                    onBlur={(e: any) => {
+                      if (e.target.value.includes("_")) {
+                        e.target.value = "";
+                      }
+                    }}
                   />
                 </div>
               </div>
@@ -97,7 +105,13 @@ export default function PropertyContact({
                 name="propertyTitle"
               />
 
-              <Button type="submit" variant="gold" size="lg" className="w-full">
+              <Button
+                type="submit"
+                disabled={pending}
+                variant="gold"
+                size="lg"
+                className="w-full"
+              >
                 Enviar Mensagem
               </Button>
 

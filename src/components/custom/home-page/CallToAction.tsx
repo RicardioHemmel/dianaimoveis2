@@ -2,14 +2,8 @@ import { ArrowRight, Phone, MessageCircle, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+import { whatsappLink, callLink } from "@/lib/constants/links/contacts";
+import { ContactForm } from "@/components/custom/home-page/ContactForm";
 
 export function HomeCallToAction() {
   return (
@@ -82,10 +76,13 @@ export function HomeCallToAction() {
                 size="lg"
                 variant="gold"
                 className="rounded-xl text-base font-bold group text-text-title"
+                asChild
               >
-                <Phone className="mr-2 size-5 stroke-3" />
-                Falar com consultor
-                <ArrowRight className="ml-2 size-4 group-hover:translate-x-1 transition-transform stroke-3" />
+                <Link href={callLink}>
+                  <Phone className="mr-2 size-5 stroke-3" />
+                  Falar com consultor
+                  <ArrowRight className="ml-2 size-4 group-hover:translate-x-1 transition-transform stroke-3" />
+                </Link>
               </Button>
 
               <Button
@@ -95,7 +92,7 @@ export function HomeCallToAction() {
              text-black hover:bg-green-500 hover:text-white"
                 asChild
               >
-                <Link href="https://wa.me/5511966536993?text=Olá%20Diana,">
+                <Link href={whatsappLink}>
                   <Image
                     src="/icons/whatsapp.svg"
                     alt="whatsapp icon"
@@ -125,28 +122,7 @@ export function HomeCallToAction() {
                 </p>
               </div>
 
-              <form className="space-y-4">
-                <Input variant={"gray"} type="text" placeholder="Seu nome" />
-                <Input
-                  variant={"gray"}
-                  type="tel"
-                  placeholder="Seu telefone com DDD"
-                />
-                <Select>
-                  <SelectTrigger variant={"gray"} className="w-full">
-                    <SelectValue placeholder="Melhor horário" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="manha">Manhã (9h - 12h)</SelectItem>
-                    <SelectItem value="tarde">Tarde (12h - 18h)</SelectItem>
-                    <SelectItem value="noite">Noite (18h - 21h)</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                <Button className="w-full h-12 rounded-xl text-base font-semibold bg-hero-bg">
-                  Solicitar contato
-                </Button>
-              </form>
+              <ContactForm />
 
               <p className="text-xs text-muted-foreground text-center mt-4">
                 Seus dados estão seguros e não serão compartilhados

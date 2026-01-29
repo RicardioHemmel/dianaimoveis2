@@ -36,7 +36,7 @@ export function FiltersContent() {
   const { amenities, typologies, areaRange, priceRange } = availableFilters;
 
   return (
-    <div className="flex flex-col items-start overflow-y-auto py-2">
+    <div className="flex flex-col items-start h-full">
       <FilterGroup id="typologies" title="O que você procura?">
         {/* TITLE | CONSTRUCTION COMPANY */}
         <FilterItem Icon={Search} label="Empreendimento / Construtora">

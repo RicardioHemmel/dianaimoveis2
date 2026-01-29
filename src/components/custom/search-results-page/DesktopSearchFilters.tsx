@@ -17,7 +17,7 @@ export function DesktopSearchFilters() {
   const { clearFilters, hasActiveFilters } = useSearchPropertyContext();
 
   return (
-    <div className="rounded-2xl border border-border/30 shadow-lg sticky top-4 h-full overflow-hidden flex flex-col">
+    <div className="rounded-2xl border border-border/30 shadow-lg sticky top-4 h-[90vh] overflow-hidden flex flex-col">
       {/* HEADER */}
       <div className="bg-linear-to-r from-hero-bg to-hero-to px-5 py-4 shrink-0">
         <div className="flex items-center justify-between">

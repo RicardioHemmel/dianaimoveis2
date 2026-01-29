@@ -17,6 +17,7 @@ import { useActionState, useEffect, useState } from "react";
 import { announcePropertyEmailAction } from "@/lib/server-actions/emails/announce-property-email.action";
 import { toast } from "sonner";
 import { NumericFormat, PatternFormat } from "react-number-format";
+import { HoneypotInput } from "@/components/custom/HoneypotInput";
 
 export function AnnouncePropertyForm() {
   const [state, formAction, pending] = useActionState(
@@ -222,6 +223,8 @@ export function AnnouncePropertyForm() {
           </Label>
         </div>
       </div>
+
+      <HoneypotInput />
 
       <Button
         type="submit"

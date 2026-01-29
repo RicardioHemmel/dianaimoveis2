@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { User, Mail, Phone, MessageSquare } from "lucide-react";
 import { PatternFormat } from "react-number-format";
-
+import { HoneypotInput } from "@/components/custom/HoneypotInput";
 import { propertyContactEmailAction } from "@/lib/server-actions/emails/property-contact-email.action";
 import { toast } from "sonner";
 import { useActionState, useEffect } from "react";
@@ -89,6 +89,8 @@ export function ContactForm({ propertyTitle }: { propertyTitle: string }) {
         defaultValue={propertyTitle}
         name="propertyTitle"
       />
+
+      <HoneypotInput />
 
       <Button
         type="submit"

@@ -12,10 +12,36 @@ import { Resend } from "resend";
 // EMAIL PROVIDER
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// TO PREVENT MULTI EMAILS SEND
+import { getClientIp, checkRateLimit } from "@/lib/security/ip-rate-limit";
+
 export async function propertyContactEmailAction(
   _: unknown,
   formData: FormData,
 ): Promise<ServerActionResponse> {
+  const ip = await getClientIp();
+  const { success: limitOk } = await checkRateLimit(
+    `ratelimit_propertyContact_${ip}`,
+  );
+
+  if (!limitOk) {
+    return {
+      success: false,
+      message:
+        "Muitas tentativas em pouco tempo. Por favor, aguarde alguns minutos.",
+    };
+  }
+
+  // HONEYPOT TO PREVENT BOTS ACTIONS
+  const honeypot = formData.get("company")?.toString();
+
+  if (honeypot) {
+    return {
+      success: true,
+      message: "Envio processado com sucesso!",
+    };
+  }
+
   const propertyTitle = formData.get("propertyTitle")?.toString();
   const name = formData.get("name")?.toString();
   const email = formData.get("email")?.toString().toLowerCase();

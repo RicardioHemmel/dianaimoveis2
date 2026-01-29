@@ -18,6 +18,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Mail, Phone, Send, User } from "lucide-react";
 import { useActionState, useEffect } from "react";
+import { HoneypotInput } from "@/components/custom/HoneypotInput";
 
 export function GeneralContactForm() {
   const [state, formAction, pending] = useActionState(
@@ -124,6 +125,8 @@ export function GeneralContactForm() {
           Concordo com a LGPD (Lei Geral de Proteção de Dados)
         </Label>
       </div>
+
+      <HoneypotInput />
 
       <Button
         type="submit"

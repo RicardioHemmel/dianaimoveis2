@@ -14,6 +14,7 @@ import { useActionState, useEffect } from "react";
 import { callRequestEmailAction } from "@/lib/server-actions/emails/call-request-email.action";
 import { toast } from "sonner";
 import { PatternFormat } from "react-number-format";
+import { HoneypotInput } from "@/components/custom/HoneypotInput";
 
 export function ContactForm() {
   const [state, formAction, pending] = useActionState(
@@ -68,6 +69,9 @@ export function ContactForm() {
           <SelectItem value="noite">Noite (18h - 21h)</SelectItem>
         </SelectContent>
       </Select>
+
+      <HoneypotInput />
+
       <Button
         className="w-full h-12 rounded-xl text-base font-semibold bg-hero-bg"
         type="submit"

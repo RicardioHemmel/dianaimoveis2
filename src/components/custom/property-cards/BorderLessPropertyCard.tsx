@@ -45,12 +45,15 @@ export function BorderLessPropertyCard({
     <article>
       <Link className="group cursor-pointer" href={`/property/${_id}`}>
         {/* FULL IMAGE CARD */}
-        <div className="relative h-[520px] 2xl:h-[570px] overflow-hidden rounded-2xl">
+        <div className="relative h-[520px] 2xl:h-[570px] w-auto overflow-hidden rounded-2xl">
           {gallery.length > 0 ? (
             <Image
               src={showCoverImage(gallery)}
               alt={title}
               fill
+              sizes="(max-width: 768px) 100vw,
+         (max-width: 1280px) 50vw,
+         33vw"
               className="object-cover group-hover:scale-105 transition-transform duration-500"
             />
           ) : (

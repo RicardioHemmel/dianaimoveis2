@@ -86,11 +86,15 @@ export function FeaturedPropertiesCarousel({
                             priority
                           />
                         ) : (
-                          <Image
-                            alt="Message Banner"
-                            fill
-                            src="/templates/default/bannerMessage2.jpg"
-                          />
+                          <div className="h-[510px] sm:h-[720px] lg:h-[635px] 2xl:h-[750px] w-full flex justify-center items-center bg-black/90">
+                            <div className="flex flex-col justify-center gap-4 text-white">
+                              <Building2
+                                size={64}
+                                className="opacity-70 mx-auto"
+                              />
+                              <p className="text-lg opacity-80">Sem imagem</p>
+                            </div>
+                          </div>
                         )}
                         <div className="w-full h-full flex items-end justify-center 2xl:justify-start">
                           <motion.div

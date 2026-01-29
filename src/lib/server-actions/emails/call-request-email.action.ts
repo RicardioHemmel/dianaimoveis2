@@ -1,8 +1,5 @@
 "use server";
 
-// MONGODB
-import connectMongoDB from "@/lib/db/mongodbConnection";
-
 //SC
 import ServerActionResponse from "@/lib/types/server-action-response";
 
@@ -37,7 +34,6 @@ export async function callRequestEmailAction(
 
   // SENDS EMAIL
   try {
-    await connectMongoDB();
     const { error } = await resend.emails.send({
       from: `${process.env.EMAIL_FROM_NAME} <${process.env.EMAIL_FROM_EMAIL}>`,
       to: [process.env.DIANA_EMAIL!],

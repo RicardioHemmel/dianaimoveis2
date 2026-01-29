@@ -2,10 +2,7 @@
 import { Property } from "@/components/custom/single-property/Property";
 
 // SERVICE
-import {
-  getPropertyToView,
-  getRelatedProperties,
-} from "@/lib/services/properties/queries/properties-query.service";
+import { getPropertyToView } from "@/lib/services/properties/queries/properties-query.service";
 
 // NEXT
 import { notFound } from "next/navigation";
@@ -19,11 +16,10 @@ export default async function PropertyPreviewPage({
   const propertyId = resolvedParams.id;
 
   const property = await getPropertyToView(propertyId);
-  const relatedProperties = await getRelatedProperties(propertyId);
 
   if (!property) {
     notFound();
   }
 
-  return <Property property={property} relatedProperties={relatedProperties} />;
+  return <Property property={property} />;
 }

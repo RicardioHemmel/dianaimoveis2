@@ -1,7 +1,7 @@
 "use client";
 
 // REACT | NEXT
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { FieldErrors, useWatch } from "react-hook-form";
 import Link from "next/link";
@@ -20,10 +20,7 @@ import {
 import { DeletePropertyDropdownItem } from "@/components/custom/DeletePropertyDropdownItem";
 
 // SCHEMA
-import {
-  PropertyInputSchema,
-  PropertyViewSchema,
-} from "@/lib/schemas/property/property.schema";
+import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
 
 // ZOD ERROR MESSAGES TREATMENT TO PT-BR
 import { extractFieldLabels } from "@/lib/errors/property-form-error-mapper";

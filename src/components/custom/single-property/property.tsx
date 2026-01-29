@@ -5,6 +5,7 @@ import PropertyDescription from "@/components/custom/single-property/PropertyDes
 import PropertyAmenities from "@/components/custom/single-property/PropertyAmenities";
 import PropertyFloorPlans from "@/components/custom/single-property/PropertyFloorPlans";
 import PropertyGallery from "@/components/custom/single-property/PropertyGallery";
+import PropertyVideo from "@/components/custom/single-property/PorpertyVideo";
 import PropertyLocation from "@/components/custom/single-property/PropertyLocation";
 import PropertyContact from "@/components/custom/single-property/PropertyContact";
 import PropertyRelated from "@/components/custom/single-property/PropertyRelated";
@@ -36,6 +37,8 @@ export function Property({
       {property.floorPlanGallery?.length > 0 && (
         <PropertyFloorPlans floorPlanGallery={property.floorPlanGallery} />
       )}
+
+      {property.videoUrl && <PropertyVideo videoUrl={property.videoUrl} />}
 
       {property.gallery?.length > 0 && (
         <PropertyGallery gallery={property.gallery} />

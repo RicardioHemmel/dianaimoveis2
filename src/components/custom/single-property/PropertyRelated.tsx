@@ -19,7 +19,7 @@ export default function PropertyRelated({
           </p>
         </div>
         {/* PROPERTIES CARD  GRID */}
-        <BorderLessCardsGridListing properties={relatedProperties} />
+        <BorderLessCardsGridListing initialData={relatedProperties} />
         <div className="text-center mt-10">
           <Button variant="gold" size="lg">
             Ver Todos os Imóveis

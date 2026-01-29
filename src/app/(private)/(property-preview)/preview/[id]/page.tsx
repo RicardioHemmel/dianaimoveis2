@@ -1,5 +1,5 @@
 // COMPONENTS
-import { Property } from "@/components/custom/single-property/Property";
+import Property from "@/components/custom/single-property/Property";
 
 // SERVICE
 import { getPropertyToView } from "@/lib/services/properties/queries/properties-query.service";

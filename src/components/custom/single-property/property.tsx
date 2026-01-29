@@ -19,7 +19,11 @@ import { getRelatedProperties } from "@/lib/services/properties/queries/singlePr
 import { headers } from "next/headers";
 import { whatsAppRedirectBaseLink } from "@/lib/constants/links/contacts";
 
-export async function Property({ property }: { property: PropertyViewSchema }) {
+export default async function Property({
+  property,
+}: {
+  property: PropertyViewSchema;
+}) {
   // GET THE CURRENT URL FROM THE SERVER
   const headersList = await headers();
   const domain = headersList.get("host") || "";

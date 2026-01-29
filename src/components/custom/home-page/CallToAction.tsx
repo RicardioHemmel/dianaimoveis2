@@ -59,7 +59,7 @@ export function HomeCallToAction() {
             </h2>
 
             <p className="text-primary-foreground/80 text-lg leading-relaxed mb-8">
-              Nossa equipe de especialistas está pronta para ajudar você a
+              Nossa especialista em imóveis está pronta para ajudar você a
               encontrar o imóvel perfeito. Atendimento personalizado, sem
               compromisso e com total transparência.
             </p>

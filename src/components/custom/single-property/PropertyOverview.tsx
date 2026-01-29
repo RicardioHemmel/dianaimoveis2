@@ -14,17 +14,21 @@ import {
 import { buildToggleFieldLabels } from "@/lib/formatters/ui-formatters/property-toggle-fields";
 
 import Link from "next/link";
-import { headers } from "next/headers";
 import { Button } from "@/components/ui/button";
-import { whatsAppRedirectBaseLink } from "@/lib/constants/links/contacts";
 import { ShareButton } from "@/components/custom/ShareButton";
 import { ToggleFavoriteBtn } from "@/components/custom/ToggleFavoriteBtn";
 
-export default async function PropertyOverview({
-  property,
-}: {
+interface PropertyOverviewProps {
   property: PropertyViewSchema;
-}) {
+  whatsAppUrlForScheduling: string;
+  whatsAppUrlForMoreInfo: string;
+}
+
+export default function PropertyOverview({
+  property,
+  whatsAppUrlForMoreInfo,
+  whatsAppUrlForScheduling,
+}: PropertyOverviewProps) {
   // SPREAD PROPERTY
   const {
     isFurnished,
@@ -43,21 +47,6 @@ export default async function PropertyOverview({
     title,
     _id,
   } = property;
-
-  // GET THE CURRENT URL FROM THE SERVER
-  const headersList = await headers();
-  const domain = headersList.get("host") || "";
-  const protocol = headersList.get("x-forwarded-proto") || "https";
-  const pageUrl = `${protocol}://${domain}`;
-
-  // MOUNT THE MESSAGES
-  const customTitle = `${title} - Diana Imóveis`;
-  const whatsappMessageForScheduling = `Gostaria de agendar uma visita no: *${customTitle}*\n\n${pageUrl}`;
-  const whatsappMessageForMoreInfo = `Gostaria de mais informações sobre o imóvel: *${customTitle}*\n\n${pageUrl}`;
-
-  // GENERATES WHATSAPP LINKS
-  const whatsAppUrlForScheduling = `${whatsAppRedirectBaseLink}&text=${encodeURIComponent(whatsappMessageForScheduling)}`;
-  const whatsAppUrlForMoreInfo = `${whatsAppRedirectBaseLink}&text=${encodeURIComponent(whatsappMessageForMoreInfo)}`;
 
   // PROPERTY MAPPED ITEMS LIST
   const rangeDetails = buildPropertyRanges({
@@ -188,7 +177,7 @@ export default async function PropertyOverview({
                 <Button
                   variant="gold"
                   size="lg"
-                  className="w-full font-normal text-base py-6"
+                  className="w-full font-semibold text-base py-6"
                   asChild
                 >
                   <Link href={whatsAppUrlForScheduling} target="_blank">

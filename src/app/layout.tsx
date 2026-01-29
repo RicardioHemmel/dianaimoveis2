@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import ReactQueryProvider from "@/providers/react-query-provider";
 import "../styles/globals.css";
 import { Playfair_Display, Inter } from "next/font/google";
+import { Toaster } from "@/components/ui/sonner";
 
 const playfair_display = Playfair_Display({
   subsets: ["latin"],
@@ -38,6 +39,7 @@ export default function RootLayout({
     >
       <body className="antialiased">
         <ReactQueryProvider>{children}</ReactQueryProvider>
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   );

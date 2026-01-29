@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { AppSidebar } from "@/components/custom/private-layout/Sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Menu, SquareArrowOutUpRight } from "lucide-react";
-import { Toaster } from "@/components/ui/sonner";
 import { auth } from "@/auth";
 import AccessDenied from "@/components/custom/AccessDenied";
 import { Button } from "@/components/ui/button";
@@ -32,7 +31,6 @@ export default async function PrivateLayout({
               <SidebarTrigger className="text-muted-foreground hover:text-foreground">
                 <Menu className="h-5 w-5" />
               </SidebarTrigger>
-              <Toaster richColors position="top-right" />
               <div className="flex-1 flex justify-between">
                 <h1 className="text-xl font-semibold text-foreground">
                   Dashboard

@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "email:dev": "email dev --dir src/components/emails",
+    "email:dev": "email dev --dir src/components/custom/emails",
     "seed": "tsx src/lib/db/seeds/seed.ts"
   },
   "dependencies": {

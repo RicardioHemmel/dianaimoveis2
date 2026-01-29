@@ -12,6 +12,7 @@ export default function PublicLayout({
     <section>
       <Navbar />
       {children}
+
       <FloatingWhatsAppBtn />
       <Footer />
     </section>

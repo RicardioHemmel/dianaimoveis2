@@ -12,17 +12,40 @@ import PropertyRelated from "@/components/custom/single-property/PropertyRelated
 import PropertyTypologies from "@/components/custom/single-property/PropertyTypologies";
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 
-export function Property({
+// GENERATE PROPERTY LINKS
+import { headers } from "next/headers";
+import { whatsAppRedirectBaseLink } from "@/lib/constants/links/contacts";
+
+export async function Property({
   property,
   relatedProperties,
 }: {
   property: PropertyViewSchema;
   relatedProperties: PropertyViewSchema[];
 }) {
+  // GET THE CURRENT URL FROM THE SERVER
+  const headersList = await headers();
+  const domain = headersList.get("host") || "";
+  const protocol = headersList.get("x-forwarded-proto") || "https";
+  const pageUrl = `${protocol}://${domain}`;
+
+  // MOUNT THE MESSAGES
+  const customTitle = `${property.title} - Diana Imóveis`;
+  const whatsappMessageForScheduling = `Gostaria de agendar uma visita no: *${customTitle}*\n\n${pageUrl}`;
+  const whatsappMessageForMoreInfo = `Gostaria de mais informações sobre o imóvel: *${customTitle}*\n\n${pageUrl}`;
+
+  // GENERATES WHATSAPP LINKS
+  const whatsAppUrlForScheduling = `${whatsAppRedirectBaseLink}&text=${encodeURIComponent(whatsappMessageForScheduling)}`;
+  const whatsAppUrlForMoreInfo = `${whatsAppRedirectBaseLink}&text=${encodeURIComponent(whatsappMessageForMoreInfo)}`;
+
   return (
     <div className="bg-surface-base">
       <PropertyHero property={property} />
-      <PropertyOverview property={property} />
+      <PropertyOverview
+        property={property}
+        whatsAppUrlForMoreInfo={whatsAppUrlForMoreInfo}
+        whatsAppUrlForScheduling={whatsAppUrlForScheduling}
+      />
       {property.propertyTypologies?.length > 0 && (
         <PropertyTypologies typologies={property.propertyTypologies} />
       )}
@@ -47,10 +70,13 @@ export function Property({
       {property.address?.street &&
         property.address?.neighborhood &&
         property.address?.city && (
-          <PropertyLocation address={property.address} />
+          <PropertyLocation
+            address={property.address}
+            whatsAppUrlForScheduling={whatsAppUrlForScheduling}
+          />
         )}
 
-      <PropertyContact />
+      <PropertyContact propertyTitle={property.title} />
 
       {relatedProperties && relatedProperties.length > 0 && (
         <PropertyRelated relatedProperties={relatedProperties} />

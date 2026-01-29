@@ -12,17 +12,14 @@ import PropertyRelated from "@/components/custom/single-property/PropertyRelated
 import PropertyTypologies from "@/components/custom/single-property/PropertyTypologies";
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 
+// RELATED PROPERTIES BASED ON THE PROPERTY STANDING
+import { getRelatedProperties } from "@/lib/services/properties/queries/singlePropertyPage/query.service";
+
 // GENERATE PROPERTY LINKS
 import { headers } from "next/headers";
 import { whatsAppRedirectBaseLink } from "@/lib/constants/links/contacts";
 
-export async function Property({
-  property,
-  relatedProperties,
-}: {
-  property: PropertyViewSchema;
-  relatedProperties: PropertyViewSchema[];
-}) {
+export async function Property({ property }: { property: PropertyViewSchema }) {
   // GET THE CURRENT URL FROM THE SERVER
   const headersList = await headers();
   const domain = headersList.get("host") || "";
@@ -37,6 +34,12 @@ export async function Property({
   // GENERATES WHATSAPP LINKS
   const whatsAppUrlForScheduling = `${whatsAppRedirectBaseLink}&text=${encodeURIComponent(whatsappMessageForScheduling)}`;
   const whatsAppUrlForMoreInfo = `${whatsAppRedirectBaseLink}&text=${encodeURIComponent(whatsappMessageForMoreInfo)}`;
+
+  // GETS FIRST 12 RELATED PROPERTIS FOR BETTER "SEO" ON RELATED PROPERTIES SECTION
+  const relatedProperties = await getRelatedProperties(1, 12, {
+    excludeId: property?._id,
+    propertyStandingId: property?.propertyStanding?._id,
+  });
 
   return (
     <div className="bg-surface-base">
@@ -79,7 +82,10 @@ export async function Property({
       <PropertyContact propertyTitle={property.title} />
 
       {relatedProperties && relatedProperties.length > 0 && (
-        <PropertyRelated relatedProperties={relatedProperties} />
+        <PropertyRelated
+          relatedTo={property}
+          relatedProperties={relatedProperties}
+        />
       )}
     </div>
   );

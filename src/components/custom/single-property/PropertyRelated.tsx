@@ -1,13 +1,12 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
 import { BorderLessCardsGridListing } from "@/components/custom/property-cards/listing/BorderLessCardGridListing";
 
 export default function PropertyRelated({
   relatedProperties,
+  relatedTo,
 }: {
   relatedProperties: PropertyViewSchema[];
+  relatedTo?: PropertyViewSchema;
 }) {
   return (
     <section className="py-16 bg-muted/30">
@@ -19,12 +18,10 @@ export default function PropertyRelated({
           </p>
         </div>
         {/* PROPERTIES CARD  GRID */}
-        <BorderLessCardsGridListing initialData={relatedProperties} />
-        <div className="text-center mt-10">
-          <Button variant="gold" size="lg">
-            Ver Todos os Imóveis
-          </Button>
-        </div>
+        <BorderLessCardsGridListing
+          initialData={relatedProperties}
+          relatedTo={relatedTo}
+        />
       </div>
     </section>
   );

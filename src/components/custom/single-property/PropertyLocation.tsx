@@ -29,7 +29,9 @@ export default function PropertyLocation({
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="title-section">Localização</h2>
-          <p className="subtitle-section">Agende já uma visita com Diana</p>
+          <p className="subtitle-section">
+            Não perca tempo e agende já uma visita com Diana
+          </p>
         </div>
 
         <div className="grid lg:grid-cols-5 gap-8">

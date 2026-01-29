@@ -90,24 +90,3 @@ export async function getAllPropertyDetails() {
 
   return { amenities, purposes, standings, types, typologies };
 }
-
-// -------------------------------- RETURNS RELATED PROPERTIES BASED ON THE STANDING OF THE SELECTED PROPERTY --------------------------------
-export async function getRelatedProperties(id: string) {
-  await connectMongoDB();
-
-  const property = await Property.findById(id);
-
-  if (!property || !property.propertyStanding) return [];
-
-  const relatedProperties = await Property.find({
-    propertyStanding: property.propertyStanding,
-    _id: { $ne: property._id }, // AVOIDS BRINGING THE MAIN PROPERTY
-  })
-    .sort({ price: 1 })
-    .populate(POPULATE_FIELDS)
-    .lean<IPropertyPopulated[]>(); // MINOR PRICE FIRST
-
-  return relatedProperties.map((property) =>
-    PropertyMapper.toViewSchema(property),
-  );
-}

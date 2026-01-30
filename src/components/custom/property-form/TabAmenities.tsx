@@ -32,7 +32,7 @@ export default function TabAmenities() {
   // AMENITIES THAT WERE FOUND BY THE FILTER
   const filteredAmenities = useMemo(() => {
     return amenitiesList?.filter((amenity) =>
-      amenity.name.toLowerCase().includes(amenitiesFilter.toLowerCase())
+      amenity.name.toLowerCase().includes(amenitiesFilter.toLowerCase().trim()),
     );
   }, [amenitiesList, amenitiesFilter]);
 

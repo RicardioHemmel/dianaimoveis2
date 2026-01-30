@@ -62,7 +62,7 @@ export interface IProperty {
 
   // OTHER FIELDS
   description: string | null;
-  deliveryDate: string | null;
+  deliveryDate: Date | null;
   condominiumFee: number | null;
   videoUrl: string | null;
 

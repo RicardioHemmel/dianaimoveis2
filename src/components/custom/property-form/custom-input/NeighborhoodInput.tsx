@@ -121,6 +121,7 @@ export function NeighborhoodInput() {
               <Input
                 {...field}
                 value={query}
+                autoComplete="off"
                 onChange={(e) => {
                   field.onChange(e);
                   setQuery(e.target.value);

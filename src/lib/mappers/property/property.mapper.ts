@@ -21,6 +21,7 @@ import {
 } from "@/lib/schemas/property/IProperty";
 import { Types } from "mongoose";
 import { resolveImageUrl } from "@/lib/media/resolveImageUrl"; // GENERATES URL FROM ENV FILE
+import { toUTCDate, toDateInputValue } from "@/lib/formatters/dates";
 
 type ViewRef = {
   _id: string;
@@ -181,7 +182,10 @@ export class PropertyMapper {
       floors: this.toPersistenceRange(property.floors),
 
       // OTHER FIELDS
-      deliveryDate: property.deliveryDate || null,
+      deliveryDate: property.deliveryDate
+        ? toUTCDate(property.deliveryDate)
+        : null,
+
       condominiumFee: property.condominiumFee || null,
       constructionCompany: property.constructionCompany
         ? {
@@ -233,7 +237,9 @@ export class PropertyMapper {
       floors: this.toDomainRange(property.floors),
 
       condominiumFee: property.condominiumFee ?? undefined,
-      deliveryDate: property.deliveryDate ?? "",
+
+      deliveryDate: toDateInputValue(property.deliveryDate),
+
       constructionCompany: property.constructionCompany
         ? {
             _id: property.constructionCompany._id?.toString() ?? "",
@@ -296,7 +302,8 @@ export class PropertyMapper {
       floors: this.toDomainRange(property.floors),
 
       condominiumFee: property.condominiumFee ?? undefined,
-      deliveryDate: property.deliveryDate ?? "",
+      deliveryDate: toDateInputValue(property.deliveryDate),
+
       constructionCompany: property.constructionCompany
         ? {
             _id: property.constructionCompany._id?.toString() ?? "",

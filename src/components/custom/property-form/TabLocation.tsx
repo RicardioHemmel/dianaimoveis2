@@ -117,13 +117,28 @@ export default function TabLocation() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Estado</FormLabel>
-              <Select onValueChange={field.onChange} value={field.value}>
+              <Select
+                value={field.value || ""}
+                onValueChange={(value) => {
+                  if (value === "clear") {
+                    field.onChange("");
+                    return;
+                  }
+                  field.onChange(value);
+                }}
+              >
                 <FormControl>
                   <SelectTrigger variant="gray" className="mt-1.5 w-full">
                     <SelectValue placeholder="Selecione um estado" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
+                  <SelectItem
+                    value="clear"
+                    className="text-muted-foreground italic"
+                  >
+                    -- Remover seleção --
+                  </SelectItem>
                   {brazilianStates?.map((state) => (
                     <SelectItem key={state.uf} value={state.uf}>
                       {state.name}
@@ -131,6 +146,7 @@ export default function TabLocation() {
                   ))}
                 </SelectContent>
               </Select>
+              <FormMessage />
             </FormItem>
           )}
         />

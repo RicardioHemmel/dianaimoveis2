@@ -151,12 +151,16 @@ export default function TabSpecific() {
                   <FormItem>
                     <FormLabel>Construtora</FormLabel>
                     <Select
-                      value={field.value?._id}
+                      value={field.value?._id || ""}
                       onValueChange={(value) => {
+                        if (value === "clear") {
+                          field.onChange(undefined);
+                          return;
+                        }
+
                         const company = constructionCompanies?.find(
                           (c) => c._id === value,
                         );
-
                         field.onChange({
                           _id: company?._id,
                           name: company?.name,
@@ -169,6 +173,12 @@ export default function TabSpecific() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
+                        <SelectItem
+                          value="clear"
+                          className="text-muted-foreground italic"
+                        >
+                          -- Remover seleção --
+                        </SelectItem>
                         {constructionCompanies?.map((company) => (
                           <SelectItem key={company._id} value={company._id}>
                             {company.name}

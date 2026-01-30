@@ -69,7 +69,7 @@ const propertySchema = new Schema<IProperty>(
     area: rangeSchema,
     floors: rangeSchema,
 
-    deliveryDate: String,
+    deliveryDate: Date,
     condominiumFee: Number,
 
     isFeatured: { type: Boolean, default: false },

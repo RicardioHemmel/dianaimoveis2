@@ -222,30 +222,30 @@ export default function TabBasicInfo() {
             )}
           />
 
-          {/* DELIVERY DATE */}
           <FormField
             control={form.control}
             name="deliveryDate"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Data de Entrega</FormLabel>
+
                 <FormControl>
                   <div className="relative">
                     <Input
+                      type="date"
                       min="1900-01-01"
                       max="3000-12-31"
-                      type="date"
-                      {...field}
-                      value={field.value || ""}
+                      value={field.value ?? ""}
+                      onChange={(e) => field.onChange(e.target.value)}
                       className="mt-1.5"
-                      variant={"gray"}
+                      variant="gray"
                     />
 
                     {field.value && (
                       <button
                         type="button"
-                        onClick={() => field.onChange("")}
-                        className="absolute right-10 top-1/2 -translate-y-1/2 mt-0.5 text-gray-400 hover:text-gray-600 cursor-pointer"
+                        onClick={() => field.onChange(undefined)}
+                        className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                       >
                         <X className="size-5" />
                       </button>

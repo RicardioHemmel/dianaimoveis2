@@ -137,9 +137,7 @@ const propertyBaseSchema = z.object({
   description: z.string().optional(),
   condominiumFee: z.number().nonnegative().optional(),
   videoUrl: z.string().optional(),
-  deliveryDate: z
-    .union([z.string().regex(/^\d{4}-\d{2}-\d{2}$/), z.literal("")])
-    .optional(),
+  deliveryDate: z.string().optional(),
 
   constructionCompany: constructionCompanySchema.optional(),
 
@@ -191,9 +189,9 @@ export const DefaultValuesPropertyForm: PropertyInputSchema = {
   description: "",
   price: undefined as unknown as number,
   propertyType: null,
-  deliveryDate: "",
   propertyPurpose: "",
   propertyStanding: "",
+  deliveryDate: undefined,
   propertyTypologies: [],
   propertyAmenities: [],
   status: "DRAFT",

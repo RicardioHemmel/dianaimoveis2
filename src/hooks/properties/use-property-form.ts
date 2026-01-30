@@ -1,7 +1,5 @@
-// REACT | NEXT
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-
-// FORM CONTROL
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   propertyInputSchema,
@@ -10,29 +8,34 @@ import {
   PropertyDetailSchema,
 } from "@/lib/schemas/property/property.schema";
 
-// MESSAGE BOX
-import { useMemo } from "react";
-
 export default function usePropertyForm(
   propertyTypes: PropertyDetailSchema[],
-  initialData?: PropertyInputSchema
+  initialData?: PropertyInputSchema,
 ) {
-  // MEMORIZES DATA TO PREVENT RERENDER BRING BACK DATA THAT WERE ALREADY DELETED FROM THE FORM
-  const memoizedDefaultValues = useMemo(
-    () => ({
-      ...DefaultValuesPropertyForm,
-      propertyType: propertyTypes.find((t) => t.name === "Apartamento"),
-      ...initialData,
-    }),
-    [initialData]
-  );
-
-  // FORM MANAGER
   const form = useForm<PropertyInputSchema>({
     resolver: zodResolver(propertyInputSchema),
     mode: "onSubmit",
-    defaultValues: memoizedDefaultValues,
+    defaultValues: {
+      ...DefaultValuesPropertyForm,
+      propertyType: propertyTypes.find((t) => t.name === "Apartamento") ?? null,
+      ...initialData,
+    },
   });
+
+  useEffect(() => {
+    const currentId = form.getValues("_id");
+
+    if (initialData && initialData._id !== currentId) {
+      form.reset({
+        ...DefaultValuesPropertyForm,
+        ...initialData,
+        propertyType:
+          initialData.propertyType ??
+          propertyTypes.find((t) => t.name === "Apartamento") ??
+          null,
+      });
+    }
+  }, [initialData?._id, propertyTypes, form]);
 
   return {
     form,

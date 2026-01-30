@@ -99,13 +99,13 @@ export async function getFilteredProperties(
 
   //-------------- DATE FILTER ----------------
   const today = new Date();
-  const todayStr = today.toISOString().split("T")[0]; // BD SAVES DATE AS STRING
+  today.setUTCHours(0, 0, 0, 0);
 
   if (filters.deliveryStatus) {
     if (filters.deliveryStatus === "Lançamento") {
-      query.deliveryDate = { $gt: todayStr };
+      query.deliveryDate = { $gt: today };
     } else if (filters.deliveryStatus === "Pronto") {
-      query.deliveryDate = { $lte: todayStr };
+      query.deliveryDate = { $lte: today };
     }
   }
 

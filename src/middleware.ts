@@ -35,7 +35,7 @@ const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = dianaImoveisMainPage;
 // Redirect page when authenticated
 const REDIRECT_WHEN_AUTHENTICATED = "/dashboard";
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname; // Get the current request path
   const publicRoute = publicRoutes.find((route) => {
     if (route.path === path) return true;
@@ -76,7 +76,7 @@ export async function proxy(request: NextRequest) {
   return NextResponse.next();
 }
 
-export const config = {
+export const config: MiddlewareConfig = {
   matcher: [
     /*
      * Match all request paths except for the ones starting with:

@@ -255,10 +255,9 @@ export class PropertyMapper {
 
       address: this.toDomainAddress(property?.address),
 
-      propertyType: {
-        _id: property?.propertyType?._id.toString(),
-        name: property?.propertyType?.name,
-      },
+      propertyType: property.propertyType
+        ? this.mapPopulatedRefToView(property?.propertyType)
+        : undefined,
       propertyPurpose: this.mapPopulatedRefToView(property?.propertyPurpose),
       propertyStanding: this.mapPopulatedRefToView(property?.propertyStanding),
       propertyTypologies: this.mapPopulatedRefArrayToView(
@@ -314,10 +313,12 @@ export class PropertyMapper {
 
       address: this.toDomainAddress(property?.address),
 
-      propertyType: {
-        _id: property?.propertyType?._id.toString(),
-        name: property?.propertyType?.name,
-      },
+      propertyType: property.propertyType
+        ? {
+            _id: property.propertyType._id.toString(),
+            name: property.propertyType.name,
+          }
+        : null,
       propertyPurpose: property.propertyPurpose?._id.toString(),
       propertyStanding: property.propertyStanding?._id.toString(),
       propertyTypologies: property.propertyTypologies.map((typology) =>

@@ -76,7 +76,7 @@ export async function proxy(request: NextRequest) {
   return NextResponse.next();
 }
 
-export const config: MiddlewareConfig = {
+export const config = {
   matcher: [
     /*
      * Match all request paths except for the ones starting with:

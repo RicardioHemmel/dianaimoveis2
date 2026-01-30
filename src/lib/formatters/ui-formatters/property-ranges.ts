@@ -38,7 +38,7 @@ export function formatRangeField(
   max?: number,
   extendedLabel: boolean = true,
 ): string {
-  if (!min || !max) return "";
+  if (min == null || max == null) return "";
 
   const isEqual = min === max;
 
@@ -84,7 +84,7 @@ export function buildPropertyRanges(
   return (Object.keys(data) as FieldTypes[])
     .map((field) => {
       const value = data[field];
-      if (!value?.min || !value?.max) return null;
+      if (value?.min == null || value?.max == null) return null;
 
       const label = formatRangeField(
         field,

@@ -89,7 +89,7 @@ export async function announcePropertyEmailAction(
     // SENDS EMAIL
     const { error } = await resend.emails.send({
       from: `${process.env.EMAIL_FROM_NAME} <${process.env.EMAIL_FROM_EMAIL}>`,
-      to: [process.env.DIANA_EMAIL!],
+      to: [process.env.NEXT_PUBLIC_DIANA_EMAIL!],
       replyTo: email,
       subject: `🏠 Novo Imóvel: ${propertyPurpose.toUpperCase()} - ${name}`,
       react: AnnouncePropertyEmail({

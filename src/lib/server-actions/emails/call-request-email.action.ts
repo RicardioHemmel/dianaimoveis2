@@ -60,7 +60,7 @@ export async function callRequestEmailAction(
   try {
     const { error } = await resend.emails.send({
       from: `${process.env.EMAIL_FROM_NAME} <${process.env.EMAIL_FROM_EMAIL}>`,
-      to: [process.env.DIANA_EMAIL!],
+      to: [process.env.NEXT_PUBLIC_DIANA_EMAIL!],
       subject: `Solicitação de Contato - ${name}`,
       react: CallRequestEmail({
         name: name,

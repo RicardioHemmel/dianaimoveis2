@@ -65,7 +65,7 @@ export async function propertyContactEmailAction(
   try {
     const { error } = await resend.emails.send({
       from: `${process.env.EMAIL_FROM_NAME} <${process.env.EMAIL_FROM_EMAIL}>`,
-      to: [process.env.DIANA_EMAIL!],
+      to: [process.env.NEXT_PUBLIC_DIANA_EMAIL!],
       replyTo: email,
       subject: `Novo Contato através do Diana Imóveis - ${name}`,
       react: PropertyContactEmail({

@@ -71,12 +71,20 @@ const propertySchema = new Schema<IProperty>(
 
     deliveryDate: String,
     condominiumFee: Number,
-    constructionCompany: String,
 
     isFeatured: { type: Boolean, default: false },
     isFurnished: toggleFieldSchema,
     isNearSubway: toggleFieldSchema,
     isPetFriendly: toggleFieldSchema,
+
+    constructionCompany: {
+      _id: {
+        type: Schema.Types.ObjectId,
+        ref: "ConstructionCompany",
+        index: true,
+      },
+      name: String,
+    },
 
     propertyType: {
       type: Schema.Types.ObjectId,

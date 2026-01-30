@@ -1,6 +1,6 @@
 "use server";
 
-import Neighborhood from "@/lib/db/models/address/neighborhood.model";
+import Neighborhood from "@/lib/db/models/property/address/neighborhood.model";
 import { PropertyMapper } from "@/lib/mappers/property/property.mapper";
 
 export async function searchNeighborhoods(query: string) {

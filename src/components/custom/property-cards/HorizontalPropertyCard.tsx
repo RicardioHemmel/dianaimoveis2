@@ -85,9 +85,9 @@ export function HorizontalPropertyCard({
             {deliveryStatus.label}
           </span>
         )}
-        {constructionCompany && (
+        {constructionCompany?.name && (
           <span className="px-3 py-1 rounded-full bg-hero-bg border border-white/20 backdrop-blur-md text-white text-xs font-medium">
-            {constructionCompany}
+            {constructionCompany.name}
           </span>
         )}
         {deliveryDate && (

@@ -47,7 +47,7 @@ export default function AboutPage() {
     <div>
       {/* HERO SECTION */}
       <section className="relative flex justify-center items-center h-[440px]  bg-[url('/banners/announcePropertyBanner.png')] bg-cover bg-center bg-no-repeat">
-        <div className="flex flex-col justify-center align-middle text-center animate-fade-in z-10">
+        <div className="flex flex-col justify-center align-middle text-center animate-fade-in z-10 px-3 sm:px-0">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
             Sobre a{" "}
             <span className="text-tag-text font-primary!">Diana Imóveis</span>
@@ -134,14 +134,14 @@ export default function AboutPage() {
                   asChild
                   size={"lg"}
                   variant={"gold"}
-                  className="group mt-8"
+                  className="group mt-8 font-semibold"
                 >
                   <a
                     href="https://wa.me/5511966536993?text=Olá%20Diana,"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <MessageCircle className="w-5 h-5 mr-2 group-hover:animate-bounce" />
+                    <MessageCircle className="size-5 mr-2 group-hover:animate-bounce" />
                     Fale Comigo
                   </a>
                 </Button>

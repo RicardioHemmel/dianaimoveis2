@@ -16,6 +16,13 @@ import {
   InputGroupInput,
   InputGroupAddon,
 } from "@/components/ui/input-group";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 
 // ICONS
 import {
@@ -40,6 +47,7 @@ export default function TabSpecific() {
   const { form, propertyDetails } = usePropertyFormContext();
   const propertyStandings = propertyDetails?.standings;
   const propertyTypologies = propertyDetails?.typologies;
+  const constructionCompanies = propertyDetails?.constructionCompanies;
 
   // CURRENT FORM VALUES
   const propertyType = useWatch({
@@ -142,14 +150,32 @@ export default function TabSpecific() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Construtora</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Digite a construtora do empreendimento"
-                        variant="gray"
-                        className="mt-1.5"
-                        {...field}
-                      />
-                    </FormControl>
+                    <Select
+                      value={field.value?._id}
+                      onValueChange={(value) => {
+                        const company = constructionCompanies?.find(
+                          (c) => c._id === value,
+                        );
+
+                        field.onChange({
+                          _id: company?._id,
+                          name: company?.name,
+                        });
+                      }}
+                    >
+                      <FormControl>
+                        <SelectTrigger variant="gray" className="mt-1.5 w-full">
+                          <SelectValue placeholder="Selecione uma construtora" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {constructionCompanies?.map((company) => (
+                          <SelectItem key={company._id} value={company._id}>
+                            {company.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}

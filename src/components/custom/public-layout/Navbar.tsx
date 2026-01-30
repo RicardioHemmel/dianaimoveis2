@@ -19,7 +19,7 @@ import {
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 // ICONS
-import { Menu, Phone, Search } from "lucide-react";
+import { Heart, Menu, Phone, Search } from "lucide-react";
 
 // NEXT / REACT
 import { usePathname } from "next/navigation";
@@ -97,7 +97,32 @@ export function Navbar() {
         </div>
 
         {/* HAMBURGER MOBILE BUTTON */}
-        <div className="md:hidden">
+        <div className="md:hidden flex items-center gap-3">
+          {/* SEARCH BUTTON */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="bg-gray-100 hover:bg-action-primary hover:text-tag transition-all duration-300"
+            asChild
+          >
+            <Link href="/properties">
+              <Search className="size-5" />
+            </Link>
+          </Button>
+
+          {/* FAVORITES BUTTON */}
+          <Button
+            variant="ghost"
+            size="icon"
+            asChild
+            className="bg-gray-100 hover:bg-red-500"
+          >
+            <Link href="/favorites">
+              <Heart className="size-5" />
+            </Link>
+          </Button>
+
+          {/* HAMBURGUER BUTTON */}
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
               <button className="p-2">
@@ -123,9 +148,9 @@ export function Navbar() {
                       onClick={() => setOpen(false)}
                       className={`${
                         isActive
-                          ? "text-white bg-hero-bg px-6 py-3 rounded-lg"
+                          ? "text-white bg-hero-bg px-3 md:px-6 py-3 rounded-lg"
                           : ""
-                      } font-semibold hover:bg-zinc-200/70`}
+                      } font-semibold hover:bg-zinc-200/70 text-xl`}
                     >
                       {item.title}
                     </Link>

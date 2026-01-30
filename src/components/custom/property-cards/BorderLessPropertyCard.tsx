@@ -84,11 +84,11 @@ export function BorderLessPropertyCard({
           {/* BOTTOM CONTENT */}
           <div className="absolute inset-x-0 bottom-0 p-5 flex flex-col gap-3">
             {/* STATUS BADGE */}
-            {constructionCompany && (
+            {constructionCompany?.name && (
               <span
                 className={`px-3 py-1 rounded-full bg-white/20 border border-white/20 backdrop-blur-md text-white text-xs font-medium w-fit`}
               >
-                {constructionCompany}
+                {constructionCompany.name}
               </span>
             )}
 

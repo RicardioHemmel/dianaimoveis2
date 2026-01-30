@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { FileUpload } from "@/lib/schemas/media/file.schema";
+import { FileUpload } from "@/lib/schemas/property/media/file.schema";
 import {
   GalleryItemInputSchema,
   FloorPlanGalleryItemInputSchema,
@@ -85,7 +85,7 @@ export default function useFileUpload(source: "gallery" | "floorPlanGallery") {
 
   function validateFilesType(files: File[], acceptedTypes: string[]): boolean {
     return files.some((file) =>
-      acceptedTypes.some((type) => !file.type.startsWith(type))
+      acceptedTypes.some((type) => !file.type.startsWith(type)),
     );
   }
 
@@ -96,15 +96,15 @@ export default function useFileUpload(source: "gallery" | "floorPlanGallery") {
 
   function hasDuplicateFiles(
     newFiles: File[],
-    oldFiles: FileUpload[]
+    oldFiles: FileUpload[],
   ): boolean {
     return newFiles.some((newFile) =>
       oldFiles.some(
         (oldFile) =>
           oldFile.file &&
           newFile.name === oldFile.file.name &&
-          newFile.size === oldFile.file.size
-      )
+          newFile.size === oldFile.file.size,
+      ),
     );
   }
 
@@ -121,7 +121,7 @@ export default function useFileUpload(source: "gallery" | "floorPlanGallery") {
 
   //-------------------------------- POPULATES PROPERTY FORM WITH CLOUD IMAGES --------------------
   function mapRemoteFilesToFileUpload(
-    images: GalleryItemInputSchema[] | FloorPlanGalleryItemInputSchema[]
+    images: GalleryItemInputSchema[] | FloorPlanGalleryItemInputSchema[],
   ): void {
     const filesFromDB = images.map((image, i) => ({
       id: window.crypto.randomUUID(),
@@ -235,8 +235,10 @@ export default function useFileUpload(source: "gallery" | "floorPlanGallery") {
         toast.error("Erro ao obter URL de upload");
         setFilesUpload((prev) =>
           prev.map((img) =>
-            img.file === file ? { ...img, uploadProgress: 0, error: true } : img
-          )
+            img.file === file
+              ? { ...img, uploadProgress: 0, error: true }
+              : img,
+          ),
         );
         return null;
       }
@@ -260,8 +262,8 @@ export default function useFileUpload(source: "gallery" | "floorPlanGallery") {
                       uploadProgress: Math.round(porcentageCompleted),
                       key: key,
                     }
-                  : img
-              )
+                  : img,
+              ),
             );
           }
         };
@@ -276,8 +278,8 @@ export default function useFileUpload(source: "gallery" | "floorPlanGallery") {
                       uploadProgress: 100,
                       status: "success",
                     }
-                  : img
-              )
+                  : img,
+              ),
             );
 
             resolve();
@@ -303,8 +305,8 @@ export default function useFileUpload(source: "gallery" | "floorPlanGallery") {
         prev.map((img) =>
           img.status === "uploading"
             ? { ...img, status: "idle", uploadProgress: 0, error: true }
-            : img
-        )
+            : img,
+        ),
       );
 
       return null;
@@ -373,8 +375,8 @@ export default function useFileUpload(source: "gallery" | "floorPlanGallery") {
 
       setFilesUpload((prev) =>
         prev.map((img) =>
-          img.key === key ? { ...img, status: "deleting" } : img
-        )
+          img.key === key ? { ...img, status: "deleting" } : img,
+        ),
       );
 
       const deleteFileResponse = await fetch("/api/s3/delete/", {
@@ -390,8 +392,8 @@ export default function useFileUpload(source: "gallery" | "floorPlanGallery") {
 
         setFilesUpload((prev) =>
           prev.map((img) =>
-            img.key === key ? { ...img, status: "success", error: true } : img
-          )
+            img.key === key ? { ...img, status: "success", error: true } : img,
+          ),
         );
 
         return;
@@ -404,14 +406,14 @@ export default function useFileUpload(source: "gallery" | "floorPlanGallery") {
           .map((img, i) => ({
             ...img,
             order: formattedOrder(i),
-          }))
+          })),
       );
     } catch {
       toast.error("Erro ao remover imagem da nuvem");
       setFilesUpload((prev) =>
         prev.map((img) =>
-          img.key === key ? { ...img, status: "success", error: true } : img
-        )
+          img.key === key ? { ...img, status: "success", error: true } : img,
+        ),
       );
     }
   }
@@ -420,7 +422,7 @@ export default function useFileUpload(source: "gallery" | "floorPlanGallery") {
   async function removeImageAndUpdateProperty(
     key: string,
     form: UseFormReturn<PropertyInputSchema>,
-    propertyId?: string
+    propertyId?: string,
   ): Promise<void> {
     if (!key) return;
 
@@ -454,7 +456,7 @@ export default function useFileUpload(source: "gallery" | "floorPlanGallery") {
   // REMOVE ALL IMAGES AND UPDATE PROPERTY
   async function removeAllImagesAndUpdateProperty(
     form: UseFormReturn<PropertyInputSchema>,
-    propertyId?: string
+    propertyId?: string,
   ): Promise<void> {
     try {
       // REMOVE LOCAL AND CLOUD FILES
@@ -499,7 +501,7 @@ export default function useFileUpload(source: "gallery" | "floorPlanGallery") {
 
   function updateImageLabel(id: string, label: string) {
     setFilesUpload((prev) =>
-      prev.map((img) => (img.id === id ? { ...img, label } : img))
+      prev.map((img) => (img.id === id ? { ...img, label } : img)),
     );
   }
 

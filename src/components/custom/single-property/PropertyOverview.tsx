@@ -75,7 +75,7 @@ export default function PropertyOverview({
             <div className="p-8">
               <div className="flex flex-wrap gap-6 my-3 items-start">
                 {/* CONSTRUCTION COMPANY */}
-                {constructionCompany && (
+                {constructionCompany?.name && (
                   <div className="flex items-center gap-3">
                     <div className="size-12 rounded-xl bg-action-primary/10 flex items-center justify-center">
                       <Building2 className="h-6 w-6 text-action-primary" />
@@ -85,7 +85,7 @@ export default function PropertyOverview({
                         Construtora
                       </p>
                       <p className="font-semibold text-foreground">
-                        {constructionCompany}
+                        {constructionCompany?.name}
                       </p>
                     </div>
                   </div>

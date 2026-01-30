@@ -108,6 +108,16 @@ const propertyDetailSchema = z.object({
 
 export type PropertyDetailSchema = z.infer<typeof propertyDetailSchema>;
 
+// -------- CONSTRUCTION COMPANY
+export const constructionCompanySchema = z.object({
+  _id: z.string(),
+  name: z.string(),
+});
+
+export type ConstructionCompanySchema = z.infer<
+  typeof constructionCompanySchema
+>;
+
 //---------------------------------------------------- BASE SCHEMA -----------------------------------------------------------
 const propertyBaseSchema = z.object({
   _id: z.string().optional(),
@@ -126,11 +136,12 @@ const propertyBaseSchema = z.object({
 
   description: z.string().optional(),
   condominiumFee: z.number().nonnegative().optional(),
-  constructionCompany: z.string().optional(),
   videoUrl: z.string().optional(),
   deliveryDate: z
     .union([z.string().regex(/^\d{4}-\d{2}-\d{2}$/), z.literal("")])
     .optional(),
+
+  constructionCompany: constructionCompanySchema.optional(),
 
   isFeatured: z.boolean(),
   isFurnished: toggleFieldSchema,
@@ -185,7 +196,6 @@ export const DefaultValuesPropertyForm: PropertyInputSchema = {
   propertyStanding: "",
   propertyTypologies: [],
   propertyAmenities: [],
-  constructionCompany: "",
   status: "DRAFT",
   gallery: [],
   floorPlanGallery: [],
@@ -221,4 +231,5 @@ export type PropertyDetailsData = {
   standings: PropertyDetailSchema[];
   types: PropertyDetailSchema[];
   typologies: PropertyDetailSchema[];
+  constructionCompanies: PropertyDetailSchema[];
 };

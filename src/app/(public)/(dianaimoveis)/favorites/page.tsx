@@ -92,8 +92,9 @@ export default function FavoritePropertiesPage() {
             Seus imóveis favoritos salvos em um só lugar. Encontre rapidamente
             os que mais chamaram sua atenção.
           </p>
+          {/* FAVORITES QTY & EXPLORE BTN */}
           <div className="flex justify-center gap-3 mt-8">
-            <div className="bg-white/10 backdrop-blur-md rounded-full px-6 py-3 border border-white/20">
+            <div className="bg-white/10 backdrop-blur-md rounded-full px-6 py-3 border border-white/20 text-sm sm:text-base">
               <span className="text-white font-medium">
                 {properties.length}{" "}
                 {properties.length === 1 ? "imóvel salvo" : "imóveis salvos"}
@@ -101,8 +102,8 @@ export default function FavoritePropertiesPage() {
             </div>
 
             <Link href={"/properties"}>
-              <div className="flex items-center gap-2 bg-action-primary backdrop-blur-md rounded-full px-6 py-3 border border-white/20 text-white font-medium">
-                <Search className="size-4" />
+              <div className="flex items-center gap-2 bg-action-primary backdrop-blur-md rounded-full px-2 sm:px-6 py-3 border border-white/20 text-white font-medium text-sm sm:text-base">
+                <Search className="size-4 sm:size-5" />
                 <span>Encontrar Imóveis</span>
               </div>
             </Link>

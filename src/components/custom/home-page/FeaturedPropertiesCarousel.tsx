@@ -136,8 +136,8 @@ export function FeaturedPropertiesCarousel({
               ))}
             </CarouselContent>
             {/* CAROUSEL NAVIGATION BUTTONS */}
-            <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 h-full w-24" />
-            <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 h-full w-24" />
+            <CarouselPrevious className="hidden sm:flex absolute left-0 md:left-4 top-1/2 -translate-y-1/2 h-full w-24" />
+            <CarouselNext className="hidden sm:flex absolute right-0 md:right-4 top-1/2 -translate-y-1/2 h-full w-24" />
           </Carousel>
         </>
       ) : (

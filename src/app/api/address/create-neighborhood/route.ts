@@ -1,4 +1,4 @@
-import Neighborhood from "@/lib/db/models/address/neighborhood.model";
+import Neighborhood from "@/lib/db/models/property/address/neighborhood.model";
 import connectMongoDB from "@/lib/db/mongodbConnection";
 import { NextRequest, NextResponse } from "next/server";
 import { neighborhoodSchema } from "@/lib/schemas/property/property.schema";

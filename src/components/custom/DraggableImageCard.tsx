@@ -5,7 +5,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 // TYPES
-import { FileUpload } from "@/lib/schemas/media/file.schema";
+import { FileUpload } from "@/lib/schemas/property/media/file.schema";
 
 // REACT | NEXT
 import { useState } from "react";

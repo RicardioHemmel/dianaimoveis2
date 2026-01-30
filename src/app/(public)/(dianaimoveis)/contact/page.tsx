@@ -12,7 +12,7 @@ export default function ContactClient() {
         className="relative flex justify-center items-center h-[440px] 
   bg-[url('/banners/contactUsBanner.png')] bg-cover bg-center bg-no-repeat"
       >
-        <div className="relative z-10 flex flex-col justify-center text-center animate-fade-in">
+        <div className="relative z-10 flex flex-col justify-center text-center animate-fade-in px-3 sm:px-0">
           <h1 className="text-4xl md:text-5xl lg:text-6xl text-white font-bold">
             Entre em Contato
           </h1>

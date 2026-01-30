@@ -60,7 +60,7 @@ export function GeneralContactForm() {
               mask="_"
               customInput={Input}
               placeholder="(00) 00000-0000"
-              className="pl-12 bg-slate-50"
+              className="pl-9 bg-slate-50"
               variant={"gray"}
               required
               allowEmptyFormatting={false}

@@ -7,6 +7,7 @@ import { typesSeed } from "./properties/types.seed";
 import { purposesSeed } from "./properties/purposes.seed";
 import { standingsSeed } from "./properties/standings.seed";
 import { typologiesSeed } from "./properties/typologies.seed";
+import { ConstructionCompaniesSeed } from "./properties/construction-company.seed";
 
 async function runSeed() {
   try {
@@ -19,6 +20,7 @@ async function runSeed() {
     await standingsSeed();
     await typesSeed();
     await typologiesSeed();
+    await ConstructionCompaniesSeed();
 
     console.log("Todas as seeds foram executadas com sucesso.");
 

@@ -8,4 +8,8 @@ export const CONSTRUCTION_COMPANIES = [
   "SKR",
   "Lavvi",
   "Gamaro",
+  "Setin",
+  "Helbor",
+  "Mac",
+  "Diálogo",
 ];

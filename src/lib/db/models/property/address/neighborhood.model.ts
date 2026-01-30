@@ -1,5 +1,5 @@
 import mongoose, { Schema, Model } from "mongoose";
-import { INeighborhood } from "@/lib/schemas/neighborhood/INeighborhood";
+import { INeighborhood } from "@/lib/schemas/property/address/INeighborhood";
 
 // MONGODB SCHEMA
 const neighborhoodSchema = new Schema<INeighborhood>({

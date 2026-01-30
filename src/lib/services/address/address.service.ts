@@ -1,6 +1,6 @@
 import "server-only";
 
-import Neighborhood from "@/lib/db/models/address/neighborhood.model";
+import Neighborhood from "@/lib/db/models/property/address/neighborhood.model";
 import { PropertyMapper } from "@/lib/mappers/property/property.mapper";
 
 export async function createNeighborhood(name: string) {

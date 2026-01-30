@@ -15,6 +15,7 @@ import { getPurposes } from "@/lib/services/properties/property-details/property
 import { getStandings } from "@/lib/services/properties/property-details/property-standings.service";
 import { getTypes } from "@/lib/services/properties/property-details/property-types.service";
 import { getTypologies } from "@/lib/services/properties/property-details/property-typologies.service";
+import { getCompanies } from "@/lib/services/properties/property-details/property-construction-company.service";
 import { PopulateOptions } from "mongoose";
 
 // --- CONSTANTS ---
@@ -78,15 +79,28 @@ export async function getAllPropertyDetails() {
   await connectMongoDB();
 
   // PROMISE.ALL TO EXECUTE ALL QUERIES IN PARALLEL (FASTER)
-  const [amenities, purposes, standings, types, typologies] = await Promise.all(
-    [
-      getAmenities(),
-      getPurposes(),
-      getStandings(),
-      getTypes(),
-      getTypologies(),
-    ],
-  );
+  const [
+    amenities,
+    purposes,
+    standings,
+    types,
+    typologies,
+    constructionCompanies,
+  ] = await Promise.all([
+    getAmenities(),
+    getPurposes(),
+    getStandings(),
+    getTypes(),
+    getTypologies(),
+    getCompanies(),
+  ]);
 
-  return { amenities, purposes, standings, types, typologies };
+  return {
+    amenities,
+    purposes,
+    standings,
+    types,
+    typologies,
+    constructionCompanies,
+  };
 }

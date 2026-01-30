@@ -183,7 +183,12 @@ export class PropertyMapper {
       // OTHER FIELDS
       deliveryDate: property.deliveryDate || null,
       condominiumFee: property.condominiumFee || null,
-      constructionCompany: property.constructionCompany || null,
+      constructionCompany: property.constructionCompany
+        ? {
+            _id: new Types.ObjectId(property.constructionCompany._id),
+            name: property.constructionCompany.name,
+          }
+        : null,
       videoUrl: property.videoUrl || null,
       description: property.description || null,
 
@@ -229,7 +234,12 @@ export class PropertyMapper {
 
       condominiumFee: property.condominiumFee ?? undefined,
       deliveryDate: property.deliveryDate ?? "",
-      constructionCompany: property.constructionCompany ?? "",
+      constructionCompany: property.constructionCompany
+        ? {
+            _id: property.constructionCompany._id?.toString() ?? "",
+            name: property.constructionCompany.name,
+          }
+        : undefined,
       videoUrl: property.videoUrl ?? "",
       description: property.description ?? "",
 
@@ -287,7 +297,12 @@ export class PropertyMapper {
 
       condominiumFee: property.condominiumFee ?? undefined,
       deliveryDate: property.deliveryDate ?? "",
-      constructionCompany: property.constructionCompany ?? "",
+      constructionCompany: property.constructionCompany
+        ? {
+            _id: property.constructionCompany._id?.toString() ?? "",
+            name: property.constructionCompany.name,
+          }
+        : undefined,
       videoUrl: property.videoUrl ?? "",
       description: property.description ?? "",
 

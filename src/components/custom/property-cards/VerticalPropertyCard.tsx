@@ -99,9 +99,9 @@ export function VerticalPropertyCard({
         {/* PROPERTY TYPE & Typology - Bottom of Image */}
         <div className="absolute bottom-4 left-4 right-4 z-10">
           <div className="flex items-center gap-2">
-            {constructionCompany && (
+            {constructionCompany?.name && (
               <span className="px-3 py-1 rounded-full bg-white/20 border border-white/20 backdrop-blur-md text-white text-xs font-medium">
-                {constructionCompany}
+                {constructionCompany.name}
               </span>
             )}
             {deliveryDate && (

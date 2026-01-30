@@ -1,5 +1,5 @@
 import { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
-import { MorphingCard } from "../MorphingCard";
+import { MorphingCard } from "@/components/custom/property-cards/MorphingCard";
 
 interface MorphingCardListingProps {
   viewMode: "grid" | "list";

@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import { IConstructionCompany } from "./construction-company/IConstruction-company";
 
 export interface IGallerySchema {
   key: string;
@@ -64,7 +65,8 @@ export interface IProperty {
   deliveryDate: string | null;
   condominiumFee: number | null;
   videoUrl: string | null;
-  constructionCompany: string | null;
+
+  constructionCompany: IConstructionCompany | null;
 
   // TOGGLE FIELDS
   isFeatured: boolean;

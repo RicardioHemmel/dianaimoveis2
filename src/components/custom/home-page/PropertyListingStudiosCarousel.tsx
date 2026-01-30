@@ -8,7 +8,7 @@ export function PropertyListingStudiosCarousel({
 }) {
   return (
     <section className="py-20 bg-muted/30 -mt-24 pt-44">
-      <div className="w-[94%] 2xl:w-[80%] mx-auto px-4">
+      <div className="w-[94%] 2xl:w-[80%] mx-auto">
         <div className="text-center mb-0 md:mb-6">
           <h2 className="title-section mb-3">Studios para Morar ou Investir</h2>
           <p className="subtitle-section">

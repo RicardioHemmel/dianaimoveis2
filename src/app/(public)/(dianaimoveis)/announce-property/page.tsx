@@ -38,14 +38,14 @@ export default function AnnouncePropertyPage() {
     <div className="min-h-screen">
       {/* HERO */}
       <section className="relative flex justify-center items-center py-16 sm:py-0 min-h-[440px]  bg-[url('/banners/aboutUsBanner.png')] bg-cover bg-center bg-no-repeat">
-        <div className="flex flex-col justify-center items-center text-center animate-fade-in z-10 w-full sm:w-5/10">
+        <div className="flex flex-col justify-center items-center text-center animate-fade-in z-10 w-full sm:w-6/10 px-2 sm:px-0">
           <span className="w-fit bg-action-primary mb-5 rounded-full px-4 py-1 text-sm font-bold">
             Anúncio Grátis
           </span>
 
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
             Venda ou Alugue seu Imóvel com a{" "}
-            <span className="text-tag-text font-primary!">Diana Imóveis</span>
+            <div className="text-tag-text font-primary!">Diana Imóveis</div>
           </h1>
           <p className="text-lg text-white/80 max-w-2xl mx-auto">
             Transformando sonhos em realidade com dedicação, experiência e um

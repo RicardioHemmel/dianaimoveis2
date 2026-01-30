@@ -22,8 +22,6 @@ export async function getRelatedProperties(
 
   await connectMongoDB();
 
-  console.log("filtros: ", filters);
-
   const skip = (page - 1) * limit;
 
   const query: any = {
@@ -36,8 +34,6 @@ export async function getRelatedProperties(
     .skip(skip)
     .limit(limit)
     .lean<IPropertyPopulated[]>();
-
-  console.log("Imóveis: ", properties);
 
   if (!properties.length) return [];
 

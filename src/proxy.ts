@@ -1,10 +1,10 @@
 import {
   NextResponse,
-  type MiddlewareConfig,
   type NextRequest,
+  type MiddlewareConfig,
 } from "next/server";
 
-// Public links from Diana Imoveis website
+// PUBLIC LINKS FROM DIANA IMOVEIS WEBSITE
 import { navLinks } from "./lib/constants/links/navbar-links";
 
 const generatedPublicRoutes = navLinks.map((item) => ({
@@ -44,6 +44,10 @@ export async function proxy(request: NextRequest) {
       return true;
     }
 
+    if (path.startsWith("/property/")) {
+      return true;
+    }
+
     return false;
   }); // Check if the current path is public
 
@@ -57,6 +61,7 @@ export async function proxy(request: NextRequest) {
 
   // If user wants to access a private route and doesn't have a token
   if (!hasSession && !publicRoute) {
+    console.log("BARRADO");
     // Redirect to signIn page by cloning the current url and changing the path
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE;
@@ -77,7 +82,7 @@ export async function proxy(request: NextRequest) {
   return NextResponse.next();
 }
 
-export const config = {
+export const config: MiddlewareConfig = {
   matcher: [
     /*
      * Match all request paths except for the ones starting with:

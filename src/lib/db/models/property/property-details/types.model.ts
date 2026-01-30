@@ -1,6 +1,5 @@
 import { IPopulatedRef } from "@/lib/schemas/property/IProperty";
 import mongoose, { Model, Schema } from "mongoose";
-import StatusModel from "./status.model";
 
 const typeSchema = new Schema(
   {
@@ -9,7 +8,7 @@ const typeSchema = new Schema(
   {
     strict: true,
     collection: "property_types",
-  }
+  },
 );
 
 const TypeModel =

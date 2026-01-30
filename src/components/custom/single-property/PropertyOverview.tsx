@@ -106,13 +106,11 @@ export default function PropertyOverview({
           {/* MAIN INFO CARD */}
           <div className="xl:col-span-2 white-card rounded-xl">
             <div className="p-8">
-              <div className="flex flex-wrap justify-start md:justify-evenly gap-6">
+              {/* GRID PRINCIPAL: 1 coluna no mobile, 2 em tablets, auto em desktop */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
                 {mainInfoCardData.length > 0 &&
                   mainInfoCardData.map((data) => (
-                    <div
-                      key={data.value}
-                      className="flex items-center gap-3 min-w-[140px]"
-                    >
+                    <div key={data.value} className="flex items-center gap-3">
                       <div className="p-4 rounded-xl bg-action-primary/10 flex items-center justify-center shrink-0">
                         <data.icon className="size-6 text-action-primary" />
                       </div>
@@ -131,7 +129,8 @@ export default function PropertyOverview({
               {/* PROPERTY DETAILS */}
               <div className="lg:col-span-2 space-y-6">
                 <div className="p-6 mt-5 border-t">
-                  <div className="flex flex-wrap justify-start md:justify-evenly gap-x-8 gap-y-6">
+                  {/* GRID DE DETALHES: 1 coluna no mobile, 2 em telas pequenas, 3 em diante */}
+                  <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-8 gap-y-6">
                     {propertyDetails.map((detail, index) => (
                       <div key={index} className="flex items-center gap-3">
                         <detail.icon className="size-7 xl:size-6 text-muted-foreground shrink-0" />
@@ -149,7 +148,7 @@ export default function PropertyOverview({
           </div>
 
           {/* PRICE CARD */}
-          <div className=" white-card rounded-xl w-full">
+          <div className="white-card rounded-xl w-full">
             <div className="p-8 relative">
               <p className="text-muted-foreground text-sm mb-1">
                 Valor do Imóvel

@@ -16,7 +16,7 @@ import bcrypt from "bcryptjs";
 // --- GMAIL WHITELIST ---
 const ALLOWED_GMAILS = process.env.ALLOWED_GMAILS
   ? process.env.ALLOWED_GMAILS.split(",").map((email) =>
-      email.trim().toLowerCase()
+      email.trim().toLowerCase(),
     )
   : [];
 
@@ -101,6 +101,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       clientSecret: GOOGLE_CLIENT_SECRET,
     }),
   ],
+  trustHost: true,
   // AFTER SUCCESS ON LOGIN CREATES TOKEN AND SESSION
   callbacks: {
     // CHECK PERMISSION AND CREATE USER IF NECESSARY

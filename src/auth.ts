@@ -16,7 +16,7 @@ import bcrypt from "bcryptjs";
 // --- GMAIL WHITELIST ---
 const ALLOWED_GMAILS = process.env.ALLOWED_GMAILS
   ? process.env.ALLOWED_GMAILS.split(",").map((email) =>
-      email.trim().toLowerCase()
+      email.trim().toLowerCase(),
     )
   : [];
 
@@ -45,7 +45,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
     strategy: "jwt",
   },
-  secret: process.env.AUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
 
   // POSSIBLE WAYS TO LOG IN
   providers: [

@@ -82,7 +82,7 @@ export default function PropertyTypes({
 
         {/* SUMMARY INFO */}
         <div className="mt-10 text-center">
-          <p className="text-muted-foreground text-sm">
+          <p className="text-muted-foreground text-base">
             <span className="font-bold text-action-primary">
               {mappedTypologies?.length}
             </span>{" "}

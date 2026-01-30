@@ -12,4 +12,5 @@ export const CONSTRUCTION_COMPANIES = [
   "Helbor",
   "Mac",
   "Diálogo",
+  "Kallas",
 ];

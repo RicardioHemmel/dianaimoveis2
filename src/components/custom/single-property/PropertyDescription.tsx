@@ -12,7 +12,7 @@ export default function PropertyDescription({
           <h2 className="title-section mb-3">Descrição</h2>
 
           <div className="glass-card p-8 md:p-12">
-            <p className="text-muted-foreground leading-relaxed text-lg mb-6">
+            <p className="text-muted-foreground leading-relaxed text-lg mb-6 text-pretty">
               {description}
             </p>
             <hr />

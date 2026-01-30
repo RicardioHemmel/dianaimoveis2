@@ -38,7 +38,7 @@ export default function UseScrollFetchProperties(
         pageParams: [1],
       },
       // VALID DATA FOR
-      staleTime: 1000 * 60 * 60, // 1h
+      staleTime: 1000 * 60 * 10, // 10 min
 
       // GETS DATA FROM THE NEXT PAGE OR STOPS WHEN THERE ISN'T DATA ANYMORE
       getNextPageParam: (lastPage, allPages) => {

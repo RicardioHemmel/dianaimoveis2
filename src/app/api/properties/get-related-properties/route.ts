@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
 
     const properties = await getRelatedProperties(Number(page), Number(limit), {
       excludeId: excludeId,
-      propertyStanding: propertyStanding,
+      propertyStandingId: propertyStanding,
     });
 
     return NextResponse.json(properties, { status: 200 });

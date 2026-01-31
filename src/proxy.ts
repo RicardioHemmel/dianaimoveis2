@@ -52,7 +52,11 @@ export async function proxy(request: NextRequest) {
   }); // Check if the current path is public
 
   // Session or Null
-  const hasSession = request.cookies.get("authjs.session-token");
+  const sessionToken =
+    request.cookies.get("authjs.session-token")?.value ||
+    request.cookies.get("__Secure-authjs.session-token")?.value;
+
+  const hasSession = !!sessionToken;
 
   // If user doesn't have token but wants to access a public route, he is able to
   if (!hasSession && publicRoute) {

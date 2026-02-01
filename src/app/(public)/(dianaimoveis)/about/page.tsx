@@ -46,7 +46,18 @@ export default function AboutPage() {
   return (
     <div>
       {/* HERO SECTION */}
-      <section className="relative flex justify-center items-center h-[440px]  bg-[url('/banners/announcePropertyBanner.png')] bg-cover bg-center bg-no-repeat">
+      <section className="relative flex justify-center items-center h-[440px]">
+        <Image
+          src="/banners/aboutUsBanner.webp"
+          alt="Banner Sobre Nós"
+          fill
+          className="object-cover object-center -z-20"
+          priority
+        />
+
+        {/* OVERLAY */}
+        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/40 to-transparent -z-10" />
+
         <div className="flex flex-col justify-center align-middle text-center animate-fade-in z-10 px-3 sm:px-0">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
             Sobre a{" "}
@@ -57,8 +68,6 @@ export default function AboutPage() {
             atendimento humanizado.
           </p>
         </div>
-
-        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/60 to-transparent" />
       </section>
 
       {/* ABOUT DIANA SECTION */}
@@ -75,7 +84,7 @@ export default function AboutPage() {
                 {/* MAIN PHOTO */}
                 <div className="relative  w-[80%] sm:w-full h-[350px] sm:h-[420px] overflow-hidden rounded-2xl shadow-2xl">
                   <Image
-                    src={"/dianaPhoto.png"}
+                    src={"/dianaPhoto.webp"}
                     alt="Corretora Diana"
                     className="object-cover"
                     fill

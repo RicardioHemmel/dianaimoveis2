@@ -10,10 +10,11 @@ export function HomeCallToAction() {
     <section className="relative py-24 overflow-hidden">
       {/* BACKGROUND WITH GRADIENT OVERLAY */}
       <div className="absolute inset-0">
-        <img
-          src="/banners/CTA_Background.jpg"
-          alt="Luxury apartment"
-          className="w-full h-full object-cover"
+        <Image
+          src="/banners/CTA_Background.webp"
+          alt="Luxury apartment Background"
+          fill
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-linear-to-r from-hero-from via-hero-from/90 to-hero-to/80" />
       </div>

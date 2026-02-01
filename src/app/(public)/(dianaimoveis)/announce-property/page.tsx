@@ -7,6 +7,7 @@ import {
   Building2,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { emailLink, whatsappLink } from "@/lib/constants/links/contacts";
 import { AnnouncePropertyForm } from "@/components/custom/announce-property-page/AnnoucePropertyForm";
 
@@ -37,7 +38,18 @@ export default function AnnouncePropertyPage() {
   return (
     <div className="min-h-screen">
       {/* HERO */}
-      <section className="relative flex justify-center items-center py-16 sm:py-0 min-h-[440px]  bg-[url('/banners/aboutUsBanner.png')] bg-cover bg-center bg-no-repeat">
+      <section className="relative flex justify-center items-center h-[440px]">
+        <Image
+          src="/banners/announcePropertyBanner.webp"
+          alt="Banner Sobre Nós"
+          fill
+          className="object-cover object-center -z-20"
+          priority
+        />
+
+        {/* OVERLAY */}
+        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/60 to-transparent -z-10" />
+
         <div className="flex flex-col justify-center items-center text-center animate-fade-in z-10 w-full sm:w-6/10 px-2 sm:px-0">
           <span className="w-fit bg-action-primary mb-5 rounded-full px-4 py-1 text-sm font-bold">
             Anúncio Grátis
@@ -52,8 +64,6 @@ export default function AnnouncePropertyPage() {
             atendimento humanizado.
           </p>
         </div>
-
-        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/60 to-black/30" />
       </section>
 
       {/* STEPS */}

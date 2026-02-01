@@ -2,19 +2,19 @@ import { Building2 } from "lucide-react";
 import Image from "next/image";
 
 const partners = [
-  { name: "Even", logo: "/company-logos/logo_even.png" },
-  { name: "Cyrela", logo: "/company-logos/logo_cyrela.png" },
-  { name: "Eztec", logo: "/company-logos/logo_eztec.png" },
-  { name: "Gafisa", logo: "/company-logos/logo_gafisa.png" },
-  { name: "Tegra", logo: "/company-logos/logo_tegra.png" },
-  { name: "Vitacon", logo: "/company-logos/logo_vitacon.png" },
-  { name: "SKR", logo: "/company-logos/logo_skr.png" },
-  { name: "Lavvi", logo: "/company-logos/logo_lavvi.png" },
-  { name: "Gamaro", logo: "/company-logos/logo_gamaro.png" },
-  { name: "Setin", logo: "/company-logos/logo_setin.png" },
-  { name: "Helbor", logo: "/company-logos/logo_helbor.png" },
-  { name: "Mac", logo: "/company-logos/logo_mac.png" },
-  { name: "Diálogo", logo: "/company-logos/logo_dialogo.png" },
+  { name: "Even", logo: "/company-logos/logo_even.webp" },
+  { name: "Cyrela", logo: "/company-logos/logo_cyrela.webp" },
+  { name: "Eztec", logo: "/company-logos/logo_eztec.webp" },
+  { name: "Gafisa", logo: "/company-logos/logo_gafisa.webp" },
+  { name: "Tegra", logo: "/company-logos/logo_tegra.webp" },
+  { name: "Vitacon", logo: "/company-logos/logo_vitacon.webp" },
+  { name: "SKR", logo: "/company-logos/logo_skr.webp" },
+  { name: "Lavvi", logo: "/company-logos/logo_lavvi.webp" },
+  { name: "Gamaro", logo: "/company-logos/logo_gamaro.webp" },
+  { name: "Setin", logo: "/company-logos/logo_setin.webp" },
+  { name: "Helbor", logo: "/company-logos/logo_helbor.webp" },
+  { name: "Mac", logo: "/company-logos/logo_mac.webp" },
+  { name: "Diálogo", logo: "/company-logos/logo_dialogo.webp" },
 ];
 
 export function CompanyPartners() {

@@ -8,10 +8,17 @@ export default function ContactClient() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* HERO SECTION */}
-      <section
-        className="relative flex justify-center items-center h-[440px] 
-  bg-[url('/banners/contactUsBanner.png')] bg-cover bg-center bg-no-repeat"
-      >
+      <section className="relative flex justify-center items-center h-[440px] overflow-hidden">
+        <Image
+          src="/banners/contactUsBanner.webp"
+          alt="Banner Entre em Contato"
+          fill
+          className="object-cover object-center -z-20"
+          priority
+        />
+
+        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/40 to-transparent -z-10" />
+
         <div className="relative z-10 flex flex-col justify-center text-center animate-fade-in px-3 sm:px-0">
           <h1 className="text-4xl md:text-5xl lg:text-6xl text-white font-bold">
             Entre em Contato
@@ -21,8 +28,6 @@ export default function ContactClient() {
             sonhos
           </p>
         </div>
-
-        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/60 to-black/30" />
       </section>
 
       {/* CONTENT */}

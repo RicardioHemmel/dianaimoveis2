@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, MapPin, Building, Home } from "lucide-react";
 import { getQtyPropertiesOnNeighborhoods } from "@/lib/services/properties/queries/homePage/query.service";
+import Image from "next/image";
 
 interface Neighborhood {
   name: string;
@@ -12,22 +13,22 @@ interface Neighborhood {
 const neighborhoodData: Neighborhood[] = [
   {
     name: "Brooklin",
-    image: "/banners/neighborhoodBrooklin.png",
+    image: "/banners/neighborhoodBrooklin.webp",
     description: "Onde o dinamismo dos negócios encontra a sofisticação",
   },
   {
     name: "Chácara Santo Antônio",
-    image: "/banners/neighborhoodChacaraSantoAntonio.png",
+    image: "/banners/neighborhoodChacaraSantoAntonio.webp",
     description: "O equilíbrio ideal entre modernidade e tradição.",
   },
   {
     name: "Alto da Boa Vista",
-    image: "/banners/neighborhoodAltoDaBoaVista.png",
+    image: "/banners/neighborhoodAltoDaBoaVista.webp",
     description: "Seu refúgio verde e exclusivo dentro da cidade.",
   },
   {
     name: "Pinheiros",
-    image: "/banners/neighborhoodPinheiros.png",
+    image: "/banners/neighborhoodPinheiros.webp",
     description: "O vibrante ponto de encontro de tendências e sabores.",
   },
 ];
@@ -42,17 +43,20 @@ export function NeighborhoodCard({
       href={`/properties?address=${neighborhood.name}`}
       className="group relative block h-80 md:h-[400px] overflow-hidden rounded-xl"
     >
-      {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-110"
-        style={{ backgroundImage: `url(${neighborhood.image})` }}
+      {/* Background Image com Next.js Image */}
+      <Image
+        src={neighborhood.image}
+        alt={neighborhood.name}
+        fill
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
       />
 
       {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-linear-to-t from-black via-black/30 to-transparent transition-opacity duration-500" />
+      <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent transition-opacity duration-500 z-10" />
 
       {/* Content */}
-      <div className="absolute inset-0 flex flex-col justify-end p-6">
+      <div className="absolute inset-0 flex flex-col justify-end p-6 z-20">
         {/* Property Count Badge */}
         <div className="mb-3 flex items-center gap-2">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-card/90 px-3 py-1.5 text-xs font-medium text-card-foreground backdrop-blur-sm">

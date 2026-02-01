@@ -65,7 +65,6 @@ export async function proxy(request: NextRequest) {
 
   // If user wants to access a private route and doesn't have a token
   if (!hasSession && !publicRoute) {
-    console.log("BARRADO");
     // Redirect to signIn page by cloning the current url and changing the path
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE;
@@ -96,6 +95,6 @@ export const config: MiddlewareConfig = {
      * - metadata files & static assets (svg, png, etc.)
      * - reset password page
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\.svg$|.*\\.png$).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };

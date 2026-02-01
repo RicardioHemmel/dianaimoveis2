@@ -9,6 +9,7 @@ import {
 import { resolveImageUrl } from "@/lib/media/resolveImageUrl";
 import { updatePropertyImageAction } from "@/lib/server-actions/properties/update-property-image.action";
 import { UseFormReturn } from "react-hook-form";
+import imageCompression from "browser-image-compression";
 
 export default function useFileUpload(source: "gallery" | "floorPlanGallery") {
   // FOR ONDRAGENTER AND ONDRAGLEAVE CONTROL
@@ -217,6 +218,27 @@ export default function useFileUpload(source: "gallery" | "floorPlanGallery") {
   //--------- SENDS ONE IMAGE TO CLOUD WITH UPLOAD PROGRESS ---------
   async function uploadSingleImage(file: File): Promise<string | null> {
     try {
+      let fileToUpload = file;
+
+      // WEBO CONVERSION CONFIG
+      if (file.type.startsWith("image/")) {
+        const options = {
+          maxSizeMB: 2,
+          maxWidthOrHeight: 1920,
+          useWebWorker: true,
+          fileType: "image/webp" as const,
+        };
+        try {
+          const compressedBlob = await imageCompression(file, options);
+          const newFileName = file.name.replace(/\.[^/.]+$/, "") + ".webp";
+          fileToUpload = new File([compressedBlob], newFileName, {
+            type: "image/webp",
+          });
+        } catch (convError) {
+          console.error("Erro na conversão, enviando original:", convError);
+        }
+      }
+
       // TRY TO GET THE PRESIGNED_URL FROM CLOUD
       const presignedUrlResponse = await fetch("/api/s3/upload/", {
         method: "POST",
@@ -224,9 +246,9 @@ export default function useFileUpload(source: "gallery" | "floorPlanGallery") {
           "content-type": "application/json",
         },
         body: JSON.stringify({
-          fileName: file.name,
-          contentType: file.type,
-          size: file.size,
+          fileName: fileToUpload.name,
+          contentType: fileToUpload.type,
+          size: fileToUpload.size,
         }),
       });
 
@@ -293,8 +315,8 @@ export default function useFileUpload(source: "gallery" | "floorPlanGallery") {
         };
 
         xhr.open("PUT", presignedUrl);
-        xhr.setRequestHeader("Content-Type", file.type);
-        xhr.send(file);
+        xhr.setRequestHeader("Content-Type", fileToUpload.type);
+        xhr.send(fileToUpload);
       });
 
       return key;

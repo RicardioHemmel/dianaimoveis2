@@ -64,9 +64,9 @@ export const StorageService = {
     await Promise.all(
       keys.map((key) =>
         this.deleteFile(key).catch((err) =>
-          console.error(`Erro ao deletar arquivo ${key}:`, err)
-        )
-      )
+          console.error(`Erro ao deletar arquivo ${key}:`, err),
+        ),
+      ),
     );
   },
 };

@@ -61,8 +61,6 @@ export default function PropertyForm() {
 
   const mode = formModeConfig[formMode];
 
-  console.log(form.getValues());
-
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const title = form.watch("title");

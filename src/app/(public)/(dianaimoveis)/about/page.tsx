@@ -56,7 +56,7 @@ export default function AboutPage() {
         />
 
         {/* OVERLAY */}
-        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/40 to-transparent -z-10" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/40 via-black/30 to-transparent -z-10" />
 
         <div className="flex flex-col justify-center align-middle text-center animate-fade-in z-10 px-3 sm:px-0">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">

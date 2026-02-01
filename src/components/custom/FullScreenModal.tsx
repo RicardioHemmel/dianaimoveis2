@@ -1,9 +1,9 @@
-// Next / React
+"use client";
+
 import Image from "next/image";
 import { useState, useEffect } from "react";
-
-// ShadcnUI
-import { Card, CardContent } from "@/components/ui/card";
+import { createPortal } from "react-dom";
+import { X } from "lucide-react";
 import {
   Carousel,
   type CarouselApi,
@@ -12,17 +12,12 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-
-// Icons
-import { X } from "lucide-react";
+import { useFileUploadContext } from "@/context/FileUploadContext";
 
 interface FullScreenImageModalProps {
   doubleClickedImageIndex: number | null;
   onClose: () => void;
 }
-
-// CONTEXT
-import { useFileUploadContext } from "@/context/FileUploadContext";
 
 export default function FullScreenImageModal({
   doubleClickedImageIndex,
@@ -30,91 +25,88 @@ export default function FullScreenImageModal({
 }: FullScreenImageModalProps) {
   const { fileUploadHook } = useFileUploadContext();
   const { filesUpload } = fileUploadHook;
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
+  const [mounted, setMounted] = useState(false);
 
-  const [carouselApi, setCarouselApi] = useState<CarouselApi>(); // Gives carousel its mechanics
-
+  // ISOLATES THE MODAL FROM THE ADMIN LAYOUT
   useEffect(() => {
-    if (!carouselApi) return;
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "ArrowLeft") {
-        carouselApi.scrollPrev();
-      } else if (event.key === "ArrowRight") {
-        carouselApi.scrollNext();
-      } else if (event.key === "Escape") {
-        onClose();
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-
-    // Removes listener when component is unmounted
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [carouselApi]);
-
-  // Blocks scrolling
-  useEffect(() => {
+    setMounted(true);
+    const originalStyle = window.getComputedStyle(document.body).overflow;
     document.body.style.overflow = "hidden";
-
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = originalStyle;
     };
   }, []);
 
-  return (
-    <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center">
+  // KEYBOARD SHORTCUTS
+  useEffect(() => {
+    if (!carouselApi) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") carouselApi.scrollPrev();
+      else if (e.key === "ArrowRight") carouselApi.scrollNext();
+      else if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [carouselApi, onClose]);
+
+  if (!mounted) return null;
+
+  return createPortal(
+    <div className="fixed inset-0 z-199 bg-black/95 flex items-center justify-center w-screen h-screen outline-none">
+      {/* Botão de Fechar */}
+      <button
+        onClick={onClose}
+        className="absolute top-6 right-8 z-200 text-white/50 hover:text-white transition-colors p-2 cursor-pointer"
+      >
+        <X className="size-10" />
+      </button>
+
       <Carousel
         setApi={setCarouselApi}
-        opts={{ loop: true, startIndex: doubleClickedImageIndex ?? 0 }}
-        className="w-[96vw] h-[92vh] flex justify-center"
+        opts={{
+          loop: true,
+          startIndex: doubleClickedImageIndex ?? 0,
+        }}
+        className="w-full h-full"
       >
-        <CarouselContent>
-          {filesUpload.length > 0 &&
-            filesUpload.map((img) => (
-              <CarouselItem key={img.id} className="h-screen flex items-center">
-                <Card className="flex justify-center w-full">
-                  <CardContent className="flex justify-center">
-                    {img.previewURL && (
-                      <>
-                        <div
-                          key={img.id}
-                          className="relative w-[70vw] h-[70vh]"
-                        >
-                          <Image
-                            alt={`Imagem ${img.id}`}
-                            src={img.previewURL}
-                            fill={true}
-                            className="object-contain"
-                          />
-                        </div>
-                        <div className="absolute top-4 rounded-4xl py-2 px-4 w-full flex justify-center">
-                          <h2 className="text-white text-lg">
-                            {img.file?.name ?? img.key}
-                          </h2>
-                        </div>
-                      </>
-                    )}
-                  </CardContent>
-                </Card>
-              </CarouselItem>
-            ))}
+        <CarouselContent className="ml-0">
+          {filesUpload.map((img) => (
+            <CarouselItem
+              key={img.id}
+              className="pl-0 relative flex flex-col items-center justify-center w-screen h-screen"
+            >
+              {/* TÍTULO CENTRALIZADO NO TOPO */}
+              <div className="absolute top-8 left-0 right-0 flex justify-center px-20">
+                <h2 className="text-white/80 text-lg font-medium tracking-wide truncate max-w-2xl">
+                  {img.file?.name ?? img.key ?? "Imagem do Imóvel"}
+                </h2>
+              </div>
+
+              {/* CONTAINER DA IMAGEM */}
+              <div className="relative w-[90vw] h-[75vh] mt-8">
+                <Image
+                  alt={`Imagem ${img.id}`}
+                  src={img.previewURL ?? ""}
+                  fill
+                  priority
+                  className="object-contain"
+                  sizes="100vw"
+                />
+              </div>
+
+              {/* LEGENDA NO RODAPÉ (OPCIONAL) */}
+              <p className="absolute bottom-8 text-white/30 text-xs font-light uppercase tracking-[0.3em]">
+                {img.status}
+              </p>
+            </CarouselItem>
+          ))}
         </CarouselContent>
 
-        {/* navigation buttons inside carousel */}
-        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2" />
-        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2" />
+        <CarouselPrevious className="fixed left-8 top-1/2 -translate-y-1/2 size-14 bg-white/5 border-none text-white hover:bg-white/20" />
+        <CarouselNext className="fixed right-8 top-1/2 -translate-y-1/2 size-14 bg-white/5 border-none text-white hover:bg-white/20" />
       </Carousel>
-
-      {/* Close Button */}
-      <button
-        type="button"
-        onClick={onClose}
-        className="absolute top-4 right-8 z-50 hover:opacity-75 cursor-pointer"
-      >
-        <X className="size-8 text-white" />
-      </button>
-    </div>
+    </div>,
+    document.body,
   );
 }

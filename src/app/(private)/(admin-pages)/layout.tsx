@@ -49,7 +49,7 @@ export default async function PrivateLayout({
             </header>
 
             {/* MAIN CONTENT */}
-            <main className="flex-1 p-6 overflow-auto animate-in fade-in duration-500 fill-mode-both">
+            <main className="flex-1 p-6 animate-in fade-in duration-500 fill-mode-both">
               {children}
             </main>
           </div>

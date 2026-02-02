@@ -66,7 +66,7 @@ export async function Property({ property }: { property: PropertyViewSchema }) {
 
       {property.videoUrl && <PropertyVideo videoUrl={property.videoUrl} />}
 
-      {property.gallery?.length > 0 && (
+      {property.gallery?.length > 1 && (
         <PropertyGallery gallery={property.gallery} />
       )}
 

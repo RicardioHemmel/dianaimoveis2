@@ -80,13 +80,15 @@ export default function PropertyHero({
       )}
 
       {/* THUMBNAILS */}
-      <div className="hidden xl:flex absolute bottom-6 left-1/2 -translate-x-1/2 z-20 w-[250px]">
-        <ThumbnailsCarousel
-          gallery={gallery}
-          setCurrentImage={setCurrentImage}
-          currentImage={currentImage}
-        />
-      </div>
+      {gallery.length > 1 && (
+        <div className="hidden xl:flex absolute bottom-6 left-1/2 -translate-x-1/2 z-20 w-[250px]">
+          <ThumbnailsCarousel
+            gallery={gallery}
+            setCurrentImage={setCurrentImage}
+            currentImage={currentImage}
+          />
+        </div>
+      )}
 
       {/* FULL SCREEN MODAL */}
       {isModalOpen && (

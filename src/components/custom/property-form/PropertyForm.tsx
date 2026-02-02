@@ -75,20 +75,11 @@ export default function PropertyForm() {
 
   // FORM SUBMIT FUNCTION
   async function onSubmit(data: PropertyInputSchema) {
-    const isGalleryLoading =
-      formMode === "edit" &&
-      initialData?.gallery?.length! > 0 &&
-      galleryUploadHook.filesUpload.length === 0;
+    const isGalleryProcessing = !galleryUploadHook.isInitialized;
+    const isFloorPlanProcessing = !floorPlanGalleryUploadHook.isInitialized;
 
-    const isFloorPlanLoading =
-      formMode === "edit" &&
-      initialData?.floorPlanGallery?.length! > 0 &&
-      floorPlanGalleryUploadHook.filesUpload.length === 0;
-
-    if (isGalleryLoading || isFloorPlanLoading) {
-      toast.error(
-        "Os dados da galeria ainda estão sendo processados. Tente novamente em um segundo.",
-      );
+    if (isGalleryProcessing || isFloorPlanProcessing) {
+      toast.error("Aguarde o carregamento das imagens antes de salvar.");
       return;
     }
 

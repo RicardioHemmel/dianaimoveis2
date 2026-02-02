@@ -15,6 +15,7 @@ export default function useFileUpload(source: "gallery" | "floorPlanGallery") {
   // FOR ONDRAGENTER AND ONDRAGLEAVE CONTROL
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [filesUpload, setFilesUpload] = useState<FileUpload[]>([]);
+  const [isInitialized, setIsInitialized] = useState<boolean>(false); // DEFINES IF DB DATA IS ALREADY MAPPED
   const countRef = useRef(0); // TO PREVENT FLICKERING WHEN DRAGGING OVER CHILD ELEMENTS
 
   // MEMORY MANAGEMENT (BLOBS)
@@ -134,6 +135,7 @@ export default function useFileUpload(source: "gallery" | "floorPlanGallery") {
     }));
 
     setFilesUpload(filesFromDB);
+    setIsInitialized(true);
   }
 
   async function handleLocalFilesUpload(files: File[]): Promise<void> {
@@ -337,49 +339,58 @@ export default function useFileUpload(source: "gallery" | "floorPlanGallery") {
 
   // ------------- UPLOADS TO CLOUD ALL "IDLE" IMAGES ---------------
   async function handleCloudUpload(currentFiles: FileUpload[]) {
-    const uploadedFiles: { key: string; order: number; label?: string }[] = [];
+    // FILES WITH CLOUD KEYS
+    const alreadyUploaded = currentFiles
+      .filter((img) => img.status === "success" && img.key)
+      .map((img) => ({
+        key: img.key,
+        order: img.order,
+        label: img.label,
+      }));
 
-    for (const img of currentFiles) {
-      // IF THE IMG WAS ALREADY SAVED ON CLOUD GETS IT'S DATA
-      if (img.status === "success" && img.key) {
-        uploadedFiles.push({
-          key: img.key,
+    // FILES TO UPLOAD
+    const filesToUpload = currentFiles.filter(
+      (img) => img.status === "idle" && img.file,
+    );
+
+    // SEND IMAGES SIMULTANEOUSLY AND MOUNT THE OBJECTS WITH THEIR CLOUD KEYS
+    const uploadedPromises = filesToUpload.map(async (img) => {
+      try {
+        const key = await uploadSingleImage(img.file!);
+
+        if (!key) return null;
+
+        return {
+          key,
           order: img.order,
           label: img.label,
-        });
-        continue;
+        };
+      } catch {
+        return null;
       }
+    });
 
-      // UPLOADS IMAGE
-      if (img.status === "idle" && img.file) {
-        try {
-          const key = await uploadSingleImage(img.file);
+    const uploadedResults = await Promise.all(uploadedPromises);
 
-          if (key) {
-            uploadedFiles.push({ key, order: img.order, label: img.label });
-          }
-        } catch {
-          toast.error("Erro ao enviar imagem");
-        }
-      }
-    }
+    const successfulUploads = uploadedResults.filter(
+      (item): item is { key: string; order: number; label: string } =>
+        item !== null,
+    );
+
+    const uploadedFiles = [...alreadyUploaded, ...successfulUploads];
 
     if (source === "gallery") {
-      const gallery = uploadedFiles.map((file) => ({
+      return uploadedFiles.map((file) => ({
         key: file.key,
         order: file.order,
       }));
-
-      return gallery;
-    } else {
-      const floorPlanGallery = uploadedFiles.map((file) => ({
-        key: file.key,
-        order: file.order,
-        label: file.label ?? "",
-      }));
-
-      return floorPlanGallery;
     }
+
+    return uploadedFiles.map((file) => ({
+      key: file.key,
+      order: file.order,
+      label: file.label ?? "",
+    }));
   }
 
   //---------------- REMOVE ONE CLOUD FILE AND UPDATES FORM ----------------------
@@ -530,6 +541,8 @@ export default function useFileUpload(source: "gallery" | "floorPlanGallery") {
   return {
     isDragging,
     filesUpload,
+    isInitialized,
+    setIsInitialized,
     removeCloudFile,
     removeLocalFile,
     removeAllFiles,

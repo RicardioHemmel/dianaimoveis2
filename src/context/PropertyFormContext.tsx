@@ -80,6 +80,9 @@ export function PropertyFormProvider({
   useEffect(() => {
     if (initialData?.gallery && initialData.gallery.length > 0) {
       galleryUploadHook.mapRemoteFilesToFileUpload(initialData.gallery);
+    } else {
+      // IF THERE ISN'T INITIAL_DATA, RELEASES THE SAFETY LOCK THAT PREVENTS SAVING PROPERTY WITHOUT THE GALLERY
+      galleryUploadHook.setIsInitialized(true);
     }
 
     if (
@@ -89,6 +92,8 @@ export function PropertyFormProvider({
       floorPlanGalleryUploadHook.mapRemoteFilesToFileUpload(
         initialData.floorPlanGallery,
       );
+    } else {
+      floorPlanGalleryUploadHook.setIsInitialized(true);
     }
   }, [initialData]);
 

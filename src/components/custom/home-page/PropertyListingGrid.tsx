@@ -17,7 +17,7 @@ export function PropertyListingGrid({
         </div>
 
         {/* PROPERTY CAROUSEL */}
-        <div className="w-full 2xl:w-[80%] mx-auto">
+        <div className="container mx-auto px-4">
           <BorderLessCardsGridListing initialData={properties} />
         </div>
       </div>

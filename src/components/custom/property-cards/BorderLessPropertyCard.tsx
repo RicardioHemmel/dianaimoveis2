@@ -45,7 +45,7 @@ export function BorderLessPropertyCard({
     <article>
       <Link className="group cursor-pointer" href={`/property/${_id}`}>
         {/* FULL IMAGE CARD */}
-        <div className="relative h-[460px] 2xl:h-[520px] w-auto overflow-hidden rounded-2xl">
+        <div className="relative h-[460px] 2xl:h-[500px] w-auto overflow-hidden rounded-2xl">
           {gallery.length > 0 ? (
             <Image
               src={showCoverImage(gallery)}

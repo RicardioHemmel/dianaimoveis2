@@ -49,7 +49,7 @@ export function SearchResults() {
                   onClick={() => setViewMode("grid")}
                   className="rounded-lg size-9"
                 >
-                  <Grid3X3 className="h-4 w-4" />
+                  <Grid3X3 className="size-4" />
                 </Button>
 
                 {/* CHANGE TO LISTING CARDS */}
@@ -59,7 +59,7 @@ export function SearchResults() {
                   onClick={() => setViewMode("list")}
                   className="rounded-lg size-9"
                 >
-                  <List className="h-4 w-4" />
+                  <List className="size-4" />
                 </Button>
               </div>
             </div>

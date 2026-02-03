@@ -74,7 +74,7 @@ export default function PropertyLocation({
                       </h3>
                       <ul className="text-muted-foreground text-sm space-y-1">
                         {referencePoints.map((rp, i) => (
-                          <li key={i} className="list-disc ml-5">
+                          <li key={i} className="list-disc ml-5 capitalize">
                             {rp}
                           </li>
                         ))}

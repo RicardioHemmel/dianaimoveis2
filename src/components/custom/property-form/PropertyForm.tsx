@@ -20,7 +20,11 @@ import {
 import { DeletePropertyDropdownItem } from "@/components/custom/DeletePropertyDropdownItem";
 
 // SCHEMA
-import { PropertyInputSchema } from "@/lib/schemas/property/property.schema";
+import {
+  floorPlanGalleryItemViewSchema,
+  PropertyInputSchema,
+  propertyInputSchema,
+} from "@/lib/schemas/property/property.schema";
 
 // ZOD ERROR MESSAGES TREATMENT TO PT-BR
 import { extractFieldLabels } from "@/lib/errors/property-form-error-mapper";
@@ -56,7 +60,6 @@ export default function PropertyForm() {
     isFirstTab,
     isLastTab,
     formMode,
-    initialData,
   } = usePropertyFormContext(); // CONTEXT
 
   const mode = formModeConfig[formMode];
@@ -72,6 +75,12 @@ export default function PropertyForm() {
     control: form.control,
     name: "isFeatured",
   });
+  const propertyStatus = useWatch({
+    control: form.control,
+    name: "status",
+  });
+
+  const formattedStatus = statusFormatter(propertyStatus);
 
   // FORM SUBMIT FUNCTION
   async function onSubmit(data: PropertyInputSchema) {
@@ -80,6 +89,18 @@ export default function PropertyForm() {
 
     if (isGalleryProcessing || isFloorPlanProcessing) {
       toast.error("Aguarde o carregamento das imagens antes de salvar.");
+      return;
+    }
+
+    // PREVENTS UPLOADING IMAGES WITHOUT THEIR LABELS
+    const missingLabels = floorPlanGalleryUploadHook.filesUpload.filter(
+      (img) =>
+        (img.status === "idle" || img.status === "success") &&
+        !img.label?.trim(),
+    );
+
+    if (missingLabels.length > 0) {
+      toast.error("Preencha o título das plantas baixas antes de salvar.");
       return;
     }
 
@@ -93,7 +114,7 @@ export default function PropertyForm() {
           floorPlanGalleryUploadHook.filesUpload,
         )) as { key: string; order: number; label: string }[];
 
-      // 2. GEOCODING
+      // GEOCODING
       let lat = data.address?.lat;
       let lng = data.address?.lng;
 
@@ -185,13 +206,13 @@ export default function PropertyForm() {
               </Badge>
 
               {/* STATUS BADGE */}
-              {/* {badgeStatus !== "" && (
+              {propertyId && (
                 <Badge
                   className={`${formattedStatus.badgeColor} text-black px-3 py-1`}
                 >
                   {formattedStatus.label}
                 </Badge>
-              )} */}
+              )}
             </div>
             <h2 className="text-3xl font-bold text-foreground">
               {title || mode.defaultTitle}

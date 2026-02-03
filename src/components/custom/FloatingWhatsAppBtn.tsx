@@ -12,6 +12,7 @@ export function FloatingWhatsAppBtn() {
       chatMessage="Olá, como posso te ajudar?"
       statusMessage="Respostas em até 1 hora"
       placeholder="Digite uma mensagem"
+      allowClickAway
       messageDelay={1.5}
     />
   );

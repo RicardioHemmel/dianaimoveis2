@@ -41,7 +41,9 @@ export async function getFilteredProperties(
   await connectMongoDB();
 
   // APPLY FILTERS BASED ON FILTERS VALUES
-  const query: any = {};
+  const query: any = {
+    status: "PUBLISHED",
+  };
 
   // SORT DATA WITH SORT WEIGHTS
   let pipeline: any[] = [{ $match: query }];

@@ -51,9 +51,10 @@ export function BorderLessPropertyCard({
               src={showCoverImage(gallery)}
               alt={title}
               fill
+              priority
               sizes="(max-width: 768px) 100vw,
-         (max-width: 1280px) 50vw,
-         33vw"
+         (max-width: 1280px) 60vw,
+        80vw"
               className="object-cover group-hover:scale-105 transition-transform duration-500"
             />
           ) : (

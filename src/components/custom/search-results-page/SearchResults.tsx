@@ -26,7 +26,7 @@ export function SearchResults() {
   // CHANGES CARDS BASED ON WIDTH
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const width = useBreakpoint();
-  const isMobile = width < 768;
+  const isMobile = width < 1536;
   useEffect(() => {
     if (isMobile === true) {
       setViewMode("grid");
@@ -38,8 +38,8 @@ export function SearchResults() {
       {properties.length > 0 ? (
         <div>
           {/* TOOLBAR */}
-          <div className="flex flex-col md:flex-row items-center md:justify-between gap-4 mb-6">
-            <div className="hidden md:flex items-center gap-4 px-4">
+          <div className="flex flex-col md:flex-row items-center justify-end 2xl:justify-between gap-4 mb-6">
+            <div className="hidden 2xl:flex items-center gap-4 px-4">
               <span className="text-sm">Trocar visualização dos imóveis</span>
               <div className="flex items-center gap-2">
                 {/* CHANGE TO GRID CARDS */}

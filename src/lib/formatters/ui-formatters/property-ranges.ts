@@ -1,4 +1,4 @@
-import { RangeSchema } from "@/lib/schemas/property/property.schema";
+﻿import { RangeSchema } from "@/lib/schemas/property/property.schema";
 
 import {
   Bed,
@@ -32,6 +32,14 @@ const FIELD_CONFIG: Record<FieldTypes, { icon: LucideIcon }> = {
   floors: { icon: Building },
 };
 
+const numberFormatter = new Intl.NumberFormat("pt-BR", {
+  maximumFractionDigits: 2,
+});
+
+function formatNumber(value: number): string {
+  return numberFormatter.format(value);
+}
+
 export function formatRangeField(
   field: FieldTypes,
   min?: number,
@@ -41,36 +49,46 @@ export function formatRangeField(
   if (min == null || max == null) return "";
 
   const isEqual = min === max;
+  const minLabel = formatNumber(min);
+  const maxLabel = formatNumber(max);
 
   // ONLY THE VALUES
   if (!extendedLabel) {
-    return isEqual ? `${min}` : `${min} a ${max}`;
+    return isEqual ? `${minLabel}` : `${minLabel} a ${maxLabel}`;
   }
 
   const isSingular = isEqual && min === 1;
 
   switch (field) {
     case "bedrooms":
-      if (isEqual) return isSingular ? `${min} quarto` : `${min} quartos`;
-      return `${min} a ${max} quartos`;
+      if (isEqual)
+        return isSingular ? `${minLabel} quarto` : `${minLabel} quartos`;
+      return `${minLabel} a ${maxLabel} quartos`;
 
     case "suites":
-      if (isEqual) return isSingular ? `${min} suíte` : `${min} suítes`;
-      return `${min} a ${max} suítes`;
+      if (isEqual)
+        return isSingular ? `${minLabel} suíte` : `${minLabel} suítes`;
+      return `${minLabel} a ${maxLabel} suítes`;
 
     case "bathrooms":
-      if (isEqual) return isSingular ? `${min} banheiro` : `${min} banheiros`;
-      return `${min} a ${max} banheiros`;
+      if (isEqual)
+        return isSingular ? `${minLabel} banheiro` : `${minLabel} banheiros`;
+      return `${minLabel} a ${maxLabel} banheiros`;
 
     case "parkingSpaces":
-      if (isEqual) return isSingular ? `${min} vaga` : `${min} vagas`;
-      return `${min} a ${max} vagas`;
+      if (isEqual)
+        return isSingular ? `${minLabel} vaga` : `${minLabel} vagas`;
+      return `${minLabel} a ${maxLabel} vagas`;
 
     case "area":
-      return isEqual ? `${min} m²` : `${min} a ${max} m²`;
+      return isEqual
+        ? `${minLabel} m²`
+        : `${minLabel} a ${maxLabel} m²`;
 
     case "floors":
-      return isEqual ? `${min}º andar` : `${min}º a ${max}º andar`;
+      return isEqual
+        ? `${minLabel}º andar`
+        : `${minLabel}º a ${maxLabel}º andar`;
 
     default:
       return "";

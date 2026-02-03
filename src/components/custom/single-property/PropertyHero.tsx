@@ -34,19 +34,34 @@ export default function PropertyHero({
 
   return (
     <section className="relative h-[70vh] min-h-[500px] overflow-hidden select-none">
-      {/* BACKGROUND IMAGE */}
-      <div className="absolute inset-0 ">
+      {/* BACKGROUND IMAGE CONTAINER */}
+      <div className="absolute inset-0">
         {gallery.length > 0 ? (
           <>
+            {/* BLURRED BACKGROUND (FILL THE EMPTY SPACE) */}
+            <Image
+              alt="Background Blur"
+              src={gallery[currentImage].url}
+              fill
+              priority
+              className="object-cover blur scale-110 brightness-[0.4]"
+              aria-hidden="true" //IGNORED BY SCREEN READERS BECAUSE IT IS DECORATIVE
+            />
+
+            {/* MAIN IMAGE */}
             <Image
               alt="Imagem de Capa"
               src={gallery[currentImage].url}
-              className="object-cover transition-all duration-700"
               fill
+              priority
+              className="object-contain z-10 transition-all duration-700"
             />
-            <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent" />
+
+            {/* GRADIENT */}
+            <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent z-20" />
           </>
         ) : (
+          /* IMAGE FALLBACK */
           <div className="absolute inset-0 flex items-center justify-center bg-black/90">
             <div className="flex flex-col items-center gap-4 text-white">
               <ImageOff size={64} className="opacity-70" />
@@ -55,13 +70,12 @@ export default function PropertyHero({
           </div>
         )}
       </div>
-
       {/* NAVIGATION ARROWS */}
       {gallery.length > 0 && (
         <Button
           variant="ghost"
           size="icon"
-          className="absolute left-4 top-1/2 -translate-y-1/2 bg-card/20 backdrop-blur-sm hover:bg-card/40 text-primary-foreground z-10"
+          className="absolute left-4 top-1/2 -translate-y-1/2 bg-card/20 backdrop-blur-sm hover:bg-card/40 text-primary-foreground z-30"
           onClick={prevImage}
         >
           <ChevronLeft className="h-6 w-6" />
@@ -72,7 +86,7 @@ export default function PropertyHero({
         <Button
           variant="ghost"
           size="icon"
-          className="absolute right-4 top-1/2 -translate-y-1/2 bg-card/20 backdrop-blur-sm hover:bg-card/40 text-primary-foreground z-10"
+          className="absolute right-4 top-1/2 -translate-y-1/2 bg-card/20 backdrop-blur-sm hover:bg-card/40 text-primary-foreground z-30"
           onClick={nextImage}
         >
           <ChevronRight className="h-6 w-6" />
@@ -105,7 +119,7 @@ export default function PropertyHero({
           type="button"
           variant="ghost"
           size="icon"
-          className="absolute top-4 right-4 bg-card/20 backdrop-blur-sm hover:bg-card/40 text-primary-foreground z-10"
+          className="absolute top-4 right-4 bg-card/20 backdrop-blur-sm hover:bg-card/40 text-primary-foreground z-30"
           onClick={() => setIsModalOpen(true)}
         >
           <Expand className="size-5" />
@@ -113,7 +127,7 @@ export default function PropertyHero({
       )}
 
       {/* PROPERTY INFO OVERLAY */}
-      <div className="absolute bottom-0 left-0 right-0 pl-8 md:pl-16 xl:pl-24 pb-10 z-10">
+      <div className="absolute bottom-0 left-0 right-0 pl-8 md:pl-16 xl:pl-24 pb-10 z-30">
         <div className="w-fit 2xl:max-w-[500px]">
           {deliveryDate && (
             <div className="inline-block bg-action-primary/90 px-4 py-1 rounded-full mb-3">

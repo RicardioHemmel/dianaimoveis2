@@ -36,14 +36,13 @@ export default function PropertyFloorPlans({
           </div>
 
           {/* FLOOR PLAN DISPLAY */}
-          <div className="white-card p-8 overflow-hidden">
-            <div className="relative aspect-square max-w-md mx-auto">
+          <div className="white-card pb-5 overflow-hidden">
+            <div className="relative aspect-square max-w-xl mx-auto">
               <Image
                 src={floorPlanGallery[activePlan].url}
                 alt={floorPlanGallery[activePlan].key}
                 className="w-full h-full object-contain transition-all duration-500"
-                width={600}
-                height={600}
+                fill
               />
             </div>
             <p className="text-center mt-6">

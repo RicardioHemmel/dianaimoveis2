@@ -78,6 +78,7 @@ export default function TabLocation() {
                     placeholder="Digite a rua, avenida, etc..."
                     variant="gray"
                     className="mt-1.5"
+                    autoComplete="off"
                     {...field}
                   />
                 </FormControl>
@@ -102,6 +103,7 @@ export default function TabLocation() {
                   placeholder="Digite a cidade"
                   variant="gray"
                   className="mt-1.5"
+                  autoComplete="off"
                   {...field}
                 />
               </FormControl>
@@ -167,6 +169,7 @@ export default function TabLocation() {
                   placeholder="00000-000"
                   className="mt-1.5"
                   variant={"gray"}
+                  autoComplete="off"
                   onValueChange={(values) => {
                     field.onChange(values.value);
                   }}
@@ -193,6 +196,8 @@ export default function TabLocation() {
                       className="border-0"
                       placeholder="Ex: Próximo ao Shopping, Perto da praia..."
                       ref={referenceInputRef}
+                      autoComplete="off"
+                      autoCapitalize="on"
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {
                           e.preventDefault();

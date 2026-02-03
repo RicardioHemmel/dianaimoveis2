@@ -3,13 +3,16 @@
 import { useEffect, useState } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Heart } from "lucide-react";
+import { toast } from "sonner";
 
 import {
   getPropertiesFromLocalStorage,
   setPropertyOnLocalStorage,
   removePropertyFromLocalStorage,
+  getPrivacyConsent,
+  setPrivacyConsent,
 } from "@/lib/helpers/localStorage";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 
 // Variants fora do componente
 const favoriteBtnVariants = cva(
@@ -50,6 +53,21 @@ export function ToggleFavoriteBtn({
   function handleFavoriteToggle(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
+
+    if (getPrivacyConsent() === "declined") {
+      toast("Para favoritar imóveis, aceite a Política de Privacidade.", {
+        action: {
+          label: "Aceitar cookies",
+          onClick: () => {
+            setPrivacyConsent("accepted");
+            setPropertyOnLocalStorage(propertyId);
+            setIsFavorite(true);
+            toast.success("Preferências de privacidade atualizadas.");
+          },
+        },
+      });
+      return;
+    }
 
     if (isFavorite) {
       removePropertyFromLocalStorage(propertyId);

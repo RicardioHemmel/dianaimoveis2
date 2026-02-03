@@ -176,12 +176,18 @@ export function Footer() {
             © {currentYear} Diana Imóveis. Todos os direitos reservados.
           </p>
           <div className="flex items-center gap-6 text-sm text-primary-foreground/50">
-            <a href="#" className="hover:text-secondary transition-colors">
+            <Link
+              href="privacy"
+              className="hover:text-secondary transition-colors"
+            >
               Política de Privacidade
-            </a>
-            <a href="#" className="hover:text-secondary transition-colors">
+            </Link>
+            <Link
+              href="terms"
+              className="hover:text-secondary transition-colors"
+            >
               Termos de Uso
-            </a>
+            </Link>
           </div>
           <p className="text-primary-foreground/50 text-sm flex items-center gap-1 justify-center md:justify-start">
             Desenvolvido por{" "}

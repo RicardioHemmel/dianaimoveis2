@@ -1,4 +1,4 @@
-import mongoose, { Schema, Model, Query } from "mongoose";
+import mongoose, { Schema, Model, Query, Aggregate } from "mongoose";
 import { IProperty } from "@/lib/schemas/property/IProperty";
 
 // GALLERY WITH ORDER FOR DISPLAY AND CLOUD KEY

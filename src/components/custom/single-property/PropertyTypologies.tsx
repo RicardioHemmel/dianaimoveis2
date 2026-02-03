@@ -16,7 +16,6 @@ export default function PropertyTypes({
             Escolha o formato ideal para o seu estilo de vida
           </p>
         </div>
-
         <div className="flex flex-wrap justify-center gap-6 mx-auto">
           {mappedTypologies?.map((typology) => {
             return (
@@ -81,14 +80,16 @@ export default function PropertyTypes({
         </div>
 
         {/* SUMMARY INFO */}
-        <div className="mt-10 text-center">
-          <p className="text-muted-foreground text-base">
-            <span className="font-bold text-action-primary">
-              {mappedTypologies?.length}
-            </span>{" "}
-            tipos disponíveis neste empreendimento
-          </p>
-        </div>
+        {mappedTypologies && mappedTypologies.length && (
+          <div className="mt-10 text-center">
+            <p className="text-muted-foreground text-base">
+              <span className="font-bold text-action-primary">
+                {mappedTypologies.length}
+              </span>{" "}
+              {` ${mappedTypologies.length > 1 ? "tipos disponíveis" : "tipo disponível"} neste empreendimento`}
+            </p>
+          </div>
+        )}
       </div>
     </section>
   );

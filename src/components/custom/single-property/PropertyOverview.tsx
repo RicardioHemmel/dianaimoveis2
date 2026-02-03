@@ -106,21 +106,19 @@ export default function PropertyOverview({
           {/* MAIN INFO CARD */}
           <div className="xl:col-span-2 white-card rounded-xl">
             <div className="p-8">
-              <div className="flex flex-wrap justify-start md:justify-evenly gap-6">
+              {/*  GRID */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {mainInfoCardData.length > 0 &&
                   mainInfoCardData.map((data) => (
-                    <div
-                      key={data.value}
-                      className="flex items-center gap-3 min-w-[140px]"
-                    >
+                    <div key={data.value} className="flex items-center gap-3">
                       <div className="p-4 rounded-xl bg-action-primary/10 flex items-center justify-center shrink-0">
-                        <data.icon className="size-6 text-action-primary" />
+                        <data.icon className="size-7 sm:size-6 text-action-primary" />
                       </div>
                       <div>
-                        <p className="text-muted-foreground text-sm">
+                        <p className="text-muted-foreground text-base sm:text-sm">
                           {data.label}
                         </p>
-                        <p className="font-semibold text-foreground text-sm lg:text-base">
+                        <p className="font-semibold text-foreground text-base sm:text-sm lg:text-base">
                           {data.value}
                         </p>
                       </div>
@@ -131,12 +129,13 @@ export default function PropertyOverview({
               {/* PROPERTY DETAILS */}
               <div className="lg:col-span-2 space-y-6">
                 <div className="p-6 mt-5 border-t">
-                  <div className="flex flex-wrap justify-start md:justify-evenly gap-x-8 gap-y-6">
+                  {/* ALTERAÇÃO AQUI: De Flex para Grid (2 colunas mobile, 4 desktop) */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8">
                     {propertyDetails.map((detail, index) => (
                       <div key={index} className="flex items-center gap-3">
                         <detail.icon className="size-7 xl:size-6 text-muted-foreground shrink-0" />
                         <div>
-                          <p className="text-xs sm:text-sm xl:text-[15px] font-medium text-foreground">
+                          <p className="text-sm sm:text-sm xl:text-[15px] font-medium text-foreground">
                             {detail.label}
                           </p>
                         </div>
@@ -149,13 +148,13 @@ export default function PropertyOverview({
           </div>
 
           {/* PRICE CARD */}
-          <div className=" white-card rounded-xl w-full">
+          <div className="white-card rounded-xl w-full">
             <div className="p-8 relative">
               <p className="text-muted-foreground text-sm mb-1">
                 Valor do Imóvel
               </p>
 
-              <h3 className="text-[23px] sm:text-xl 2xl:text-[26px] font-display font-bold text-text-title mb-6">
+              <h3 className="text-[22px] sm:text-xl 2xl:text-[26px] font-display font-extrabold text-text-title mb-6">
                 A partir de{" "}
                 <span className="">{`${formattedPrice(price)}`}</span>
               </h3>

@@ -31,7 +31,9 @@ export function RangeInput({ form, name, label }: RangeInputProps) {
                 name={field.name}
                 value={field.value as FieldPath<PropertyInputSchema>}
                 customInput={Input}
+                autoComplete="off"
                 allowNegative={false}
+                decimalSeparator=","
                 placeholder="0"
                 className="bg-white text-center focus:border-3 focus:border-admin-primary/50"
                 onValueChange={(values) => {

@@ -77,7 +77,7 @@ export function HorizontalPropertyCard({
       </div>
 
       {/* STATUS BADGE - TOP RIGHT */}
-      <div className="absolute top-8 right-20 z-10 flex gap-2">
+      <div className="absolute top-8 right-20 z-10 flex gap-2 ">
         {deliveryDate && (
           <span
             className={`px-3 py-1.5 rounded-full text-primary-foreground text-xs font-bold shadow-lg bg-hero-bg`}

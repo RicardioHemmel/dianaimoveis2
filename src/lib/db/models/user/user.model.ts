@@ -17,15 +17,8 @@ const userSchema = new Schema<IUser>(
       enum: Object.values(UserRole),
       default: UserRole.USER,
     },
-
-    propertyIds: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Property",
-      },
-    ],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 //MONGOOSE.MODELS.USER CHECKS IF IT HAS ALREADY BEEN COMPILED TO AVOID RECOMPILATION ERROR IN NEXT.JS (HOT RELOAD)

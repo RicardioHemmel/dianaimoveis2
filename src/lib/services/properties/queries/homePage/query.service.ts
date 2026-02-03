@@ -36,8 +36,11 @@ export async function getHighEnd(
   const highEndStanding = await PropertyStandings.findOne({
     name: "Alto Padrão",
   });
+  const veryHighStanding = await PropertyStandings.findOne({
+    name: "Altíssimo Padrão",
+  });
   const properties = await Property.find({
-    propertyStanding: { $eq: [highEndStanding?._id!] },
+    propertyStanding: { $in: [highEndStanding?._id!, veryHighStanding?._id!] },
   })
     .limit(limit)
     .populate(POPULATE_FIELDS)

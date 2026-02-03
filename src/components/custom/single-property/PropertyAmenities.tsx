@@ -23,7 +23,9 @@ export default function PropertyAmenities({
                  hover:bg-primary-foreground/20 hover:border-secondary/50 hover:-translate-y-1 hover:shadow-lg hover:shadow-secondary/10"
             >
               <CircleCheckBig className="h-4 w-4 text-green-400" />
-              <span className="text-sm font-medium">{amenity.name}</span>
+              <span className="text-sm font-medium capitalize">
+                {amenity.name}
+              </span>
             </div>
           ))}
         </div>

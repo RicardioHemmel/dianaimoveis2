@@ -8,7 +8,7 @@ import { updateProperty } from "@/lib/services/properties/properties.service";
 
 export async function updatePropertyAction(
   id: string,
-  formData: PropertyInputSchema
+  formData: PropertyInputSchema,
 ) {
   const parsed = propertyInputSchema.safeParse(formData);
 
@@ -34,6 +34,6 @@ export async function updatePropertyAction(
       };
     }
 
-    throw err; 
+    throw err;
   }
 }

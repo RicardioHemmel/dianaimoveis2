@@ -49,7 +49,7 @@ export function HomeCallToAction() {
               Atendimento Especializado
             </span>
 
-            <h2 className="font-display  text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight mt-8">
+            <h2 className="font-display  text-3xl md:text-4xl font-bold mb-6 leading-tight mt-8">
               Pronto para encontrar o apartamento dos seus sonhos?
             </h2>
 

@@ -12,7 +12,7 @@ export function MorphingCardListing({
 }: MorphingCardListingProps) {
   if (viewMode === "grid") {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-y-10  gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 [@media(min-width:1800px)]:grid-cols-3 gap-y-10 gap-3">
         {properties.map((property, index) => (
           <MorphingCard
             property={property}

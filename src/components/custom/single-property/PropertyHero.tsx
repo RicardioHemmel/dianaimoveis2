@@ -95,7 +95,7 @@ export default function PropertyHero({
 
       {/* THUMBNAILS */}
       {gallery.length > 1 && (
-        <div className="hidden xl:flex absolute bottom-6 left-1/2 -translate-x-1/2 z-20 w-[250px]">
+        <div className="hidden xl:flex absolute bottom-6 left-1/2 -translate-x-1/2 z-31 w-[250px]">
           <ThumbnailsCarousel
             gallery={gallery}
             setCurrentImage={setCurrentImage}

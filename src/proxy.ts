@@ -7,9 +7,15 @@ import {
 // PUBLIC LINKS FROM DIANA IMOVEIS WEBSITE
 import { navLinks } from "./lib/constants/links/navbar-links";
 
+const privacyPages = [
+  { path: "terms", whenAuthenticated: "stay" },
+  { path: "privacy", whenAuthenticated: "stay" },
+];
+
 const generatedPublicRoutes = navLinks.map((item) => ({
   path: item.path,
   whenAuthenticated: "stay",
+  ...privacyPages,
 }));
 
 // Public pages to redirect

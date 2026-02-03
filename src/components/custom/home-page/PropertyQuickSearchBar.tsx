@@ -49,8 +49,8 @@ export function PropertyQuickSearchBar() {
 
   return (
     <section className="relative mt-6 lg:-mt-12 z-20 px-2 sm:px-4">
-      <div className="container mx-auto">
-        <div className="bg-card rounded-2xl shadow-xl border border-border/30 p-4 md:p-6 lg:p-8 xl:p-10">
+      <div className="container mx-auto xl:px-6">
+        <div className="bg-card rounded-2xl shadow-xl border border-border/30 p-4 xl:p-4">
           {/* SINGLE ROW LAYOUT */}
           <div className="flex items-center flex-col xl:flex-row gap-4">
             {/* ICON - Hidden on mobile, visible on lg+ */}

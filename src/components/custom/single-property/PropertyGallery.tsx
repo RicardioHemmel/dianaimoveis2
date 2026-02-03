@@ -30,12 +30,12 @@ export default function PropertyGallery({
         </div>
 
         {/* Grid Gallery */}
-        <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-2 gap-2 md:gap-3 h-[350px] md:h-[500px] mb-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-2 gap-2 md:gap-3 h-min-[350px] md:h-[500px] mb-10">
           {visibleImages.map((image, index) => {
             const isMain = index === 0;
 
-            // No mobile mostramos 3 fotos (índices 0, 1, 2)
-            // No desktop mostramos as 5 fotos (índices 0 a 4)
+            // On mobile we show 3 photos (indexes 0, 1, 2)
+            // On the desktop we show the 5 photos (indexes 0 to 4)
             const isLastMobile = index === 2;
             const isLastDesktop = index === MAX_VISIBLE_IMAGES - 1;
 
@@ -55,16 +55,15 @@ export default function PropertyGallery({
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
 
-                {/* Overlay de hover padrão */}
+                {/* DEFAULT HOVER OVERLAY */}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
 
-                {/* "Ver mais" Overlay Dinâmico */}
+                {/* "SEE MORE" DYNAMIC OVERLAY */}
                 {remainingImages > 0 && (
                   <div
                     className={`
                 absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-white 
                 transition-all duration-300 group-hover:bg-black/70
-                /* Só mostra no mobile se for a 3ª foto, só mostra no desktop se for a 5ª */
                 ${isLastMobile ? "flex md:hidden" : "hidden"}
                 ${isLastDesktop ? "md:flex" : ""}
               `}

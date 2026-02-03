@@ -68,7 +68,7 @@ export default function AnnouncePropertyPage() {
 
       {/* STEPS */}
       <section className="bg-zinc-200 py-8">
-        <div className="container mx-auto grid md:grid-cols-3 gap-6 text-center place-items-center">
+        <div className="container mx-auto px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 grid md:grid-cols-3 gap-6 text-center place-items-center">
           {[
             ["01", "Preencha o formulário"],
             ["02", "Análise do anúncio"],
@@ -89,7 +89,7 @@ export default function AnnouncePropertyPage() {
 
       {/* CONTENT */}
       <section className="py-16 bg-surface-base">
-        <div className="container mx-auto grid lg:grid-cols-3 gap-12 px-4">
+        <div className="container mx-auto px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 grid lg:grid-cols-3 gap-12">
           {/* FORM */}
           <div className="lg:col-span-2 white-card rounded-2xl p-8 ">
             <h2 className="text-2xl font-serif font-bold mb-6">

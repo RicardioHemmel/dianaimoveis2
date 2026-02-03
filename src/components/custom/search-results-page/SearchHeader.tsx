@@ -6,17 +6,12 @@ import { Button } from "@/components/ui/button";
 import { useSearchPropertyContext } from "@/context/SearchPropertyContext";
 
 export function SearchHeader() {
-  const {
-    clearFilters,
-    activeFiltersBadge,
-    cleanSpecificFilter,
-    pagination,
-    selectedFilters,
-  } = useSearchPropertyContext();
+  const { clearFilters, activeFiltersBadge, cleanSpecificFilter, pagination } =
+    useSearchPropertyContext();
 
   return (
     <div className="bg-surface-muted border-b border-border">
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 py-6">
         <div className="flex flex-col md:flex-row items-center md:justify-between gap-4">
           <div className="flex-col flex items-center gap-5 md:block">
             <h1 className="font-display text-2xl md:text-3xl font-semibold text-text-title">

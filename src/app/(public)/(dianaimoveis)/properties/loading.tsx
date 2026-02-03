@@ -19,10 +19,10 @@ export default function PropertiesLoading() {
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-center md:items-stretch">
             {/* Desktop filters skeleton */}
             <aside className="hidden w-full xl:block lg:w-[320px] shrink-0">
-              <div className="bg-card rounded-2xl border border-border/30 shadow-lg p-6">
+              <div className="bg-card rounded-2xl border border-border/30 shadow-lg p-6 h-[70vh]">
                 <Skeleton className="h-6 w-40 mb-4" />
-                <div className="space-y-3">
-                  {Array.from({ length: 6 }).map((_, index) => (
+                <div className="space-y-8">
+                  {Array.from({ length: 10 }).map((_, index) => (
                     <Skeleton key={index} className="h-4 w-full" />
                   ))}
                 </div>
@@ -36,7 +36,7 @@ export default function PropertiesLoading() {
                 <Skeleton className="h-9 w-40 hidden md:block" />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-y-10 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 [@media(min-width:1800px)]:grid-cols-3 gap-y-10 gap-3">
                 {Array.from({ length: 9 }).map((_, index) => (
                   <div
                     key={index}

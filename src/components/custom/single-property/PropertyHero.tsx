@@ -127,7 +127,7 @@ export default function PropertyHero({
       )}
 
       {/* PROPERTY INFO OVERLAY */}
-      <div className="absolute bottom-0 left-0 right-0 pl-8 md:pl-16 xl:pl-24 pb-10 z-30">
+      <div className="absolute bottom-0 left-0 right-0 pl-8 md:pl-16 xl:pl-24 pb-10 pe-6 z-30">
         <div className="w-fit 2xl:max-w-[500px]">
           {deliveryDate && (
             <div className="inline-block bg-action-primary/90 px-4 py-1 rounded-full mb-3">

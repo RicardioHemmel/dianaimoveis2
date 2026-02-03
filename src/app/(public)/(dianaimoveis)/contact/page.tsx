@@ -32,7 +32,7 @@ export default function ContactClient() {
 
       {/* CONTENT */}
       <section className="py-16 md:py-24 bg-surface-muted">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
             {/* FORM */}
             <div>

@@ -41,7 +41,7 @@ export function HomeCallToAction() {
         </svg>
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* LEFT CONTENT */}
           <div className="text-primary-foreground text-center lg:text-start">
@@ -49,7 +49,7 @@ export function HomeCallToAction() {
               Atendimento Especializado
             </span>
 
-            <h2 className="font-display  text-3xl md:text-4xl font-bold mb-6 leading-tight mt-8">
+            <h2 className="font-display text-3xl md:text-4xl font-bold mb-6 leading-tight mt-8">
               Pronto para encontrar o apartamento dos seus sonhos?
             </h2>
 

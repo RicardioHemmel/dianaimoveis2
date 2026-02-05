@@ -42,6 +42,7 @@ export function PropertyCardHorizontal({
     parkingSpaces,
     isFeatured,
     gallery,
+    propertyStanding,
     _id,
   } = property;
 
@@ -81,6 +82,7 @@ export function PropertyCardHorizontal({
                   alt="Imagem de Capa"
                   src={showCoverImage(gallery)}
                   sizes="(max-width: 768px) 100vw, 256px"
+                  className="object-cover"
                   fill
                 />
               ) : (
@@ -88,11 +90,15 @@ export function PropertyCardHorizontal({
               )}
             </div>
 
-            <Badge
-              className={`absolute top-3 left-3 ${deliveryStatus.badgeColor}`}
-            >
-              {deliveryStatus.label}
-            </Badge>
+            <div className="absolute top-3 left-3 flex gap-2">
+              <Badge className={deliveryStatus.badgeColor}>
+                {deliveryStatus.label}
+              </Badge>
+
+              {propertyStanding?.name && (
+                <Badge variant={"secondary"}>{propertyStanding.name}</Badge>
+              )}
+            </div>
           </Link>
         </div>
 
@@ -110,7 +116,7 @@ export function PropertyCardHorizontal({
                   <>
                     <MapPin className="h-4 w-4 shrink-0 text-black" />
                     <span className="truncate text-black">
-                      {`${property?.address?.street}, ${property?.address?.city}`}
+                      {`${property?.address?.street}, ${property?.address?.neighborhood?.name}`}
                     </span>
                   </>
                 ) : (

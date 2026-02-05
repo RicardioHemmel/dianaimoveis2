@@ -196,7 +196,7 @@ export function SearchPropertyProvider({
   // CLEAN ALL FILTERS
   function clearFilters() {
     setSelectedFilters(defaultSelectedFilters);
-    replace("/properties");
+    replace(pathName, { scroll: false });
   }
 
   // CLEAN SPECIFIC FILTER

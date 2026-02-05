@@ -39,6 +39,7 @@ export async function getAllPropertiesToView(): Promise<PropertyViewSchema[]> {
   const properties = await Property.find()
     .setOptions({ includeDrafts: true }) // BRINGS ALSO DRAFT PROPERTIES
     .populate(POPULATE_FIELDS)
+    .sort({ createdAt: -1 })
     .lean<IPropertyPopulated[]>();
 
   return properties.map((property) => PropertyMapper.toViewSchema(property));

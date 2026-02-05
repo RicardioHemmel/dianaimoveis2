@@ -157,6 +157,7 @@ function SelectScrollUpButton({
   return (
     <SelectPrimitive.ScrollUpButton
       data-slot="select-scroll-up-button"
+      aria-label="Rolar para cima"
       className={cn("flex items-center justify-center py-1", className)}
       {...props}
     >
@@ -172,6 +173,7 @@ function SelectScrollDownButton({
   return (
     <SelectPrimitive.ScrollDownButton
       data-slot="select-scroll-down-button"
+      aria-label="Rolar para baixo"
       className={cn(
         "flex cursor-default items-center justify-center py-1",
         className

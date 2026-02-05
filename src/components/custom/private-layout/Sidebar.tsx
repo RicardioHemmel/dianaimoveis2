@@ -34,6 +34,9 @@ export function AppSidebar() {
     SIDEBAR_LINKS.dashboard,
     SIDEBAR_LINKS.propertyList,
     SIDEBAR_LINKS.newProperty,
+    SIDEBAR_LINKS.amenities,
+    SIDEBAR_LINKS.neighborhoods,
+    SIDEBAR_LINKS.constructionCompanies,
   ];
 
   return (
@@ -95,10 +98,10 @@ export function AppSidebar() {
                     : "text-white/70 hover:bg-white/10 hover:text-white"
                 }
               >
-                <Link href="/settings">
+                {/* <Link href="/settings">
                   <Settings />
                   <span>Configurações</span>
-                </Link>
+                </Link> */}
               </SidebarMenuButton>
             </SidebarMenuItem>
 

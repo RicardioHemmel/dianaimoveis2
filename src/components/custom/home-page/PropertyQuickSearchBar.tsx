@@ -87,6 +87,7 @@ export function PropertyQuickSearchBar() {
                       <SelectTrigger
                         className="w-full h-10 sm:h-11 border-border/50 rounded-lg text-sm"
                         variant={"gray"}
+                        aria-label="Quartos"
                       >
                         <div className="flex items-center gap-2">
                           <BedDouble className="size-4 text-text-title" />
@@ -114,6 +115,7 @@ export function PropertyQuickSearchBar() {
                       <SelectTrigger
                         className="w-full h-10 sm:h-11 border-border/50 rounded-lg text-sm"
                         variant={"gray"}
+                        aria-label="Banheiros"
                       >
                         <div className="flex items-center gap-2">
                           <Bath className="size-4 text-text-title" />
@@ -141,6 +143,7 @@ export function PropertyQuickSearchBar() {
                       <SelectTrigger
                         className="w-full h-10 sm:h-11 border-border/50 rounded-lg text-sm"
                         variant={"gray"}
+                        aria-label="Vagas"
                       >
                         <div className="flex items-center gap-2">
                           <Car className="size-4 text-text-title" />

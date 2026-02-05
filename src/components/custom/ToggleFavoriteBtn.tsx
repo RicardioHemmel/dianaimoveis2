@@ -82,6 +82,8 @@ export function ToggleFavoriteBtn({
     return (
       <button
         onClick={handleFavoriteToggle}
+        aria-label={isFavorite ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+        aria-pressed={isFavorite}
         className={
           favoriteBtnVariants({
             variant,
@@ -111,6 +113,8 @@ export function ToggleFavoriteBtn({
       size="lg"
       className={isFavorite ? "bg-red-500 hover:bg-red-600 border-red-500" : ""}
       onClick={handleFavoriteToggle}
+      aria-label={isFavorite ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+      aria-pressed={isFavorite}
     >
       <Heart className={`h-4 w-4 ${isFavorite ? "fill-current" : ""}`} />
     </Button>

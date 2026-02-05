@@ -52,9 +52,8 @@ export function BorderLessPropertyCard({
               alt={title}
               fill
               priority
-              sizes="(max-width: 768px) 100vw,
-         (max-width: 1280px) 60vw,
-        80vw"
+              sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+              quality={70}
               className="object-cover group-hover:scale-105 transition-transform duration-500"
             />
           ) : (
@@ -116,9 +115,9 @@ export function BorderLessPropertyCard({
             <div className="w-full h-px bg-white/20" />
 
             {/* FEATURES ROW */}
-            <div className="flex items-center gap-4 text-white/80 text-sm">
+            <div className="flex items-center gap-4 text-white/80 text-xs lg:text-sm">
               {mappedPropertyDetails.map((detail, i) => (
-                <div key={i} className="flex items-center gap-3">
+                <div key={i} className="flex items-center gap-1 lg:gap-3">
                   <detail.icon className="size-4" />
                   <span>{detail.label}</span>
                 </div>

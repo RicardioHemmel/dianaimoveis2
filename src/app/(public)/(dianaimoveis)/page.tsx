@@ -17,10 +17,17 @@ import {
 } from "@/lib/services/properties/queries/homePage/query.service";
 
 export default async function HomePage() {
-  const featuredProperties = await getFeaturedProperties();
-  const studioProperties = await getStudios();
-  const highEndProperties = await getHighEnd();
-  const allProperties = await getAllProperties(1, 12);
+  const [
+    featuredProperties,
+    studioProperties,
+    highEndProperties,
+    allProperties,
+  ] = await Promise.all([
+    getFeaturedProperties(),
+    getStudios(),
+    getHighEnd(),
+    getAllProperties(1, 12),
+  ]);
 
   return (
     <>

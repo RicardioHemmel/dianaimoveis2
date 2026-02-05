@@ -170,6 +170,8 @@ export const propertyViewSchema = propertyBaseSchema.extend({
   propertyStanding: propertyDetailSchema.optional(),
   propertyTypologies: z.array(propertyDetailSchema),
   propertyAmenities: z.array(propertyDetailSchema),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
 });
 
 export type PropertyViewSchema = z.infer<typeof propertyViewSchema>;

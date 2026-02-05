@@ -29,7 +29,7 @@ export default async function PrivateLayout({
             {/* Top Header */}
             <header className="h-16 border-b bg-card flex items-center px-6 gap-4 sticky top-0 z-10 shadow-sm">
               <SidebarTrigger className="text-muted-foreground hover:text-foreground">
-                <Menu className="h-5 w-5" />
+                <Menu className="size-5" />
               </SidebarTrigger>
               <div className="flex-1 flex justify-between">
                 <h1 className="text-xl font-semibold text-foreground">

@@ -44,6 +44,8 @@ export interface IPopulatedRef {
 //-------------------------------------- BASE IPROPERTY --------------------------------
 export interface IProperty {
   _id?: Types.ObjectId;
+  createdAt?: Date;
+  updatedAt?: Date;
 
   // REQUIRED
   title: string;

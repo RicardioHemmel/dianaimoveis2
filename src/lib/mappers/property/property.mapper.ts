@@ -224,6 +224,8 @@ export class PropertyMapper {
   static toViewSchema(property: IPropertyPopulated): PropertyViewSchema {
     return {
       _id: property._id!.toString(),
+      createdAt: property.createdAt?.toISOString(),
+      updatedAt: property.updatedAt?.toISOString(),
       title: property.title,
       price: property.price,
 

@@ -60,7 +60,7 @@ export function ContactForm() {
         }}
       />
       <Select name="bestTime" required>
-        <SelectTrigger variant={"gray"} className="w-full">
+        <SelectTrigger variant={"gray"} className="w-full" aria-label="Melhor horário">
           <SelectValue placeholder="Melhor horário" />
         </SelectTrigger>
         <SelectContent>

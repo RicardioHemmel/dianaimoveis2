@@ -11,7 +11,7 @@ export function HomeCallToAction() {
       {/* BACKGROUND WITH GRADIENT OVERLAY */}
       <div className="absolute inset-0">
         <Image
-          src="/banners/CTA_Background.webp"
+          src="/banners/CTA_Background.jpg"
           alt="Luxury apartment Background"
           fill
           className="object-cover"

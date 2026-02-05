@@ -84,6 +84,8 @@ export function FeaturedPropertiesCarousel({
                             className="object-cover"
                             src={showCoverImage(property.gallery)}
                             priority
+                            sizes="100vw"
+                            quality={70}
                           />
                         ) : (
                           <div className="h-[510px] sm:h-[720px] lg:h-[635px] 2xl:h-[750px] w-full flex justify-center items-center bg-black/90">

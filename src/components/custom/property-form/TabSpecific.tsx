@@ -1,7 +1,6 @@
 "use client";
 
 // COMPONENTS
-import { Input } from "@/components/ui/input";
 import { TabsContent } from "@/components/ui/tabs";
 import {
   FormControl,
@@ -29,9 +28,9 @@ import {
   Check,
   HandCoins,
   MapPin,
-  Sparkles,
   Layers,
   Building2,
+  LandPlot,
 } from "lucide-react";
 
 // CONTEXT
@@ -199,7 +198,7 @@ export default function TabSpecific() {
               {/* STANDING HEADING */}
               <div className="flex items-center gap-2 mb-6">
                 <span className="p-2 rounded-lg bg-amber-500/10">
-                  <Sparkles className="h-5 w-5 text-amber-600" />
+                  <LandPlot className="h-5 w-5 text-amber-600" />
                 </span>
                 <div>
                   <h3 className="text-lg font-semibold text-foreground">

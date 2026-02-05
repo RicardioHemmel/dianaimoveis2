@@ -13,22 +13,22 @@ interface Neighborhood {
 const neighborhoodData: Neighborhood[] = [
   {
     name: "Brooklin",
-    image: "/banners/neighborhoodBrooklin.webp",
+    image: "/banners/neighborhoodBrooklin.jpg",
     description: "Onde o dinamismo dos negócios encontra a sofisticação",
   },
   {
     name: "Chácara Santo Antônio",
-    image: "/banners/neighborhoodChacaraSantoAntonio.webp",
+    image: "/banners/neighborhoodChacaraSantoAntonio.jpg",
     description: "O equilíbrio ideal entre modernidade e tradição.",
   },
   {
     name: "Alto da Boa Vista",
-    image: "/banners/neighborhoodAltoDaBoaVista.webp",
+    image: "/banners/neighborhoodAltoDaBoaVista.jpg",
     description: "Seu refúgio verde e exclusivo dentro da cidade.",
   },
   {
     name: "Pinheiros",
-    image: "/banners/neighborhoodPinheiros.webp",
+    image: "/banners/neighborhoodPinheiros.jpg",
     description: "O vibrante ponto de encontro de tendências e sabores.",
   },
 ];

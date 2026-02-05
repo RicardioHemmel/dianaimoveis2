@@ -39,7 +39,7 @@ export function FiltersContent() {
     <div className="flex flex-col items-start h-full">
       <FilterGroup id="typologies" title="O que você procura?">
         {/* TITLE | CONSTRUCTION COMPANY */}
-        <FilterItem Icon={Search} label="Empreendimento / Construtora">
+        <FilterItem Icon={Search} label="Empreendimento">
           <div className="flex flex-wrap gap-2">
             <SearchFilter />
           </div>

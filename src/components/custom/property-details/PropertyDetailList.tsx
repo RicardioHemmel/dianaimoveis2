@@ -250,8 +250,10 @@ export function PropertyDetailList({
                     {item.linkedProperties.length > 0 && (
                       <Badge className="text-xs bg-admin-primary">
                         <Building2 className="size-4 mr-1" />
-                        {item.linkedProperties.length} imóvel
-                        {item.linkedProperties.length !== 1 ? "is" : ""}
+                        {item.linkedProperties.length}{" "}
+                        {item.linkedProperties.length !== 1
+                          ? " imóveis"
+                          : " imóvel"}
                       </Badge>
                     )}
                     <Button

@@ -77,13 +77,13 @@ export function RangeFilter({
           <h2 className="text-lg font-medium">{title}</h2>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-start gap-3">
           <RangeInput
             form={form}
             name={`${name}.min` as FieldPath<PropertyInputSchema>}
             label="De"
           />
-          <span className="bg-gray-50 p-2 rounded-full mt-6">
+          <span className="bg-gray-50 p-2 rounded-full mt-7">
             <ArrowRight className="size-4" />
           </span>
           <RangeInput

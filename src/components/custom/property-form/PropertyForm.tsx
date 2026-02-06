@@ -186,8 +186,26 @@ export default function PropertyForm() {
   };
 
   // BUTTON TEXTS
-  const actionText = formMode === "edit" ? "Salvar" : "Cadastrar";
-  const loadingText = formMode === "edit" ? "Salvando..." : "Cadastrando...";
+  const isEditMode = formMode === "edit";
+  const isPublished = propertyStatus === "PUBLISHED";
+
+  const draftButtonText = isEditMode
+    ? isPublished
+      ? "Mudar para rascunho"
+      : "Salvar rascunho"
+    : "Salvar rascunho";
+
+  const publishButtonText = isEditMode
+    ? isPublished
+      ? "Salvar"
+      : "Publicar"
+    : "Cadastrar";
+
+  const publishLoadingText = isEditMode
+    ? isPublished
+      ? "Salvando..."
+      : "Publicando..."
+    : "Cadastrando...";
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
@@ -305,7 +323,7 @@ export default function PropertyForm() {
                   form.setValue("status", "DRAFT", { shouldDirty: true });
                 }}
               >
-                Salvar rascunho
+                {draftButtonText}
               </Button>
 
               {/* SAVES PROPERTY AS A PUBLISHED PROPERTY */}
@@ -318,7 +336,7 @@ export default function PropertyForm() {
                   form.setValue("status", "PUBLISHED", { shouldDirty: true });
                 }}
               >
-                {isPending ? loadingText : `${actionText} imóvel`}
+                {isPending ? publishLoadingText : publishButtonText}
               </Button>
             </div>
           </Card>

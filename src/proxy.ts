@@ -15,7 +15,6 @@ const privacyPages = [
 const generatedPublicRoutes = navLinks.map((item) => ({
   path: item.path,
   whenAuthenticated: "stay",
-  ...privacyPages,
 }));
 
 // Public pages to redirect
@@ -27,6 +26,7 @@ const resetPasswordPage = "/reset-password";
 // Free access routes
 const publicRoutes = [
   ...generatedPublicRoutes,
+  ...privacyPages,
   { path: loginPage, whenAuthenticated: "redirect" }, //Redirect to dashboard if authenticated
   { path: forgetPasswordPage, whenAuthenticated: "redirect" },
   { path: resetPasswordPage, whenAuthenticated: "redirect" },

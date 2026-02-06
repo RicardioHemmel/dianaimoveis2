@@ -42,6 +42,7 @@ export function PropertyCardHorizontal({
     parkingSpaces,
     isFeatured,
     gallery,
+    constructionCompany,
     propertyStanding,
     _id,
   } = property;
@@ -64,14 +65,15 @@ export function PropertyCardHorizontal({
 
   return (
     <Card className="relative overflow-hidden shadow-xl bg-white p-0">
-      {/* FIXED STATUS BADGE - TOP RIGHT */}
-      <Badge
-        className={`absolute top-3 right-3 z-10 text-black  ${formattedStatus.badgeColor}`}
-      >
-        <formattedStatus.icon />
-        {formattedStatus.label}
-      </Badge>
+      {/* FIXED STATUS AND CONSTRUCTION COMPANY BADGES - TOP RIGHT */}
+      <div className="flex gap-3 absolute top-3 right-3 z-10 ">
+        {constructionCompany?.name && <Badge>{constructionCompany.name}</Badge>}
 
+        <Badge className={`text-black  ${formattedStatus.badgeColor}`}>
+          <formattedStatus.icon />
+          {formattedStatus.label}
+        </Badge>
+      </div>
       <div className="flex flex-col md:flex-row min-h-44">
         {/* IMAGE SECTION */}
         <div className="relative w-full md:w-64 h-48 md:h-auto bg-muted overflow-hidden shrink-0">

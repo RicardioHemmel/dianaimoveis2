@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { getAllPropertiesToView } from "@/lib/services/properties/queries/properties-query.service";
 import { getStandings } from "@/lib/services/properties/property-details/property-standings.service";
 import { getTypologies } from "@/lib/services/properties/property-details/property-typologies.service";
+import { getCompanies } from "@/lib/services/properties/property-details/property-construction-company.service";
 import { PropertyListWithFilters } from "@/components/custom/property-list/PropertyListWithFilters";
 import {
   PropertyListResultCount,
@@ -21,15 +22,17 @@ export default async function PropertiesListPage({
 }: PropertiesListPageProps) {
   const resolvedSearchParams = await Promise.resolve(searchParams ?? {});
   const propertiesPromise = getAllPropertiesToView();
-  const [standings, typologies] = await Promise.all([
+  const [standings, typologies, constructionCompanies] = await Promise.all([
     getStandings(),
     getTypologies(),
+    getCompanies(),
   ]);
 
   return (
     <PropertyListWithFilters
       standings={standings}
       typologies={typologies}
+      constructionCompanies={constructionCompanies}
       resultCountSlot={
         <Suspense fallback={<ResultCountSkeleton />}>
           <PropertyListResultCount

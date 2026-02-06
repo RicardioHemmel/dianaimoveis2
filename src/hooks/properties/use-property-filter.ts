@@ -20,6 +20,7 @@ export interface Filters {
   status: "DRAFT" | "PUBLISHED" | null;
   featured: boolean | null;
   deliveryStatus: DeliveryStatus | null;
+  constructionCompany: string | null;
   sortOption: SortOptions | null;
 }
 
@@ -54,7 +55,10 @@ const isSortOption = (value: string | null): value is Filters["sortOption"] =>
 const parseFilters = (params: URLSearchParams): Filters => {
   const standingParam = params.get("standing");
   const standing = standingParam
-    ? standingParam.split(",").map((item) => item.trim()).filter(Boolean)
+    ? standingParam
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean)
     : [];
 
   const featuredParam = params.get("featured");
@@ -69,6 +73,7 @@ const parseFilters = (params: URLSearchParams): Filters => {
 
   const statusParam = params.get("status");
   const deliveryStatusParam = params.get("deliveryStatus");
+  const constructionCompanyParam = params.get("constructionCompany");
   const sortParam = params.get("sortOption");
 
   return {
@@ -81,6 +86,7 @@ const parseFilters = (params: URLSearchParams): Filters => {
     deliveryStatus: isDeliveryStatus(deliveryStatusParam)
       ? deliveryStatusParam
       : null,
+    constructionCompany: constructionCompanyParam || null,
     sortOption: isSortOption(sortParam) ? sortParam : null,
   };
 };
@@ -124,6 +130,10 @@ export function UsePropertyFilter() {
 
     if (nextFilters.deliveryStatus) {
       params.set("deliveryStatus", nextFilters.deliveryStatus);
+    }
+
+    if (nextFilters.constructionCompany) {
+      params.set("constructionCompany", nextFilters.constructionCompany);
     }
 
     if (nextFilters.sortOption) {

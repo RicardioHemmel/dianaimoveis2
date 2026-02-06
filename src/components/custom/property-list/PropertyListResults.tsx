@@ -25,6 +25,7 @@ type Filters = {
   status: "DRAFT" | "PUBLISHED" | null;
   featured: boolean | null;
   deliveryStatus: DeliveryStatus | null;
+  constructionCompany: string | null;
   sortOption: SortOption | null;
 };
 
@@ -83,6 +84,7 @@ const parseFilters = (params: SearchParams): Filters => {
 
   const statusParam = getSingleParam(params.status);
   const deliveryStatusParam = getSingleParam(params.deliveryStatus);
+  const constructionCompanyParam = getSingleParam(params.constructionCompany);
   const sortParam = getSingleParam(params.sortOption);
 
   return {
@@ -95,6 +97,7 @@ const parseFilters = (params: SearchParams): Filters => {
     deliveryStatus: isDeliveryStatus(deliveryStatusParam)
       ? deliveryStatusParam
       : null,
+    constructionCompany: constructionCompanyParam || null,
     sortOption: isSortOption(sortParam) ? sortParam : null,
   };
 };
@@ -108,6 +111,7 @@ const hasActiveFilters = (filters: Filters) =>
     filters.status !== null ||
     filters.featured !== null ||
     filters.deliveryStatus !== null ||
+    filters.constructionCompany !== null ||
     filters.sortOption !== null
   );
 
@@ -130,6 +134,7 @@ const filterProperties = (
         ? "featured"
         : "not-featured";
   const deliveryFilter = filters.deliveryStatus ?? "all";
+  const constructionCompanyFilter = filters.constructionCompany ?? "all";
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -188,6 +193,13 @@ const filterProperties = (
       }
     }
 
+    const matchesConstructionCompany =
+      constructionCompanyFilter === "all"
+        ? true
+        : constructionCompanyFilter === "none"
+          ? !property.constructionCompany?._id
+          : property.constructionCompany?._id === constructionCompanyFilter;
+
     return (
       matchesTitle &&
       matchesNeighborhood &&
@@ -195,7 +207,8 @@ const filterProperties = (
       matchesTypology &&
       matchesStatus &&
       matchesFeatured &&
-      matchesDelivery
+      matchesDelivery &&
+      matchesConstructionCompany
     );
   });
 };
@@ -307,11 +320,11 @@ const EmptyState = () => (
     </div>
 
     <h3 className="text-2xl font-bold text-foreground mb-2 text-center">
-      Nenhum imÃ³vel cadastrado
+      Nenhum imóvel cadastrado
     </h3>
     <p className="text-muted-foreground text-center max-w-md mb-8">
-      Seu portfÃ³lio estÃ¡ aguardando o primeiro imÃ³vel! Comece agora e
-      organize suas propriedades de forma profissional.
+      Seu portfólio está aguardando o primeiro imóvel! Comece agora e organize
+      suas propriedades de forma profissional.
     </p>
 
     <Button
@@ -321,7 +334,7 @@ const EmptyState = () => (
     >
       <Link href={"properties/new"}>
         <Home className="h-5 w-5" />
-        Cadastrar Primeiro ImÃ³vel
+        Cadastrar Primeiro imóvel
       </Link>
     </Button>
   </div>

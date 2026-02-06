@@ -39,6 +39,7 @@ type SortFilter = SortOptions;
 type PropertyListWithFiltersProps = {
   standings: PropertyDetailSchema[];
   typologies: PropertyDetailSchema[];
+  constructionCompanies: PropertyDetailSchema[];
   resultCountSlot: ReactNode;
   listSlot: ReactNode;
 };
@@ -46,6 +47,7 @@ type PropertyListWithFiltersProps = {
 export function PropertyListWithFilters({
   standings,
   typologies,
+  constructionCompanies,
   resultCountSlot,
   listSlot,
 }: PropertyListWithFiltersProps) {
@@ -62,6 +64,7 @@ export function PropertyListWithFilters({
         ? "featured"
         : "not-featured";
   const deliveryFilter: DeliveryFilter = filters.deliveryStatus ?? "all";
+  const constructionCompanyFilter = filters.constructionCompany ?? "all";
   const sortFilter: SortFilter = filters.sortOption ?? "date_desc";
   const [titleDraft, setTitleDraft] = useState(titleFilter);
 
@@ -151,6 +154,7 @@ export function PropertyListWithFilters({
     statusFilter !== "all" ||
     featuredFilter !== "all" ||
     deliveryFilter !== "all" ||
+    constructionCompanyFilter !== "all" ||
     filters.sortOption !== null;
 
   return (
@@ -212,7 +216,7 @@ export function PropertyListWithFilters({
         </div>
 
         {/* INPUT GRID */}
-        <div className="grid gap-6 p-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 p-5 md:grid-cols-2 lg:grid-cols-4">
           {/* TITLE */}
           <div className="space-y-2">
             <Label className="text-xs font-medium uppercase">
@@ -318,6 +322,33 @@ export function PropertyListWithFilters({
                 <SelectItem value="all">Todos</SelectItem>
                 <SelectItem value="featured">Em destaque</SelectItem>
                 <SelectItem value="not-featured">Sem destaque</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* CONSTRUCTION COMPANY */}
+          <div className="space-y-2">
+            <Label className="text-xs font-medium uppercase">Construtora</Label>
+            <Select
+              value={constructionCompanyFilter}
+              onValueChange={(value) =>
+                setFilter("constructionCompany", value === "all" ? null : value)
+              }
+            >
+              <div className="relative">
+                <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10 pointer-events-none" />
+                <SelectTrigger className="pl-9 w-full" variant={"gray"}>
+                  <SelectValue placeholder="Todas" />
+                </SelectTrigger>
+              </div>
+              <SelectContent>
+                <SelectItem value="all">Todas</SelectItem>
+                <SelectItem value="none">Sem construtora</SelectItem>
+                {constructionCompanies.map((company) => (
+                  <SelectItem key={company._id} value={company._id}>
+                    {company.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

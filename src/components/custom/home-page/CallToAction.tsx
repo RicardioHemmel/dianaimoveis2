@@ -90,12 +90,12 @@ export function HomeCallToAction() {
                 size="lg"
                 variant="outline"
                 className="group rounded-xl font-semibold border-none 
-             text-black hover:bg-green-500 hover:text-white"
+              bg-green-500 hover:text-black"
                 asChild
               >
-                <Link href={whatsappLink}>
+                <Link href={whatsappLink} aria-label="Botão para o Whatsapp">
                   <Image
-                    src="/icons/whatsapp.svg"
+                    src="/icons/whatsapp-white-icon.svg"
                     alt="whatsapp icon"
                     width={20}
                     height={20}

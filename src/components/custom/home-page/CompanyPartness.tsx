@@ -22,13 +22,15 @@ export function CompanyPartners() {
     <section className="py-16 bg-background border-y border-border/30">
       <div className="container mx-auto px-4">
         <div className="text-center mb-10">
-          <div className="flex items-center justify-center gap-2 mb-3">
-            <Building2 className="size-5 text-action-primary" />
-            <span className="text-action-primary font-semibold uppercase tracking-wider">
-              Construtoras Parceiras
-            </span>
+          <div className="flex justify-center mb-3">
+            <div className="flex items-center justify-center gap-2 bg-muted px-4 py-2 rounded-full">
+              <Building2 className="size-5 text-text-title" />
+              <span className="text-text-title font-semibold uppercase tracking-wider">
+                Construtoras Parceiras
+              </span>
+            </div>
           </div>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground font-semibold">
             Trabalhamos com todas as construtoras do mercado
           </p>
         </div>

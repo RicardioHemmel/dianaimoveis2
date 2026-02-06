@@ -48,7 +48,7 @@ export function FilterGroup({ children, id, title }: FilterGroupProps) {
       <div
         className={cn(
           "overflow-hidden transition-all duration-400",
-          isExpanded ? "max-h-[800px] opacity-100 pb-5" : "max-h-0 opacity-0",
+          isExpanded ? "max-h-[9999px] opacity-100 pb-5" : "max-h-0 opacity-0",
         )}
       >
         <div className="space-y-5">{children}</div>

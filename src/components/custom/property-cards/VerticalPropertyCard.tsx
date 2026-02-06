@@ -70,7 +70,7 @@ export function VerticalPropertyCard({
               className="object-cover transition-transform duration-400 group-hover:scale-110"
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              quality={70}
+              quality={75}
             />
           ) : (
             <div className="flex flex-col items-center z-20">
@@ -90,7 +90,8 @@ export function VerticalPropertyCard({
         <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
           {deliveryDate && (
             <span
-              className={`px-3 py-1.5 rounded-full text-primary-foreground text-xs font-bold shadow-lg ${deliveryStatus.badgeColor}`}
+              className={`px-3 py-1.5 rounded-full text-primary-foreground text-xs font-semibold shadow-lg tracking-wider
+ ${deliveryStatus.badgeColor}`}
             >
               {deliveryStatus.label}
             </span>
@@ -168,6 +169,7 @@ export function VerticalPropertyCard({
           <Link
             href={`/property/${_id}`}
             className="px-3 py-2 rounded-full bg-hero-bg text-white text-[12px] sm:text-sm font-semibold hover:bg-hero-via transition-all duration-300"
+            aria-label="Link para ver detalhes do imóvel"
           >
             Ver Detalhes
           </Link>

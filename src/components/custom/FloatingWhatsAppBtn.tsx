@@ -7,7 +7,7 @@ export function FloatingWhatsAppBtn() {
     <FloatingWhatsApp
       phoneNumber="5511966536993"
       accountName="Diana Imóveis"
-      avatar="/dianaPhoto.webp"
+      avatar="/dianaPhoto-square.webp"
       allowEsc
       chatMessage="Olá, como posso te ajudar?"
       statusMessage="Respostas em até 1 hora"

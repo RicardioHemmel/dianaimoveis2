@@ -1,8 +1,8 @@
 export type DeliveryStatus = "Lançamento" | "Pronto" | "Sem data";
 
 const statusColors: Record<DeliveryStatus, string> = {
-  Lançamento: "bg-emerald-500 text-white",
-  Pronto: "bg-sky-800 text-white",
+  Lançamento: "bg-teal-800 text-white",
+  Pronto: "bg-cyan-700 text-white",
   "Sem data": "bg-white text-black",
 };
 

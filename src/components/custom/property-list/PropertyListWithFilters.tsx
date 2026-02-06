@@ -1,23 +1,18 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   Building2,
-  Home,
   MapPin,
   Loader2,
   X,
   ListFilter,
-  RefreshCw,
   BrushCleaning,
   CalendarClock,
   Search,
   Star,
   Tag,
-  ArrowUpDown,
 } from "lucide-react";
-import { PropertyCardHorizontal } from "@/components/custom/HorizontalPropertyCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -32,10 +27,7 @@ import {
   UsePropertyFilter,
   type SortOptions,
 } from "@/hooks/properties/use-property-filter";
-import type {
-  PropertyDetailSchema,
-  PropertyViewSchema,
-} from "@/lib/schemas/property/property.schema";
+import type { PropertyDetailSchema } from "@/lib/schemas/property/property.schema";
 import type { DeliveryStatus } from "@/lib/formatters/ui-formatters/property-delivery-date";
 import { Label } from "@/components/ui/label";
 
@@ -45,15 +37,17 @@ type DeliveryFilter = "all" | DeliveryStatus;
 type SortFilter = SortOptions;
 
 type PropertyListWithFiltersProps = {
-  properties: PropertyViewSchema[];
   standings: PropertyDetailSchema[];
   typologies: PropertyDetailSchema[];
+  resultCountSlot: ReactNode;
+  listSlot: ReactNode;
 };
 
 export function PropertyListWithFilters({
-  properties,
   standings,
   typologies,
+  resultCountSlot,
+  listSlot,
 }: PropertyListWithFiltersProps) {
   const { filters, setFilter, clearFilters } = UsePropertyFilter();
   const titleFilter = filters.title ?? "";
@@ -149,182 +143,6 @@ export function PropertyListWithFilters({
     setIsNeighborhoodOpen(false);
   };
 
-  const filteredProperties = useMemo(() => {
-    const normalizedTitle = titleDraft.trim().toLowerCase();
-    const normalizedNeighborhood = neighborhoodFilter.trim().toLowerCase();
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    return properties.filter((property) => {
-      const matchesTitle = normalizedTitle
-        ? property.title.toLowerCase().includes(normalizedTitle)
-        : true;
-
-      const neighborhoodName =
-        property.address?.neighborhood?.name?.toLowerCase() ?? "";
-      const matchesNeighborhood = normalizedNeighborhood
-        ? neighborhoodName.includes(normalizedNeighborhood)
-        : true;
-
-      const matchesStanding =
-        standingFilter === "all"
-          ? true
-          : standingFilter === "undefined"
-            ? !property.propertyStanding || !property.propertyStanding._id
-            : property.propertyStanding?._id === standingFilter;
-
-      const matchesTypology =
-        typologyFilter === "all"
-          ? true
-          : (property.propertyTypologies ?? []).some(
-              (typology) => typology._id === typologyFilter,
-            );
-
-      const matchesStatus =
-        statusFilter === "all" ? true : property.status === statusFilter;
-
-      const matchesFeatured =
-        featuredFilter === "all"
-          ? true
-          : featuredFilter === "featured"
-            ? property.isFeatured
-            : !property.isFeatured;
-
-      let matchesDelivery = true;
-      if (deliveryFilter !== "all") {
-        if (deliveryFilter === "Sem data") {
-          matchesDelivery = !property.deliveryDate;
-        } else if (!property.deliveryDate) {
-          matchesDelivery = false;
-        } else {
-          const deliveryDate = new Date(`${property.deliveryDate}T00:00:00`);
-          const deliveryTime = deliveryDate.getTime();
-          if (Number.isNaN(deliveryTime)) {
-            matchesDelivery = false;
-          } else {
-            const isLaunch = deliveryTime > today.getTime();
-            matchesDelivery =
-              deliveryFilter === "Lançamento" ? isLaunch : !isLaunch;
-          }
-        }
-      }
-
-      return (
-        matchesTitle &&
-        matchesNeighborhood &&
-        matchesStanding &&
-        matchesTypology &&
-        matchesStatus &&
-        matchesFeatured &&
-        matchesDelivery
-      );
-    });
-  }, [
-    properties,
-    titleDraft,
-    neighborhoodFilter,
-    standingFilter,
-    typologyFilter,
-    statusFilter,
-    featuredFilter,
-    deliveryFilter,
-  ]);
-
-  const sortedProperties = useMemo(() => {
-    const propertiesToSort = [...filteredProperties];
-
-    const getCreatedAtTime = (property: PropertyViewSchema) => {
-      const createdAt = (property as { createdAt?: string | Date }).createdAt;
-      if (createdAt) {
-        const time = new Date(createdAt).getTime();
-        return Number.isNaN(time) ? 0 : time;
-      }
-
-      const id = property._id ?? "";
-      if (id.length >= 8) {
-        const seconds = parseInt(id.slice(0, 8), 16);
-        return Number.isNaN(seconds) ? 0 : seconds * 1000;
-      }
-
-      return 0;
-    };
-
-    const getAreaMin = (property: PropertyViewSchema) =>
-      property.area?.min ?? property.area?.max ?? null;
-
-    const getDeliveryTime = (property: PropertyViewSchema) => {
-      if (!property.deliveryDate) return null;
-      const time = new Date(`${property.deliveryDate}T00:00:00`).getTime();
-      return Number.isNaN(time) ? null : time;
-    };
-
-    switch (sortFilter) {
-      case "price_asc":
-        propertiesToSort.sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
-        break;
-      case "price_desc":
-        propertiesToSort.sort((a, b) => (b.price ?? 0) - (a.price ?? 0));
-        break;
-      case "area_asc":
-        propertiesToSort.sort((a, b) => {
-          const aArea = getAreaMin(a);
-          const bArea = getAreaMin(b);
-          const aHas = aArea !== null;
-          const bHas = bArea !== null;
-
-          if (aHas !== bHas) return aHas ? -1 : 1;
-          if (!aHas || !bHas) return 0;
-          return (aArea as number) - (bArea as number);
-        });
-        break;
-      case "area_desc":
-        propertiesToSort.sort((a, b) => {
-          const aArea = getAreaMin(a);
-          const bArea = getAreaMin(b);
-          const aHas = aArea !== null;
-          const bHas = bArea !== null;
-
-          if (aHas !== bHas) return aHas ? -1 : 1;
-          if (!aHas || !bHas) return 0;
-          return (bArea as number) - (aArea as number);
-        });
-        break;
-      case "ready":
-        propertiesToSort.sort((a, b) => {
-          const aTime = getDeliveryTime(a);
-          const bTime = getDeliveryTime(b);
-          const aHas = aTime !== null;
-          const bHas = bTime !== null;
-
-          if (aHas !== bHas) return aHas ? -1 : 1;
-          if (!aHas || !bHas) return 0;
-          return (aTime as number) - (bTime as number);
-        });
-        break;
-      case "launch":
-        propertiesToSort.sort((a, b) => {
-          const aTime = getDeliveryTime(a) ?? 0;
-          const bTime = getDeliveryTime(b) ?? 0;
-          return bTime - aTime;
-        });
-        break;
-      case "date_asc":
-        propertiesToSort.sort(
-          (a, b) => getCreatedAtTime(a) - getCreatedAtTime(b),
-        );
-        break;
-      case "date_desc":
-      default:
-        propertiesToSort.sort(
-          (a, b) => getCreatedAtTime(b) - getCreatedAtTime(a),
-        );
-        break;
-    }
-
-    return propertiesToSort;
-  }, [filteredProperties, sortFilter]);
-
   const hasActiveFilters =
     titleDraft.trim() ||
     neighborhoodFilter.trim() ||
@@ -334,63 +152,6 @@ export function PropertyListWithFilters({
     featuredFilter !== "all" ||
     deliveryFilter !== "all" ||
     filters.sortOption !== null;
-
-  const EmptyState = () => (
-    <div className="flex flex-col items-center justify-center py-16 px-4">
-      <div className="relative mb-6">
-        <div className="absolute inset-0 bg-secondary/20 rounded-full blur-2xl scale-150" />
-        <div className="relative bg-linear-to-br from-admin-primary/30 to-admin-primary/10 p-6 rounded-full border border-admin-primary/45">
-          <Building2 className="h-16 w-16 text-admin-primary" />
-        </div>
-      </div>
-
-      <h3 className="text-2xl font-bold text-foreground mb-2 text-center">
-        Nenhum imóvel cadastrado
-      </h3>
-      <p className="text-muted-foreground text-center max-w-md mb-8">
-        Seu portfólio está aguardando o primeiro imóvel! Comece agora e organize
-        suas propriedades de forma profissional.
-      </p>
-
-      <Button
-        size="lg"
-        className="bg-admin-primary hover:bg-admin-primary/90 gap-2 text-base px-8"
-        asChild
-      >
-        <Link href={"properties/new"}>
-          <Home className="h-5 w-5" />
-          Cadastrar Primeiro Imóvel
-        </Link>
-      </Button>
-    </div>
-  );
-
-  const FilterEmptyState = () => (
-    <div className="flex flex-col items-center justify-center py-16 px-4 border rounded-lg bg-card">
-      <div className="flex items-center justify-center size-14 rounded-full bg-admin-primary/10 mb-4">
-        <ListFilter className="h-6 w-6 text-admin-primary" />
-      </div>
-      <h3 className="text-lg font-semibold text-foreground mb-1">
-        Nenhum imóvel encontrado
-      </h3>
-      <p className="text-muted-foreground text-center max-w-md mb-4">
-        Ajuste os filtros para visualizar outros resultados.
-      </p>
-      {hasActiveFilters && (
-        <Button
-          onClick={handleClearFilters}
-          className="gap-2 border-2 border-hero-bg text-text-title hover:bg-hero-bg hover:text-white bg-white transition-all duration-300 hover:scale-105 group"
-        >
-          <RefreshCw className="size-4 group-hover:animate-spin" />
-          Limpar filtros
-        </Button>
-      )}
-    </div>
-  );
-
-  if (properties.length === 0) {
-    return <EmptyState />;
-  }
 
   return (
     <div className="space-y-6">
@@ -414,12 +175,7 @@ export function PropertyListWithFilters({
 
           <div className="flex items-center gap-3">
             {/* PROPERTY QTY */}
-            <div className="rounded-full px-4 py-1.5 font-medium bg-admin-primary text-white">
-              <span className="text-xl font-bold">
-                {sortedProperties.length}
-              </span>{" "}
-              imóveis encontrados
-            </div>
+            {resultCountSlot}
 
             {/* SORTING FILTER */}
             <Select
@@ -459,11 +215,13 @@ export function PropertyListWithFilters({
         <div className="grid gap-6 p-5 md:grid-cols-2 lg:grid-cols-3">
           {/* TITLE */}
           <div className="space-y-2">
-            <Label className="text-xs font-medium uppercase">Título</Label>
+            <Label className="text-xs font-medium uppercase">
+              Nome do Imóvel
+            </Label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Buscar por título..."
+                placeholder="Buscar por nome..."
                 variant={"gray"}
                 value={titleDraft}
                 onChange={(e) => setTitleDraft(e.target.value)}
@@ -474,9 +232,7 @@ export function PropertyListWithFilters({
 
           {/* NEIGHBORHOOD WITH AUTOCOMPLETE */}
           <div className="space-y-2 relative" ref={neighborhoodRef}>
-            <Label className="text-xs font-medium uppercase">
-              Bairro
-            </Label>
+            <Label className="text-xs font-medium uppercase">Bairro</Label>
             <div className="relative">
               <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -542,9 +298,7 @@ export function PropertyListWithFilters({
 
           {/* IS FEATURED */}
           <div className="space-y-2">
-            <Label className="text-xs font-medium uppercase">
-              Destaque
-            </Label>
+            <Label className="text-xs font-medium uppercase">Destaque</Label>
             <Select
               value={featuredFilter}
               onValueChange={(value) =>
@@ -572,9 +326,7 @@ export function PropertyListWithFilters({
         <div className="grid gap-6 p-5 md:grid-cols-2 lg:grid-cols-4">
           {/* STANDING */}
           <div className="space-y-2">
-            <Label className="text-xs font-medium uppercase">
-              Porte
-            </Label>
+            <Label className="text-xs font-medium uppercase">Porte</Label>
             <Select
               value={standingFilter}
               onValueChange={(value) =>
@@ -601,9 +353,7 @@ export function PropertyListWithFilters({
 
           {/* TYPOLOGY */}
           <div className="space-y-2">
-            <Label className="text-xs font-medium uppercase">
-              Tipologia
-            </Label>
+            <Label className="text-xs font-medium uppercase">Tipologia</Label>
             <Select
               value={typologyFilter}
               onValueChange={(value) =>
@@ -629,9 +379,7 @@ export function PropertyListWithFilters({
 
           {/* STATUS - PUBLISHED | DRAFT */}
           <div className="space-y-2">
-            <Label className="text-xs font-medium uppercase">
-              Status
-            </Label>
+            <Label className="text-xs font-medium uppercase">Status</Label>
             <Select
               value={statusFilter}
               onValueChange={(value) =>
@@ -685,15 +433,7 @@ export function PropertyListWithFilters({
       </div>
 
       {/* PROPERTY LIST */}
-      {sortedProperties.length > 0 ? (
-        <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          {sortedProperties.map((property) => (
-            <PropertyCardHorizontal property={property} key={property._id} />
-          ))}
-        </div>
-      ) : (
-        <FilterEmptyState />
-      )}
+      {listSlot}
     </div>
   );
 }

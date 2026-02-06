@@ -1,0 +1,400 @@
+import Link from "next/link";
+import { Building2, Home, ListFilter, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { PropertyCardHorizontal } from "@/components/custom/HorizontalPropertyCard";
+import type { PropertyViewSchema } from "@/lib/schemas/property/property.schema";
+import type { DeliveryStatus } from "@/lib/formatters/ui-formatters/property-delivery-date";
+
+type SearchParams = Record<string, string | string[] | undefined>;
+
+type SortOption =
+  | "date_asc"
+  | "area_asc"
+  | "price_asc"
+  | "price_desc"
+  | "date_desc"
+  | "area_desc"
+  | "launch"
+  | "ready";
+
+type Filters = {
+  title: string | null;
+  neighborhood: string | null;
+  standing: string[];
+  typology: string | null;
+  status: "DRAFT" | "PUBLISHED" | null;
+  featured: boolean | null;
+  deliveryStatus: DeliveryStatus | null;
+  sortOption: SortOption | null;
+};
+
+const DELIVERY_STATUS_VALUES: DeliveryStatus[] = [
+  "Lançamento",
+  "Pronto",
+  "Sem data",
+];
+
+const SORT_OPTIONS: SortOption[] = [
+  "date_asc",
+  "area_asc",
+  "price_asc",
+  "price_desc",
+  "date_desc",
+  "area_desc",
+  "launch",
+  "ready",
+];
+
+const BASE_PATH = "/property-list";
+
+const getSingleParam = (value: string | string[] | undefined) =>
+  Array.isArray(value) ? (value[0] ?? null) : (value ?? null);
+
+const parseListParam = (value: string | string[] | undefined) => {
+  if (!value) return [];
+  const raw = Array.isArray(value) ? value.join(",") : value;
+  return raw
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+};
+
+const isStatus = (value: string | null): value is Filters["status"] =>
+  value === "DRAFT" || value === "PUBLISHED";
+
+const isDeliveryStatus = (
+  value: string | null,
+): value is Filters["deliveryStatus"] =>
+  !!value && DELIVERY_STATUS_VALUES.includes(value as DeliveryStatus);
+
+const isSortOption = (value: string | null): value is Filters["sortOption"] =>
+  !!value && SORT_OPTIONS.includes(value as SortOption);
+
+const parseFilters = (params: SearchParams): Filters => {
+  const featuredParam = getSingleParam(params.featured);
+  const featured =
+    featuredParam === null
+      ? null
+      : featuredParam === "true"
+        ? true
+        : featuredParam === "false"
+          ? false
+          : null;
+
+  const statusParam = getSingleParam(params.status);
+  const deliveryStatusParam = getSingleParam(params.deliveryStatus);
+  const sortParam = getSingleParam(params.sortOption);
+
+  return {
+    title: getSingleParam(params.title),
+    neighborhood: getSingleParam(params.neighborhood),
+    standing: parseListParam(params.standing),
+    typology: getSingleParam(params.typology),
+    status: isStatus(statusParam) ? statusParam : null,
+    featured,
+    deliveryStatus: isDeliveryStatus(deliveryStatusParam)
+      ? deliveryStatusParam
+      : null,
+    sortOption: isSortOption(sortParam) ? sortParam : null,
+  };
+};
+
+const hasActiveFilters = (filters: Filters) =>
+  !!(
+    (filters.title && filters.title.trim()) ||
+    (filters.neighborhood && filters.neighborhood.trim()) ||
+    filters.standing.length > 0 ||
+    filters.typology !== null ||
+    filters.status !== null ||
+    filters.featured !== null ||
+    filters.deliveryStatus !== null ||
+    filters.sortOption !== null
+  );
+
+const filterProperties = (
+  properties: PropertyViewSchema[],
+  filters: Filters,
+) => {
+  const normalizedTitle = (filters.title ?? "").trim().toLowerCase();
+  const normalizedNeighborhood = (filters.neighborhood ?? "")
+    .trim()
+    .toLowerCase();
+
+  const standingFilter = filters.standing[0] ?? "all";
+  const typologyFilter = filters.typology ?? "all";
+  const statusFilter = filters.status ?? "all";
+  const featuredFilter =
+    filters.featured === null
+      ? "all"
+      : filters.featured
+        ? "featured"
+        : "not-featured";
+  const deliveryFilter = filters.deliveryStatus ?? "all";
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  return properties.filter((property) => {
+    const matchesTitle = normalizedTitle
+      ? property.title.toLowerCase().includes(normalizedTitle)
+      : true;
+
+    const neighborhoodName =
+      property.address?.neighborhood?.name?.toLowerCase() ?? "";
+    const matchesNeighborhood = normalizedNeighborhood
+      ? neighborhoodName.includes(normalizedNeighborhood)
+      : true;
+
+    const matchesStanding =
+      standingFilter === "all"
+        ? true
+        : standingFilter === "undefined"
+          ? !property.propertyStanding || !property.propertyStanding._id
+          : property.propertyStanding?._id === standingFilter;
+
+    const matchesTypology =
+      typologyFilter === "all"
+        ? true
+        : (property.propertyTypologies ?? []).some(
+            (typology) => typology._id === typologyFilter,
+          );
+
+    const matchesStatus =
+      statusFilter === "all" ? true : property.status === statusFilter;
+
+    const matchesFeatured =
+      featuredFilter === "all"
+        ? true
+        : featuredFilter === "featured"
+          ? property.isFeatured
+          : !property.isFeatured;
+
+    let matchesDelivery = true;
+    if (deliveryFilter !== "all") {
+      if (deliveryFilter === "Sem data") {
+        matchesDelivery = !property.deliveryDate;
+      } else if (!property.deliveryDate) {
+        matchesDelivery = false;
+      } else {
+        const deliveryDate = new Date(`${property.deliveryDate}T00:00:00`);
+        const deliveryTime = deliveryDate.getTime();
+        if (Number.isNaN(deliveryTime)) {
+          matchesDelivery = false;
+        } else {
+          const isLaunch = deliveryTime > today.getTime();
+          matchesDelivery =
+            deliveryFilter === "Lançamento" ? isLaunch : !isLaunch;
+        }
+      }
+    }
+
+    return (
+      matchesTitle &&
+      matchesNeighborhood &&
+      matchesStanding &&
+      matchesTypology &&
+      matchesStatus &&
+      matchesFeatured &&
+      matchesDelivery
+    );
+  });
+};
+
+const sortProperties = (
+  properties: PropertyViewSchema[],
+  sortOption: SortOption | null,
+) => {
+  const propertiesToSort = [...properties];
+
+  const getCreatedAtTime = (property: PropertyViewSchema) => {
+    const createdAt = (property as { createdAt?: string | Date }).createdAt;
+    if (createdAt) {
+      const time = new Date(createdAt).getTime();
+      return Number.isNaN(time) ? 0 : time;
+    }
+
+    const id = property._id ?? "";
+    if (id.length >= 8) {
+      const seconds = parseInt(id.slice(0, 8), 16);
+      return Number.isNaN(seconds) ? 0 : seconds * 1000;
+    }
+
+    return 0;
+  };
+
+  const getAreaMin = (property: PropertyViewSchema) =>
+    property.area?.min ?? property.area?.max ?? null;
+
+  const getDeliveryTime = (property: PropertyViewSchema) => {
+    if (!property.deliveryDate) return null;
+    const time = new Date(`${property.deliveryDate}T00:00:00`).getTime();
+    return Number.isNaN(time) ? null : time;
+  };
+
+  switch (sortOption ?? "date_desc") {
+    case "price_asc":
+      propertiesToSort.sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
+      break;
+    case "price_desc":
+      propertiesToSort.sort((a, b) => (b.price ?? 0) - (a.price ?? 0));
+      break;
+    case "area_asc":
+      propertiesToSort.sort((a, b) => {
+        const aArea = getAreaMin(a);
+        const bArea = getAreaMin(b);
+        const aHas = aArea !== null;
+        const bHas = bArea !== null;
+
+        if (aHas !== bHas) return aHas ? -1 : 1;
+        if (!aHas || !bHas) return 0;
+        return (aArea as number) - (bArea as number);
+      });
+      break;
+    case "area_desc":
+      propertiesToSort.sort((a, b) => {
+        const aArea = getAreaMin(a);
+        const bArea = getAreaMin(b);
+        const aHas = aArea !== null;
+        const bHas = bArea !== null;
+
+        if (aHas !== bHas) return aHas ? -1 : 1;
+        if (!aHas || !bHas) return 0;
+        return (bArea as number) - (aArea as number);
+      });
+      break;
+    case "ready":
+      propertiesToSort.sort((a, b) => {
+        const aTime = getDeliveryTime(a);
+        const bTime = getDeliveryTime(b);
+        const aHas = aTime !== null;
+        const bHas = bTime !== null;
+
+        if (aHas !== bHas) return aHas ? -1 : 1;
+        if (!aHas || !bHas) return 0;
+        return (aTime as number) - (bTime as number);
+      });
+      break;
+    case "launch":
+      propertiesToSort.sort((a, b) => {
+        const aTime = getDeliveryTime(a) ?? 0;
+        const bTime = getDeliveryTime(b) ?? 0;
+        return bTime - aTime;
+      });
+      break;
+    case "date_asc":
+      propertiesToSort.sort(
+        (a, b) => getCreatedAtTime(a) - getCreatedAtTime(b),
+      );
+      break;
+    case "date_desc":
+    default:
+      propertiesToSort.sort(
+        (a, b) => getCreatedAtTime(b) - getCreatedAtTime(a),
+      );
+      break;
+  }
+
+  return propertiesToSort;
+};
+
+const EmptyState = () => (
+  <div className="flex flex-col items-center justify-center py-16 px-4">
+    <div className="relative mb-6">
+      <div className="absolute inset-0 bg-secondary/20 rounded-full blur-2xl scale-150" />
+      <div className="relative bg-linear-to-br from-admin-primary/30 to-admin-primary/10 p-6 rounded-full border border-admin-primary/45">
+        <Building2 className="h-16 w-16 text-admin-primary" />
+      </div>
+    </div>
+
+    <h3 className="text-2xl font-bold text-foreground mb-2 text-center">
+      Nenhum imÃ³vel cadastrado
+    </h3>
+    <p className="text-muted-foreground text-center max-w-md mb-8">
+      Seu portfÃ³lio estÃ¡ aguardando o primeiro imÃ³vel! Comece agora e
+      organize suas propriedades de forma profissional.
+    </p>
+
+    <Button
+      size="lg"
+      className="bg-admin-primary hover:bg-admin-primary/90 gap-2 text-base px-8"
+      asChild
+    >
+      <Link href={"properties/new"}>
+        <Home className="h-5 w-5" />
+        Cadastrar Primeiro ImÃ³vel
+      </Link>
+    </Button>
+  </div>
+);
+
+const FilterEmptyState = ({ showClear }: { showClear: boolean }) => (
+  <div className="flex flex-col items-center justify-center py-16 px-4 border rounded-lg bg-card">
+    <div className="flex items-center justify-center size-14 rounded-full bg-admin-primary/10 mb-4">
+      <ListFilter className="h-6 w-6 text-admin-primary" />
+    </div>
+    <h3 className="text-lg font-semibold text-foreground mb-1">
+      Nenhum imóvel encontrado
+    </h3>
+    <p className="text-muted-foreground text-center max-w-md mb-4">
+      Ajuste os filtros para visualizar outros resultados.
+    </p>
+    {showClear && (
+      <Button
+        asChild
+        className="gap-2 border-2 border-hero-bg text-text-title hover:bg-hero-bg hover:text-white bg-white transition-all duration-300 hover:scale-105 group"
+      >
+        <Link href={BASE_PATH}>
+          <RefreshCw className="size-4 group-hover:animate-spin" />
+          Limpar filtros
+        </Link>
+      </Button>
+    )}
+  </div>
+);
+
+type PropertyListResultsProps = {
+  propertiesPromise: Promise<PropertyViewSchema[]>;
+  searchParams: SearchParams;
+};
+
+export async function PropertyListResultCount({
+  propertiesPromise,
+  searchParams,
+}: PropertyListResultsProps) {
+  const properties = await propertiesPromise;
+  const filters = parseFilters(searchParams);
+  const filtered = filterProperties(properties, filters);
+
+  return (
+    <div className="rounded-full px-4 py-1.5 font-medium bg-admin-primary text-white">
+      <span className="text-xl font-bold">{filtered.length}</span> imóveis
+      encontrados
+    </div>
+  );
+}
+
+export async function PropertyListResults({
+  propertiesPromise,
+  searchParams,
+}: PropertyListResultsProps) {
+  const properties = await propertiesPromise;
+  const filters = parseFilters(searchParams);
+  const filtered = filterProperties(properties, filters);
+  const sorted = sortProperties(filtered, filters.sortOption);
+
+  if (properties.length === 0) {
+    return <EmptyState />;
+  }
+
+  if (sorted.length === 0) {
+    return <FilterEmptyState showClear={!!hasActiveFilters(filters)} />;
+  }
+
+  return (
+    <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      {sorted.map((property) => (
+        <PropertyCardHorizontal property={property} key={property._id} />
+      ))}
+    </div>
+  );
+}

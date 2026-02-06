@@ -105,7 +105,7 @@ export function Navbar() {
             className="bg-gray-100 hover:bg-action-primary hover:text-tag transition-all duration-300"
             asChild
           >
-            <Link href="/properties">
+            <Link href="/properties" aria-label="Buscar imóveis">
               <Search className="size-5" />
             </Link>
           </Button>
@@ -117,7 +117,7 @@ export function Navbar() {
             asChild
             className="bg-gray-100 hover:bg-red-500"
           >
-            <Link href="/favorites">
+            <Link href="/favorites" aria-label="Imóveis favoritos">
               <Heart className="size-5" />
             </Link>
           </Button>

@@ -176,7 +176,7 @@ export function PropertyQuickSearchBar() {
               {/* ADVANCED SEARCH BUTTON */}
               <Button
                 variant="outline"
-                className="w-full sm:w-auto h-10 sm:h-11 px-4 rounded-lg border-action-primary text-action-primary hover:bg-action-primary hover:text-white font-medium text-sm"
+                className="w-full sm:w-auto h-10 sm:h-11 px-4 rounded-lg border-action-primary hover:text-action-primary bg-action-primary text-white font-medium text-sm"
                 asChild
               >
                 <Link href={"/properties"}>

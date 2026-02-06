@@ -99,7 +99,7 @@ Para dúvidas sobre estes termos, entre em contato através da nossa página de 
                 {sections.map((section, index) => (
                   <div key={index} className="group">
                     <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-action-primary/10 flex items-center justify-center group-hover:bg-action-primary/20 transition-colors">
+                      <div className="shrink-0 size-12 rounded-xl bg-action-primary/10 flex items-center justify-center group-hover:bg-action-primary/20 transition-colors">
                         <section.icon className="w-6 h-6 text-action-primary" />
                       </div>
                       <div className="flex-1">

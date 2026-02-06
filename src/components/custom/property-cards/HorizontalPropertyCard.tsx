@@ -67,7 +67,7 @@ export function HorizontalPropertyCard({
             className="object-cover transition-transform duration-400 group-hover:scale-110"
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            quality={70}
+              quality={75}
           />
         ) : (
           <div className="flex flex-col items-center z-20">

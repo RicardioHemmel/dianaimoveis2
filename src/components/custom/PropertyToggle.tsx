@@ -29,6 +29,7 @@ export function PropertyToggle({
     onChange({
       ...safeValue,
       value: checked,
+      show: checked ? true : safeValue.show,
     });
   };
 

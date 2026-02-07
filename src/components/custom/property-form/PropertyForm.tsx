@@ -189,11 +189,8 @@ export default function PropertyForm() {
   const isEditMode = formMode === "edit";
   const isPublished = propertyStatus === "PUBLISHED";
 
-  const draftButtonText = isEditMode
-    ? isPublished
-      ? "Mudar para rascunho"
-      : "Salvar rascunho"
-    : "Salvar rascunho";
+  const draftButtonText =
+    isEditMode && isPublished ? "Mudar para rascunho" : "Salvar rascunho";
 
   const publishButtonText = isEditMode
     ? isPublished

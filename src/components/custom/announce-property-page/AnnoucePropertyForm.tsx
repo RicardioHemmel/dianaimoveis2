@@ -168,7 +168,6 @@ export function AnnouncePropertyForm() {
             <SelectContent>
               <SelectItem value="apto">Apartamento</SelectItem>
               <SelectItem value="casa">Casa</SelectItem>
-              <SelectItem value="cobertura">Cobertura</SelectItem>
             </SelectContent>
           </Select>
 

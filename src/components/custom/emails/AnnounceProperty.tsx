@@ -99,7 +99,7 @@ export default function AnnoucePropertyEmail({
 
               <div className="grid grid-cols-2 gap-y-2 text-sm bg-[#fffdf5] p-4 border border-[#f3ebce] rounded-md">
                 <Text className="m-0">
-                  <strong>Valor:</strong> R$ {price}
+                  <strong>Valor:</strong> {price}
                 </Text>
                 <Text className="m-0">
                   <strong>Área:</strong> {sqm} m²

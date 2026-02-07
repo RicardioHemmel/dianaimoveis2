@@ -21,7 +21,7 @@ export async function getClientIp() {
   return headersList.get("x-real-ip") ?? "unknown";
 }
 
-// 🔹 Rate limit helper
+// RATE LIMIT HELPER
 export async function checkRateLimit(key: string) {
   return rateLimit.limit(key);
 }

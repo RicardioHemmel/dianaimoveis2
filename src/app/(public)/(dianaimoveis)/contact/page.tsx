@@ -97,7 +97,7 @@ export default function ContactClient() {
                     aria-label="WhatsApp"
                   >
                     <Image
-                      src="/icons/whatsapp.svg"
+                      src="/icons/whatsapp-white-icon.svg"
                       alt="whatsapp icon"
                       width={26}
                       height={26}
